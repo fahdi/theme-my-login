@@ -2,15 +2,17 @@
 Contributors: jfarthing84
 Donate link: http://webdesign.jaedub.com
 Tags: wordpress, login, register, theme, form
-Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: trunk
+Requires at least: 2.5
+Tested up to: 2.5
+Stable tag: 1.1
 
 This plugin makes your registration and login pages look just like the rest of your website.
+
 
 == Description ==
 
 This plugin makes your registration and login pages look just like the rest of your website by replacing the wp-login.php page with a function that includes the header files, footer files, and all of the HTML in between that you specify in the 'Theme My Login' settings.
+
 
 == Installation ==
 
@@ -34,6 +36,13 @@ Upload the Theme My Login plugin to your 'wp-content/plugins' directory and acti
 
 9. Template Footer Files - Enter each footer file used in your template, one per line. Typically this is sidebar.php and footer.php. You can figure this out by clicking Appearance->Editor->Main Index Template. If you see the function calls get_sidebar() and get_footer() then you should be able to leave the defaults alone.
 
-Now you can save your changes and go test out your new themed login and registration pages. That's all! 
+Now you can save your changes and go test out your new themed login and registration pages. That's all!
+
+
+== Version History ==
+
+* 1.0.0 - 2009-03-13 - Initial release version
+* 1.0.1 - 2009-03-14 - Made backwards compatible to WordPress 2.5+
+
 
 http://webdesign.jaedub.com

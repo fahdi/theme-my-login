@@ -3,9 +3,17 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: This plugin creates custom login and register pages to replace the wp-login and wp-register pages.
-Version: 1.0
+Version: 1.0.1
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
+
+Version History
+
+1.0.0 - 2009-03-13
+    Initial release version
+1.0.1 - 2009-03-14
+    Made backwards compatible to WordPress 2.5+
+    
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -305,7 +313,8 @@ if (!class_exists('ThemeMyLogin')) {
             switch ($action) :
 
             case 'logout' :
-                check_admin_referer('log-out');
+                if ($wp_version > '2.6')
+                    check_admin_referer('log-out');
                 wp_logout();
 
                 if ($this->GetOption('logout_redirect')) {
@@ -542,5 +551,82 @@ if (!class_exists('ThemeMyLogin')) {
 if (class_exists('ThemeMyLogin')) {
     $ThemeMyLogin = new ThemeMyLogin();
 }
+
+if ( !function_exists('is_ssl') ) :
+function is_ssl() {
+    if ( isset($_SERVER['HTTPS']) ) {
+        if ( 'on' == strtolower($_SERVER['HTTPS']) )
+            return true;
+        if ( '1' == $_SERVER['HTTPS'] )
+            return true;
+    } elseif ( isset($_SERVER['SERVER_PORT']) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+        return true;
+    }
+    return false;
+}
+endif;
+
+if ( !function_exists('site_url') ) :
+function site_url($path = '', $scheme = null) {
+    // should the list of allowed schemes be maintained elsewhere?
+    $orig_scheme = $scheme;
+    if ( !in_array($scheme, array('http', 'https')) ) {
+        if ( ('login_post' == $scheme) && ( force_ssl_login() || force_ssl_admin() ) )
+            $scheme = 'https';
+        elseif ( ('login' == $scheme) && ( force_ssl_admin() ) )
+            $scheme = 'https';
+        elseif ( ('admin' == $scheme) && force_ssl_admin() )
+            $scheme = 'https';
+        else
+            $scheme = ( is_ssl() ? 'https' : 'http' );
+    }
+
+    $url = str_replace( 'http://', "{$scheme}://", get_option('siteurl') );
+
+    if ( !empty($path) && is_string($path) && strpos($path, '..') === false )
+        $url .= '/' . ltrim($path, '/');
+
+    return apply_filters('site_url', $url, $path, $orig_scheme);
+}
+endif;
+
+if ( !function_exists('admin_url') ) :
+function admin_url($path = '') {
+    $url = site_url('wp-admin/', 'admin');
+
+    if ( !empty($path) && is_string($path) && strpos($path, '..') === false )
+        $url .= ltrim($path, '/');
+
+    return $url;
+}
+endif;
+
+if ( !function_exists('force_ssl_login') ) :
+function force_ssl_login($force = '') {
+    static $forced;
+
+    if ( '' != $force ) {
+        $old_forced = $forced;
+        $forced = $force;
+        return $old_forced;
+    }
+
+    return $forced;
+}
+endif;
+
+if ( !function_exists('force_ssl_admin') ) :
+function force_ssl_admin($force = '') {
+    static $forced;
+
+    if ( '' != $force ) {
+        $old_forced = $forced;
+        $forced = $force;
+        return $old_forced;
+    }
+
+    return $forced;
+}
+endif;
 
 ?>
