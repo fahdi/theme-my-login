@@ -2,8 +2,8 @@
 /*
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
-Description: This plugin creates custom login and register pages to replace the wp-login and wp-register pages.
-Version: 1.0.1
+Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
+Version: 1.1.0
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -13,6 +13,8 @@ Version History
     Initial release version
 1.0.1 - 2009-03-14
     Made backwards compatible to WordPress 2.5+
+1.1.0 - 2009-03-14
+    Added custom profile to completely hide the back-end from subscribers
     
 */
 
@@ -31,6 +33,9 @@ if (!class_exists('ThemeMyLogin')) {
             
             add_action('init', array(&$this, 'Init'));
             add_action('admin_menu', array(&$this, 'AddAdminPage'));
+            
+            if ( !isset($_POST['from']) && $_POST['from'] != 'profile' )
+                add_action('load-profile.php', array(&$this, 'DoProfile'));
             
             $this->LoadOptions();
         }
@@ -56,6 +61,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['tml_login_text']        = 'Log In';
             $this->options['tml_register_text']     = 'Register';
             $this->options['tml_password_text']     = 'Reset Password';
+            $this->options['tml_profile_text']      = 'Your Profile';
         }
 
         # Loads options from database
@@ -131,6 +137,7 @@ if (!class_exists('ThemeMyLogin')) {
                 $this->SetOption('login_text', stripslashes($_POST['login_text']));
                 $this->SetOption('register_text', stripslashes($_POST['register_text']));
                 $this->SetOption('password_text', stripslashes($_POST['password_text']));
+                $this->SetOption('profile_text', stripslashes($_POST['profile_text']));
                 $this->SetOption('login_redirect', stripslashes($_POST['login_redirect']));
                 $this->SetOption('logout_redirect', stripslashes($_POST['logout_redirect']));
                 $this->SetOption('header_html', stripslashes($_POST['header_html']));
@@ -142,6 +149,9 @@ if (!class_exists('ThemeMyLogin')) {
             } //end if
 
             ?>
+            <div class="updated">
+                <p>If you like this plugin, please help keep it up to date by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3836253">donating through PayPal</a>!</p>
+            </div>
             <div class="wrap">
             <?php if ( strlen($success) > 0 ) { ?>
                 <div id="message" class="updated fade">
@@ -195,6 +205,13 @@ if (!class_exists('ThemeMyLogin')) {
                         </td>
                     </tr>
                     <tr valign="top">
+                        <th scope="row"><label for="profile_text">Profile Text</label></th>
+                        <td>
+                            <input name="profile_text" type="text" id="profile_text" value="<?php echo( htmlspecialchars ( $this->GetOption('profile_text') ) ); ?>" class="regular-text" />
+                            <span class="setting-description">This will appear above the users profile.</span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
                         <th scope="row"><label for="login_redirect">Template Header Files</label></th>
                         <td>
                             <textarea name="header_files" id="header_files" rows="5" cols="50" class="large-text"><?php echo $this->GetOption('header_files') ? htmlspecialchars(implode("\n", $this->GetOption('header_files'))) : ''; ?></textarea>
@@ -237,6 +254,12 @@ if (!class_exists('ThemeMyLogin')) {
                 case "wp-register.php":
                     $this->DoLogin();
                 break;
+            }
+            
+            if ( is_admin() && current_user_can('edit_posts') === false && $pagenow != 'profile.php') {
+                $redirect_to = get_bloginfo('wpurl') . '/wp-admin/profile.php';
+                wp_safe_redirect($redirect_to);
+                die();
             }
         }
         
@@ -543,6 +566,235 @@ if (!class_exists('ThemeMyLogin')) {
                 die();
             break;
             endswitch;
+        }
+        
+        function DoProfile() {
+
+            function ProfileJS ( ) {
+            ?>
+            <script type="text/javascript">
+                function update_nickname ( ) {
+
+                    var nickname = jQuery('#nickname').val();
+                    var display_nickname = jQuery('#display_nickname').val();
+
+                    if ( nickname == '' ) {
+                        jQuery('#display_nickname').remove();
+                    }
+                    jQuery('#display_nickname').val(nickname).html(nickname);
+
+                }
+
+                jQuery(function($) {
+                    $('#pass1').keyup( check_pass_strength )
+                    $('.color-palette').click(function(){$(this).siblings('input[name=admin_color]').attr('checked', 'checked')});
+                } );
+
+                jQuery(document).ready( function() {
+                    jQuery('#pass1,#pass2').attr('autocomplete','off');
+                    jQuery('#nickname').blur(update_nickname);
+                });
+            </script>
+            <?php
+            }
+
+            function ProfileCSS ( ) {
+            ?>
+                <style type="text/css">
+                table.form-table th, table.form-table td {
+                    padding: 0;
+                }
+                table.form-table th {
+                    width: 150px;
+                    vertical-align: text-top;
+                    text-align: left;
+                }
+                p.message {
+                    padding: 3px 5px;
+                    background-color: lightyellow;
+                    border: 1px solid yellow;
+                }
+                #display_name {
+                    width: 250px;
+                }
+                .field-hint {
+                    display: block;
+                    clear: both;
+                }
+                </style>
+            <?php
+            }
+
+            if ( !$user_id ) {
+                $current_user = wp_get_current_user();
+                $user_id = $current_user->ID;
+            }
+
+            if ($current_user->has_cap('edit_posts') === false) {
+                $is_profile_page = true;
+                //add_filter('wp_title','cyc_title');
+                add_action('wp_head', 'ProfileJS');
+                add_action('wp_head', 'ProfileCSS');
+
+                wp_enqueue_script('jquery');
+
+                wp_reset_vars(array('action', 'redirect', 'profile', 'user_id', 'wp_http_referer'));
+                $wp_http_referer = remove_query_arg(array('update', 'delete_count'), stripslashes($wp_http_referer));
+                $user_id = (int) $user_id;
+
+                $profileuser = get_user_to_edit($user_id);
+                if ( !current_user_can('edit_user', $user_id) )
+                        wp_die(__('You do not have permission to edit this user.'));
+
+                $this->DoHeader(__($this->GetOption('profile_text')), '', $errors);
+                if ($_GET['updated'] == true) {
+                    echo '<p class="message">Your profile has been updated.</p>';
+                }
+                ?>
+
+                <form name="profile" id="your-profile" action="" method="post">
+                <?php wp_nonce_field('update-user_' . $user_id) ?>
+                <?php if ( $wp_http_referer ) : ?>
+                    <input type="hidden" name="wp_http_referer" value="<?php echo clean_url($wp_http_referer); ?>" />
+                <?php endif; ?>
+                <p>
+                <input type="hidden" name="from" value="profile" />
+                <input type="hidden" name="checkuser_id" value="<?php echo $user_ID ?>" />
+                </p>
+
+                <h3><?php _e('Name') ?></h3>
+
+                <table class="form-table">
+                    <tr>
+                        <th><label for="user_login"><?php _e('Username'); ?></label></th>
+                        <td><input type="text" name="user_login" id="user_login" value="<?php echo $profileuser->user_login; ?>" disabled="disabled" /> <?php _e('Your username cannot be changed'); ?></td>
+                    </tr>
+                    <tr>
+                        <th><label for="first_name"><?php _e('First name') ?></label></th>
+                        <td><input type="text" name="first_name" id="first_name" value="<?php echo $profileuser->first_name ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="last_name"><?php _e('Last name') ?></label></th>
+                        <td><input type="text" name="last_name" id="last_name" value="<?php echo $profileuser->last_name ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="nickname"><?php _e('Nickname') ?></label></th>
+                        <td><input type="text" name="nickname" id="nickname" value="<?php echo $profileuser->nickname ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="display_name"><?php _e('Display name publicly&nbsp;as') ?></label></th>
+                        <td>
+                            <select name="display_name" id="display_name">
+                            <?php
+                                $public_display = array();
+                                $public_display['display_displayname'] = $profileuser->display_name;
+                                $public_display['display_nickname'] = $profileuser->nickname;
+                                $public_display['display_username'] = $profileuser->user_login;
+                                $public_display['display_firstname'] = $profileuser->first_name;
+                                $public_display['display_firstlast'] = $profileuser->first_name.' '.$profileuser->last_name;
+                                $public_display['display_lastfirst'] = $profileuser->last_name.' '.$profileuser->first_name;
+                                $public_display = array_unique(array_filter(array_map('trim', $public_display)));
+                                foreach($public_display as $id => $item) {
+                            ?>
+                                <option id="<?php echo $id; ?>" value="<?php echo $item; ?>"><?php echo $item; ?></option>
+                            <?php
+                                }
+                            ?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3><?php _e('Contact Info') ?></h3>
+
+                <table class="form-table">
+                <tr>
+                    <th><label for="email"><?php _e('E-mail') ?></label></th>
+                    <td><input type="text" name="email" id="email" value="<?php echo $profileuser->user_email ?>" /> <?php _e('Required'); ?></td>
+                </tr>
+
+                <tr>
+                    <th><label for="url"><?php _e('Website') ?></label></th>
+                    <td><input type="text" name="url" id="url" value="<?php echo $profileuser->user_url ?>" /></td>
+                </tr>
+
+                <tr>
+                    <th><label for="aim"><?php _e('AIM') ?></label></th>
+                    <td><input type="text" name="aim" id="aim" value="<?php echo $profileuser->aim ?>" /></td>
+                </tr>
+
+                <tr>
+                    <th><label for="yim"><?php _e('Yahoo IM') ?></label></th>
+                    <td><input type="text" name="yim" id="yim" value="<?php echo $profileuser->yim ?>" /></td>
+                </tr>
+
+                <tr>
+                    <th><label for="jabber"><?php _e('Jabber / Google Talk') ?></label></th>
+                    <td><input type="text" name="jabber" id="jabber" value="<?php echo $profileuser->jabber ?>" /></td>
+                </tr>
+                </table>
+
+                <h3><?php _e('About Yourself'); ?></h3>
+
+                <table class="form-table">
+                <tr>
+                    <th><label for="description"><?php _e('Biographical Info'); ?></label></th>
+                    <td><textarea name="description" id="description" rows="5" cols="30"><?php echo $profileuser->description ?></textarea><br /><?php _e('Share a little biographical information to fill out your profile. This may be shown publicly.'); ?><br/><br/></td>
+                </tr>
+
+                <?php
+                $show_password_fields = apply_filters('show_password_fields', true);
+                if ( $show_password_fields ) :
+                ?>
+                <tr>
+                    <th><label for="pass1"><?php _e('New Password'); ?></label></th>
+                    <td>
+                        <input type="password" name="pass1" id="pass1" size="16" value="" /><br/><?php _e("If you would like to change the password type a new one. Otherwise leave this blank."); ?><br />
+                        <input type="password" name="pass2" id="pass2" size="16" value="" /><br/><?php _e("Type your new password again."); ?><br />
+                    </td>
+                </tr>
+                <?php endif; ?>
+                </table>
+
+                <?php
+                    do_action('profile_personal_options');
+                    do_action('show_user_profile');
+                ?>
+
+                <?php if (count($profileuser->caps) > count($profileuser->roles)): ?>
+                <br class="clear" />
+                    <table width="99%" style="border: none;" cellspacing="2" cellpadding="3" class="editform">
+                        <tr>
+                            <th scope="row"><?php _e('Additional Capabilities') ?></th>
+                            <td><?php
+                            $output = '';
+                            foreach($profileuser->caps as $cap => $value) {
+                                if(!$wp_roles->is_role($cap)) {
+                                    if($output != '') $output .= ', ';
+                                    $output .= $value ? $cap : "Denied: {$cap}";
+                                }
+                            }
+                            echo $output;
+                            ?></td>
+                        </tr>
+                    </table>
+                <?php endif; ?>
+
+                <p class="submit">
+                    <input type="hidden" name="action" value="update" />
+                    <input type="hidden" name="user_id" id="user_id" value="<?php echo $user_id; ?>" />
+                    <input type="submit" id="cycsubmit" value="<?php $is_profile_page? _e('Update Profile') : _e('Update User') ?>" name="submit" />
+                </p>
+                </form>
+            </div>
+            <?php
+                echo $this->GetOption('footer_html');
+                $footer_files = $this->GetOption('footer_files');
+                foreach((array)$footer_files as $footer_file)
+                    include(TEMPLATEPATH . '/' . $footer_file);
+
+                die();
+            }
         }
     }
 }
