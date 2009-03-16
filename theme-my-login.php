@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 1.1.0
+Version: 1.1.1
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -15,7 +15,8 @@ Version History
     Made backwards compatible to WordPress 2.5+
 1.1.0 - 2009-03-14
     Added custom profile to completely hide the back-end from subscribers
-    
+1.1.1 - 2009-03-16
+    Prepared plugin for internationalization and changed user access level to 'manage options' instead of level 10
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -101,13 +102,13 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function AddAdminPage(){
-            add_submenu_page('options-general.php', "Theme My Login", "Theme My Login", 10, "Theme My Login", array(&$this, 'AdminPage'));
+            add_submenu_page('options-general.php', __('Theme My Login'), __('Theme My Login'), 'manage_options', __('Theme My Login'), array(&$this, 'AdminPage'));
         }
 
         function AdminPage(){
             if ( $_POST ) {
                 if ( !current_user_can('manage_options') )
-                    die( __( 'Cheatin&#8217; huh?' ) );
+                    die( __('Cheatin&#8217; huh?') );
 
                 check_admin_referer('tml-settings');
                 
@@ -150,7 +151,7 @@ if (!class_exists('ThemeMyLogin')) {
 
             ?>
             <div class="updated">
-                <p>If you like this plugin, please help keep it up to date by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3836253">donating through PayPal</a>!</p>
+                <p><?php _e('If you like this plugin, please help keep it up to date by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3836253">donating through PayPal</a>!'); ?></p>
             </div>
             <div class="wrap">
             <?php if ( strlen($success) > 0 ) { ?>
@@ -163,84 +164,84 @@ if (!class_exists('ThemeMyLogin')) {
 
                 <form action="" method="post" id="tml-settings">
             <?php if ( function_exists('wp_nonce_field') ) wp_nonce_field('tml-settings'); ?>
-                <h3>Redirection Settings</h3>
+                <h3><?php _e('Redirection Settings'); ?></h3>
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row"><label for="login_redirect">Redirect on Login</label></th>
+                        <th scope="row"><label for="login_redirect"><?php _e('Redirect on Login'); ?></label></th>
                         <td>
                             <input name="login_redirect" type="text" id="login_redirect" value="<?php echo( htmlspecialchars ( $this->GetOption('login_redirect') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">Defaults to 'wp-admin/'.</span>
+                            <span class="setting-description"><?php _e('Defaults to <code>wp-admin/</code>.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="logout_redirect">Redirect on Logout</label></th>
+                        <th scope="row"><label for="logout_redirect"><?php _e('Redirect on Logout'); ?></label></th>
                         <td>
                             <input name="logout_redirect" type="text" id="logout_redirect" value="<?php echo( htmlspecialchars ( $this->GetOption('logout_redirect') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">Defaults to 'wp-login.php?loggedout=true'.</span>
+                            <span class="setting-description"><?php _e('Defaults to <code>wp-login.php?loggedout=true</code>.'); ?></span>
                         </td>
                     </tr>
                 </table>
 
-                <h3>Template Settings</h3>
+                <h3><?php _e('Template Settings'); ?></h3>
                 <table class="form-table">
                     <tr valign="top">
-                        <th scope="row"><label for="register_text">Register Text</label></th>
+                        <th scope="row"><label for="register_text"><?php _e('Register Text'); ?></label></th>
                         <td>
                             <input name="register_text" type="text" id="register_text" value="<?php echo( htmlspecialchars ( $this->GetOption('register_text') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">This will appear above the registration form.</span>
+                            <span class="setting-description"><?php _e('This will appear above the registration form.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="login_text">Login Text</label></th>
+                        <th scope="row"><label for="login_text"><?php _e('Login Text'); ?></label></th>
                         <td>
                             <input name="login_text" type="text" id="login_text" value="<?php echo( htmlspecialchars ( $this->GetOption('login_text') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">This will appear above the login form.</span>
+                            <span class="setting-description"><?php _e('This will appear above the login form.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="password_text">Forgot Password Text</label></th>
+                        <th scope="row"><label for="password_text"><?php _e('Forgot Password Text'); ?></label></th>
                         <td>
                             <input name="password_text" type="text" id="password_text" value="<?php echo( htmlspecialchars ( $this->GetOption('password_text') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">This will appear above the forgot password form.</span>
+                            <span class="setting-description"><?php _e('This will appear above the forgot password form.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="profile_text">Profile Text</label></th>
+                        <th scope="row"><label for="profile_text"><?php _e('Profile Text'); ?></label></th>
                         <td>
                             <input name="profile_text" type="text" id="profile_text" value="<?php echo( htmlspecialchars ( $this->GetOption('profile_text') ) ); ?>" class="regular-text" />
-                            <span class="setting-description">This will appear above the users profile.</span>
+                            <span class="setting-description"><?php _e('This will appear above the users profile.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="login_redirect">Template Header Files</label></th>
+                        <th scope="row"><label for="login_redirect"><?php _e('Template Header Files'); ?></label></th>
                         <td>
                             <textarea name="header_files" id="header_files" rows="5" cols="50" class="large-text"><?php echo $this->GetOption('header_files') ? htmlspecialchars(implode("\n", $this->GetOption('header_files'))) : ''; ?></textarea>
-                            <span class="setting-description">Enter each header file used in your template, one per line. Typically, this is 'header.php'.</span>
+                            <span class="setting-description"><?php _e('Enter each header file used in your template, one per line. Typically, this is <code>header.php</code>.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="header_html">Template HTML After Header</label></th>
+                        <th scope="row"><label for="header_html"><?php _e('Template HTML After Header'); ?></label></th>
                         <td>
                             <textarea name="header_html" id="header_html" rows="5" cols="50" class="large-text"><?php echo $this->GetOption('header_html') ? htmlspecialchars($this->GetOption('header_html')) : ''; ?></textarea>
-                            <span class="setting-description">Enter the HTML that appears after the get_header() function and before the page code.</span>
+                            <span class="setting-description"><?php _e('Enter the HTML that appears after the get_header() function and before the page code.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="footer_html">Template HTML Before Footer</label></th>
+                        <th scope="row"><label for="footer_html"><?php _e('Template HTML Before Footer'); ?></label></th>
                         <td>
                             <textarea name="footer_html" id="footer_html" rows="5" cols="50" class="large-text"><?php echo $this->GetOption('footer_html') ? htmlspecialchars($this->GetOption('footer_html')) : ''; ?></textarea>
-                            <span class="setting-description">Enter footer HTML that appears between the page code and the get_sidebar()/get_footer() functions.</span>
+                            <span class="setting-description"><?php _e('Enter footer HTML that appears between the page code and the get_sidebar()/get_footer() functions.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="footer_files">Template Footer Files</label></th>
+                        <th scope="row"><label for="footer_files"><?php _e('Template Footer Files'); ?></label></th>
                         <td>
                             <textarea name="footer_files" id="footer_files" rows="5" cols="50" class="large-text"><?php echo $this->GetOption('footer_files') ? htmlspecialchars(implode("\n", $this->GetOption('footer_files'))) : ''; ?></textarea>
-                            <span class="setting-description">Enter each footer file used in your template, one per line. Typically, this is 'sidebar.php' and 'footer.php'.</span>
+                            <span class="setting-description"><?php _e('Enter each footer file used in your template, one per line. Typically, this is <code>sidebar.php</code> and <code>footer.php</code>.'); ?></span>
                         </td>
                     </tr>
                 </table>
-                <p class="submit"><input type="submit" name="Submit" class="button-primary" value="Save Changes" />
+                <p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes'); ?>" />
                 </form>
             </div>
             <?php
