@@ -16,7 +16,7 @@ Version History
 1.1.0 - 2009-03-14
     Added custom profile to completely hide the back-end from subscribers
 1.1.1 - 2009-03-16
-    Prepared plugin for internationalization and changed user access level to 'manage options' instead of level 10
+    Prepared plugin for internationalization and fixed a PHP version bug
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -24,7 +24,7 @@ if (!class_exists('ThemeMyLogin')) {
     
         var $options = array();
 
-        function ThemedRegLog() {
+        function ThemeMyLogin() {
             $this->__construct();
         }
 

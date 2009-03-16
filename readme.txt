@@ -46,4 +46,4 @@ Now you can save your changes and go test out your new themed login and registra
 * 1.0.0 - 2009-03-13 - Initial release version
 * 1.0.1 - 2009-03-14 - Made backwards compatible to WordPress 2.5+
 * 1.1.0 - 2009-03-14 - Added custom profile to completely hide the back-end from subscribers
-* 1.1.1 - 2009-03-16 - Prepared plugin for internationalization and changed user access level to 'manage options' instead of level 10
+* 1.1.1 - 2009-03-16 - Prepared plugin for internationalization and fixed a PHP version bug
