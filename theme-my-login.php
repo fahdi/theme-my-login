@@ -271,8 +271,10 @@ if (!class_exists('ThemeMyLogin')) {
                 $wp_error = new WP_Error();
                 
             $header_files = $this->GetOption('header_files');
-            foreach((array)$header_files as $header_file)
-                include(TEMPLATEPATH . '/' . $header_file);
+            foreach((array)$header_files as $header_file) {
+                if (file_exists(TEMPLATEPATH . '/' . $header_file))
+                    include(TEMPLATEPATH . '/' . $header_file);
+            }
 
             echo $this->GetOption('header_html');
             ?>
@@ -394,8 +396,10 @@ if (!class_exists('ThemeMyLogin')) {
             <?php
                 echo $this->GetOption('footer_html');
                 $footer_files = $this->GetOption('footer_files');
-                foreach((array)$footer_files as $footer_file)
-                    include(TEMPLATEPATH . '/' . $footer_file);
+                foreach((array)$footer_files as $footer_file) {
+                    if (file_exists(TEMPLATEPATH . '/' . $footer_file))
+                        include(TEMPLATEPATH . '/' . $footer_file);
+                }
 
                 die();
             break;
@@ -461,8 +465,10 @@ if (!class_exists('ThemeMyLogin')) {
             <?php
                 echo $this->GetOption('footer_html');
                 $footer_files = $this->GetOption('footer_files');
-                foreach((array)$footer_files as $footer_file)
-                    include(TEMPLATEPATH . '/' . $footer_file);
+                foreach((array)$footer_files as $footer_file) {
+                    if (file_exists(TEMPLATEPATH . '/' . $footer_file))
+                        include(TEMPLATEPATH . '/' . $footer_file);
+                }
 
                 die();
             break;
@@ -561,8 +567,10 @@ if (!class_exists('ThemeMyLogin')) {
             <?php
                 echo $this->GetOption('footer_html');
                 $footer_files = $this->GetOption('footer_files');
-                foreach((array)$footer_files as $footer_file)
-                    include(TEMPLATEPATH . '/' . $footer_file);
+                foreach((array)$footer_files as $footer_file) {
+                    if (file_exists(TEMPLATEPATH . '/' . $footer_file))
+                        include(TEMPLATEPATH . '/' . $footer_file);
+                }
 
                 die();
             break;
@@ -791,8 +799,10 @@ if (!class_exists('ThemeMyLogin')) {
             <?php
                 echo $this->GetOption('footer_html');
                 $footer_files = $this->GetOption('footer_files');
-                foreach((array)$footer_files as $footer_file)
-                    include(TEMPLATEPATH . '/' . $footer_file);
+                foreach((array)$footer_files as $footer_file) {
+                    if (file_exists(TEMPLATEPATH . '/' . $footer_file))
+                        include(TEMPLATEPATH . '/' . $footer_file);
+                }
 
                 die();
             }
