@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 1.1.1
+Version: 1.1.2
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -17,6 +17,8 @@ Version History
     Added custom profile to completely hide the back-end from subscribers
 1.1.1 - 2009-03-16
     Prepared plugin for internationalization and fixed a PHP version bug
+1.1.2 - 2009-03-20
+    Updated to allow customization of text below registration form
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -61,6 +63,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['tml_footer_html']       = '    </div>' . "\n";
             $this->options['tml_login_text']        = 'Log In';
             $this->options['tml_register_text']     = 'Register';
+            $this->options['tml_register_msg']      = 'A password will be e-mailed to you.';
             $this->options['tml_password_text']     = 'Reset Password';
             $this->options['tml_profile_text']      = 'Your Profile';
         }
@@ -137,6 +140,7 @@ if (!class_exists('ThemeMyLogin')) {
 
                 $this->SetOption('login_text', stripslashes($_POST['login_text']));
                 $this->SetOption('register_text', stripslashes($_POST['register_text']));
+                $this->SetOption('register_msg', stripslashes($_POST['register_msg']));
                 $this->SetOption('password_text', stripslashes($_POST['password_text']));
                 $this->SetOption('profile_text', stripslashes($_POST['profile_text']));
                 $this->SetOption('login_redirect', stripslashes($_POST['login_redirect']));
@@ -189,6 +193,13 @@ if (!class_exists('ThemeMyLogin')) {
                         <td>
                             <input name="register_text" type="text" id="register_text" value="<?php echo( htmlspecialchars ( $this->GetOption('register_text') ) ); ?>" class="regular-text" />
                             <span class="setting-description"><?php _e('This will appear above the registration form.'); ?></span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="register_msg"><?php _e('Register Message'); ?></label></th>
+                        <td>
+                            <input name="register_msg" type="text" id="register_msg" value="<?php echo( htmlspecialchars ( $this->GetOption('register_msg') ) ); ?>" class="regular-text" />
+                            <span class="setting-description"><?php _e('This will appear below the registration form.'); ?></span>
                         </td>
                     </tr>
                     <tr valign="top">
@@ -451,7 +462,7 @@ if (!class_exists('ThemeMyLogin')) {
                     <input type="text" name="user_email" id="user_email" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="25" tabindex="20" /></label>
                 </p>
             <?php do_action('register_form'); ?>
-                <p id="reg_passmail"><?php _e('A password will be e-mailed to you.') ?></p>
+                <p id="reg_passmail"><?php _e($this->GetOption('register_msg')) ?></p>
                 <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Register'); ?>" tabindex="100" /></p>
             </form>
 

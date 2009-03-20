@@ -4,7 +4,7 @@ Donate link: http://webdesign.jaedub.com
 Tags: wordpress, login, register, theme, form, james kelly
 Requires at least: 2.5
 Tested up to: 2.5
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 
 This plugin themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
 
@@ -24,19 +24,21 @@ Upload the Theme My Login plugin to your 'wp-content/plugins' directory and acti
 
 3. Register Text - You can change this to whatever text you want to appear above your registration form. This defaults to 'Register'.
 
-4. Login Text - You can change this to whatever text you want to appear above your login form. This defaults to 'Log In'.
+4. Register Message - You can change this to whatever you want to appear below your registration form. This defaults to 'A password will be e-mailed to you.'
 
-5. Forgot Password Text - You can change this to whatever text you want to appear above your forgot password form. This defaults to 'Forgot Password'.
+5. Login Text - You can change this to whatever text you want to appear above your login form. This defaults to 'Log In'.
 
-6. Profile Text - You can change this to whatever text you want to appear above the user profile form. This defaults to 'Your Profile'.
+6. Forgot Password Text - You can change this to whatever text you want to appear above your forgot password form. This defaults to 'Forgot Password'.
 
-7. Template Header Files - Enter each header file used in your template, one per line. Typically, this is only header.php, but you can figure this out by clicking Appearance->Editor->Main Index Template. If the only function call you see is get_header() before the HTML then it's likely this is the only file you need to enter.
+7. Profile Text - You can change this to whatever text you want to appear above the user profile form. This defaults to 'Your Profile'.
 
-8. Template HTML After Header - Enter the HTML that appears between the get_header() function and the page code. You can probably figure this out by clicking Appearance->Editor->Main Index Template. The HTML you need to copy is everything between the last ?> in the top of the file and the line that looks something like this: <?php endif; ?> and the line that may look like this: <?php get_sidebar(); ?>. Keep in mind that if you are using a template that doesn't fit the typical scheme, you will need to experiment a bit to get this right.
+8. Template Header Files - Enter each header file used in your template, one per line. Typically, this is only header.php, but you can figure this out by clicking Appearance->Editor->Main Index Template. If the only function call you see is get_header() before the HTML then it's likely this is the only file you need to enter.
 
-9. Template HTML Before Footer - Enter the HTML that appears between the page code and the get_sidebar()/get_footer() functions. You can probably figure this out by clicking Appearance->Editor->Main Index Template. The HTML you need to copy is everything between the last ?> in the top of the file and the line that looks something like this: <?php if (have_posts()) : ?>. Keep in mind that if you are using a template that doesn't fit the typical scheme, you will need to experiment a bit to get this right.
+9. Template HTML After Header - Enter the HTML that appears between the get_header() function and the page code. You can probably figure this out by clicking Appearance->Editor->Main Index Template. The HTML you need to copy is everything between the last ?> in the top of the file and the line that looks something like this: <?php endif; ?> and the line that may look like this: <?php get_sidebar(); ?>. Keep in mind that if you are using a template that doesn't fit the typical scheme, you will need to experiment a bit to get this right.
 
-10. Template Footer Files - Enter each footer file used in your template, one per line. Typically this is sidebar.php and footer.php. You can figure this out by clicking Appearance->Editor->Main Index Template. If you see the function calls get_sidebar() and get_footer() then you should be able to leave the defaults alone.
+10. Template HTML Before Footer - Enter the HTML that appears between the page code and the get_sidebar()/get_footer() functions. You can probably figure this out by clicking Appearance->Editor->Main Index Template. The HTML you need to copy is everything between the last ?> in the top of the file and the line that looks something like this: <?php if (have_posts()) : ?>. Keep in mind that if you are using a template that doesn't fit the typical scheme, you will need to experiment a bit to get this right.
+
+11. Template Footer Files - Enter each footer file used in your template, one per line. Typically this is sidebar.php and footer.php. You can figure this out by clicking Appearance->Editor->Main Index Template. If you see the function calls get_sidebar() and get_footer() then you should be able to leave the defaults alone.
 
 Now you can save your changes and go test out your new themed login and registration pages. That's all!
 
@@ -47,3 +49,4 @@ Now you can save your changes and go test out your new themed login and registra
 * 1.0.1 - 2009-03-14 - Made backwards compatible to WordPress 2.5+
 * 1.1.0 - 2009-03-14 - Added custom profile to completely hide the back-end from subscribers
 * 1.1.1 - 2009-03-16 - Prepared plugin for internationalization and fixed a PHP version bug
+* 1.1.2 - 2009-03-20 - Updated to allow customization of text below registration form
