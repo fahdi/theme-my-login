@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 1.1.2
+Version: 1.2.0
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -19,11 +19,13 @@ Version History
     Prepared plugin for internationalization and fixed a PHP version bug
 1.1.2 - 2009-03-20
     Updated to allow customization of text below registration form
+1.2.0 - 2009-03-26
+    Added capability to customize page titles for all pages affected by plugin
 */
 
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
-    
+
         var $options = array();
 
         function ThemeMyLogin() {
@@ -33,24 +35,26 @@ if (!class_exists('ThemeMyLogin')) {
         function __construct() {
             register_activation_hook ( __FILE__, array( &$this, 'Activate' ) );
             register_deactivation_hook ( __FILE__, array( &$this, 'Deactivate' ) );
-            
+
             add_action('init', array(&$this, 'Init'));
             add_action('admin_menu', array(&$this, 'AddAdminPage'));
-            
+
+            add_filter('wp_title', array(&$this, 'DoTitle'));
+
             if ( !isset($_POST['from']) && $_POST['from'] != 'profile' )
                 add_action('load-profile.php', array(&$this, 'DoProfile'));
-            
+
             $this->LoadOptions();
         }
-        
+
         function Activate() {
 
         }
-        
+
         function Deactivate() {
             delete_option('tml_options');
         }
-        
+
         # Sets up default options
         function InitOptions() {
             $this->options['tml_version']           ='1.0';
@@ -61,10 +65,14 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['tml_header_html']       = '    <div id="content" class="narrowcolumn">' . "\n";
             $this->options['tml_footer_files']      = array('sidebar.php', 'footer.php');
             $this->options['tml_footer_html']       = '    </div>' . "\n";
+            $this->options['tml_login_title']       = '%blogname% &rsaquo; Log In';
             $this->options['tml_login_text']        = 'Log In';
+            $this->options['tml_register_title']    = '%blogname% &rsaquo; Register';
             $this->options['tml_register_text']     = 'Register';
             $this->options['tml_register_msg']      = 'A password will be e-mailed to you.';
-            $this->options['tml_password_text']     = 'Reset Password';
+            $this->options['tml_password_title']    = '%blogname% &rsaquo; Lost Password';
+            $this->options['tml_password_text']     = 'Lost Password';
+            $this->options['tml_profile_title']     = '%blogname% &rsaquo; Profile';
             $this->options['tml_profile_text']      = 'Your Profile';
         }
 
@@ -114,7 +122,7 @@ if (!class_exists('ThemeMyLogin')) {
                     die( __('Cheatin&#8217; huh?') );
 
                 check_admin_referer('tml-settings');
-                
+
                 $error = "";
                 $header_files = trim(str_replace("\r\n", "\n", stripslashes($_POST['header_files'])));
                 $header_files = explode("\n", $header_files);
@@ -136,12 +144,16 @@ if (!class_exists('ThemeMyLogin')) {
                 if ( empty($error) ) {
                     $this->SetOption('footer_files', $footer_files);
                     $success = "<li>Custom login and registration form options updated successfully!</li>";
-                 }
+                }
 
+                $this->SetOption('login_title', stripslashes($_POST['login_title']));
                 $this->SetOption('login_text', stripslashes($_POST['login_text']));
+                $this->SetOption('register_title', stripslashes($_POST['register_title']));
                 $this->SetOption('register_text', stripslashes($_POST['register_text']));
                 $this->SetOption('register_msg', stripslashes($_POST['register_msg']));
+                $this->SetOption('password_title', stripslashes($_POST['password_title']));
                 $this->SetOption('password_text', stripslashes($_POST['password_text']));
+                $this->SetOption('profile_title', stripslashes($_POST['profile_title']));
                 $this->SetOption('profile_text', stripslashes($_POST['profile_text']));
                 $this->SetOption('login_redirect', stripslashes($_POST['login_redirect']));
                 $this->SetOption('logout_redirect', stripslashes($_POST['logout_redirect']));
@@ -189,6 +201,13 @@ if (!class_exists('ThemeMyLogin')) {
                 <h3><?php _e('Template Settings'); ?></h3>
                 <table class="form-table">
                     <tr valign="top">
+                        <th scope="row"><label for="register_title"><?php _e('Register Page Title'); ?></label></th>
+                        <td>
+                            <input name="register_title" type="text" id="register_title" value="<?php echo( htmlspecialchars ( $this->GetOption('register_title') ) ); ?>" class="regular-text" />
+                            <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Register &rsaquo;'</span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
                         <th scope="row"><label for="register_text"><?php _e('Register Text'); ?></label></th>
                         <td>
                             <input name="register_text" type="text" id="register_text" value="<?php echo( htmlspecialchars ( $this->GetOption('register_text') ) ); ?>" class="regular-text" />
@@ -203,6 +222,13 @@ if (!class_exists('ThemeMyLogin')) {
                         </td>
                     </tr>
                     <tr valign="top">
+                        <th scope="row"><label for="login_title"><?php _e('Login Page Title'); ?></label></th>
+                        <td>
+                            <input name="login_title" type="text" id="login_title" value="<?php echo( htmlspecialchars ( $this->GetOption('login_title') ) ); ?>" class="regular-text" />
+                            <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Log In &rsaquo;'</span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
                         <th scope="row"><label for="login_text"><?php _e('Login Text'); ?></label></th>
                         <td>
                             <input name="login_text" type="text" id="login_text" value="<?php echo( htmlspecialchars ( $this->GetOption('login_text') ) ); ?>" class="regular-text" />
@@ -210,10 +236,24 @@ if (!class_exists('ThemeMyLogin')) {
                         </td>
                     </tr>
                     <tr valign="top">
-                        <th scope="row"><label for="password_text"><?php _e('Forgot Password Text'); ?></label></th>
+                        <th scope="row"><label for="password_title"><?php _e('Lost Password Page Title'); ?></label></th>
+                        <td>
+                            <input name="password_title" type="text" id="password_title" value="<?php echo( htmlspecialchars ( $this->GetOption('password_title') ) ); ?>" class="regular-text" />
+                            <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Lost Password &rsaquo;'</span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="password_text"><?php _e('Lost Password Text'); ?></label></th>
                         <td>
                             <input name="password_text" type="text" id="password_text" value="<?php echo( htmlspecialchars ( $this->GetOption('password_text') ) ); ?>" class="regular-text" />
-                            <span class="setting-description"><?php _e('This will appear above the forgot password form.'); ?></span>
+                            <span class="setting-description"><?php _e('This will appear above the lost password form.'); ?></span>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="profile_title"><?php _e('Profile Page Title'); ?></label></th>
+                        <td>
+                            <input name="profile_title" type="text" id="profile_title" value="<?php echo( htmlspecialchars ( $this->GetOption('profile_title') ) ); ?>" class="regular-text" />
+                            <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Profile &rsaquo;'</span>
                         </td>
                     </tr>
                     <tr valign="top">
@@ -257,7 +297,7 @@ if (!class_exists('ThemeMyLogin')) {
             </div>
             <?php
         }
-        
+
         function Init() {
             global $pagenow;
 
@@ -265,22 +305,49 @@ if (!class_exists('ThemeMyLogin')) {
                 case "wp-login.php":
                 case "wp-register.php":
                     $this->DoLogin();
-                break;
+                    break;
             }
-            
+
             if ( is_admin() && current_user_can('edit_posts') === false && $pagenow != 'profile.php') {
                 $redirect_to = get_bloginfo('wpurl') . '/wp-admin/profile.php';
                 wp_safe_redirect($redirect_to);
                 die();
             }
         }
-        
+
+        function DoTitle($title) {
+            global $pagenow;
+
+            switch ($pagenow) {
+                case "wp-login.php":
+                case "wp-register.php":
+                    switch ($_GET['action']) {
+                        case 'register':
+                            return str_replace('%blogname%', get_option('blogname'), $this->GetOption('register_title'));
+                            break;
+                        case 'lostpassword':
+                            return str_replace('%blogname%', get_option('blogname'), $this->GetOption('password_title'));
+                            break;
+                        default:
+                            return str_replace('%blogname%', get_option('blogname'), $this->GetOption('login_title'));
+                    }
+                    break;
+                case "profile.php":
+                    if (current_user_can('edit_posts') === false)
+                        return str_replace('%blogname%', get_option('blogname'), $this->GetOption('profile_title'));
+                    break;
+                default:
+                    return $title;
+                    break;
+            }
+        }
+
         function DoHeader($title = 'Log In', $message = '', $wp_error = '') {
             global $error;
 
             if ( empty($wp_error) )
                 $wp_error = new WP_Error();
-                
+
             $header_files = $this->GetOption('header_files');
             foreach((array)$header_files as $header_file) {
                 if (file_exists(TEMPLATEPATH . '/' . $header_file))
@@ -289,10 +356,10 @@ if (!class_exists('ThemeMyLogin')) {
 
             echo $this->GetOption('header_html');
             ?>
-            
+
             <div id="login">
                 <h2><?php _e($title); ?></h2>
-                
+
             <?php
 
             if ( !empty( $message ) ) echo apply_filters('login_message', $message) . "\n";
@@ -319,10 +386,10 @@ if (!class_exists('ThemeMyLogin')) {
                     echo '<div id="login_error">' . apply_filters('login_errors', $errors) . "</div>\n";
                 if ( !empty($messages) )
                     echo '<p class="message">' . apply_filters('login_messages', $messages) . "</p>\n";
-                    
+
             }
         }
-        
+
         function DoLogin() {
             $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
             $errors = new WP_Error();
@@ -365,7 +432,7 @@ if (!class_exists('ThemeMyLogin')) {
 
                 wp_safe_redirect($redirect_to);
                 exit();
-            break;
+                break;
 
             case 'lostpassword' :
             case 'retrievepassword' :
@@ -413,7 +480,7 @@ if (!class_exists('ThemeMyLogin')) {
                 }
 
                 die();
-            break;
+                break;
 
             case 'resetpass' :
             case 'rp' :
@@ -427,7 +494,7 @@ if (!class_exists('ThemeMyLogin')) {
                 wp_redirect('wp-login.php?action=lostpassword&error=invalidkey');
                 exit();
 
-            break;
+                break;
 
             case 'register' :
                 if ( !get_option('users_can_register') ) {
@@ -482,7 +549,7 @@ if (!class_exists('ThemeMyLogin')) {
                 }
 
                 die();
-            break;
+                break;
 
             case 'login' :
             default:
@@ -584,10 +651,10 @@ if (!class_exists('ThemeMyLogin')) {
                 }
 
                 die();
-            break;
+                break;
             endswitch;
         }
-        
+
         function DoProfile() {
 
             function ProfileJS ( ) {
@@ -652,7 +719,6 @@ if (!class_exists('ThemeMyLogin')) {
 
             if ($current_user->has_cap('edit_posts') === false) {
                 $is_profile_page = true;
-                //add_filter('wp_title','cyc_title');
                 add_action('wp_head', 'ProfileJS');
                 add_action('wp_head', 'ProfileCSS');
 
@@ -803,7 +869,7 @@ if (!class_exists('ThemeMyLogin')) {
                 <p class="submit">
                     <input type="hidden" name="action" value="update" />
                     <input type="hidden" name="user_id" id="user_id" value="<?php echo $user_id; ?>" />
-                    <input type="submit" id="cycsubmit" value="<?php $is_profile_page? _e('Update Profile') : _e('Update User') ?>" name="submit" />
+                    <input type="submit" id="submit" value="<?php $is_profile_page? _e('Update Profile') : _e('Update User') ?>" name="submit" />
                 </p>
                 </form>
             </div>
