@@ -22,7 +22,7 @@ Version History
 1.2.0 - 2009-03-26
     Added capability to customize page titles for all pages affected by plugin
 2.0.0 - 2009-03-27
-    Completely revamped plugin to use page template, no more specifying template files & HTML
+    Completely rewrote plugin to use page template, no more specifying template files & HTML
 */
 
 if (!class_exists('ThemeMyLogin')) {
