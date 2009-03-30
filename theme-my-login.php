@@ -70,7 +70,9 @@ if (!class_exists('ThemeMyLogin')) {
                 'post_status' => 'publish',
                 'post_type' => 'page',
                 'post_author' => 1,
-                'post_content' => 'Please do not edit or remove me!'
+                'post_content' => 'Please do not edit or remove me!',
+                'commen_status' => 'closed',
+                'ping_status' => 'closed'
                 );
 
                 $theme_my_login = wp_insert_post($insert);
@@ -161,13 +163,13 @@ if (!class_exists('ThemeMyLogin')) {
             global $pagenow;
             
             $this->LoadOptions();
-            $redirect_to = $this->QueryURL();
+            $url = $this->QueryURL();
             
             if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
-                $redirect_to = $redirect_to . 'show=profile';
+                $url = $url . 'show=profile';
                 if ($_GET['updated'] == true)
-                    $redirect_to = $redirect_to . '&updated=true';
-                wp_safe_redirect($redirect_to);
+                    $url = $url . '&updated=true';
+                wp_safe_redirect($url);
                 exit;
             }
 
