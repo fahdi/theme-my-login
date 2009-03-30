@@ -161,10 +161,10 @@ if (!class_exists('ThemeMyLogin')) {
             global $pagenow;
             
             $this->LoadOptions();
-            $url = $this->QueryURL();
+            $redirect_to = $this->QueryURL();
             
             if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
-                $redirect_to = $url . 'show=profile';
+                $redirect_to = $redirect_to . 'show=profile';
                 if ($_GET['updated'] == true)
                     $redirect_to = $redirect_to . '&updated=true';
                 wp_safe_redirect($redirect_to);
