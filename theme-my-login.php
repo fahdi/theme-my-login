@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0
+Version: 2.0.1
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -23,6 +23,8 @@ Version History
     Added capability to customize page titles for all pages affected by plugin
 2.0.0 - 2009-03-27
     Completely rewrote plugin to use page template, no more specifying template files & HTML
+2.0.1 - 2009-03-30
+    Fixed a bug that redirected users who were not yet logged in to profile page
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -161,7 +163,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->LoadOptions();
             $url = $this->QueryURL();
             
-            if ( is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
+            if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
                 $redirect_to = $url . 'show=profile';
                 if ($_GET['updated'] == true)
                     $redirect_to = $redirect_to . '&updated=true';
