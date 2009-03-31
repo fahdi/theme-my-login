@@ -1,6 +1,6 @@
 <?php
 
-if ( $_POST ) {
+if ( $http_post ) {
     $user_login = $_POST['user_login'];
     $user_email = $_POST['user_email'];
 }
@@ -8,7 +8,7 @@ if ( $_POST ) {
 $this->DoHeader('', $this->errors);
 ?>
 
-    <form name="registerform" id="registerform" action="<?php echo get_permalink($this->GetOption('page_id')); ?>?action=register" method="post">
+    <form name="registerform" id="registerform" action="<?php echo $this->QueryURL(); ?>action=register" method="post">
         <p>
             <label><?php _e('Username') ?><br />
             <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" tabindex="10" /></label>

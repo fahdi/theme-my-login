@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.1
+Version: 2.0.2
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -25,6 +25,8 @@ Version History
     Completely rewrote plugin to use page template, no more specifying template files & HTML
 2.0.1 - 2009-03-30
     Fixed a bug that redirected users who were not yet logged in to profile page
+2.0.2 - 2009-03-31
+    Fixed a bug that broke new user registration and a bug that broke other plugins that use 'the_content' filter
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -70,13 +72,23 @@ if (!class_exists('ThemeMyLogin')) {
                 'post_status' => 'publish',
                 'post_type' => 'page',
                 'post_author' => 1,
-                'post_content' => 'Please do not edit or remove me!',
-                'commen_status' => 'closed',
+                'post_content' => '[theme-my-login]',
+                'comment_status' => 'closed',
                 'ping_status' => 'closed'
                 );
 
                 $theme_my_login = wp_insert_post($insert);
-            } else $theme_my_login = $theme_my_login->ID;
+            } else {
+                $theme_my_login = $theme_my_login->ID;
+                $update = array(
+                'ID' => $theme_my_login,
+                'post_content' => '[theme-my-login]',
+                'comment_status' => 'closed',
+                'ping_status' => 'closed'
+                );
+                
+                wp_update_post($update);
+            }
             
             $this->SetOption( 'page_id', $theme_my_login );
             $this->SaveOptions();
@@ -200,6 +212,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->errors = new WP_Error();
             
             $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+            $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 
             if ( isset($_GET['key']) )
                 $action = 'resetpass';
@@ -238,7 +251,7 @@ if (!class_exists('ThemeMyLogin')) {
             case 'lostpassword':
             case 'retrievepassword':
                 require('includes/compat.php');
-                if ( $_POST ) {
+                if ( $http_post ) {
                     $this->errors = retrieve_password();
                     if ( !is_wp_error($this->errors) ) {
                         wp_redirect('wp-login.php?checkemail=confirm');
@@ -247,7 +260,7 @@ if (!class_exists('ThemeMyLogin')) {
                 }
                 break;
             case 'register':
-                require('includes/compat.php');
+                require_once('includes/compat.php');
                 if ( !get_option('users_can_register') ) {
                     wp_redirect('wp-login.php?registration=disabled');
                     exit();
@@ -255,7 +268,7 @@ if (!class_exists('ThemeMyLogin')) {
 
                 $user_login = '';
                 $user_email = '';
-                if ( $_POST ) {
+                if ( $http_post ) {
                     require_once( ABSPATH . WPINC . '/registration.php');
     
                     $user_login = $_POST['user_login'];
@@ -351,12 +364,18 @@ if (!class_exists('ThemeMyLogin')) {
             if ((is_page()) && ($wp_query->post->ID == $this->GetOption('page_id'))) :
             
                 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+                $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
                 
                 if ( isset($_GET['key']) )
                     $action = 'resetpass';
                     
                 if ($_GET['show'] == 'profile') {
-                    add_filter('the_content', array(&$this, 'Profile'));
+                    if (is_user_logged_in()) {
+                        add_filter('the_content', array(&$this, 'Profile'));
+                    } else {
+                        wp_redirect('wp-login.php');
+                        exit;
+                    }
                 } else {
 
                     switch ($action) {
@@ -487,8 +506,11 @@ if (!class_exists('ThemeMyLogin')) {
             exit();
         }
         
-        function LostPassword() {
-            include 'includes/lost-password.php';
+        function LostPassword($content) {
+            if (strpos($content, '[theme-my-login]') !== false)
+                include 'includes/lost-password.php';
+            else
+                return $content;
         }
         
         function ResetPass() {
@@ -545,16 +567,25 @@ if (!class_exists('ThemeMyLogin')) {
             exit();
         }
         
-        function Register() {
-            include 'includes/register.php';
+        function Register($content) {
+            if (strpos($content, '[theme-my-login]') !== false)
+                include 'includes/register.php';
+            else
+                return $content;
         }
         
-        function Login() {
-            include 'includes/login.php';
+        function Login($content) {
+            if (strpos($content, '[theme-my-login]') !== false)
+                include 'includes/login.php';
+            else
+                return $content;
         }
         
-        function Profile() {
-            include 'includes/profile.php';
+        function Profile($content) {
+            if (strpos($content, '[theme-my-login]') !== false)
+                include 'includes/profile.php';
+            else
+                return $content;
         }
         
         function ProfileJS ( ) {

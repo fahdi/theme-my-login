@@ -9,7 +9,7 @@ $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) :
 
 ?>
 
-    <form name="lostpasswordform" id="lostpasswordform" action="" method="post">
+    <form name="lostpasswordform" id="lostpasswordform" action="<?php echo $this->QueryURL(); ?>action=lostpassword" method="post">
     <p>
         <label><?php _e('Username or E-mail:') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" tabindex="10" /></label>
