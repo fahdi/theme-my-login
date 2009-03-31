@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0
+Version: 2.0.1
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -22,13 +22,17 @@ Version History
 1.2.0 - 2009-03-26
     Added capability to customize page titles for all pages affected by plugin
 2.0.0 - 2009-03-27
-    Completely revamped plugin to use page template, no more specifying template files & HTML
+    Completely rewrote plugin to use page template, no more specifying template files & HTML
+2.0.1 - 2009-03-30
+    Fixed a bug that redirected users who were not yet logged in to profile page
 */
 
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
         var $options = array();
+        var $is_login = false;
+        var $errors = '';
 
         function ThemeMyLogin() {
             $this->__construct();
@@ -40,14 +44,15 @@ if (!class_exists('ThemeMyLogin')) {
 
             add_action('init', array(&$this, 'Init'));
             add_action('admin_menu', array(&$this, 'AddAdminPage'));
+            
+            add_action('wp_print_scripts', array(&$this, 'DoLogin'));
 
             add_filter('wp_title', array(&$this, 'WPTitle'));
             add_filter('the_title', array(&$this, 'TheTitle'));
-            add_filter('the_content', array(&$this, 'TheContent'));
             
             add_filter('wp_list_pages_excludes', array(&$this, 'ListPagesExcludes'));
-
-            if ($_GET['profile'] == true) {
+            
+            if ($_GET['show'] == 'profile') {
                 add_action('wp_head', array(&$this, 'ProfileJS'));
                 add_action('wp_head', array(&$this, 'ProfileCSS'));
                 wp_enqueue_script('jquery');
@@ -65,7 +70,9 @@ if (!class_exists('ThemeMyLogin')) {
                 'post_status' => 'publish',
                 'post_type' => 'page',
                 'post_author' => 1,
-                'post_content' => 'Please do not edit or remove me!'
+                'post_content' => 'Please do not edit or remove me!',
+                'commen_status' => 'closed',
+                'ping_status' => 'closed'
                 );
 
                 $theme_my_login = wp_insert_post($insert);
@@ -144,7 +151,7 @@ if (!class_exists('ThemeMyLogin')) {
         function QueryURL() {
             global $wp_rewrite;
 
-            $url = get_permalink( $this->GetOption( 'page_id' ) );
+            $url = get_permalink( $this->GetOption('page_id') );
 
             if ($wp_rewrite->using_permalinks())
                 return $url . '?';
@@ -156,51 +163,226 @@ if (!class_exists('ThemeMyLogin')) {
             global $pagenow;
             
             $this->LoadOptions();
-
             $url = $this->QueryURL();
-
-            if ( is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
-                $redirect_to = $url . 'profile=true';
+            
+            if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
+                $url = $url . 'show=profile';
                 if ($_GET['updated'] == true)
-                    $redirect_to = $redirect_to . '&updated=true';
-                wp_safe_redirect($redirect_to);
-                die();
+                    $url = $url . '&updated=true';
+                wp_safe_redirect($url);
+                exit;
             }
 
             switch ($pagenow) {
                 case 'wp-register.php':
                 case 'wp-login.php':
-                    if (isset($_GET))
+                    if (isset($_GET)) :
                         $count = 1;
-                        foreach($_GET as $key => $value) {
-                            if (strpos($url, '?') !== false)
+                        foreach($_GET as $key => $value) :
+                            if (strpos($url, '?') !== false) :
                                 if ($count == 1)
                                     $url .= $key . '=' . $value;
                                 else
                                     $url .= '&' . $key . '=' . $value;
-                            else
+                            else :
                                 $url .= '?' . $key . '=' . $value;
-                                
+                            endif;
                             $count++;
-                        }
-                        wp_safe_redirect($url);
-                        die();
+                        endforeach;
+                    else :
+                        $url = get_permalink( $this->GetOption('page_id') );
+                    endif;
+                    wp_safe_redirect($url);
+                    exit;
                     break;
             }
+            
+            $this->errors = new WP_Error();
+            
+            $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+            if ( isset($_GET['key']) )
+                $action = 'resetpass';
+            
+            nocache_headers();
+
+            if ( defined('RELOCATE') ) { // Move flag is set
+                if ( isset( $_SERVER['PATH_INFO'] ) && ($_SERVER['PATH_INFO'] != $_SERVER['PHP_SELF']) )
+                    $_SERVER['PHP_SELF'] = str_replace( $_SERVER['PATH_INFO'], '', $_SERVER['PHP_SELF'] );
+
+                $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+                if ( dirname($schema . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']) != get_option('siteurl') )
+                    update_option('siteurl', dirname($schema . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']) );
+            }
+
+            //Set a cookie now to see if they are supported by the browser.
+            setcookie(TEST_COOKIE, 'Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
+            if ( SITECOOKIEPATH != COOKIEPATH )
+                setcookie(TEST_COOKIE, 'Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN);
+            
+            if (isset($_POST['show']) && $_POST['show'] == 'profile') {
+                if ( !$user_id ) {
+                    $current_user = wp_get_current_user();
+                    $user_id = $current_user->ID;
+                    if (!$user_id) {
+                        wp_redirect('wp-login.php');
+                        exit;
+                    }
+                }
+            }
+            
+            switch ($action) :
+            case 'logout':
+                $this->Logout();
+                break;
+            case 'lostpassword':
+            case 'retrievepassword':
+                require('includes/compat.php');
+                if ( $_POST ) {
+                    $this->errors = retrieve_password();
+                    if ( !is_wp_error($this->errors) ) {
+                        wp_redirect('wp-login.php?checkemail=confirm');
+                        exit();
+                    }
+                }
+                break;
+            case 'register':
+                require('includes/compat.php');
+                if ( !get_option('users_can_register') ) {
+                    wp_redirect('wp-login.php?registration=disabled');
+                    exit();
+                }
+
+                $user_login = '';
+                $user_email = '';
+                if ( $_POST ) {
+                    require_once( ABSPATH . WPINC . '/registration.php');
+    
+                    $user_login = $_POST['user_login'];
+                    $user_email = $_POST['user_email'];
+                    $this->errors = register_new_user($user_login, $user_email);
+                    if ( !is_wp_error($this->errors) ) {
+                        wp_redirect('wp-login.php?checkemail=registered');
+                        exit();
+                    }
+                }
+                break;
+            case 'login':
+                $secure_cookie = '';
+
+                // If the user wants ssl but the session is not ssl, force a secure cookie.
+                if ( !empty($_POST['log']) && !force_ssl_admin() ) {
+                    $user_name = sanitize_user($_POST['log']);
+                    if ( $user = get_userdatabylogin($user_name) ) {
+                        if ( get_user_option('use_ssl', $user->ID) ) {
+                            $secure_cookie = true;
+                            force_ssl_admin(true);
+                        }
+                    }
+                }
+
+                if ( isset( $_REQUEST['redirect_to'] ) ) {
+                    $redirect_to = $_REQUEST['redirect_to'];
+                    // Redirect to https if user wants ssl
+                    if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
+                        $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
+                } else {
+                    $redirect_to = $this->GetOption('login_redirect');
+                }
+
+                if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() && ( 0 !== strpos($redirect_to, 'https') ) && ( 0 === strpos($redirect_to, 'http') ) )
+                    $secure_cookie = false;
+
+                $user = wp_signon('', $secure_cookie);
+
+                $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
+
+                if ( !is_wp_error($user) ) {
+                    // If the user can't edit posts, send them to their profile.
+                    if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' ) )
+                        $redirect_to = admin_url('profile.php');
+                    wp_safe_redirect($redirect_to);
+                    exit();
+                }
+                
+                $this->errors = $user;
+                
+                break;
+                
+            case 'update':
+                if (isset($_POST['from']) && $_POST['from'] == 'profile') {
+                
+                    if ( !$user_id ) {
+                        $current_user = wp_get_current_user();
+                        $user_id = $current_user->ID;
+                        if (!$user_id) {
+                            wp_redirect('wp-login.php');
+                            exit;
+                        }
+                    }
+
+                    //include ABSPATH . '/wp-admin/includes/misc.php';
+                    include ABSPATH . '/wp-admin/includes/user.php';
+                    include ABSPATH . 'wp-includes/registration-functions.php';
+                    
+                    check_admin_referer('update-user_' . $user_id);
+
+                    if ( !current_user_can('edit_user', $user_id) )
+                        wp_die(__('You do not have permission to edit this user.'));
+
+                    do_action('personal_options_update');
+
+                    $this->errors = edit_user($user_id);
+
+                    if ( !is_wp_error( $this->errors ) ) {
+                        $redirect = 'wp-admin/profile.php?updated=true';
+                        $redirect = add_query_arg('wp_http_referer', urlencode($wp_http_referer), $redirect);
+                        wp_redirect($redirect);
+                        exit;
+                    }
+                }
+                break;
+            endswitch;
         }
         
-        function TheContent($content) {
-            if (is_page($this->GetOption('page_id'))) {
-                if (isset($_GET['profile']))
-                    $this->DoProfile();
-                else
-                    $this->DoLogin();
-            } else return $content;
+        function DoLogin() {
+            global $wp_query;
+            
+            if ((is_page()) && ($wp_query->post->ID == $this->GetOption('page_id'))) :
+            
+                $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+                
+                if ( isset($_GET['key']) )
+                    $action = 'resetpass';
+                    
+                if ($_GET['show'] == 'profile') {
+                    add_filter('the_content', array(&$this, 'Profile'));
+                } else {
+
+                    switch ($action) {
+                    case 'lostpassword' :
+                    case 'retrievepassword' :
+                        add_filter('the_content', array(&$this, 'LostPassword'));
+                        break;
+                    case 'resetpass' :
+                    case 'rp' :
+                        $this->ResetPass();
+                        break;
+                    case 'register' :
+                        add_filter('the_content', array(&$this, 'Register'));
+                        break;
+                    case 'login' :
+                    default:
+                        add_filter('the_content', array(&$this, 'Login'));
+                        break;
+                    }
+                }
+            endif;
         }
 
         function WPTitle($title) {
-            if ( strpos($title, 'Theme My Login') !== false ) {
-                if (isset($_GET['profile']))
+            if (is_page($this->GetOption('page_id'))) {
+                if ($_GET['show'] == 'profile')
                     return str_replace('%blogname%', get_option('blogname'), $this->GetOption('profile_title'));
                     
                 switch ($_GET['action']) {
@@ -221,8 +403,8 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function TheTitle($title) {
-            if ( strpos($title, 'Theme My Login') !== false ) {
-                if (isset($_GET['profile']))
+            if ($title == 'Login') {
+                if ($_GET['show'] == 'profile')
                     return $this->GetOption('profile_text');
 
                 switch ($_GET['action']) {
@@ -286,126 +468,92 @@ if (!class_exists('ThemeMyLogin')) {
 
             }
         }
+        
+        function Logout() {
+            if ($wp_version > '2.6')
+                check_admin_referer('log-out');
+            wp_logout();
 
-        function DoLogin() {
-            
-            $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-            $errors = new WP_Error();
-
-            if ( isset($_GET['key']) )
-                $action = 'resetpass';
-
-            nocache_headers();
-
-            if ( defined('RELOCATE') ) { // Move flag is set
-                if ( isset( $_SERVER['PATH_INFO'] ) && ($_SERVER['PATH_INFO'] != $_SERVER['PHP_SELF']) )
-                    $_SERVER['PHP_SELF'] = str_replace( $_SERVER['PATH_INFO'], '', $_SERVER['PHP_SELF'] );
-
-                $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
-                if ( dirname($schema . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']) != get_option('siteurl') )
-                    update_option('siteurl', dirname($schema . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']) );
+            if ($this->GetOption('logout_redirect')) {
+                $redirect_to = $this->GetOption('logout_redirect');
+            } else {
+                if ( isset( $_REQUEST['redirect_to'] ) )
+                    $redirect_to = $_REQUEST['redirect_to'];
+                else
+                    $redirect_to = 'wp-login.php';
             }
 
-            //Set a cookie now to see if they are supported by the browser.
-            setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
-            if ( SITECOOKIEPATH != COOKIEPATH )
-                setcookie(TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN);
-
-            $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
-            switch ($action) :
-
-            case 'logout' :
-                if ($wp_version > '2.6')
-                    check_admin_referer('log-out');
-                wp_logout();
-
-                if ($this->GetOption('logout_redirect')) {
-                    $redirect_to = $this->GetOption('logout_redirect');
-                } else {
-                    if ( isset( $_REQUEST['redirect_to'] ) )
-                        $redirect_to = $_REQUEST['redirect_to'];
-                    else
-                        $redirect_to = 'wp-login.php';
-                }
-
-                wp_safe_redirect($redirect_to);
-                exit();
-                break;
-
-            case 'lostpassword' :
-            case 'retrievepassword' :
-                include 'includes/lost-password.php';
-                break;
-
-            case 'resetpass' :
-            case 'rp' :
-            
-                if (!function_exists('reset_password')) :
-                function reset_password($key) {
-                    global $wpdb;
-                    
-                    require('includes/wp271-functions.php');
-
-                    $key = preg_replace('/[^a-z0-9]/i', '', $key);
-
-                    if ( empty( $key ) )
-                        return new WP_Error('invalid_key', __('Invalid key'));
-
-                    $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s", $key));
-                    if ( empty( $user ) )
-                        return new WP_Error('invalid_key', __('Invalid key'));
-
-                    do_action('password_reset', $user);
-
-                    // Generate something random for a password...
-                    $new_pass = wp_generate_password();
-                    wp_set_password($new_pass, $user->ID);
-                    $message  = sprintf(__('Username: %s'), $user->user_login) . "\r\n";
-                    $message .= sprintf(__('Password: %s'), $new_pass) . "\r\n";
-                    $message .= site_url('wp-login.php', 'login') . "\r\n";
-
-                    if (  !wp_mail($user->user_email, sprintf(__('[%s] Your new password'), get_option('blogname')), $message) )
-                        die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
-
-                    if ( !function_exists('wp_password_change_notification') ) :
-                    function wp_password_change_notification(&$user) {
-                        if ( $user->user_email != get_option('admin_email') ) {
-                            $message = sprintf(__('Password Lost and Changed for user: %s'), $user->user_login) . "\r\n";
-                            wp_mail(get_option('admin_email'), sprintf(__('[%s] Password Lost/Changed'), get_option('blogname')), $message);
-                        }
-                    }
-                    endif;
-
-                    wp_password_change_notification($user);
-
-                    return true;
-                }
-                endif;
-                
-                $errors = reset_password($_GET['key']);
-
-                if ( ! is_wp_error($errors) ) {
-                    wp_redirect('wp-login.php?checkemail=newpass');
-                    exit();
-                }
-
-                wp_redirect('wp-login.php?action=lostpassword&error=invalidkey');
-                exit();
-
-                break;
-
-            case 'register' :
-                include 'includes/register.php';
-                break;
-
-            case 'login' :
-            default:
-                include 'includes/login.php';
-                break;
-            endswitch;
+            wp_safe_redirect($redirect_to);
+            exit();
         }
         
-        function DoProfile() {
+        function LostPassword() {
+            include 'includes/lost-password.php';
+        }
+        
+        function ResetPass() {
+            if (!function_exists('reset_password')) :
+            function reset_password($key) {
+                global $wpdb;
+
+                require('includes/compat.php');
+
+                $key = preg_replace('/[^a-z0-9]/i', '', $key);
+
+                if ( empty( $key ) )
+                    return new WP_Error('invalid_key', __('Invalid key'));
+
+                $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s", $key));
+                if ( empty( $user ) )
+                    return new WP_Error('invalid_key', __('Invalid key'));
+
+                do_action('password_reset', $user);
+
+                // Generate something random for a password...
+                $new_pass = wp_generate_password();
+                wp_set_password($new_pass, $user->ID);
+                $message  = sprintf(__('Username: %s'), $user->user_login) . "\r\n";
+                $message .= sprintf(__('Password: %s'), $new_pass) . "\r\n";
+                $message .= site_url('wp-login.php', 'login') . "\r\n";
+
+                if (  !wp_mail($user->user_email, sprintf(__('[%s] Your new password'), get_option('blogname')), $message) )
+                    die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
+
+                if ( !function_exists('wp_password_change_notification') ) :
+                function wp_password_change_notification(&$user) {
+                    if ( $user->user_email != get_option('admin_email') ) {
+                        $message = sprintf(__('Password Lost and Changed for user: %s'), $user->user_login) . "\r\n";
+                        wp_mail(get_option('admin_email'), sprintf(__('[%s] Password Lost/Changed'), get_option('blogname')), $message);
+                    }
+                }
+                endif;
+
+                wp_password_change_notification($user);
+
+                return true;
+            }
+            endif;
+
+            $errors = reset_password($_GET['key']);
+
+            if ( ! is_wp_error($errors) ) {
+                wp_redirect('wp-login.php?checkemail=newpass');
+                exit();
+            }
+
+            wp_redirect('wp-login.php?action=lostpassword&error=invalidkey');
+            exit();
+        }
+        
+        function Register() {
+            include 'includes/register.php';
+        }
+        
+        function Login() {
+            include 'includes/login.php';
+        }
+        
+        function Profile() {
             include 'includes/profile.php';
         }
         
