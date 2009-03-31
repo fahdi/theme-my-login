@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.1
+Version: 2.0
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -23,8 +23,6 @@ Version History
     Added capability to customize page titles for all pages affected by plugin
 2.0.0 - 2009-03-27
     Completely rewrote plugin to use page template, no more specifying template files & HTML
-2.0.1 - 2009-03-30
-    Fixed a bug that redirected users who were not yet logged in to profile page
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -165,7 +163,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->LoadOptions();
             $url = $this->QueryURL();
             
-            if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
+            if ( is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
                 $url = $url . 'show=profile';
                 if ($_GET['updated'] == true)
                     $url = $url . '&updated=true';
@@ -200,6 +198,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->errors = new WP_Error();
             
             $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+            $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 
             if ( isset($_GET['key']) )
                 $action = 'resetpass';
@@ -238,7 +237,7 @@ if (!class_exists('ThemeMyLogin')) {
             case 'lostpassword':
             case 'retrievepassword':
                 require('includes/compat.php');
-                if ( $_POST ) {
+                if ( $http_post ) {
                     $this->errors = retrieve_password();
                     if ( !is_wp_error($this->errors) ) {
                         wp_redirect('wp-login.php?checkemail=confirm');
@@ -255,7 +254,7 @@ if (!class_exists('ThemeMyLogin')) {
 
                 $user_login = '';
                 $user_email = '';
-                if ( $_POST ) {
+                if ( $http_post ) {
                     require_once( ABSPATH . WPINC . '/registration.php');
     
                     $user_login = $_POST['user_login'];
@@ -351,6 +350,7 @@ if (!class_exists('ThemeMyLogin')) {
             if ((is_page()) && ($wp_query->post->ID == $this->GetOption('page_id'))) :
             
                 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+                $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
                 
                 if ( isset($_GET['key']) )
                     $action = 'resetpass';
