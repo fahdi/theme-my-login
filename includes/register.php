@@ -1,6 +1,6 @@
 <?php
 
-if ($http_post) {
+if ( $_POST ) {
     $user_login = $_POST['user_login'];
     $user_email = $_POST['user_email'];
 }

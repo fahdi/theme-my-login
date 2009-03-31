@@ -219,8 +219,6 @@ if (!class_exists('ThemeMyLogin')) {
             setcookie(TEST_COOKIE, 'Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
             if ( SITECOOKIEPATH != COOKIEPATH )
                 setcookie(TEST_COOKIE, 'Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN);
-                
-            $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
             
             if (isset($_POST['show']) && $_POST['show'] == 'profile') {
                 if ( !$user_id ) {
@@ -240,7 +238,7 @@ if (!class_exists('ThemeMyLogin')) {
             case 'lostpassword':
             case 'retrievepassword':
                 require('includes/compat.php');
-                if ( $http_post ) {
+                if ( $_POST ) {
                     $this->errors = retrieve_password();
                     if ( !is_wp_error($this->errors) ) {
                         wp_redirect('wp-login.php?checkemail=confirm');
@@ -257,7 +255,7 @@ if (!class_exists('ThemeMyLogin')) {
 
                 $user_login = '';
                 $user_email = '';
-                if ( $http_post ) {
+                if ( $_POST ) {
                     require_once( ABSPATH . WPINC . '/registration.php');
     
                     $user_login = $_POST['user_login'];
@@ -353,7 +351,6 @@ if (!class_exists('ThemeMyLogin')) {
             if ((is_page()) && ($wp_query->post->ID == $this->GetOption('page_id'))) :
             
                 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-                $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
                 
                 if ( isset($_GET['key']) )
                     $action = 'resetpass';
