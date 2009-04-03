@@ -51,6 +51,7 @@ if (!class_exists('ThemeMyLogin')) {
             add_action('init', array(&$this, 'Init'));
             add_action('init', array(&$this, 'ReInit'));
             
+            add_filter('wp_head', array(&$this, 'WPHead'));
             add_filter('wp_title', array(&$this, 'WPTitle'));
             add_filter('the_title', array(&$this, 'TheTitle'));
             add_filter('wp_list_pages_excludes', array(&$this, 'ListPagesExcludes'));
@@ -230,6 +231,10 @@ if (!class_exists('ThemeMyLogin')) {
         
         function DisplayLogin() {
             include 'includes/wp-login-forms.php';
+        }
+        
+        function WPHead() {
+            echo '<!--Theme My Login Version ' . $this->version . '-->';
         }
 
         function WPTitle($title) {
