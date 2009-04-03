@@ -48,7 +48,8 @@ case 'logout' :
         check_admin_referer('log-out');
     wp_logout();
 
-    $redirect_to = 'wp-login.php?loggedout=true';
+
+    $redirect_to = get_option('siteurl') . '/wp-login.php?loggedout=true';
     if ( isset( $_REQUEST['redirect_to'] ) )
         $redirect_to = $_REQUEST['redirect_to'];
 
@@ -60,7 +61,7 @@ case 'retrievepassword' :
     if ( $http_post ) {
         $this->errors = retrieve_password();
         if ( !is_wp_error($this->errors) ) {
-            wp_redirect('wp-login.php?checkemail=confirm');
+            wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=confirm');
             exit();
         }
     }
@@ -73,16 +74,16 @@ case 'rp' :
     $this->errors = reset_password($_GET['key']);
 
     if ( ! is_wp_error($this->errors) ) {
-        wp_redirect('wp-login.php?checkemail=newpass');
+        wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=newpass');
         exit();
     }
 
-    wp_redirect('wp-login.php?action=lostpassword&error=invalidkey');
+    wp_redirect(get_option('siteurl') . '/wp-login.php?action=lostpassword&error=invalidkey');
     exit();
     break;
 case 'register' :
     if ( !get_option('users_can_register') ) {
-        wp_redirect('wp-login.php?registration=disabled');
+        wp_redirect(get_option('siteurl') . '/wp-login.php?registration=disabled');
         exit();
     }
     
@@ -94,7 +95,7 @@ case 'register' :
         $this->errors = register_new_user($user_login, $user_email);
         
         if ( !is_wp_error($this->errors) ) {
-            wp_redirect('wp-login.php?checkemail=registered');
+            wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=registered');
             exit();
         }
     }

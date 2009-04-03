@@ -29,7 +29,7 @@ case 'update':
     $this->errors = edit_user($user_id);
 
     if ( !is_wp_error( $this->errors ) ) {
-        $redirect = ('wp-admin/profile.php?updated=true');
+        $redirect = (admin_url('profile.php') . '?updated=true');
         wp_redirect($redirect);
         exit;
     }
