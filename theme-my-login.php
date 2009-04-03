@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.3
+Version: 2.0.4
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -29,6 +29,8 @@ Version History
     Fixed a bug that broke new user registration and a bug that broke other plugins that use 'the_content' filter
 2.0.3 - 2009-04-02
     Fixed various reported bugs and cleaned up code
+2.0.4 - 2009-04-03
+    Fixed a bug regarding relative URL's in redirection
 */
 
 if (!class_exists('ThemeMyLogin')) {

@@ -4,7 +4,7 @@ Donate link: http://webdesign.jaedub.com
 Tags: wordpress, login, register, theme, form, james kelly
 Requires at least: 2.5
 Tested up to: 2.7.1
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 
 This plugin themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
 
@@ -57,3 +57,4 @@ Now you can save your changes and go test out your new themed login and registra
 * 2.0.1 - 2009-03-30 - Fixed a bug that redirected users who were not yet logged in to profile page
 * 2.0.2 - 2009-03-31 - Fixed a bug that broke new user registration and a bug that broke other plugins that use 'the_content' filter
 * 2.0.3 - 2009-04-02 - Fixed various reported bugs and cleaned up code
+* 2.0.4 - 2009-04-03 - Fixed a bug regarding relative URL's in redirection
