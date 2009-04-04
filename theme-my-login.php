@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.4
+Version: 2.0.5
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -26,11 +26,13 @@ Version History
 2.0.1 - 2009-03-30
     Fixed a bug that redirected users who were not yet logged in to profile page
 2.0.2 - 2009-03-31
-    Fixed a bug that broke new user registration and a bug that broke other plugins that use 'the_content' filter
+    Fixed a bug that broke registration and broke other plugins using the_content filter
 2.0.3 - 2009-04-02
     Fixed various reported bugs and cleaned up code
 2.0.4 - 2009-04-03
     Fixed a bug regarding relative URL's in redirection
+2.0.5 - 2009-04-04
+    Fixed a bug with default redirection and hid the login form from logged in users
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -83,6 +85,11 @@ if (!class_exists('ThemeMyLogin')) {
                 $page_id = $theme_my_login->ID;
             }
             
+            if ($this->GetOption('login_redirect') == 'wp-admin/')
+                $this->SetOption('login_redirect', admin_url());
+            if ($this->GetOption('logout_redirect') == 'wp-login.php?loggedout=true')
+                $this->SetOption('logout_redirect', site_url('wp-login.php?loggedout=true', 'login'));
+            
             $this->SetOption('page_id', $page_id);
             $this->SaveOptions();
         }
@@ -98,8 +105,8 @@ if (!class_exists('ThemeMyLogin')) {
         function InitOptions() {
             $this->options['chk_uninstall']     = 0;
             $this->options['page_id']           = '0';
-            $this->options['login_redirect']    = 'wp-admin/';
-            $this->options['logout_redirect']   = 'wp-login.php?loggedout=true';
+            $this->options['login_redirect']    = admin_url();
+            $this->options['logout_redirect']   = site_url('wp-login.php?loggedout=true', 'login');
             $this->options['login_title']       = '%blogname% &rsaquo; Log In';
             $this->options['login_text']        = 'Log In';
             $this->options['register_title']    = '%blogname% &rsaquo; Register';
@@ -200,7 +207,10 @@ if (!class_exists('ThemeMyLogin')) {
             switch ($pagenow) {
                 case 'wp-register.php':
                 case 'wp-login.php':
-                    $redirect_to = $this->ArgURL($permalink, $_GET);
+                    if ( is_user_logged_in() && $_REQUEST['action'] != 'logout' )
+                        $redirect_to = admin_url('profile.php');
+                    else
+                        $redirect_to = $this->ArgURL($permalink, $_GET);
                     wp_safe_redirect($redirect_to);
                     exit;
                     break;

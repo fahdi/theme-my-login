@@ -54,14 +54,14 @@ if ( $_POST ) {
             <th scope="row"><label for="login_redirect"><?php _e('Redirect on Login'); ?></label></th>
             <td>
                 <input name="login_redirect" type="text" id="login_redirect" value="<?php echo( htmlspecialchars ( $this->GetOption('login_redirect') ) ); ?>" class="regular-text" />
-                <span class="setting-description"><?php _e('Defaults to <code>wp-admin/</code>.'); ?></span>
+                <span class="setting-description"><?php _e('Must be an absolute URL.'); ?></span>
             </td>
         </tr>
         <tr valign="top">
             <th scope="row"><label for="logout_redirect"><?php _e('Redirect on Logout'); ?></label></th>
             <td>
                 <input name="logout_redirect" type="text" id="logout_redirect" value="<?php echo( htmlspecialchars ( $this->GetOption('logout_redirect') ) ); ?>" class="regular-text" />
-                <span class="setting-description"><?php _e('Defaults to <code>wp-login.php?loggedout=true</code>.'); ?></span>
+                <span class="setting-description"><?php _e('Must be an absolute URL.'); ?></span>
             </td>
         </tr>
     </table>
@@ -72,7 +72,7 @@ if ( $_POST ) {
             <th scope="row"><label for="register_title"><?php _e('Register Page Title'); ?></label></th>
             <td>
                 <input name="register_title" type="text" id="register_title" value="<?php echo( htmlspecialchars ( $this->GetOption('register_title') ) ); ?>" class="regular-text" />
-                <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Register &rsaquo;'</span>
+                <span class="setting-description">You can use %blogname% for your blog name.'</span>
             </td>
         </tr>
         <tr valign="top">
@@ -93,7 +93,7 @@ if ( $_POST ) {
             <th scope="row"><label for="login_title"><?php _e('Login Page Title'); ?></label></th>
             <td>
                 <input name="login_title" type="text" id="login_title" value="<?php echo( htmlspecialchars ( $this->GetOption('login_title') ) ); ?>" class="regular-text" />
-                <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Log In &rsaquo;'</span>
+                <span class="setting-description">You can use %blogname% for your blog name.'</span>
             </td>
         </tr>
         <tr valign="top">
@@ -107,7 +107,7 @@ if ( $_POST ) {
             <th scope="row"><label for="password_title"><?php _e('Lost Password Page Title'); ?></label></th>
             <td>
                 <input name="password_title" type="text" id="password_title" value="<?php echo( htmlspecialchars ( $this->GetOption('password_title') ) ); ?>" class="regular-text" />
-                <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Lost Password &rsaquo;'</span>
+                <span class="setting-description">You can use %blogname% for your blog name.'</span>
             </td>
         </tr>
         <tr valign="top">
@@ -121,7 +121,7 @@ if ( $_POST ) {
             <th scope="row"><label for="profile_title"><?php _e('Profile Page Title'); ?></label></th>
             <td>
                 <input name="profile_title" type="text" id="profile_title" value="<?php echo( htmlspecialchars ( $this->GetOption('profile_title') ) ); ?>" class="regular-text" />
-                <span class="setting-description">You can use %blogname% for your blog name. Defaults to 'Profile &rsaquo;'</span>
+                <span class="setting-description">You can use %blogname% for your blog name.'</span>
             </td>
         </tr>
         <tr valign="top">
