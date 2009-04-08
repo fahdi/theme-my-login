@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.5
+Version: 2.0.6
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -33,6 +33,8 @@ Version History
     Fixed a bug regarding relative URL's in redirection
 2.0.5 - 2009-04-04
     Fixed a bug with default redirection and hid the login form from logged in users
+2.0.6 - 2009-04-08
+    Added the option to turn on/off subscriber profile theming
 */
 
 if (!class_exists('ThemeMyLogin')) {
@@ -197,7 +199,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->LoadOptions();
             $permalink = $this->QueryURL();
             
-            if ( is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
+            if ( $this->GetOption('theme_profile') && is_user_logged_in() && is_admin() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
                 $_GET['profile'] = true;
                 $redirect_to = $this->ArgURL($permalink, $_GET);
                 wp_safe_redirect($redirect_to);
@@ -218,7 +220,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function ReInit() {
-            if ($_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
+            if ($this->GetOption('theme_profile') && $_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
                 include 'includes/profile-actions.php';
             else
                 include 'includes/wp-login-actions.php';
@@ -226,7 +228,7 @@ if (!class_exists('ThemeMyLogin')) {
         
         function TheContent($content) {
             if (strpos($content, '[theme-my-login]') !== false) {
-                if ($_GET['profile'] && is_user_logged_in())
+                if ($this->GetOption('theme_profile') && $_GET['profile'] && is_user_logged_in())
                     return $this->DisplayProfile();
                 else
                     return $this->DisplayLogin();

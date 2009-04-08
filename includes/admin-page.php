@@ -9,6 +9,7 @@ if ( $_POST ) {
     $this->SetOption('chk_uninstall', stripslashes($_POST['chk_uninstall']));
     $this->SetOption('login_redirect', stripslashes($_POST['login_redirect']));
     $this->SetOption('logout_redirect', stripslashes($_POST['logout_redirect']));
+    $this->SetOption('theme_profile', stripslashes($_POST['theme_profile']));
     $this->SetOption('login_title', stripslashes($_POST['login_title']));
     $this->SetOption('login_text', stripslashes($_POST['login_text']));
     $this->SetOption('register_title', stripslashes($_POST['register_title']));
@@ -68,6 +69,13 @@ if ( $_POST ) {
 
     <h3><?php _e('Template Settings'); ?></h3>
     <table class="form-table">
+        <tr valign="top">
+            <th scope="row"><label for="theme_profile"><?php _e('Theme Profile?'); ?></label></th>
+            <td>
+                <input name="theme_profile" type="checkbox" id="theme_profile" value="1" <?php if ($this->GetOption('theme_profile')) { echo 'checked="checked"'; } ?> />
+                <span class="setting-description"><?php _e('Check here to theme subscriber\'s profile. This is known to cause issues with plugins that have a user administration menu.'); ?></span>
+            </td>
+        </tr>
         <tr valign="top">
             <th scope="row"><label for="register_title"><?php _e('Register Page Title'); ?></label></th>
             <td>
