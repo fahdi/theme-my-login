@@ -62,7 +62,7 @@ if (!class_exists('ThemeMyLogin')) {
             
             add_action('admin_menu', array(&$this, 'AddAdminPage'));
             add_action('init', array(&$this, 'Init'));
-            add_action('wp_print_scripts', array(&$this, 'WPPrintScripts'));
+            add_action('parse_request', array(&$this, 'ParseRequest'));
             
             add_filter('wp_head', array(&$this, 'WPHead'));
             add_filter('wp_title', array(&$this, 'WPTitle'));
@@ -227,8 +227,11 @@ if (!class_exists('ThemeMyLogin')) {
             }
         }
 
-        function WPPrintScripts() {
-            if (is_page($this->GetOption('page_id'))) {
+        function ParseRequest() {
+            global $wp;
+            $page_id = $wp->query_vars['page_id'];
+            
+            if ($this->GetOption('page_id') == $page_id) {
                 if ($this->GetOption('theme_profile') && $_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
                     include 'includes/profile-actions.php';
                 else
