@@ -229,10 +229,10 @@ if (!class_exists('ThemeMyLogin')) {
 
         function ParseRequest() {
             global $wp;
-            $page_id = $wp->query_vars['page_id'];
+            $page_id = isset($wp->query_vars['page_id']) ? $wp->query_vars['page_id'] : false;
             
             if ($this->GetOption('page_id') == $page_id) {
-                if ($this->GetOption('theme_profile') && $_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
+                if ($this->GetOption('theme_profile') && isset($_GET['profile']) && isset($_REQUEST['action']) && $_REQUEST['action'] == 'update' && is_user_logged_in())
                     include 'includes/profile-actions.php';
                 else
                     include 'includes/wp-login-actions.php';
@@ -241,7 +241,7 @@ if (!class_exists('ThemeMyLogin')) {
         
         function TheContent($content) {
             if (strpos($content, '[theme-my-login]') !== false) {
-                if ($this->GetOption('theme_profile') && $_GET['profile'] && is_user_logged_in())
+                if ($this->GetOption('theme_profile') && isset($_GET['profile']) && is_user_logged_in())
                     return $this->DisplayProfile();
                 else
                     return $this->DisplayLogin();
@@ -264,9 +264,10 @@ if (!class_exists('ThemeMyLogin')) {
 
         function WPTitle($title) {
             if (is_page($this->GetOption('page_id'))) {
-                if ($_GET['profile'] && is_user_logged_in())
+                if (isset($_GET['profile']) && is_user_logged_in())
                     return str_replace('%blogname%', get_option('blogname'), $this->GetOption('profile_title'));
                     
+                if (isset($_GET['action'])) :
                 switch ($_GET['action']) {
                     case 'register':
                         return str_replace('%blogname%', get_option('blogname'), $this->GetOption('register_title'));
@@ -281,14 +282,16 @@ if (!class_exists('ThemeMyLogin')) {
                     default:
                         return str_replace('%blogname%', get_option('blogname'), $this->GetOption('login_title'));
                 }
+                endif;
             } return $title;
         }
         
         function TheTitle($title) {
             if ($title == 'Login') {
-                if ($_GET['profile'] && is_user_logged_in())
+                if (isset($_GET['profile']) && is_user_logged_in())
                     return $this->GetOption('profile_text');
 
+                if (isset($_GET['action'])) :
                 switch ($_GET['action']) {
                     case 'register':
                         return $this->GetOption('register_text');
@@ -303,6 +306,7 @@ if (!class_exists('ThemeMyLogin')) {
                     default:
                         return $this->GetOption('login_text');
                 }
+                endif;
             } return $title;
         }
         
