@@ -4,13 +4,14 @@ require('wp-login-functions.php');
 require_once ABSPATH . '/wp-admin/includes/misc.php';
 require_once ABSPATH . '/wp-admin/includes/user.php';
 
-if ( !$user_id ) {
+if ( !isset($user_id) ) {
     $current_user = wp_get_current_user();
     $user_id = $current_user->ID;
 }
 
 wp_reset_vars(array('action', 'redirect', 'profile', 'user_id', 'wp_http_referer'));
-$wp_http_referer = remove_query_arg(array('update', 'delete_count'), stripslashes($wp_http_referer));
+if (isset($wp_http_referer))
+    $wp_http_referer = remove_query_arg(array('update', 'delete_count'), stripslashes($wp_http_referer));
 $user_id = (int) $user_id;
 
 $profileuser = get_user_to_edit($user_id);
@@ -19,14 +20,14 @@ if ( !current_user_can('edit_user', $user_id) )
 
 login_header('', $this->errors);
 
-if ($_GET['updated'] == true) {
+if (isset($_GET['updated']) && $_GET['updated'] == true) {
     echo '<p class="message">Your profile has been updated.</p>';
 }
 ?>
 
 <form name="profile" id="your-profile" action="<?php echo ssl_or_not($this->QueryURL().'profile=1') ?>" method="post">
 <?php wp_nonce_field('update-user_' . $user_id) ?>
-<?php if ( $wp_http_referer ) : ?>
+<?php if ( isset($wp_http_referer) ) : ?>
 <input type="hidden" name="wp_http_referer" value="<?php echo clean_url($wp_http_referer); ?>" />
 <?php endif; ?>
 <p>

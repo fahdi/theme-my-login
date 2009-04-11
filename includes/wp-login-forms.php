@@ -70,13 +70,13 @@ default :
     if ( isset( $_REQUEST['redirect_to'] ) ) {
         $redirect_to = $_REQUEST['redirect_to'];
         // Redirect to https if user wants ssl
-        if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
+        if ( isset($secure_cookie) && false !== strpos($redirect_to, 'wp-admin') )
             $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
     } else {
         $redirect_to = $this->GetOption('login_redirect');
     }
 
-    $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
+    //$redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
 
     // Clear errors if loggedout is set.
     if ( !empty($_GET['loggedout']) )
@@ -102,7 +102,7 @@ default :
 <form name="loginform" id="loginform" action="<?php echo ssl_or_not($this->QueryURL().'action=login') ?>" method="post">
     <p>
         <label><?php _e('Username') ?><br />
-        <input type="text" name="log" id="user_login" class="input" value="<?php echo $user_login; ?>" size="20" tabindex="10" /></label>
+        <input type="text" name="log" id="user_login" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" tabindex="10" /></label>
     </p>
     <p>
         <label><?php _e('Password') ?><br />

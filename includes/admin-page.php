@@ -5,11 +5,12 @@ if ( $_POST ) {
         die( __('Cheatin&#8217; huh?') );
 
     check_admin_referer('tml-settings');
-
-    $this->SetOption('chk_uninstall', stripslashes($_POST['chk_uninstall']));
+    $chk_uninstall = isset($_POST['chk_uninstall']) ? true : false;
+    $theme_profile = isset($_POST['theme_profile']) ? true : false;
+    $this->SetOption('chk_uninstall', $chk_uninstall);
     $this->SetOption('login_redirect', stripslashes($_POST['login_redirect']));
     $this->SetOption('logout_redirect', stripslashes($_POST['logout_redirect']));
-    $this->SetOption('theme_profile', stripslashes($_POST['theme_profile']));
+    $this->SetOption('theme_profile', $theme_profile);
     $this->SetOption('login_title', stripslashes($_POST['login_title']));
     $this->SetOption('login_text', stripslashes($_POST['login_text']));
     $this->SetOption('register_title', stripslashes($_POST['register_title']));
@@ -30,7 +31,7 @@ if ( $_POST ) {
 </div>
 
 <div class="wrap">
-<?php if ( strlen($success) > 0 ) { ?>
+<?php if ( isset($success) && strlen($success) > 0 ) { ?>
     <div id="message" class="updated fade">
         <p><strong><?php _e("<ul>{$success}</ul>"); ?></strong></p>
     </div>
