@@ -1,10 +1,5 @@
 <?php
 
-global $wp_version;
-
-if ($wp_version < '2.6')
-    include 'compat.php';
-
 require('wp-login-functions.php');
 
 $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);

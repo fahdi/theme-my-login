@@ -1,9 +1,4 @@
 <?php
-
-global $wp_version;
-
-if ($wp_version < '2.6')
-    include 'compat.php';
     
 require('wp-login-functions.php');
 require_once ABSPATH . '/wp-admin/includes/misc.php';

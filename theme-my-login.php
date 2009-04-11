@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.6
+Version: 2.0.7
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 
@@ -35,11 +35,20 @@ Version History
     Fixed a bug with default redirection and hid the login form from logged in users
 2.0.6 - 2009-04-08
     Added the option to turn on/off subscriber profile theming
+2.0.7 - 2009-04-10
+    Fixed a bug that broke the Featured Content plugin
 */
+
+
+global $wp_version;
+
+if ($wp_version < '2.6')
+    include 'includes/compat.php';
 
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
+        var $version = '2.0.7';
         var $options = array();
         var $errors = '';
 
@@ -53,7 +62,7 @@ if (!class_exists('ThemeMyLogin')) {
             
             add_action('admin_menu', array(&$this, 'AddAdminPage'));
             add_action('init', array(&$this, 'Init'));
-            add_action('init', array(&$this, 'ReInit'));
+            add_action('parse_request', array(&$this, 'ParseRequest'));
             
             add_filter('wp_head', array(&$this, 'WPHead'));
             add_filter('wp_title', array(&$this, 'WPTitle'));
@@ -63,12 +72,9 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function Activate() {
-            if (get_option('tml_options'))
-                delete_option('tml_options');
-                
             $theme_my_login = get_page_by_title('Login');
-            
-            $insert = array(
+            if ( !$theme_my_login ) {
+                $insert = array(
                 'post_title' => 'Login',
                 'post_status' => 'publish',
                 'post_type' => 'page',
@@ -77,15 +83,8 @@ if (!class_exists('ThemeMyLogin')) {
                 'comment_status' => 'closed',
                 'ping_status' => 'closed'
                 );
-                
-            if (!$theme_my_login) {
-                $theme_my_login = wp_insert_post($insert);
-                $page_id = $theme_my_login;
-            } else {
-                $insert['ID'] = $theme_my_login->ID;
-                wp_update_post($insert);
-                $page_id = $theme_my_login->ID;
-            }
+                $page_id = wp_insert_post($insert);
+            } else $page_id = $theme_my_login->ID;
             
             if ($this->GetOption('login_redirect') == 'wp-admin/')
                 $this->SetOption('login_redirect', admin_url());
@@ -106,6 +105,7 @@ if (!class_exists('ThemeMyLogin')) {
         # Sets up default options
         function InitOptions() {
             $this->options['chk_uninstall']     = 0;
+            $this->options['version']           = $this->version;
             $this->options['page_id']           = '0';
             $this->options['login_redirect']    = admin_url();
             $this->options['logout_redirect']   = site_url('wp-login.php?loggedout=true', 'login');
@@ -216,14 +216,27 @@ if (!class_exists('ThemeMyLogin')) {
                     wp_safe_redirect($redirect_to);
                     exit;
                     break;
+                case 'profile.php':
+                    if ( $this->GetOption('theme_profile') && is_user_logged_in() && current_user_can('edit_posts') === false && !isset($_POST['from']) && $_POST['from'] != 'profile' ) {
+                        $_GET['profile'] = true;
+                        $redirect_to = $this->ArgURL($permalink, $_GET);
+                        wp_safe_redirect($redirect_to);
+                        exit;
+                    }
+                    break;
             }
         }
 
-        function ReInit() {
-            if ($this->GetOption('theme_profile') && $_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
-                include 'includes/profile-actions.php';
-            else
-                include 'includes/wp-login-actions.php';
+        function ParseRequest() {
+            global $wp;
+            $page_id = $wp->query_vars['page_id'];
+            
+            if ($this->GetOption('page_id') == $page_id) {
+                if ($this->GetOption('theme_profile') && $_GET['profile'] && $_REQUEST['action'] == 'update' && is_user_logged_in())
+                    include 'includes/profile-actions.php';
+                else
+                    include 'includes/wp-login-actions.php';
+            }
         }
         
         function TheContent($content) {
@@ -246,7 +259,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function WPHead() {
-            echo '<!--Theme My Login Version ' . $this->version . '-->';
+            echo '<!-- Theme My Login Version ' . $this->version . ' -->' . "\n";
         }
 
         function WPTitle($title) {
