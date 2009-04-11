@@ -1,9 +1,9 @@
 <?php
 
-require('wp-login-functions.php');
-require_once ABSPATH . '/wp-admin/includes/misc.php';
-require_once ABSPATH . '/wp-admin/includes/user.php';
-require_once ABSPATH . WPINC . '/registration.php';
+require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
+require_once (ABSPATH . '/wp-admin/includes/misc.php');
+require_once (ABSPATH . '/wp-admin/includes/user.php');
+require_once (ABSPATH . WPINC . '/registration.php');
 
 if ( !isset($user_id) ) {
     $current_user = wp_get_current_user();

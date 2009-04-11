@@ -2,7 +2,7 @@
 
 global $wp_version;
     
-require('wp-login-functions.php');
+require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
 
 if ( force_ssl_admin() && !is_ssl() ) {
     if ( 0 === strpos($_SERVER['REQUEST_URI'], 'http') ) {
@@ -85,7 +85,7 @@ case 'register' :
     }
     
     if ( $http_post ) {
-        require_once( ABSPATH . WPINC . '/registration.php');
+        require_once (ABSPATH . WPINC . '/registration.php');
 
         $user_login = $_POST['user_login'];
         $user_email = $_POST['user_email'];

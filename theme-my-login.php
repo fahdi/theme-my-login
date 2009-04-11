@@ -3,52 +3,31 @@
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.7
+Version: 2.0.8
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
-
-Version History
-
-1.0.0 - 2009-03-13
-    Initial release version
-1.0.1 - 2009-03-14
-    Made backwards compatible to WordPress 2.5+
-1.1.0 - 2009-03-14
-    Added custom profile to completely hide the back-end from subscribers
-1.1.1 - 2009-03-16
-    Prepared plugin for internationalization and fixed a PHP version bug
-1.1.2 - 2009-03-20
-    Updated to allow customization of text below registration form
-1.2.0 - 2009-03-26
-    Added capability to customize page titles for all pages affected by plugin
-2.0.0 - 2009-03-27
-    Completely rewrote plugin to use page template, no more specifying template files & HTML
-2.0.1 - 2009-03-30
-    Fixed a bug that redirected users who were not yet logged in to profile page
-2.0.2 - 2009-03-31
-    Fixed a bug that broke registration and broke other plugins using the_content filter
-2.0.3 - 2009-04-02
-    Fixed various reported bugs and cleaned up code
-2.0.4 - 2009-04-03
-    Fixed a bug regarding relative URL's in redirection
-2.0.5 - 2009-04-04
-    Fixed a bug with default redirection and hid the login form from logged in users
-2.0.6 - 2009-04-08
-    Added the option to turn on/off subscriber profile theming
-2.0.7 - 2009-04-10
-    Fixed a bug that broke the Featured Content plugin
 */
 
 
 global $wp_version;
 
-if ($wp_version < '2.6')
-    include 'includes/compat.php';
+if ($wp_version < '2.6') {
+    if ( !defined('WP_CONTENT_DIR') )
+        define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+    if ( !defined('WP_CONTENT_URL') )
+        define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
+    if ( !defined('WP_PLUGIN_DIR') )
+        define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+    if ( !defined('WP_PLUGIN_URL') )
+        define( 'WP_PLUGIN_URL', WP_CONTENT_URL . '/plugins' );
+        
+    require (WP_PLUGIN_DIR . '/theme-my-login/includes/compat.php');
+}
 
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '2.0.7';
+        var $version = '2.0.8';
         var $options = array();
         var $errors = '';
 
@@ -158,7 +137,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function AdminPage(){
-            include 'includes/admin-page.php';
+            require (WP_PLUGIN_DIR . '/theme-my-login/includes/admin-page.php');
         }
         
         function QueryURL() {
@@ -229,13 +208,20 @@ if (!class_exists('ThemeMyLogin')) {
 
         function ParseRequest() {
             global $wp;
-            $page_id = isset($wp->query_vars['page_id']) ? $wp->query_vars['page_id'] : false;
+            $is_login = false;
+            $page_id = isset($wp->query_vars['page_id']) ? $wp->query_vars['page_id'] : 0;
+            $pagename = isset($wp->query_vars['pagename']) ? $wp->query_vars['pagename'] : '';
+
+            if (isset($page_id) && $page_id == $this->GetOption('page_id'))
+                $is_login = true;
+            elseif (isset($pagename) && $pagename == 'login')
+                $is_login = true;
             
-            if ($this->GetOption('page_id') == $page_id) {
+            if ($is_login) {
                 if ($this->GetOption('theme_profile') && isset($_GET['profile']) && isset($_REQUEST['action']) && $_REQUEST['action'] == 'update' && is_user_logged_in())
-                    include 'includes/profile-actions.php';
+                    require (WP_PLUGIN_DIR . '/theme-my-login/includes/profile-actions.php');
                 else
-                    include 'includes/wp-login-actions.php';
+                    require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-actions.php');
             }
         }
         
@@ -251,11 +237,11 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function DisplayProfile() {
-            include 'includes/profile-form.php';
+            require (WP_PLUGIN_DIR . '/theme-my-login/includes/profile-form.php');
         }
         
         function DisplayLogin() {
-            include 'includes/wp-login-forms.php';
+            require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php');
         }
         
         function WPHead() {
@@ -267,7 +253,9 @@ if (!class_exists('ThemeMyLogin')) {
                 if (isset($_GET['profile']) && is_user_logged_in())
                     return str_replace('%blogname%', get_option('blogname'), $this->GetOption('profile_title'));
                     
-                if (isset($_GET['action'])) :
+                if (!isset($_GET['action']))
+                    $_GET['action'] = 'login';
+                    
                 switch ($_GET['action']) {
                     case 'register':
                         return str_replace('%blogname%', get_option('blogname'), $this->GetOption('register_title'));
@@ -282,7 +270,6 @@ if (!class_exists('ThemeMyLogin')) {
                     default:
                         return str_replace('%blogname%', get_option('blogname'), $this->GetOption('login_title'));
                 }
-                endif;
             } return $title;
         }
         
@@ -291,7 +278,9 @@ if (!class_exists('ThemeMyLogin')) {
                 if (isset($_GET['profile']) && is_user_logged_in())
                     return $this->GetOption('profile_text');
 
-                if (isset($_GET['action'])) :
+                if (!isset($_GET['action']))
+                    $_GET['action'] = 'login';
+                    
                 switch ($_GET['action']) {
                     case 'register':
                         return $this->GetOption('register_text');
@@ -306,7 +295,6 @@ if (!class_exists('ThemeMyLogin')) {
                     default:
                         return $this->GetOption('login_text');
                 }
-                endif;
             } return $title;
         }
         

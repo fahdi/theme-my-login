@@ -1,6 +1,6 @@
 <?php
 
-require('wp-login-functions.php');
+require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
 
 $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
@@ -70,13 +70,11 @@ default :
     if ( isset( $_REQUEST['redirect_to'] ) ) {
         $redirect_to = $_REQUEST['redirect_to'];
         // Redirect to https if user wants ssl
-        if ( isset($secure_cookie) && false !== strpos($redirect_to, 'wp-admin') )
+        if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
             $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
     } else {
         $redirect_to = $this->GetOption('login_redirect');
     }
-
-    //$redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
 
     // Clear errors if loggedout is set.
     if ( !empty($_GET['loggedout']) )
