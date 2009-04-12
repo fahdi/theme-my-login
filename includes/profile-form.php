@@ -1,6 +1,6 @@
 <?php
     
-require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
+require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
 require_once (ABSPATH . '/wp-admin/includes/misc.php');
 require_once (ABSPATH . '/wp-admin/includes/user.php');
 

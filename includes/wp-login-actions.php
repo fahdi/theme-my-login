@@ -2,7 +2,7 @@
 
 global $wp_version;
     
-require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
+require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
 
 if ( force_ssl_admin() && !is_ssl() ) {
     if ( 0 === strpos($_SERVER['REQUEST_URI'], 'http') ) {
@@ -45,10 +45,13 @@ case 'logout' :
         check_admin_referer('log-out');
     wp_logout();
 
-
-    $redirect_to = get_option('siteurl') . '/wp-login.php?loggedout=true';
     if ( isset( $_REQUEST['redirect_to'] ) )
         $redirect_to = $_REQUEST['redirect_to'];
+    else
+        $redirect_to = $this->GetOption('logout_redirect');
+        
+    if ( empty($redirect_to) )
+        $redirect_to = get_bloginfo('siteurl') . '/wp-login.php?loggedout=true';
 
     wp_safe_redirect($redirect_to);
     exit();
@@ -111,26 +114,29 @@ case 'login' :
         }
     }
 
-    if ( isset( $_REQUEST['redirect_to'] ) ) {
-        $redirect_to = $_REQUEST['redirect_to'];
-        // Redirect to https if user wants ssl
-        if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
-            $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
-    } else {
-        $redirect_to = $this->GetOption('login_redirect');
-    }
-
-    if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() && ( 0 !== strpos($redirect_to, 'https') ) && ( 0 === strpos($redirect_to, 'http') ) )
+    if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() )
         $secure_cookie = false;
 
     $user = wp_signon('', $secure_cookie);
 
-    $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
-
     if ( !is_wp_error($user) ) {
-        // If the user can't edit posts, send them to their profile.
+        if ($user->has_cap('subscriber'))
+            $redirect_to = $this->GetOption('subscr_login_redirect');
+        elseif ($user->has_cap('contributor'))
+            $redirect_to = $this->GetOption('contrb_login_redirect');
+        elseif ($user->has_cap('author'))
+            $redirect_to = $this->GetOption('author_login_redirect');
+        elseif ($user->has_cap('editor'))
+            $redirect_to = $this->GetOption('editor_login_redirect');
+        elseif ($user->has_cap('administrator'))
+            $redirect_to = $this->GetOption('admin_login_redirect');
+            
+        if (empty($redirect_to))
+            $redirect_to = get_bloginfo('siteurl') . '/wp-admin';
+            
         if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' ) )
             $redirect_to = admin_url('profile.php');
+            
         wp_safe_redirect($redirect_to);
         exit();
     }

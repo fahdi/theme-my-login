@@ -2,12 +2,11 @@
 /*
 Plugin Name: Theme My Login
 Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
-Description: Themes the WordPress login, register, forgot password and profile pages to look like the rest of your website.
-Version: 2.0.8
+Description: Themes the WordPress login pages according to your theme. Also allows you to redirect users based on their role upon login.
+Version: 2.1
 Author: Jae Dub
 Author URI: http://webdesign.jaedub.com
 */
-
 
 global $wp_version;
 
@@ -27,7 +26,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '2.0.8';
+        var $version = '2.1';
         var $options = array();
         var $errors = '';
 
@@ -65,11 +64,6 @@ if (!class_exists('ThemeMyLogin')) {
                 $page_id = wp_insert_post($insert);
             } else $page_id = $theme_my_login->ID;
             
-            if ($this->GetOption('login_redirect') == 'wp-admin/')
-                $this->SetOption('login_redirect', admin_url());
-            if ($this->GetOption('logout_redirect') == 'wp-login.php?loggedout=true')
-                $this->SetOption('logout_redirect', site_url('wp-login.php?loggedout=true', 'login'));
-            
             $this->SetOption('page_id', $page_id);
             $this->SaveOptions();
         }
@@ -83,20 +77,24 @@ if (!class_exists('ThemeMyLogin')) {
 
         # Sets up default options
         function InitOptions() {
-            $this->options['chk_uninstall']     = 0;
-            $this->options['version']           = $this->version;
-            $this->options['page_id']           = '0';
-            $this->options['login_redirect']    = admin_url();
-            $this->options['logout_redirect']   = site_url('wp-login.php?loggedout=true', 'login');
-            $this->options['login_title']       = '%blogname% &rsaquo; Log In';
-            $this->options['login_text']        = 'Log In';
-            $this->options['register_title']    = '%blogname% &rsaquo; Register';
-            $this->options['register_text']     = 'Register';
-            $this->options['register_msg']      = 'A password will be e-mailed to you.';
-            $this->options['password_title']    = '%blogname% &rsaquo; Lost Password';
-            $this->options['password_text']     = 'Lost Password';
-            $this->options['profile_title']     = '%blogname% &rsaquo; Profile';
-            $this->options['profile_text']      = 'Your Profile';
+            $this->options['chk_uninstall']         = 0;
+            $this->options['version']               = $this->version;
+            $this->options['page_id']               = '0';
+            $this->options['subscr_login_redirect'] = admin_url();
+            $this->options['contrb_login_redirect'] = admin_url();
+            $this->options['author_login_redirect'] = admin_url();
+            $this->options['editor_login_redirect'] = admin_url();
+            $this->options['admin_login_redirect']  = admin_url();
+            $this->options['logout_redirect']       = site_url('wp-login.php?loggedout=true', 'login');
+            $this->options['login_title']           = 'Log In';
+            $this->options['login_text']            = 'Log In';
+            $this->options['register_title']        = 'Register';
+            $this->options['register_text']         = 'Register';
+            $this->options['register_msg']          = 'A password will be e-mailed to you.';
+            $this->options['password_title']        = 'Lost Password';
+            $this->options['password_text']         = 'Lost Password';
+            $this->options['profile_title']         = 'Your Profile';
+            $this->options['profile_text']          = 'Your Profile';
         }
 
         # Loads options from database
@@ -189,7 +187,7 @@ if (!class_exists('ThemeMyLogin')) {
                 case 'wp-register.php':
                 case 'wp-login.php':
                     if ( is_user_logged_in() && $_REQUEST['action'] != 'logout' )
-                        $redirect_to = admin_url('profile.php');
+                        $redirect_to = admin_url();
                     else
                         $redirect_to = $this->ArgURL($permalink, $_GET);
                     wp_safe_redirect($redirect_to);
