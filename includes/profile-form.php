@@ -14,7 +14,9 @@ if (isset($wp_http_referer))
     $wp_http_referer = remove_query_arg(array('update', 'delete_count'), stripslashes($wp_http_referer));
 $user_id = (int) $user_id;
 
+global $profileuser;
 $profileuser = get_user_to_edit($user_id);
+
 if ( !current_user_can('edit_user', $user_id) )
     wp_die(__('You do not have permission to edit this user.'));
 
