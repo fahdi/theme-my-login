@@ -1,6 +1,6 @@
 === Theme My Login ===
 Contributors: jfarthing84
-Donate link: http://webdesign.jaedub.com/donate
+Donate link: http://www.jfarthing.com/donate
 Tags: themed login, custom login
 Requires at least: 2.5
 Tested up to: 2.8

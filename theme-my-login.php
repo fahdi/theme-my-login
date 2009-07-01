@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Theme My Login
-Plugin URI: http://webdesign.jaedub.com/wordpress-plugins/theme-my-login-plugin
+Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
 Version: 2.2
 Author: Jae Dub
-Author URI: http://webdesign.jaedub.com
+Author URI: http://www.jfarthing.com
 */
 
 global $wp_version;

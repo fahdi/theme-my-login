@@ -22,7 +22,7 @@ if ( $_POST ) {
 ?>
 
 <div class="updated" style="background:aliceblue; border:1px solid lightblue">
-    <p><?php _e('If you like this plugin, please help keep it up to date by <a href="http://webdesign.jaedub.com/donate">donating through PayPal</a>!', 'theme-my-login'); ?></p>
+    <p><?php _e('If you like this plugin, please help keep it up to date by <a href="http://www.jfarthing.com/donate">donating through PayPal</a>!', 'theme-my-login'); ?></p>
 </div>
 
 <div class="wrap">
