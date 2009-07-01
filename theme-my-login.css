@@ -1,0 +1,15 @@
+#login {
+    padding: 5px;
+    }
+    
+#login .error {
+    padding: 5px;
+    border: 1px solid red;
+    background-color: lightcoral;
+    }
+
+#login .message {
+    padding: 5px;
+    border: 1px solid yellow;
+    background-color: lightyellow;
+    }
