@@ -15,14 +15,9 @@ if ( force_ssl_admin() && !is_ssl() ) {
 }
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-$this->errors = new WP_Error();
 
 if ( isset($_GET['key']) )
     $action = 'resetpass';
-
-nocache_headers();
-
-header('Content-Type: '.get_bloginfo('html_type').'; charset='.get_bloginfo('charset'));
 
 if ( defined('RELOCATE') ) { // Move flag is set
     if ( isset( $_SERVER['PATH_INFO'] ) && ($_SERVER['PATH_INFO'] != $_SERVER['PHP_SELF']) )
@@ -44,14 +39,10 @@ case 'logout' :
     if ($wp_version >= '2.6')
         check_admin_referer('log-out');
     wp_logout();
-
+    
+    $redirect_to = site_url('wp-login.php?loggedout=true', 'login');
     if ( isset( $_REQUEST['redirect_to'] ) )
         $redirect_to = $_REQUEST['redirect_to'];
-    else
-        $redirect_to = $this->GetOption('logout_redirect');
-        
-    if ( empty($redirect_to) )
-        $redirect_to = get_bloginfo('siteurl') . '/wp-login.php?loggedout=true';
 
     wp_safe_redirect($redirect_to);
     exit();
@@ -59,31 +50,31 @@ case 'logout' :
 case 'lostpassword' :
 case 'retrievepassword' :
     if ( $http_post ) {
-        $this->errors = retrieve_password();
-        if ( !is_wp_error($this->errors) ) {
-            wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=confirm');
+        $login_errors = retrieve_password();
+        if ( !is_wp_error($login_errors) ) {
+            wp_redirect(site_url('wp-login.php?checkemail=confirm', 'login'));
             exit();
         }
     }
 
     if ( isset($_GET['error']) && 'invalidkey' == $_GET['error'] )
-        $this->errors->add('invalidkey', __('Sorry, that key does not appear to be valid.'));
+        $login_errors->add('invalidkey', __('Sorry, that key does not appear to be valid.'));
     break;
 case 'resetpass' :
 case 'rp' :
-    $this->errors = reset_password($_GET['key']);
+    $login_errors = reset_password($_GET['key']);
 
-    if ( ! is_wp_error($this->errors) ) {
-        wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=newpass');
+    if ( ! is_wp_error($login_errors) ) {
+        wp_redirect(site_url('wp-login.php?checkemail=newpass', 'login'));
         exit();
     }
 
-    wp_redirect(get_option('siteurl') . '/wp-login.php?action=lostpassword&error=invalidkey');
+    wp_redirect(site_url('wp-login.php?action=lostpassword&error=invalidkey', 'login'));
     exit();
     break;
 case 'register' :
     if ( !get_option('users_can_register') ) {
-        wp_redirect(get_option('siteurl') . '/wp-login.php?registration=disabled');
+        wp_redirect(site_url('wp-login.php?registration=disabled', 'login'));
         exit();
     }
     
@@ -92,10 +83,10 @@ case 'register' :
 
         $user_login = $_POST['user_login'];
         $user_email = $_POST['user_email'];
-        $this->errors = register_new_user($user_login, $user_email);
+        $login_errors = register_new_user($user_login, $user_email);
         
-        if ( !is_wp_error($this->errors) ) {
-            wp_redirect(get_option('siteurl') . '/wp-login.php?checkemail=registered');
+        if ( !is_wp_error($login_errors) ) {
+            wp_redirect(site_url('wp-login.php?checkemail=registered', 'login'));
             exit();
         }
     }
@@ -113,35 +104,32 @@ case 'login' :
             }
         }
     }
+    
+    if ( isset( $_REQUEST['redirect_to'] ) ) {
+        $redirect_to = $_REQUEST['redirect_to'];
+        // Redirect to https if user wants ssl
+        if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
+            $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
+    } else {
+        $redirect_to = admin_url();
+    }
 
     if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() )
         $secure_cookie = false;
 
     $user = wp_signon('', $secure_cookie);
+    
+    $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
 
     if ( !is_wp_error($user) ) {
-        if ($user->has_cap('subscriber'))
-            $redirect_to = $this->GetOption('subscr_login_redirect');
-        elseif ($user->has_cap('contributor'))
-            $redirect_to = $this->GetOption('contrb_login_redirect');
-        elseif ($user->has_cap('author'))
-            $redirect_to = $this->GetOption('author_login_redirect');
-        elseif ($user->has_cap('editor'))
-            $redirect_to = $this->GetOption('editor_login_redirect');
-        elseif ($user->has_cap('administrator'))
-            $redirect_to = $this->GetOption('admin_login_redirect');
-            
-        if (empty($redirect_to))
-            $redirect_to = get_bloginfo('siteurl') . '/wp-admin';
-            
-        if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' ) )
+        // If the user can't edit posts, send them to their profile.
+        if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' || $redirect_to == admin_url() ) )
             $redirect_to = admin_url('profile.php');
-            
         wp_safe_redirect($redirect_to);
         exit();
     }
 
-    $this->errors = $user;
+    $login_errors = $user;
     break;
 } // end action switch
 ?>

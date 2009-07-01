@@ -30,10 +30,25 @@ function login_header($message = '', $wp_error = '') {
             }
         }
         if ( !empty($errors) )
-            echo '<div id="login_error">' . apply_filters('login_errors', $errors) . "</div>\n";
+            echo '<p class="error">' . apply_filters('login_errors', $errors) . "</p>\n";
         if ( !empty($messages) )
             echo '<p class="message">' . apply_filters('login_messages', $messages) . "</p>\n";
     }
+}
+endif;
+
+if (!function_exists('login_footer')) :
+function login_footer() {
+    $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'login';
+    echo '<ul class="links">' . "\n";
+    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail']))
+        echo '<li><a href="' . site_url('wp-login.php', 'login') . '">' . __('Log in') . '</a></li>' . "\n";
+    if (get_option('users_can_register') && $_GET['action'] != 'register')
+        echo '<li><a href="' . site_url('wp-login.php?action=register', 'login') . '">' . __('Register') . '</a></li>' . "\n";
+    if ($_GET['action'] != 'lostpassword')
+        echo '<li><a href="' . site_url('wp-login.php?action=lostpassword', 'login') . '" title="' . __('Password Lost and Found') . '">' . __('Lost your password?') . '</a></li>' . "\n";
+    echo '</ul>' . "\n";
+    echo '</div>' . "\n";
 }
 endif;
 
@@ -173,17 +188,6 @@ function register_new_user($user_login, $user_email) {
     wp_new_user_notification($user_id, $user_pass);
 
     return $user_id;
-}
-endif;
-
-if ( !function_exists('ssl_or_not') ) :
-function ssl_or_not($url = '') {
-    if ( force_ssl_login() || force_ssl_admin() )
-        $scheme = 'https';
-    else
-        $scheme = ( is_ssl() ? 'https' : 'http' );
-
-    return str_replace( 'http://', "{$scheme}://", $url );
 }
 endif;
 
