@@ -167,7 +167,12 @@ if (!class_exists('ThemeMyLogin')) {
         function DisplayLogin() {
             global $login_errors;
             
-            require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php');
+            if ( !is_user_logged_in() ) {
+                require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php');
+            } else {
+                wp_redirect(admin_url());
+                exit;
+            }
         }
         
         function WPHead() {
