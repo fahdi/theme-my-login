@@ -67,7 +67,7 @@ if (!class_exists('ThemeMyLogin')) {
                 'comment_status' => 'closed',
                 'ping_status' => 'closed'
                 );
-                $page_id = wp_insert_post($insert);
+                $theme_my_login = wp_insert_post($insert);
             } else $page_id = $theme_my_login->ID;
             
             $this->SetOption('page_id', $page_id);
@@ -228,7 +228,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function ListPagesExcludes($excludes) {
-            $excludes[] = $this->GetOption( 'page_id' );
+            $excludes[] = $this->GetOption('page_id');
 
             return $excludes;
         }
