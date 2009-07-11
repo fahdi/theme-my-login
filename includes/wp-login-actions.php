@@ -15,6 +15,7 @@ if ( force_ssl_admin() && !is_ssl() ) {
 }
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+$post_from = isset($_REQUEST['post-from']) ? $_REQUEST['post-from'] : '';
 
 if ( isset($_GET['key']) )
     $action = 'resetpass';
@@ -40,7 +41,7 @@ case 'logout' :
         check_admin_referer('log-out');
     wp_logout();
     
-    $redirect_to = site_url('wp-login.php?loggedout=true', 'login');
+    $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('loggedout' => 'true')) : site_url('wp-login.php?loggedout=true', 'login');
     if ( isset( $_REQUEST['redirect_to'] ) )
         $redirect_to = $_REQUEST['redirect_to'];
 
@@ -52,7 +53,8 @@ case 'retrievepassword' :
     if ( $http_post ) {
         $login_errors = retrieve_password();
         if ( !is_wp_error($login_errors) ) {
-            wp_redirect(site_url('wp-login.php?checkemail=confirm', 'login'));
+            $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('checkemail' => 'confirm')) : site_url('wp-login.php?checkemail=confirm', 'login');
+            wp_redirect($redirect_to);
             exit();
         }
     }
@@ -65,16 +67,19 @@ case 'rp' :
     $login_errors = reset_password($_GET['key']);
 
     if ( ! is_wp_error($login_errors) ) {
-        wp_redirect(site_url('wp-login.php?checkemail=newpass', 'login'));
+        $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('checkemail' => 'newpass')) : site_url('wp-login.php?checkemail=newpass', 'login');
+        wp_redirect($redirect_to);
         exit();
     }
 
-    wp_redirect(site_url('wp-login.php?action=lostpassword&error=invalidkey', 'login'));
+    $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('action' => 'lostpassword', 'error' => 'invalidkey')) : site_url('wp-login.php?action=lostpassword&error=invalidkey', 'login');
+    wp_redirect($redirect_to);
     exit();
     break;
 case 'register' :
     if ( !get_option('users_can_register') ) {
-        wp_redirect(site_url('wp-login.php?registration=disabled', 'login'));
+        $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('registration' => 'disabled')) : site_url('wp-login.php?registration=disabled', 'login');
+        wp_redirect($redirect_to);
         exit();
     }
     
@@ -86,7 +91,8 @@ case 'register' :
         $login_errors = register_new_user($user_login, $user_email);
         
         if ( !is_wp_error($login_errors) ) {
-            wp_redirect(site_url('wp-login.php?checkemail=registered', 'login'));
+            $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('checkemail' => 'registered')) : site_url('wp-login.php?checkemail=registered', 'login');
+            wp_redirect($redirect_to);
             exit();
         }
     }

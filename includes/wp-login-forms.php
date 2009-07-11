@@ -15,17 +15,21 @@ case 'retrievepassword' :
     $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
 ?>
 
-<form name="lostpasswordform" id="lostpasswordform" action="<?php echo add_query_arg('action', 'lostpassword', $this->permalink) ?>" method="post">
+<form name="lostpasswordform" id="lostpasswordform" action="<?php //echo add_query_arg('action', 'lostpassword', $this->permalink) ?>" method="post">
     <p>
         <label><?php _e('Username or E-mail:', 'theme-my-login') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" tabindex="10" /></label>
     </p>
 <?php do_action('lostpassword_form'); ?>
-    <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Get New Password', 'theme-my-login'); ?>" tabindex="100" /></p>
+    <p class="submit">
+    <input type="hidden" name="post-from" id="post-from" value="<?php echo $type; ?>" />
+    <input type="hidden" name="action" id="action" value="lostpassword" />
+    <input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Get New Password', 'theme-my-login'); ?>" tabindex="100" />
+    </p>
 </form>
 
 <?php
-    login_footer();
+    login_footer($type);
 break;
 
 case 'register' :
@@ -34,22 +38,26 @@ case 'register' :
     login_header('', $login_errors);
 ?>
 
-<form name="registerform" id="registerform" action="<?php echo add_query_arg('action', 'register', $this->permalink) ?>" method="post">
+<form name="registerform" id="registerform" action="<?php //echo add_query_arg('action', 'register', $this->permalink) ?>" method="post">
     <p>
         <label><?php _e('Username', 'theme-my-login') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" tabindex="10" /></label>
     </p>
     <p>
         <label><?php _e('E-mail', 'theme-my-login') ?><br />
-        <input type="text" name="user_email" id="user_email" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="25" tabindex="20" /></label>
+        <input type="text" name="user_email" id="user_email" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" tabindex="20" /></label>
     </p>
 <?php do_action('register_form'); ?>
     <p id="reg_passmail"><?php _e($this->GetOption('register_msg')) ?></p>
-    <p class="submit"><input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Register', 'theme-my-login'); ?>" tabindex="100" /></p>
+    <p class="submit">
+    <input type="hidden" name="post-from" id="post-from" value="<?php echo $type; ?>" />
+    <input type="hidden" name="action" id="action" value="register" />
+    <input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Register', 'theme-my-login'); ?>" tabindex="100" />
+    </p>
 </form>
 
 <?php
-    login_footer();
+    login_footer($type);
 break;
 
 case 'login' :
@@ -87,7 +95,7 @@ default :
         $user_login = ( 'incorrect_password' == $login_errors->get_error_code() || 'empty_password' == $login_errors->get_error_code() ) ? attribute_escape(stripslashes($_POST['log'])) : '';
 ?>
 <?php if ( !isset($_GET['checkemail']) || !in_array( $_GET['checkemail'], array('confirm', 'newpass') ) ) : ?>
-<form name="loginform" id="loginform" action="<?php echo add_query_arg('action', 'login', $this->permalink) ?>" method="post">
+<form name="loginform" id="loginform" action="" method="post">
     <p>
         <label><?php _e('Username', 'theme-my-login') ?><br />
         <input type="text" name="log" id="user_login" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" tabindex="10" /></label>
@@ -99,6 +107,8 @@ default :
 <?php do_action('login_form'); ?>
     <p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme" value="forever" tabindex="90" /> <?php _e('Remember Me', 'theme-my-login'); ?></label></p>
     <p class="submit">
+        <input type="hidden" name="post-from" id="post-from" value="<?php echo $type; ?>" />
+        <input type="hidden" name="action" id="action" value="login" />
         <input type="submit" name="wp-submit" id="wp-submit" value="<?php _e('Log In', 'theme-my-login'); ?>" tabindex="100" />
         <input type="hidden" name="redirect_to" value="<?php echo attribute_escape($redirect_to); ?>" />
         <input type="hidden" name="testcookie" value="1" />
@@ -107,7 +117,7 @@ default :
 <?php endif; ?>
 
 <?php
-    login_footer();
+    login_footer($type);
 break;
 
 endswitch;

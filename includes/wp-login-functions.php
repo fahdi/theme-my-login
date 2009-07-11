@@ -1,5 +1,27 @@
 <?php
 
+if (!function_exists('theme_my_login_url')) :
+function theme_my_login_url($args = array()) {
+    $login_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+
+    if ($_SERVER["SERVER_PORT"] != "80") {
+        $login_url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
+    } else {
+        $login_url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+    }
+
+    $keys = array('action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key');
+    $login_url = remove_query_arg($keys, $login_url);
+
+    if (!empty($args)) {
+        foreach ($args as $key => $value)
+            $login_url = add_query_arg($key, $value, $login_url);
+    }
+
+    return $login_url;
+}
+endif;
+
 if (!function_exists('login_header')) :
 function login_header($message = '', $wp_error = '') {
     global $error;
@@ -38,15 +60,21 @@ function login_header($message = '', $wp_error = '') {
 endif;
 
 if (!function_exists('login_footer')) :
-function login_footer() {
+function login_footer($type = 'page') {
     $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'login';
     echo '<ul class="links">' . "\n";
-    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail']))
-        echo '<li><a href="' . site_url('wp-login.php', 'login') . '">' . __('Log in') . '</a></li>' . "\n";
-    if (get_option('users_can_register') && $_GET['action'] != 'register')
-        echo '<li><a href="' . site_url('wp-login.php?action=register', 'login') . '">' . __('Register') . '</a></li>' . "\n";
-    if ($_GET['action'] != 'lostpassword')
-        echo '<li><a href="' . site_url('wp-login.php?action=lostpassword', 'login') . '" title="' . __('Password Lost and Found') . '">' . __('Lost your password?') . '</a></li>' . "\n";
+    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail'])) {
+        $url = ($type == 'widget') ? add_query_arg('action', 'login', wp_guess_url()) : site_url('wp-login.php', 'login');
+        echo '<li><a href="' . $url . '">' . __('Log in') . '</a></li>' . "\n";
+    }
+    if (get_option('users_can_register') && $_GET['action'] != 'register') {
+        $url = ($type == 'widget') ? add_query_arg('action', 'register', wp_guess_url()) : site_url('wp-login.php?action=register', 'login');
+        echo '<li><a href="' . $url . '">' . __('Register') . '</a></li>' . "\n";
+    }
+    if ($_GET['action'] != 'lostpassword') {
+        $url = ($type == 'widget') ? add_query_arg('action', 'lostpassword', wp_guess_url()) : site_url('wp-login.php?action=lostpassword', 'login');
+        echo '<li><a href="' . $url . '" title="' . __('Password Lost and Found') . '">' . __('Lost your password?') . '</a></li>' . "\n";
+    }
     echo '</ul>' . "\n";
     echo '</div>' . "\n";
 }
