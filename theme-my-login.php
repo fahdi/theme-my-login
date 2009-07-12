@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.0
+Version: 3.0.1
 Author: Jae Dub
 Author URI: http://www.jfarthing.com
 */
@@ -26,7 +26,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '3.0';
+        var $version = '3.0.1';
         var $options = array();
         var $permalink = '';
 
@@ -86,6 +86,7 @@ if (!class_exists('ThemeMyLogin')) {
         function InitOptions() {
             $this->options['uninstall']             = 0;
             $this->options['page_id']               = 0;
+            $this->options['show_page']             = 0;
             $this->options['login_title']           = __('Log In', 'theme-my-login');
             $this->options['register_title']        = __('Register', 'theme-my-login');
             $this->options['register_msg']          = __('A password will be e-mailed to you.', 'theme-my-login');
@@ -162,7 +163,7 @@ if (!class_exists('ThemeMyLogin')) {
             switch ($pagenow) {
                 case 'wp-register.php':
                 case 'wp-login.php':
-                    $redirect_to = admin_url();
+                    $redirect_to = add_query_arg($_GET, $this->permalink);
                     wp_redirect($redirect_to);
                     exit;
                 break;
@@ -235,7 +236,8 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function ListPagesExcludes($excludes) {
-            $excludes[] = $this->GetOption( 'page_id' );
+            if (!$this->GetOption('show_page'))
+                $excludes[] = $this->GetOption( 'page_id' );
 
             return $excludes;
         }

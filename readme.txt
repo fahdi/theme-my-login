@@ -26,6 +26,11 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.0.1 =
+* Fixed a bug that caused a redirection loop when trying to access wp-login.php
+* Fixed a bug that broke the widget admin interface
+* Added the option to show/hide login page from page list
+
 = 3.0 =
 * Added a login widget
 

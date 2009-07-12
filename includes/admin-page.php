@@ -5,6 +5,7 @@ if ( $_POST ) {
     check_admin_referer('theme-my-login');
 
     $this->SetOption('uninstall', $_POST['uninstall']);
+    $this->SetOption('show_page', $_POST['show_page']);
     $this->SetOption('login_title', stripslashes($_POST['login_title']));
     $this->SetOption('register_title', stripslashes($_POST['register_title']));
     $this->SetOption('register_msg', stripslashes($_POST['register_msg']));
@@ -44,6 +45,13 @@ if ( $_POST ) {
             <td>
                 <input name="uninstall" type="checkbox" id="uninstall" value="1" <?php if ($this->GetOption('uninstall')) { echo 'checked="checked"'; } ?> />
                 <?php _e('Uninstall', 'theme-my-login'); ?>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><label for="show_page"><?php _e('Page List', 'theme-my-login'); ?></label></th>
+            <td>
+                <input name="show_page" type="checkbox" id="show_page" value="1" <?php if ($this->GetOption('show_page')) { echo 'checked="checked"'; } ?> />
+                <?php _e('Show Login Page', 'theme-my-login'); ?>
             </td>
         </tr>
     </table>
