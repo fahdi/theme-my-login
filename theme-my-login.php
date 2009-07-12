@@ -3,14 +3,14 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.0.2
+Version: 3.0.1
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 */
 
 global $wp_version;
 
-if ($wp_version < '2.6') {
+if ($wp_version < '2.7') {
     if ( !defined('WP_CONTENT_DIR') )
         define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
     if ( !defined('WP_CONTENT_URL') )
