@@ -37,7 +37,7 @@ if ( SITECOOKIEPATH != COOKIEPATH )
 $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 switch ($action) {
 case 'logout' :
-    if ($wp_version >= '2.6')
+    if ($wp_version >= '2.7')
         check_admin_referer('log-out');
     wp_logout();
     
