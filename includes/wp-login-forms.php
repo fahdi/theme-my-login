@@ -66,13 +66,13 @@ default :
     if ( isset( $_REQUEST['redirect_to'] ) ) {
         $redirect_to = $_REQUEST['redirect_to'];
         // Redirect to https if user wants ssl
-        if ( $secure_cookie && false !== strpos($redirect_to, 'wp-admin') )
+        if ( isset($secure_cookie) && false !== strpos($redirect_to, 'wp-admin') )
             $redirect_to = preg_replace('|^http://|', 'https://', $redirect_to);
     } else {
         $redirect_to = admin_url();
     }
     
-    $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
+    $redirect_to = apply_filters('login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', isset( $user ) ? $user : '');
 
     // Clear errors if loggedout is set.
     if ( !empty($_GET['loggedout']) )
@@ -87,7 +87,7 @@ default :
     elseif    ( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )    $login_errors->add('registerdisabled', __('User registration is currently not allowed.', 'theme-my-login'));
     elseif    ( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )    $login_errors->add('confirm', __('Check your e-mail for the confirmation link.', 'theme-my-login'), 'message');
     elseif    ( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )    $login_errors->add('newpass', __('Check your e-mail for your new password.', 'theme-my-login'), 'message');
-    elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $login_errors->add('registered', __('Registration complete. Please check your e-mail.', 'theme-my-login'), 'message');
+    elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $login_errors->add('registered', $this->GetOption('registered_complete'), 'message');
 
     login_header('', $login_errors);
     

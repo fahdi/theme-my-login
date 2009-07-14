@@ -26,6 +26,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.0.2 =
+* Fixed a bug that didn't allow custom registration message to be displayed
+* Fixed a few PHP unset variable notice's with a call to isset()
+
 = 3.0.1 =
 * Fixed a bug that caused a redirection loop when trying to access wp-login.php
 * Fixed a bug that broke the widget admin interface
