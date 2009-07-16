@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.0.2
+Version: 3.0.3
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 */
@@ -26,7 +26,7 @@ if ($wp_version < '2.7') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '3.0.2';
+        var $version = '3.0.3';
         var $options = array();
         var $permalink = '';
 
@@ -279,10 +279,10 @@ if (!class_exists('ThemeMyLogin')) {
                 do_action('theme_my_login_avatar', $current_user);
                 echo '<ul class="theme-my-login-links">' . "\n";
                 if ($dashboard_link[$user_role] == true) :
-                    echo '<li><a href="' . admin_url() . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . site_url('wp-admin/', 'admin') . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
                 endif;
                 if ($profile_link[$user_role] == true) :
-                    echo '<li><a href="' . admin_url('profile.php') . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . site_url('wp-admin/profile.php', 'admin') . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
                 endif;
                 do_action('theme_my_login_links', $user_role);
                 echo '<li><a href="' . wp_logout_url(wp_guess_url()) . '">' . __('Logout', 'theme-my-login') . '</a></li>' . "\n";

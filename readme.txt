@@ -26,6 +26,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.0.3 =
+* Fixed a bug with the widget links
+
 = 3.0.2 =
 * Fixed a bug that didn't allow custom registration message to be displayed
 * Fixed a few PHP unset variable notice's with a call to isset()
