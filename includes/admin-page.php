@@ -1,5 +1,8 @@
 <?php
 
+global $wp_roles;
+$user_roles = $wp_roles->get_names();
+
 if ( $_POST ) {
 
     check_admin_referer('theme-my-login');
@@ -12,6 +15,12 @@ if ( $_POST ) {
     $this->SetOption('register_complete', stripslashes($_POST['register_complete']));
     $this->SetOption('password_title', stripslashes($_POST['password_title']));
     $this->SetOption('password_msg', stripslashes($_POST['password_msg']));
+    foreach ($user_roles as $role => $value) {
+        $dashboard_url[$role] = $_POST['widget_dashboard_url'][$role];
+        $profile_url[$role] = $_POST['widget_profile_url'][$role];
+    }
+    $this->SetOption('widget_dashboard_url', $dashboard_url);
+    $this->SetOption('widget_profile_url', $profile_url);
     $this->SaveOptions();
 
     if (isset($_POST['uninstall']))
@@ -19,6 +28,9 @@ if ( $_POST ) {
     else
         $success =__('Settings saved.', 'theme-my-login');
 }
+
+$dashboard_url = $this->GetOption('widget_dashboard_url');
+$profile_url = $this->GetOption('widget_profile_url');
 
 ?>
 
@@ -95,7 +107,32 @@ if ( $_POST ) {
             </td>
         </tr>
     </table>
-
+    
+    <h3><?php _e('Widget Settings', 'theme-my-login'); ?></h3>
+    <h4><?php _e('Dashboard URL'); ?></h4>
+    <table class="form-table">
+        <?php foreach ($user_roles as $role => $value) : ?>
+        <tr valign="top">
+            <th scope="row"><?php echo ucwords($role); ?></th>
+            <td>
+                <input name="widget_dashboard_url[<?php echo $role; ?>]" type="text" id="widget_dashboard_url[<?php echo $role; ?>]" value="<?php echo $dashboard_url[$role]; ?>" class="regular-text" />
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    
+    <h4><?php _e('Profile URL'); ?></h4>
+    <table class="form-table">
+        <?php foreach ($user_roles as $role => $value) : ?>
+        <tr valign="top">
+            <th scope="row"><?php echo ucwords($role); ?></th>
+            <td>
+                <input name="widget_profile_url[<?php echo $role; ?>]" type="text" id="widget_profile_url[<?php echo $role; ?>]" value="<?php echo $profile_url[$role]; ?>" class="regular-text" />
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+    
     <p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes', 'theme-my-login'); ?>" />
     </form>
 </div>

@@ -1,21 +1,26 @@
 <?php
 
+$options = get_option('theme_my_login');
+
 require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-functions.php');
 
 $http_post = ('POST' == $_SERVER['REQUEST_METHOD']);
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+if (empty($type))
+    $type = 'page';
 
 switch ($action) :
 
 case 'lostpassword' :
 case 'retrievepassword' :
     do_action('lost_password');
-    login_header('<p class="message">' . $this->GetOption('password_msg') . '</p>', $login_errors);
+    login_header('<p class="message">' . $options['password_msg'] . '</p>', $login_errors);
 
     $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
 ?>
 
-<form name="lostpasswordform" id="lostpasswordform" action="<?php //echo add_query_arg('action', 'lostpassword', $this->permalink) ?>" method="post">
+<form name="lostpasswordform" id="lostpasswordform" action="" method="post">
     <p>
         <label><?php _e('Username or E-mail:', 'theme-my-login') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" tabindex="10" /></label>
@@ -38,7 +43,7 @@ case 'register' :
     login_header('', $login_errors);
 ?>
 
-<form name="registerform" id="registerform" action="<?php //echo add_query_arg('action', 'register', $this->permalink) ?>" method="post">
+<form name="registerform" id="registerform" action="" method="post">
     <p>
         <label><?php _e('Username', 'theme-my-login') ?><br />
         <input type="text" name="user_login" id="user_login" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" tabindex="10" /></label>
@@ -48,7 +53,7 @@ case 'register' :
         <input type="text" name="user_email" id="user_email" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" tabindex="20" /></label>
     </p>
 <?php do_action('register_form'); ?>
-    <p id="reg_passmail"><?php _e($this->GetOption('register_msg')) ?></p>
+    <p id="reg_passmail"><?php _e($options['register_msg']) ?></p>
     <p class="submit">
     <input type="hidden" name="post-from" id="post-from" value="<?php echo $type; ?>" />
     <input type="hidden" name="action" id="action" value="register" />
@@ -87,7 +92,7 @@ default :
     elseif    ( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )    $login_errors->add('registerdisabled', __('User registration is currently not allowed.', 'theme-my-login'));
     elseif    ( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )    $login_errors->add('confirm', __('Check your e-mail for the confirmation link.', 'theme-my-login'), 'message');
     elseif    ( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )    $login_errors->add('newpass', __('Check your e-mail for your new password.', 'theme-my-login'), 'message');
-    elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $login_errors->add('registered', $this->GetOption('registered_complete'), 'message');
+    elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $login_errors->add('registered', $options['register_complete'], 'message');
 
     login_header('', $login_errors);
     

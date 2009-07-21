@@ -1,7 +1,7 @@
 === Theme My Login ===
 Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
-Tags: widget, login, registration, theme, custom, log in, register, sidebar
+Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar
 Requires at least: 2.5
 Tested up to: 2.8.1
 Stable tag: trunk
@@ -16,7 +16,8 @@ This plugin themes the WordPress login, registration and forgot password pages a
 
 == Installation ==
 
-Upload the Theme My Login plugin to your 'wp-content/plugins' directory and activate it. The 'Theme My Login' settings will apear under the 'Settings' menu in the WordPress admin.
+1. Upload the plugin to your 'wp-content/plugins' directory
+1. Activate the plugin
 
 
 == Frequently Asked Questions ==
@@ -25,6 +26,11 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 3.1 =
+* Added the ability to specify URL's for widget 'Dashboard' and 'Profile' links per user role
+* Implemented WordPress 2.8 widget control for multiple widget instances
+* Fixed a bug regarding the registration complete message
 
 = 3.0.3 =
 * Fixed a bug with the widget links

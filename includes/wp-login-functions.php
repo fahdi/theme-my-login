@@ -63,7 +63,7 @@ if (!function_exists('login_footer')) :
 function login_footer($type = 'page') {
     $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'login';
     echo '<ul class="links">' . "\n";
-    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail'])) {
+    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail']) && 'registered' != $_GET['checkemail']) {
         $url = ($type == 'widget') ? add_query_arg('action', 'login', wp_guess_url()) : site_url('wp-login.php', 'login');
         echo '<li><a href="' . $url . '">' . __('Log in') . '</a></li>' . "\n";
     }

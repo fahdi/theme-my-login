@@ -86,4 +86,17 @@ function wp_password_change_notification(&$user) {
     }
 }
 endif;
+
+if ( !function_exists('wp_guess_url') ) :
+function wp_guess_url() {
+    if ( defined('WP_SITEURL') && '' != WP_SITEURL ) {
+        $url = WP_SITEURL;
+    } else {
+        $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+        $url = preg_replace('|/wp-admin/.*|i', '', $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    }
+    return $url;
+}
+endif;
+
 ?>
