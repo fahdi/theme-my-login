@@ -16,7 +16,7 @@ class ThemeMyLoginWidget extends WP_Widget {
 
         if (!is_page($ThemeMyLogin->GetOption('page_id'))) {
             if ($user_ID != '' && $instance['show_logged_in']) {
-                $user_role = $current_user->roles[0];
+                $user_role = reset($current_user->roles);
                 $dashboard_url = $ThemeMyLogin->GetOption('widget_dashboard_url');
                 $profile_url = $ThemeMyLogin->GetOption('widget_profile_url');
                 echo $before_widget . $before_title . __('Welcome', 'theme-my-login') . ', ' . $current_user->display_name . $after_title . "\n";

@@ -20,7 +20,7 @@ class ThemeMyLoginWidget {
 
         if (!is_page($ThemeMyLogin->GetOption('page_id'))) {
             if ($user_ID != '' && $ThemeMyLogin->GetOption('widget_show_logged_in')) {
-                $user_role = $current_user->roles[0];
+                $user_role = reset($current_user->roles);
                 $dashboard_link = $ThemeMyLogin->GetOption('widget_dashboard_link');
                 $dashboard_url = $ThemeMyLogin->GetOption('widget_dashboard_url');
                 $profile_link = $ThemeMyLogin->GetOption('widget_profile_link');

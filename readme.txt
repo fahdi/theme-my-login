@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar
 Requires at least: 2.5
-Tested up to: 2.8.1
+Tested up to: 2.8.2
 Stable tag: trunk
 
 Themes the WordPress login pages according to your theme.
@@ -26,6 +26,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 3.1.1 =
+* Fixed a bug that incorrectly determined current user role
 
 = 3.1 =
 * Added the ability to specify URL's for widget 'Dashboard' and 'Profile' links per user role
