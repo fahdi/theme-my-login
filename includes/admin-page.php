@@ -15,6 +15,8 @@ if ( $_POST ) {
     $this->SetOption('register_complete', stripslashes($_POST['register_complete']));
     $this->SetOption('password_title', stripslashes($_POST['password_title']));
     $this->SetOption('password_msg', stripslashes($_POST['password_msg']));
+    $this->SetOption('widget_allow_register', $_POST['widget_allow_register']);
+    $this->SetOption('widget_allow_password', $_POST['widget_allow_password']);
     foreach ($user_roles as $role => $value) {
         $dashboard_url[$role] = $_POST['widget_dashboard_url'][$role];
         $profile_url[$role] = $_POST['widget_profile_url'][$role];
@@ -53,17 +55,17 @@ $profile_url = $this->GetOption('widget_profile_url');
     <h3><?php _e('General Settings', 'theme-my-login'); ?></h3>
     <table class="form-table">
         <tr valign="top">
-            <th scope="row"><label for="uninstall"><?php _e('Plugin', 'theme-my-login'); ?></label></th>
+            <th scope="row"><?php _e('Plugin', 'theme-my-login'); ?></th>
             <td>
                 <input name="uninstall" type="checkbox" id="uninstall" value="1" <?php if ($this->GetOption('uninstall')) { echo 'checked="checked"'; } ?> />
-                <?php _e('Uninstall', 'theme-my-login'); ?>
+                <label for="uninstall"><?php _e('Uninstall', 'theme-my-login'); ?></label>
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><label for="show_page"><?php _e('Page List', 'theme-my-login'); ?></label></th>
+            <th scope="row"><?php _e('Page List', 'theme-my-login'); ?></th>
             <td>
                 <input name="show_page" type="checkbox" id="show_page" value="1" <?php if ($this->GetOption('show_page')) { echo 'checked="checked"'; } ?> />
-                <?php _e('Show Login Page', 'theme-my-login'); ?>
+                <label for="show_page"><?php _e('Show Login Page', 'theme-my-login'); ?></label>
             </td>
         </tr>
     </table>
@@ -109,6 +111,22 @@ $profile_url = $this->GetOption('widget_profile_url');
     </table>
     
     <h3><?php _e('Widget Settings', 'theme-my-login'); ?></h3>
+    <table class="form-table">
+        <tr valign="top">
+            <th scope="row"><?php _e('Registration'); ?></th>
+            <td>
+                <input name="widget_allow_register" type="checkbox" id="widget_allow_register" value="1" <?php if ($this->GetOption('widget_allow_register')) { echo 'checked="checked"'; } ?> />
+                <label for="widget_allow_register"><?php _e('Allow Registration in Widget', 'theme-my-login'); ?></label>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><?php _e('Lost Password'); ?></th>
+            <td>
+                <input name="widget_allow_password" type="checkbox" id="widget_allow_password" value="1" <?php if ($this->GetOption('widget_allow_password')) { echo 'checked="checked"'; } ?> />
+                <label for="widget_allow_password"><?php _e('Allow Password Recovery in Widget', 'theme-my-login'); ?></label>
+            </td>
+        </tr>
+    </table>
     <h4><?php _e('Dashboard URL'); ?></h4>
     <table class="form-table">
         <?php foreach ($user_roles as $role => $value) : ?>

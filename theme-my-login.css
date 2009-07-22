@@ -4,12 +4,12 @@
     
 #login .error {
     padding: 5px;
-    border: 1px solid red;
-    background-color: lightcoral;
+    border: 1px solid #ff0000;
+    background-color: #f08080;
     }
 
 #login .message {
     padding: 5px;
-    border: 1px solid yellow;
-    background-color: lightyellow;
+    border: 1px solid #ffff00;
+    background-color: #ffffe0;
     }
