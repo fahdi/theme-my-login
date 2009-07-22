@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
-"POT-Creation-Date: 2009-07-21 18:47+0000\n"
+"POT-Creation-Date: 2009-07-22 23:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,87 +16,103 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: includes/admin-page.php:27
+#: includes/admin-page.php:29
 msgid ""
 "To complete uninstall, deactivate this plugin. If you do not wish to "
 "uninstall, please uncheck the \"Complete Uninstall\" checkbox."
 msgstr ""
 
-#: includes/admin-page.php:29
+#: includes/admin-page.php:31
 msgid "Settings saved."
 msgstr ""
 
-#: includes/admin-page.php:38
+#: includes/admin-page.php:40
 msgid ""
 "If you like this plugin, please help keep it up to date by <a href=\"http://"
 "www.jfarthing.com/donate\">donating through PayPal</a>!"
 msgstr ""
 
-#: includes/admin-page.php:48
+#: includes/admin-page.php:50
 msgid "Theme My Login Settings"
 msgstr ""
 
-#: includes/admin-page.php:53
+#: includes/admin-page.php:55
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin-page.php:56
+#: includes/admin-page.php:58
 msgid "Plugin"
 msgstr ""
 
-#: includes/admin-page.php:59
+#: includes/admin-page.php:61
 msgid "Uninstall"
 msgstr ""
 
-#: includes/admin-page.php:63
+#: includes/admin-page.php:65
 msgid "Page List"
 msgstr ""
 
-#: includes/admin-page.php:66
+#: includes/admin-page.php:68
 msgid "Show Login Page"
 msgstr ""
 
-#: includes/admin-page.php:71
+#: includes/admin-page.php:73
 msgid "Template Settings"
 msgstr ""
 
-#: includes/admin-page.php:74
+#: includes/admin-page.php:76
 msgid "Register Title"
 msgstr ""
 
-#: includes/admin-page.php:80
+#: includes/admin-page.php:82
 msgid "Register Message"
 msgstr ""
 
-#: includes/admin-page.php:86
+#: includes/admin-page.php:88
 msgid "Registration Complete Message"
 msgstr ""
 
-#: includes/admin-page.php:92
+#: includes/admin-page.php:94
 msgid "Login Title"
 msgstr ""
 
-#: includes/admin-page.php:98
+#: includes/admin-page.php:100
 msgid "Lost Password Title"
 msgstr ""
 
-#: includes/admin-page.php:104
+#: includes/admin-page.php:106
 msgid "Lost Password Message"
 msgstr ""
 
-#: includes/admin-page.php:111
+#: includes/admin-page.php:113
 msgid "Widget Settings"
 msgstr ""
 
-#: includes/admin-page.php:112
+#: includes/admin-page.php:116
+msgid "Registration"
+msgstr ""
+
+#: includes/admin-page.php:119
+msgid "Allow Registration in Widget"
+msgstr ""
+
+#: includes/admin-page.php:123 theme-my-login.php:93
+msgid "Lost Password"
+msgstr ""
+
+#: includes/admin-page.php:126
+msgid "Allow Password Recovery in Widget"
+msgstr ""
+
+#: includes/admin-page.php:130
 msgid "Dashboard URL"
 msgstr ""
 
-#: includes/admin-page.php:124
+#: includes/admin-page.php:142
 msgid "Profile URL"
 msgstr ""
 
-#: includes/admin-page.php:136
+#: includes/admin-page.php:154
 msgid "Save Changes"
 msgstr ""
 
@@ -116,7 +132,7 @@ msgstr ""
 
 #. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
 #. Plugin Name of an extension
-#: includes/widget-new.php:7 theme-my-login.php:142
+#: includes/widget-new.php:7 theme-my-login.php:144
 msgid "Theme My Login"
 msgstr ""
 
@@ -181,7 +197,7 @@ msgstr ""
 msgid "register_msg"
 msgstr ""
 
-#: includes/wp-login-forms.php:60 includes/wp-login-functions.php:72
+#: includes/wp-login-forms.php:60 includes/wp-login-functions.php:73
 #: theme-my-login.php:90
 msgid "Register"
 msgstr ""
@@ -221,109 +237,109 @@ msgstr ""
 msgid "Log In"
 msgstr ""
 
-#: includes/wp-login-functions.php:68
+#: includes/wp-login-functions.php:69
 msgid "Log in"
 msgstr ""
 
-#: includes/wp-login-functions.php:76
+#: includes/wp-login-functions.php:77
 msgid "Password Lost and Found"
 msgstr ""
 
-#: includes/wp-login-functions.php:76
+#: includes/wp-login-functions.php:77
 msgid "Lost your password?"
 msgstr ""
 
-#: includes/wp-login-functions.php:90
+#: includes/wp-login-functions.php:91
 msgid "<strong>ERROR</strong>: Enter a username or e-mail address."
 msgstr ""
 
-#: includes/wp-login-functions.php:95
+#: includes/wp-login-functions.php:96
 msgid ""
 "<strong>ERROR</strong>: There is no user registered with that email address."
 msgstr ""
 
-#: includes/wp-login-functions.php:107
+#: includes/wp-login-functions.php:108
 msgid "<strong>ERROR</strong>: Invalid username or e-mail."
 msgstr ""
 
-#: includes/wp-login-functions.php:121
+#: includes/wp-login-functions.php:122
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/wp-login-functions.php:133
+#: includes/wp-login-functions.php:134
 msgid ""
 "Someone has asked to reset the password for the following site and username."
 msgstr ""
 
-#: includes/wp-login-functions.php:135 includes/wp-login-functions.php:164
+#: includes/wp-login-functions.php:136 includes/wp-login-functions.php:165
 #, php-format
 msgid "Username: %s"
 msgstr ""
 
-#: includes/wp-login-functions.php:136
+#: includes/wp-login-functions.php:137
 msgid ""
 "To reset your password visit the following address, otherwise just ignore "
 "this email and nothing will happen."
 msgstr ""
 
-#: includes/wp-login-functions.php:139
+#: includes/wp-login-functions.php:140
 #, php-format
 msgid "[%s] Password Reset"
 msgstr ""
 
-#: includes/wp-login-functions.php:140 includes/wp-login-functions.php:169
+#: includes/wp-login-functions.php:141 includes/wp-login-functions.php:170
 msgid "The e-mail could not be sent."
 msgstr ""
 
-#: includes/wp-login-functions.php:140 includes/wp-login-functions.php:169
+#: includes/wp-login-functions.php:141 includes/wp-login-functions.php:170
 msgid "Possible reason: your host may have disabled the mail() function..."
 msgstr ""
 
-#: includes/wp-login-functions.php:153 includes/wp-login-functions.php:157
+#: includes/wp-login-functions.php:154 includes/wp-login-functions.php:158
 msgid "Invalid key"
 msgstr ""
 
-#: includes/wp-login-functions.php:165
+#: includes/wp-login-functions.php:166
 #, php-format
 msgid "Password: %s"
 msgstr ""
 
-#: includes/wp-login-functions.php:168
+#: includes/wp-login-functions.php:169
 #, php-format
 msgid "[%s] Your new password"
 msgstr ""
 
-#: includes/wp-login-functions.php:186
+#: includes/wp-login-functions.php:187
 msgid "<strong>ERROR</strong>: Please enter a username."
 msgstr ""
 
-#: includes/wp-login-functions.php:188
+#: includes/wp-login-functions.php:189
 msgid ""
 "<strong>ERROR</strong>: This username is invalid.  Please enter a valid "
 "username."
 msgstr ""
 
-#: includes/wp-login-functions.php:191
+#: includes/wp-login-functions.php:192
 msgid ""
 "<strong>ERROR</strong>: This username is already registered, please choose "
 "another one."
 msgstr ""
 
-#: includes/wp-login-functions.php:195
+#: includes/wp-login-functions.php:196
 msgid "<strong>ERROR</strong>: Please type your e-mail address."
 msgstr ""
 
-#: includes/wp-login-functions.php:197
+#: includes/wp-login-functions.php:198
 msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
 msgstr ""
 
-#: includes/wp-login-functions.php:200
+#: includes/wp-login-functions.php:201
 msgid ""
 "<strong>ERROR</strong>: This email is already registered, please choose "
 "another one."
 msgstr ""
 
-#: includes/wp-login-functions.php:212
+#: includes/wp-login-functions.php:213
 #, php-format
 msgid ""
 "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a "
@@ -336,10 +352,6 @@ msgstr ""
 
 #: theme-my-login.php:92
 msgid "Registration complete. Please check your e-mail."
-msgstr ""
-
-#: theme-my-login.php:93
-msgid "Lost Password"
 msgstr ""
 
 #: theme-my-login.php:94
