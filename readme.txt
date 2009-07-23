@@ -27,6 +27,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.1 =
+* Fixed a XHTML validation issue
+
 = 3.2 =
 * Added the option to allow/disallow registration and password recovery within the widget
 * Fixed a bug regarding color names within the CSS file that broke validation
