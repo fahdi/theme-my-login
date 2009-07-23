@@ -27,6 +27,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.2 =
+* Added the option to leave widget links blank for default handling
+
 = 3.2.1 =
 * Fixed a XHTML validation issue
 

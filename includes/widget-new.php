@@ -19,6 +19,8 @@ class ThemeMyLoginWidget extends WP_Widget {
                 $user_role = reset($current_user->roles);
                 $dashboard_url = $ThemeMyLogin->GetOption('widget_dashboard_url');
                 $profile_url = $ThemeMyLogin->GetOption('widget_profile_url');
+                $user_dashboard_url = (empty($dashboard_url[$user_role])) ? site_url('wp-admin/', 'admin') : $dashboard_url[$user_role];
+                $user_profile_url = (empty($profile_url[$user_role])) ? site_url('wp-admin/profile.php', 'admin') : $profile_url[$user_role];
                 echo $before_widget . $before_title . __('Welcome', 'theme-my-login') . ', ' . $current_user->display_name . $after_title . "\n";
                 if ($instance['show_gravatar']) :
                     echo '<div class="theme-my-login-avatar">' . get_avatar( $user_ID, $size = $instance['gravatar_size'] ) . '</div>' . "\n";
@@ -26,10 +28,10 @@ class ThemeMyLoginWidget extends WP_Widget {
                 do_action('theme_my_login_avatar', $current_user);
                 echo '<ul class="theme-my-login-links">' . "\n";
                 if ($instance['dashboard_link_' . $user_role]) :
-                    echo '<li><a href="' . $dashboard_url[$user_role] . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
                 endif;
                 if ($instance['profile_link_' . $user_role]) :
-                    echo '<li><a href="' . $profile_url[$user_role] . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_profile_url . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
                 endif;
                 do_action('theme_my_login_links', $user_role);
                 $redirect = wp_guess_url();

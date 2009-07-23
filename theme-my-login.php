@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.2.1
+Version: 3.2.2
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 */
@@ -26,7 +26,7 @@ if ($wp_version < '2.7') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '3.2.1';
+        var $version = '3.2.2';
         var $options = array();
         var $permalink = '';
 
@@ -36,7 +36,7 @@ if (!class_exists('ThemeMyLogin')) {
 
         function __construct() {
         
-            load_plugin_textdomain('theme-my-login', '/wp-content/plugins/theme-my-login/language');
+            load_plugin_textdomain('theme-my-login', 'wp-content/plugins/theme-my-login/language', 'language');
 
             register_activation_hook ( __FILE__, array( &$this, 'Activate' ) );
             register_deactivation_hook ( __FILE__, array( &$this, 'Deactivate' ) );
@@ -104,8 +104,8 @@ if (!class_exists('ThemeMyLogin')) {
 
             $user_roles = array('subscriber', 'contributor', 'author', 'editor', 'administrator');
             foreach ($user_roles as $role) {
-                $dashboard_url[$role] = site_url('wp-admin', 'admin');
-                $profile_url[$role] = site_url('wp-admin/profile.php', 'admin');
+                $dashboard_url[$role] = '';
+                $profile_url[$role] = '';
             }
             $this->options['widget_dashboard_url'] = $dashboard_url;
             $this->options['widget_profile_url'] = $profile_url;

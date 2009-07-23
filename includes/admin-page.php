@@ -128,6 +128,7 @@ $profile_url = $this->GetOption('widget_profile_url');
         </tr>
     </table>
     <h4><?php _e('Dashboard URL'); ?></h4>
+    <p class="setting-description">Leave blank for default</p>
     <table class="form-table">
         <?php foreach ($user_roles as $role => $value) : ?>
         <tr valign="top">
@@ -140,6 +141,7 @@ $profile_url = $this->GetOption('widget_profile_url');
     </table>
     
     <h4><?php _e('Profile URL'); ?></h4>
+    <p class="setting-description">Leave blank for default</p>
     <table class="form-table">
         <?php foreach ($user_roles as $role => $value) : ?>
         <tr valign="top">
