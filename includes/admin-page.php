@@ -113,14 +113,14 @@ $profile_url = $this->GetOption('widget_profile_url');
     <h3><?php _e('Widget Settings', 'theme-my-login'); ?></h3>
     <table class="form-table">
         <tr valign="top">
-            <th scope="row"><?php _e('Registration'); ?></th>
+            <th scope="row"><?php _e('Registration', 'theme-my-login'); ?></th>
             <td>
                 <input name="widget_allow_register" type="checkbox" id="widget_allow_register" value="1" <?php if ($this->GetOption('widget_allow_register')) { echo 'checked="checked"'; } ?> />
                 <label for="widget_allow_register"><?php _e('Allow Registration in Widget', 'theme-my-login'); ?></label>
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?php _e('Lost Password'); ?></th>
+            <th scope="row"><?php _e('Lost Password', 'theme-my-login'); ?></th>
             <td>
                 <input name="widget_allow_password" type="checkbox" id="widget_allow_password" value="1" <?php if ($this->GetOption('widget_allow_password')) { echo 'checked="checked"'; } ?> />
                 <label for="widget_allow_password"><?php _e('Allow Password Recovery in Widget', 'theme-my-login'); ?></label>
@@ -153,6 +153,6 @@ $profile_url = $this->GetOption('widget_profile_url');
         <?php endforeach; ?>
     </table>
     
-    <p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes', 'theme-my-login'); ?>" />
+    <p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes'); ?>" />
     </form>
 </div>

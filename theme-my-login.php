@@ -3,9 +3,10 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.2.2
+Version: 3.2.3
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
+Text Domain: theme-my-login
 */
 
 global $wp_version;
@@ -26,7 +27,7 @@ if ($wp_version < '2.7') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '3.2.2';
+        var $version = '3.2.3';
         var $options = array();
         var $permalink = '';
 
@@ -86,12 +87,12 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['uninstall']             = 0;
             $this->options['page_id']               = 0;
             $this->options['show_page']             = 0;
-            $this->options['login_title']           = __('Log In', 'theme-my-login');
-            $this->options['register_title']        = __('Register', 'theme-my-login');
-            $this->options['register_msg']          = __('A password will be e-mailed to you.', 'theme-my-login');
-            $this->options['register_complete']     = __('Registration complete. Please check your e-mail.', 'theme-my-login');
-            $this->options['password_title']        = __('Lost Password', 'theme-my-login');
-            $this->options['password_msg']          = __('Please enter your username or e-mail address. You will receive a new password via e-mail.', 'theme-my-login');
+            $this->options['login_title']           = __('Log In');
+            $this->options['register_title']        = __('Register');
+            $this->options['register_msg']          = __('A password will be e-mailed to you.');
+            $this->options['register_complete']     = __('Registration complete. Please check your e-mail.');
+            $this->options['password_title']        = __('Lost Password');
+            $this->options['password_msg']          = __('Please enter your username or e-mail address. You will receive a new password via e-mail.');
             
             // Widget options
             $this->options['widget_allow_register'] = 1;

@@ -3,8 +3,8 @@
 class ThemeMyLoginWidget extends WP_Widget {
 
     function ThemeMyLoginWidget(){
-        $widget_ops = array('classname' => 'widget_theme_my_login', 'description' => __('A login form for your blog.') );
-        $this->WP_Widget('theme-my-login', __('Theme My Login'), $widget_ops);
+        $widget_ops = array('classname' => 'widget_theme_my_login', 'description' => __('A login form for your blog.', 'theme-my-login') );
+        $this->WP_Widget('theme-my-login', __('Theme My Login', 'theme-my-login'), $widget_ops);
     }
 
     function widget($args, $instance){
@@ -28,17 +28,17 @@ class ThemeMyLoginWidget extends WP_Widget {
                 do_action('theme_my_login_avatar', $current_user);
                 echo '<ul class="theme-my-login-links">' . "\n";
                 if ($instance['dashboard_link_' . $user_role]) :
-                    echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard') . '</a></li>' . "\n";
                 endif;
                 if ($instance['profile_link_' . $user_role]) :
-                    echo '<li><a href="' . $user_profile_url . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_profile_url . '">' . __('Profile') . '</a></li>' . "\n";
                 endif;
                 do_action('theme_my_login_links', $user_role);
                 $redirect = wp_guess_url();
                 if (version_compare($wp_version, '2.7', '>='))
-                    echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Logout', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
                 else
-                    echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Logout', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
                 echo '</ul>' . "\n";
                 echo $after_widget . "\n";
             } elseif (empty($user_ID)) {
@@ -100,18 +100,18 @@ class ThemeMyLoginWidget extends WP_Widget {
         $instance = wp_parse_args( (array) $instance, (array) $defaults );
 
         $is_checked = (empty($instance['show_logged_in'])) ? '' : 'checked="checked" ';
-        echo '<p><input name="' . $this->get_field_name('show_logged_in') . '" type="checkbox" id="' . $this->get_field_id('show_logged_in') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_logged_in') . '">' . __('Show When Logged In') . '</label></p>' . "\n";
+        echo '<p><input name="' . $this->get_field_name('show_logged_in') . '" type="checkbox" id="' . $this->get_field_id('show_logged_in') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_logged_in') . '">' . __('Show When Logged In', 'theme-my-login') . '</label></p>' . "\n";
         $is_checked = (empty($instance['show_gravatar'])) ? '' : 'checked="checked" ';
-        echo '<p><input name="' . $this->get_field_name('show_gravatar') . '" type="checkbox" id="' . $this->get_field_id('show_gravatar') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_gravatar') . '">' . __('Show Gravatar') . '</label></p>' . "\n";
-        echo '<p>' . __('Gravatar Size') . ': <input name="' . $this->get_field_name('gravatar_size') . '" type="text" id="' . $this->get_field_id('gravatar_size') . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id('gravatar_size') . '"></label></p>' . "\n";
-        echo '<p>' . __('Dashboard Link') . ':<br />' . "\n";
+        echo '<p><input name="' . $this->get_field_name('show_gravatar') . '" type="checkbox" id="' . $this->get_field_id('show_gravatar') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_gravatar') . '">' . __('Show Gravatar', 'theme-my-login') . '</label></p>' . "\n";
+        echo '<p>' . __('Gravatar Size', 'theme-my-login') . ': <input name="' . $this->get_field_name('gravatar_size') . '" type="text" id="' . $this->get_field_id('gravatar_size') . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id('gravatar_size') . '"></label></p>' . "\n";
+        echo '<p>' . __('Dashboard Link', 'theme-my-login') . ':<br />' . "\n";
         foreach ($user_roles as $role => $value) {
             $is_checked = (empty($instance['dashboard_link_' . $role])) ? '' : 'checked="checked" ';
             echo '<input name="' . $this->get_field_name('dashboard_link_' . $role) . '" type="checkbox" id="' . $this->get_field_id('dashboard_link_' . $role) . '" value="1" ' . $is_checked . '/> ' . ucwords($role) . '<br />' . "\n";
             //echo '<input name="' . $this->get_field_name('dashboard_url_' . $role) . '" type="text" id="' . $this->get_field_id('dashboard_url_' . $role) . '" value="' . $instance['dashboard_url_' . $role] . '" class="widefat" /><br />' . "\n";
         }
         echo '</p>';
-        echo '<p>' . __('Profile Link') . ':<br />' . "\n";
+        echo '<p>' . __('Profile Link', 'theme-my-login') . ':<br />' . "\n";
         foreach ($user_roles as $role => $value) {
             $is_checked = (empty($instance['profile_link_' . $role])) ? '' : 'checked="checked" ';
             echo '<input name="' . $this->get_field_name('profile_link_' . $role) . '" type="checkbox" id="' . $this->get_field_id('profile_link_' . $role) . '" value="1" ' . $is_checked . '/> ' . ucwords($role) . '<br />' . "\n";

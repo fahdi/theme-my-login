@@ -34,17 +34,17 @@ class ThemeMyLoginWidget {
                 do_action('theme_my_login_avatar', $current_user);
                 echo '<ul class="theme-my-login-links">' . "\n";
                 if ($dashboard_link[$user_role] == true) :
-                    echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard') . '</a></li>' . "\n";
                 endif;
                 if ($profile_link[$user_role] == true) :
-                    echo '<li><a href="' . $user_profile_url . '">' . __('Profile', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . $user_profile_url . '">' . __('Profile') . '</a></li>' . "\n";
                 endif;
                 do_action('theme_my_login_links', $user_role);
                 $redirect = wp_guess_url();
                 if (version_compare($wp_version, '2.7', '>='))
-                    echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Logout', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
                 else
-                    echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Logout', 'theme-my-login') . '</a></li>' . "\n";
+                    echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
                 echo '</ul>' . "\n";
             } elseif (empty($user_ID)) {
                 switch ($_GET['action']) {

@@ -27,6 +27,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.3 = 
+* Fixed and updated many gettext calls for internationalization
+
 = 3.2.2 =
 * Added the option to leave widget links blank for default handling
 
