@@ -27,6 +27,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.4 =
+* Fixed the load_plugin_textdomain() call
+* Added 'login_head' action hook
+
 = 3.2.3 = 
 * Fixed and updated many gettext calls for internationalization
 
