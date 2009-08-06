@@ -1,0 +1,368 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 3.2.3\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
+"POT-Creation-Date: 2009-07-23 23:24+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Bertrand Benoît <infos@benoit-bertrand.be>\n"
+"Language-Team: Bertrand Benoit <infos@benoit-bertrand.be>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: French\n"
+"X-Poedit-Country: BELGIUM\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"Plural-Forms: nplurals=2;plural=n>2\n"
+"X-Poedit-KeywordsList: __;_e;_c\n"
+"X-Poedit-Basepath: C:\\Download\\theme-my-login\n"
+"X-Poedit-SearchPath-0: C:\\Download\\theme-my-login\n"
+
+#: includes/admin-page.php:29
+msgid "To complete uninstall, deactivate this plugin. If you do not wish to uninstall, please uncheck the \"Complete Uninstall\" checkbox."
+msgstr "Pour terminer la désinstallation vous devez désactiver ce plugin. Si vous ne voulez pas le désinstaller, merci de décocher la case \"Désinstallation Complète\"."
+
+#: includes/admin-page.php:31
+msgid "Settings saved."
+msgstr "Paramètres Sauvergardés"
+
+#: includes/admin-page.php:40
+msgid "If you like this plugin, please help keep it up to date by <a href=\"http://www.jfarthing.com/donate\">donating through PayPal</a>!"
+msgstr "Si vous aimez cette extension, vous pouvez faire un don par <a href=\"http://www.jfarthing.com/donate\">PayPal</a> !"
+
+#: includes/admin-page.php:50
+msgid "Theme My Login Settings"
+msgstr "Paramètres de \"Theme My Login\""
+
+#: includes/admin-page.php:55
+msgid "General Settings"
+msgstr "Paramètres Général"
+
+#: includes/admin-page.php:58
+msgid "Plugin"
+msgstr "Extensions"
+
+#: includes/admin-page.php:61
+msgid "Uninstall"
+msgstr "Désinstaller"
+
+#: includes/admin-page.php:65
+msgid "Page List"
+msgstr "Onglet Page"
+
+#: includes/admin-page.php:68
+msgid "Show Login Page"
+msgstr "Montrer la Page de Connexion"
+
+#: includes/admin-page.php:73
+msgid "Template Settings"
+msgstr "Paramètres du Template"
+
+#: includes/admin-page.php:76
+msgid "Register Title"
+msgstr "Titre pour l'Inscription"
+
+#: includes/admin-page.php:82
+msgid "Register Message"
+msgstr "Message pour l'Inscription"
+
+#: includes/admin-page.php:88
+msgid "Registration Complete Message"
+msgstr "Message pour l'Inscription Terminée"
+
+#: includes/admin-page.php:94
+msgid "Login Title"
+msgstr "Titre pour la connexion"
+
+#: includes/admin-page.php:100
+msgid "Lost Password Title"
+msgstr "Titre pour le mot de passe perdu"
+
+#: includes/admin-page.php:106
+msgid "Lost Password Message"
+msgstr "Message pour le mot de passe perdu"
+
+#: includes/admin-page.php:113
+msgid "Widget Settings"
+msgstr "Paramètres du Widget"
+
+#: includes/admin-page.php:116
+msgid "Registration"
+msgstr "Inscription"
+
+#: includes/admin-page.php:119
+msgid "Allow Registration in Widget"
+msgstr "Permettre l'Inscription dans le Widget"
+
+#: includes/admin-page.php:123
+#: theme-my-login.php:94
+msgid "Lost Password"
+msgstr "Mot de passe perdu"
+
+#: includes/admin-page.php:126
+msgid "Allow Password Recovery in Widget"
+msgstr "Permettre la récupération du mot de passe dans le Widget"
+
+#: includes/admin-page.php:130
+msgid "Dashboard URL"
+msgstr "URL vers l'Adm. Du Site"
+
+#: includes/admin-page.php:143
+msgid "Profile URL"
+msgstr "URL vers le Profile"
+
+#: includes/admin-page.php:156
+msgid "Save Changes"
+msgstr "Enregistrer"
+
+#: includes/compat.php:84
+#, php-format
+msgid "Password Lost and Changed for user: %s"
+msgstr "Mot de passe perdu et changé pour l'utilisateur : %s"
+
+#: includes/compat.php:85
+#, php-format
+msgid "[%s] Password Lost/Changed"
+msgstr "[%s] Mot de passe Perdu / Changé"
+
+#: includes/widget-new.php:6
+msgid "A login form for your blog."
+msgstr "Une page de connexion pour votre blog."
+
+#. #-#-#-#-#  plugin.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Plugin Name of an extension
+#: includes/widget-new.php:7
+#: theme-my-login.php:145
+msgid "Theme My Login"
+msgstr "Theme My Login"
+
+#: includes/widget-new.php:24
+#: includes/widget-old.php:30
+msgid "Welcome"
+msgstr "Bienvenue"
+
+#: includes/widget-new.php:31
+#: includes/widget-old.php:37
+msgid "Dashboard"
+msgstr "Adm. Du Site"
+
+#: includes/widget-new.php:34
+#: includes/widget-old.php:40
+msgid "Profile"
+msgstr "Profile"
+
+#: includes/widget-new.php:39
+#: includes/widget-new.php:41
+#: includes/widget-old.php:45
+#: includes/widget-old.php:47
+msgid "Log Out"
+msgstr "Déconnexion"
+
+#: includes/widget-new.php:103
+msgid "Show When Logged In"
+msgstr "Montrer quand on est connecté"
+
+#: includes/widget-new.php:105
+msgid "Show Gravatar"
+msgstr "Montrer le Gravatar"
+
+#: includes/widget-new.php:106
+msgid "Gravatar Size"
+msgstr "Taille du Gravatar"
+
+#: includes/widget-new.php:107
+msgid "Dashboard Link"
+msgstr "Liens vers l'Adm. Du Site"
+
+#: includes/widget-new.php:114
+msgid "Profile Link"
+msgstr "Liens vers le Profile"
+
+#: includes/wp-login-actions.php:63
+msgid "Sorry, that key does not appear to be valid."
+msgstr "Désolé, cette clé n'est pas valide."
+
+#: includes/wp-login-forms.php:25
+msgid "Username or E-mail:"
+msgstr "Nom d'Utilisateur ou E-mail :"
+
+#: includes/wp-login-forms.php:32
+msgid "Get New Password"
+msgstr "Obtenir un Nouveau Mot de passe"
+
+#: includes/wp-login-forms.php:48
+#: includes/wp-login-forms.php:105
+msgid "Username"
+msgstr "Nom d'Utilisateur"
+
+#: includes/wp-login-forms.php:52
+msgid "E-mail"
+msgstr "E-mail"
+
+#: includes/wp-login-forms.php:60
+#: includes/wp-login-functions.php:73
+#: theme-my-login.php:91
+msgid "Register"
+msgstr "Inscription"
+
+#: includes/wp-login-forms.php:88
+msgid "<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress."
+msgstr "<strong>ERREUR</strong>: Les cookies sont bloqués ou non-supportés par votre navigateur. Vous devez <a href='http://www.google.com/cookies.html'>activer les cookies</a> pour utiliser WordPress."
+
+#: includes/wp-login-forms.php:91
+msgid "You are now logged out."
+msgstr "Vous êtes déconnecté."
+
+#: includes/wp-login-forms.php:92
+msgid "User registration is currently not allowed."
+msgstr "L'inscription n'est pas autorisée actuellement."
+
+#: includes/wp-login-forms.php:93
+msgid "Check your e-mail for the confirmation link."
+msgstr "Vérifiez votre e-mail pour le lien de cofirmation."
+
+#: includes/wp-login-forms.php:94
+msgid "Check your e-mail for your new password."
+msgstr "Vérifiez votre e-mail pour votre nouveau mot de passe."
+
+#: includes/wp-login-forms.php:109
+msgid "Password"
+msgstr "Mot de passe"
+
+#: includes/wp-login-forms.php:113
+msgid "Remember Me"
+msgstr "Se souvenir de moi"
+
+#: includes/wp-login-forms.php:117
+#: theme-my-login.php:90
+msgid "Log In"
+msgstr "Connexion"
+
+#: includes/wp-login-functions.php:69
+msgid "Log in"
+msgstr "Connexion"
+
+#: includes/wp-login-functions.php:77
+msgid "Password Lost and Found"
+msgstr "Mot de passe Perdu et Trouvé"
+
+#: includes/wp-login-functions.php:77
+msgid "Lost your password?"
+msgstr "Mot de passe perdu ?"
+
+#: includes/wp-login-functions.php:91
+msgid "<strong>ERROR</strong>: Enter a username or e-mail address."
+msgstr "<strong>ERREUR</strong>: Entezr un nom d'utilisateur ou un adresse e-mail."
+
+#: includes/wp-login-functions.php:96
+msgid "<strong>ERROR</strong>: There is no user registered with that email address."
+msgstr "<strong>ERREURR</strong>: Il n'y a aucun utilisateur enregistré avec cette adresse e-mail."
+
+#: includes/wp-login-functions.php:108
+msgid "<strong>ERROR</strong>: Invalid username or e-mail."
+msgstr "<strong>ERREUR</strong>: Nom d'utilisateur ou adresse e-mail incorrecte."
+
+#: includes/wp-login-functions.php:122
+msgid "Password reset is not allowed for this user"
+msgstr "La réinitialisation du mot de passe n'est pas autorisée pour cet utilisateur."
+
+#: includes/wp-login-functions.php:134
+msgid "Someone has asked to reset the password for the following site and username."
+msgstr "Quelqu'un a demandé la réinitialisation de votre mot de passe.<br>Ceci concerne le site internet et le nom d'utilisateur suivant :"
+
+#: includes/wp-login-functions.php:136
+#: includes/wp-login-functions.php:165
+#, php-format
+msgid "Username: %s"
+msgstr "Nom d'utilisateur : %s"
+
+#: includes/wp-login-functions.php:137
+msgid "To reset your password visit the following address, otherwise just ignore this email and nothing will happen."
+msgstr "Pour réinitialiser votre mot de passe cliquer sur le lien suivant, sinon ne faites pas attention à cet et rien ne sera modifier."
+
+#: includes/wp-login-functions.php:140
+#, php-format
+msgid "[%s] Password Reset"
+msgstr "[%s] Mot de passe Réinitialisé"
+
+#: includes/wp-login-functions.php:141
+#: includes/wp-login-functions.php:170
+msgid "The e-mail could not be sent."
+msgstr "L'e-mail n'a pas pu être envoyé."
+
+#: includes/wp-login-functions.php:141
+#: includes/wp-login-functions.php:170
+msgid "Possible reason: your host may have disabled the mail() function..."
+msgstr "Raison possible : votre hébergeur a peut-être désactiver la fonction mail()..."
+
+#: includes/wp-login-functions.php:154
+#: includes/wp-login-functions.php:158
+msgid "Invalid key"
+msgstr "Clé Invalide"
+
+#: includes/wp-login-functions.php:166
+#, php-format
+msgid "Password: %s"
+msgstr "Mot de passe : %s"
+
+#: includes/wp-login-functions.php:169
+#, php-format
+msgid "[%s] Your new password"
+msgstr "[%s] Votre Nouveau Mot de passe"
+
+#: includes/wp-login-functions.php:187
+msgid "<strong>ERROR</strong>: Please enter a username."
+msgstr "<strong>ERREUR</strong>: Merci d'entrer un nom d'utilisateur."
+
+#: includes/wp-login-functions.php:189
+msgid "<strong>ERROR</strong>: This username is invalid.  Please enter a valid username."
+msgstr "<strong>ERREUR</strong>: Ce nom d'utilisateur est invalide.  Merci d'en choisir un nouveau."
+
+#: includes/wp-login-functions.php:192
+msgid "<strong>ERROR</strong>: This username is already registered, please choose another one."
+msgstr "<strong>ERREUR</strong>: Ce nom d'utilisateur est déjà utilisé, merci d'en choisir un nouveau."
+
+#: includes/wp-login-functions.php:196
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr "<strong>ERREUR</strong>: Merci d'entrer votre adresse e-mail."
+
+#: includes/wp-login-functions.php:198
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr "<strong>ERREUR</strong>: L'adresse email est incorrecte."
+
+#: includes/wp-login-functions.php:201
+msgid "<strong>ERROR</strong>: This email is already registered, please choose another one."
+msgstr "<strong>ERREUR</strong>: Cette adresse e-mail invalide.  Merci d'en choisir une autre."
+
+#: includes/wp-login-functions.php:213
+#, php-format
+msgid "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href=\"mailto:%s\">webmaster</a> !"
+msgstr "<strong>ERREUR</strong>: Impossible de vous enregistrer... <br>Merci de contacter le <a href=\"mailto:%s\">webmaster</a> !"
+
+#: theme-my-login.php:92
+msgid "A password will be e-mailed to you."
+msgstr "Un mot de passe vous sera envoyé par e-mail."
+
+#: theme-my-login.php:93
+msgid "Registration complete. Please check your e-mail."
+msgstr "Inscription Terminée. Merci de vérifier votre e-mail."
+
+#: theme-my-login.php:95
+msgid "Please enter your username or e-mail address. You will receive a new password via e-mail."
+msgstr "Entrez votre nom d'utilisateur ou votre adresse e-mail. <br>Vous recevrez un nouveau password par e-mail."
+
+#. Plugin URI of an extension
+msgid "http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin"
+msgstr "http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin"
+
+#. Description of an extension
+msgid "Themes the WordPress login, registration and forgot password pages according to your theme."
+msgstr "Editer la page de login de WordPress, l'inscription et les mots de passe enaccord avec votre thème."
+
+#. Author of an extension
+msgid "Jeff Farthing"
+msgstr "Jeff Farthing"
+
+#. Author URI of an extension
+msgid "http://www.jfarthing.com"
+msgstr "http://www.jfarthing.com"
+

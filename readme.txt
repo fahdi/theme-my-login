@@ -27,9 +27,14 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.6 =
+* Fixed a bug dealing with the version_compare() function
+* Included French translation
+* Included Spanish translation
+
 = 3.2.5 =
 * Fixed a bug that produced a 'headers aldready sent' error when uploading media
-* Included a Dutch translation file
+* Included Dutch translation
 
 = 3.2.4 =
 * Fixed the load_plugin_textdomain() call

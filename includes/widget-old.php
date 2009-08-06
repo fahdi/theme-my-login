@@ -41,7 +41,7 @@ class ThemeMyLoginWidget {
                 endif;
                 do_action('theme_my_login_links', $user_role);
                 $redirect = wp_guess_url();
-                if (version_compare($wp_version, '2.7', '>='))
+                if ($wp_version >= '2.7')
                     echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
                 else
                     echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
