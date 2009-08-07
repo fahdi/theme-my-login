@@ -27,6 +27,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.2.7 =
+* Fixed a bug that determined how to create the widget
+
 = 3.2.6 =
 * Fixed a bug dealing with the version_compare() function
 * Included French translation
