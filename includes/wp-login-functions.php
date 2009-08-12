@@ -145,29 +145,39 @@ function retrieve_password() {
 endif;
 
 if (!function_exists('reset_password')) :
-function reset_password($key) {
+function reset_password($key, $login) {
     global $wpdb;
 
     $key = preg_replace('/[^a-z0-9]/i', '', $key);
 
-    if ( empty( $key ) )
+    if ( empty( $key ) || !is_string( $key ) )
         return new WP_Error('invalid_key', __('Invalid key'));
 
-    $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s", $key));
+    if ( empty($login) || !is_string($login) )
+        return new WP_Error('invalid_key', __('Invalid key'));
+
+    $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login));
     if ( empty( $user ) )
         return new WP_Error('invalid_key', __('Invalid key'));
 
-    do_action('password_reset', $user);
-
     // Generate something random for a password...
     $new_pass = wp_generate_password();
+
+    do_action('password_reset', $user, $new_pass);
+
     wp_set_password($new_pass, $user->ID);
+    update_usermeta($user->ID, 'default_password_nag', true); //Set up the Password change nag.
     $message  = sprintf(__('Username: %s'), $user->user_login) . "\r\n";
     $message .= sprintf(__('Password: %s'), $new_pass) . "\r\n";
     $message .= site_url('wp-login.php', 'login') . "\r\n";
 
-    if (  !wp_mail($user->user_email, sprintf(__('[%s] Your new password'), get_option('blogname')), $message) )
-        die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
+    $title = sprintf(__('[%s] Your new password'), get_option('blogname'));
+
+    $title = apply_filters('password_reset_title', $title);
+    $message = apply_filters('password_reset_message', $message, $new_pass);
+
+    if ( $message && !wp_mail($user->user_email, $title, $message) )
+          die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
 
     wp_password_change_notification($user);
 

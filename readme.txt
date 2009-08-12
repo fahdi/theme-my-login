@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar
 Requires at least: 2.5
-Tested up to: 2.8.2
+Tested up to: 2.8.4
 Stable tag: trunk
 
 Themes the WordPress login pages according to your theme.
@@ -26,6 +26,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 3.2.8 =
+* Fixed a security exploit regarding admin password reset addressed in WordPress 2.8.4
 
 = 3.2.7 =
 * Fixed a bug that determined how to create the widget
