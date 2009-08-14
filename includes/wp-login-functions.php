@@ -61,20 +61,25 @@ function login_header($message = '', $wp_error = '') {
 endif;
 
 if (!function_exists('login_footer')) :
-function login_footer($type = 'page') {
+function login_footer($type = 'page', $action = '') {
     $options = get_option('theme_my_login');
-    $_GET['action'] = isset($_GET['action']) ? $_GET['action'] : 'login';
+    
+    if (empty($action))
+        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
+        
+    $guess_url = remove_query_arg('loggedout');
+        
     echo '<ul class="links">' . "\n";
-    if (in_array($_GET['action'], array('register', 'lostpassword')) || $_GET['action'] == 'login' && isset($_GET['checkemail']) && 'registered' != $_GET['checkemail']) {
-        $url = ($type == 'widget') ? add_query_arg('action', 'login', wp_guess_url()) : site_url('wp-login.php', 'login');
+    if (in_array($action, array('register', 'lostpassword')) || $action == 'login' && isset($_GET['checkemail']) && 'registered' != $_GET['checkemail']) {
+        $url = ($type == 'widget') ? add_query_arg('action', 'login', $guess_url) : site_url('wp-login.php', 'login');
         echo '<li><a href="' . $url . '">' . __('Log in') . '</a></li>' . "\n";
     }
-    if (get_option('users_can_register') && $_GET['action'] != 'register') {
-        $url = ($type == 'widget' && $options['widget_allow_register']) ? add_query_arg('action', 'register', wp_guess_url()) : site_url('wp-login.php?action=register', 'login');
+    if (get_option('users_can_register') && $action != 'register') {
+        $url = ($type == 'widget' && $options['widget_allow_register']) ? add_query_arg('action', 'register', $guess_url) : site_url('wp-login.php?action=register', 'login');
         echo '<li><a href="' . $url . '">' . __('Register') . '</a></li>' . "\n";
     }
-    if ($_GET['action'] != 'lostpassword') {
-        $url = ($type == 'widget' && $options['widget_allow_password']) ? add_query_arg('action', 'lostpassword', wp_guess_url()) : site_url('wp-login.php?action=lostpassword', 'login');
+    if ($action != 'lostpassword') {
+        $url = ($type == 'widget' && $options['widget_allow_password']) ? add_query_arg('action', 'lostpassword', $guess_url) : site_url('wp-login.php?action=lostpassword', 'login');
         echo '<li><a href="' . $url . '" title="' . __('Password Lost and Found') . '">' . __('Lost your password?') . '</a></li>' . "\n";
     }
     echo '</ul>' . "\n";

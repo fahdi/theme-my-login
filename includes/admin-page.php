@@ -7,16 +7,16 @@ if ( $_POST ) {
 
     check_admin_referer('theme-my-login');
 
-    $this->SetOption('uninstall', $_POST['uninstall']);
-    $this->SetOption('show_page', $_POST['show_page']);
+    $this->SetOption('uninstall', isset($_POST['uninstall']));
+    $this->SetOption('show_page', isset($_POST['show_page']));
     $this->SetOption('login_title', stripslashes($_POST['login_title']));
     $this->SetOption('register_title', stripslashes($_POST['register_title']));
     $this->SetOption('register_msg', stripslashes($_POST['register_msg']));
     $this->SetOption('register_complete', stripslashes($_POST['register_complete']));
     $this->SetOption('password_title', stripslashes($_POST['password_title']));
     $this->SetOption('password_msg', stripslashes($_POST['password_msg']));
-    $this->SetOption('widget_allow_register', $_POST['widget_allow_register']);
-    $this->SetOption('widget_allow_password', $_POST['widget_allow_password']);
+    $this->SetOption('widget_allow_register', isset($_POST['widget_allow_register']));
+    $this->SetOption('widget_allow_password', isset($_POST['widget_allow_password']));
     foreach ($user_roles as $role => $value) {
         $dashboard_url[$role] = $_POST['widget_dashboard_url'][$role];
         $profile_url[$role] = $_POST['widget_profile_url'][$role];

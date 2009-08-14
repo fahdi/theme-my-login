@@ -197,7 +197,7 @@ if (!class_exists('ThemeMyLogin')) {
                 return $content;
         }
         
-        function DisplayLogin($type = 'page') {
+        function DisplayLogin($type = 'page', $action = '') {
             global $login_errors;
 
             $login_forms = WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php';
@@ -239,10 +239,11 @@ if (!class_exists('ThemeMyLogin')) {
             } return $title;
         }
         
-        function TheTitle($title) {
+        function TheTitle($title, $action = '') {
             if ($title == 'Login') {
 
-                $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
+                if (empty($action))
+                    $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
                     
                 switch ($action) {
                     case 'register':
@@ -308,6 +309,7 @@ if (class_exists('ThemeMyLogin')) {
         $defaults['after_widget'] = '</li>';
         $defaults['before_title'] = '<h2>';
         $defaults['after_title'] = '</h2>';
+        $defaults['action'] = 'login';
         $defaults['show_logged_in'] = 1;
         $defaults['show_gravatar'] = 1;
         $defaults['gravatar_size'] = 50;
@@ -346,9 +348,9 @@ if (class_exists('ThemeMyLogin')) {
             echo '</ul>' . "\n";
             echo $args['after_widget'] . "\n";
         } elseif (empty($user_ID)) {
-            $action = (empty($_GET['action'])) ? 'login' : $_GET['action'];
-            echo $args['before_widget'] . $args['before_title'] . $ThemeMyLogin->TheTitle('Login') . $args['after_title'] . "\n";
-            echo $ThemeMyLogin->DisplayLogin('widget');
+            $action = (empty($_GET['action'])) ? (empty($args['action'])) ? '' : $args['action'] : $_GET['action'];
+            echo $args['before_widget'] . $args['before_title'] . $ThemeMyLogin->TheTitle('Login', $action) . $args['after_title'] . "\n";
+            echo $ThemeMyLogin->DisplayLogin('widget', $action);
             echo $args['after_widget'] . "\n";
         }
     }
