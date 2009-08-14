@@ -27,6 +27,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.3 =
+* Fixed a bug that disabled error display when GET variable 'loggedout' was set
+* Added template tag access
+
 = 3.2.8 =
 * Fixed a security exploit regarding admin password reset addressed in WordPress 2.8.4
 

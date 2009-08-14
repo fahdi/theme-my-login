@@ -90,9 +90,9 @@ class ThemeMyLoginWidget extends WP_Widget {
         $defaults['gravatar_size'] = 50;
         foreach ($user_roles as $role => $value) {
             $defaults['dashboard_link_' . $role] = 1;
-            $defaults['dashboard_url_' . $role] = 'wp-admin/';
+            //$defaults['dashboard_url_' . $role] = 'wp-admin/';
             $defaults['profile_link_' . $role] = 1;
-            $defaults['profile_url_' . $role] = 'wp-admin/profile.php';
+            //$defaults['profile_url_' . $role] = 'wp-admin/profile.php';
         }
         $instance = wp_parse_args( (array) $instance, (array) $defaults );
 

@@ -56,6 +56,7 @@ function login_header($message = '', $wp_error = '') {
         if ( !empty($messages) )
             echo '<p class="message">' . apply_filters('login_messages', $messages) . "</p>\n";
     }
+    $error = '';
 }
 endif;
 

@@ -100,6 +100,9 @@ case 'register' :
 case 'login' :
     $secure_cookie = '';
 
+    if (isset($_GET['loggedout']))
+        unset($_GET['loggedout']);
+
     // If the user wants ssl but the session is not ssl, force a secure cookie.
     if ( !empty($_POST['log']) && !force_ssl_admin() ) {
         $user_name = sanitize_user($_POST['log']);

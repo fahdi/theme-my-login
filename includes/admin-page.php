@@ -36,7 +36,7 @@ $profile_url = $this->GetOption('widget_profile_url');
 
 ?>
 
-<div class="updated" style="background:aliceblue; border:1px solid lightblue">
+<div class="updated" style="background:#f0f8ff; border:1px solid #addae6">
     <p><?php _e('If you like this plugin, please help keep it up to date by <a href="http://www.jfarthing.com/donate">donating through PayPal</a>!', 'theme-my-login'); ?></p>
 </div>
 

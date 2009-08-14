@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.2.8
+Version: 3.3
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -11,7 +11,7 @@ Text Domain: theme-my-login
 
 global $wp_version;
 
-if ($wp_version < '2.7') {
+if ($wp_version < '2.6') {
     if ( !defined('WP_CONTENT_DIR') )
         define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
     if ( !defined('WP_CONTENT_URL') )
@@ -27,7 +27,7 @@ if ($wp_version < '2.7') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '3.2.8';
+        var $version = '3.3';
         var $options = array();
         var $permalink = '';
 
@@ -100,14 +100,20 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['widget_show_logged_in'] = 1;
             $this->options['widget_show_gravatar'] = 1;
             $this->options['widget_gravatar_size'] = 50;
-            $this->options['widget_dashboard_link'] = array('subscriber' => 1, 'contributor' => 1, 'author' => 1, 'editor' => 1, 'administrator' => 1);
-            $this->options['widget_profile_link'] = array('subscriber' => 1, 'contributor' => 1, 'author' => 1, 'editor' => 1, 'administrator' => 1);
 
-            $user_roles = array('subscriber', 'contributor', 'author', 'editor', 'administrator');
-            foreach ($user_roles as $role) {
+            global $wp_roles;
+            if (empty($wp_roles))
+                $wp_roles = new WP_Roles();
+                
+            $user_roles = $wp_roles->get_names();
+            foreach ($user_roles as $role => $title) {
+                $dashboard_link[$role] = 1;
+                $profile_link[$role] = 1;
                 $dashboard_url[$role] = '';
                 $profile_url[$role] = '';
             }
+            $this->options['widget_dashboard_link'] = $dashboard_link;
+            $this->options['widget_profile_link'] = $profile_link;
             $this->options['widget_dashboard_url'] = $dashboard_url;
             $this->options['widget_profile_url'] = $profile_url;
         }
@@ -183,6 +189,8 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function TheContent($content) {
+            global $login_errors;
+            
             if (strpos($content, '[theme-my-login]') !== false)
                 return str_replace('[theme-my-login]', $this->DisplayLogin(), $content);
             else
@@ -191,24 +199,30 @@ if (!class_exists('ThemeMyLogin')) {
         
         function DisplayLogin($type = 'page') {
             global $login_errors;
-            
-            require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php');
+
+            $login_forms = WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php';
+            if (is_file($login_forms)) {
+                ob_start();
+                include $login_forms;
+                $contents = ob_get_contents();
+                ob_end_clean();
+                return $contents;
+            }
+            return false;
         }
         
         function WPHead() {
             echo '<!-- Theme My Login Version ' . $this->version . ' -->' . "\n";
             echo '<link rel="stylesheet" type="text/css" href="' . WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css" />' . "\n";
-            echo '<!-- Theme My Login Version ' . $this->version . ' -->' . "\n";
             do_action('login_head');
         }
 
         function WPTitle($title) {
             if ( is_page($this->GetOption('page_id')) ) {
                     
-                if (!isset($_GET['action']))
-                    $_GET['action'] = 'login';
-                    
-                switch ($_GET['action']) {
+                $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
+
+                switch ($action) {
                     case 'register':
                         return str_replace('Login', $this->GetOption('register_title'), $title);
                         break;
@@ -228,10 +242,9 @@ if (!class_exists('ThemeMyLogin')) {
         function TheTitle($title) {
             if ($title == 'Login') {
 
-                if (!isset($_GET['action']))
-                    $_GET['action'] = 'login';
+                $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
                     
-                switch ($_GET['action']) {
+                switch ($action) {
                     case 'register':
                         return $this->GetOption('register_title');
                         break;
@@ -280,6 +293,64 @@ if (class_exists('ThemeMyLogin')) {
         require (WP_PLUGIN_DIR . '/theme-my-login/includes/widget-new.php');
     } else {
         require (WP_PLUGIN_DIR . '/theme-my-login/includes/widget-old.php');
+    }
+    
+    function theme_my_login($args = array()) {
+        global $ThemeMyLogin, $wp_version, $user_ID, $current_user, $login_errors, $wp_roles;
+
+        if (empty($wp_roles))
+            $wp_roles = new WP_Roles();
+
+        $user_roles = $wp_roles->get_names();
+
+        //Defaults
+        $defaults['before_widget'] = '<li>';
+        $defaults['after_widget'] = '</li>';
+        $defaults['before_title'] = '<h2>';
+        $defaults['after_title'] = '</h2>';
+        $defaults['show_logged_in'] = 1;
+        $defaults['show_gravatar'] = 1;
+        $defaults['gravatar_size'] = 50;
+        foreach ($user_roles as $role => $value) {
+            $defaults['dashboard_link_' . $role] = 1;
+            $defaults['profile_link_' . $role] = 1;
+        }
+        
+        $args = wp_parse_args( $args, (array) $defaults );
+
+        if ($user_ID != '' && $args['show_logged_in']) {
+            get_currentuserinfo();
+            $user_role = reset($current_user->roles);
+            $dashboard_url = $ThemeMyLogin->GetOption('widget_dashboard_url');
+            $profile_url = $ThemeMyLogin->GetOption('widget_profile_url');
+            $user_dashboard_url = (empty($dashboard_url[$user_role])) ? site_url('wp-admin/', 'admin') : $dashboard_url[$user_role];
+            $user_profile_url = (empty($profile_url[$user_role])) ? site_url('wp-admin/profile.php', 'admin') : $profile_url[$user_role];
+            echo $args['before_widget'] . $args['before_title'] . __('Welcome', 'theme-my-login') . ', ' . $current_user->display_name . $args['after_title'] . "\n";
+            if ($args['show_gravatar']) :
+                echo '<div class="theme-my-login-avatar">' . get_avatar( $user_ID, $size = $args['gravatar_size'] ) . '</div>' . "\n";
+            endif;
+            do_action('theme_my_login_avatar', $current_user);
+            echo '<ul class="theme-my-login-links">' . "\n";
+            if ($args['dashboard_link_' . $user_role]) :
+                echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard') . '</a></li>' . "\n";
+            endif;
+            if ($args['profile_link_' . $user_role]) :
+                echo '<li><a href="' . $user_profile_url . '">' . __('Profile') . '</a></li>' . "\n";
+            endif;
+            do_action('theme_my_login_links', $user_role);
+            $redirect = wp_guess_url();
+            if (version_compare($wp_version, '2.7', '>='))
+                echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
+            else
+                echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
+            echo '</ul>' . "\n";
+            echo $args['after_widget'] . "\n";
+        } elseif (empty($user_ID)) {
+            $action = (empty($_GET['action'])) ? 'login' : $_GET['action'];
+            echo $args['before_widget'] . $args['before_title'] . $ThemeMyLogin->TheTitle('Login') . $args['after_title'] . "\n";
+            echo $ThemeMyLogin->DisplayLogin('widget');
+            echo $args['after_widget'] . "\n";
+        }
     }
 }
 
