@@ -135,15 +135,20 @@ function retrieve_password() {
         $key = wp_generate_password(20, false);
         do_action('retrieve_password_key', $user_login, $key);
         // Now insert the new md5 key into the db
-        $wpdb->query($wpdb->prepare("UPDATE $wpdb->users SET user_activation_key = %s WHERE user_login = %s", $key, $user_login));
+        $wpdb->update($wpdb->users, array('user_activation_key' => $key), array('user_login' => $user_login));
     }
     $message = __('Someone has asked to reset the password for the following site and username.') . "\r\n\r\n";
     $message .= get_option('siteurl') . "\r\n\r\n";
     $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
     $message .= __('To reset your password visit the following address, otherwise just ignore this email and nothing will happen.') . "\r\n\r\n";
-    $message .= site_url("wp-login.php?action=rp&key=$key", 'login') . "\r\n";
+    $message .= site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user_login), 'login') . "\r\n";
 
-    if ( !wp_mail($user_email, sprintf(__('[%s] Password Reset'), get_option('blogname')), $message) )
+    $title = sprintf(__('[%s] Password Reset'), get_option('blogname'));
+
+    $title = apply_filters('retrieve_password_title', $title);
+    $message = apply_filters('retrieve_password_message', $message, $key);
+
+    if ( $message && !wp_mail($user_email, $title, $message) )
         die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
 
     return true;

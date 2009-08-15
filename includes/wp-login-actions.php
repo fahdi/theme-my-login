@@ -64,7 +64,7 @@ case 'retrievepassword' :
     break;
 case 'resetpass' :
 case 'rp' :
-    $login_errors = reset_password($_GET['key']);
+    $login_errors = reset_password($_GET['key'], $_GET['login']);
 
     if ( ! is_wp_error($login_errors) ) {
         $redirect_to = ('widget' == $post_from) ? theme_my_login_url(array('checkemail' => 'newpass')) : site_url('wp-login.php?checkemail=newpass', 'login');

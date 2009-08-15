@@ -27,6 +27,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 3.3.1 =
+* Fixed a bug that broke password recovery due to the new system from WP 2.8.4
+
 = 3.3 =
 * Fixed a bug that disabled error display when GET variable 'loggedout' was set
 * Added template tag access
