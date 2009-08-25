@@ -10,8 +10,6 @@ class ThemeMyLoginWidget extends WP_Widget {
     function widget($args, $instance){
         global $ThemeMyLogin;
         
-        $WPLogin = new WPLogin('theme-my-login');
-        
         $new_args['widget'] = array_merge($args, $instance);
 
         if (!is_page($ThemeMyLogin->GetOption('page_id'))) {
