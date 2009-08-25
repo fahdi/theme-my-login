@@ -131,11 +131,13 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function InitOptions($save = false) {
+        
+            $login_page = get_page_by_title('login');
 
             $this->options['general']['uninstall']      = 0;
             $this->options['general']['defaults']       = 0;
             $this->options['general']['show_page']      = 0;
-            $this->options['general']['page_id']        = 3;
+            $this->options['general']['page_id']        = ( $login_page ) ? $login_page->ID : 0;
             
             $this->options['titles']['welcome']         = __('Welcome') . ', %display_name%';
             $this->options['titles']['login']           = __('Log In');
