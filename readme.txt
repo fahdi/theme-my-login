@@ -1,9 +1,9 @@
 === Theme My Login ===
 Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
-Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar
+Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.5
-Tested up to: 2.8.4
+Tested up to: 2.9-rare
 Stable tag: trunk
 
 Themes the WordPress login pages according to your theme.
@@ -11,7 +11,16 @@ Themes the WordPress login pages according to your theme.
 
 == Description ==
 
-This plugin themes the WordPress login, registration and forgot password pages according to your current theme. It replaces the wp-login.php and profile.php by using a page template from your theme. Also includes a widget for sidebar login.
+This plugin themes the WordPress login, registration and forgot password pages according to your current theme. It replaces the wp-login.php file by using a page template from your theme. Also includes a widget for sidebar login.
+
+= Features =
+* Your registration, log in and password recovery pages will all match the rest of your website
+* Includes a customizeable widget to login anywhere from your blog
+* Redirect users upon log in based on their role
+* Customize titles and messages for the registration, log in and password recovery forms
+* Show gravatar to users who are logged in
+* Assign custom links to users who are logged in based on their role
+* Customize user emails for registration and/or password recovery
 
 
 == Installation ==
@@ -26,6 +35,15 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 4.0 =
+* Implemented custom links for logged in users based on role
+* Implemented custom redirection upon log in based on role
+* Implemented custom registration/password recovery emails
+* Implemented true shortcode and template tag functionality
+* Implemented true multi-instance functionality
+* Implemented an easy-to-use jQuery tabbed administration menu
+* Implemented both 'fresh' and 'classic' colors for administration menu
 
 = 3.3.1 =
 * Fixed a bug that broke password recovery due to the new system from WP 2.8.4

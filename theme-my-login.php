@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 3.3.1
+Version: 4.0
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -11,265 +11,337 @@ Text Domain: theme-my-login
 
 global $wp_version;
 
+require_once ('classes/class.plugin-shell.php');
+require_once ('classes/class.wp-login.php');
+
 if ($wp_version < '2.6') {
-    if ( !defined('WP_CONTENT_DIR') )
-        define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-    if ( !defined('WP_CONTENT_URL') )
-        define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
-    if ( !defined('WP_PLUGIN_DIR') )
-        define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-    if ( !defined('WP_PLUGIN_URL') )
-        define( 'WP_PLUGIN_URL', WP_CONTENT_URL . '/plugins' );
-        
     require (WP_PLUGIN_DIR . '/theme-my-login/includes/compat.php');
 }
 
 if (!class_exists('ThemeMyLogin')) {
-    class ThemeMyLogin {
+    class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '3.3.1';
+        var $version = '4.0';
         var $options = array();
         var $permalink = '';
+        var $instances = 0;
 
         function ThemeMyLogin() {
-            $this->__construct();
-        }
-
-        function __construct() {
-        
-            load_plugin_textdomain('theme-my-login', '/wp-content/plugins/theme-my-login/language');
+            global $wp_version;
+            
+            $this->SetPluginTitle('Theme My Login');
+            
+            load_plugin_textdomain($this->plugin_textdomain, '/wp-content/plugins/theme-my-login/language');
 
             register_activation_hook ( __FILE__, array( &$this, 'Activate' ) );
             register_deactivation_hook ( __FILE__, array( &$this, 'Deactivate' ) );
+
+            $this->AddAction('parse_request');
+            $this->AddAction('init');
             
-            add_action('admin_menu', array(&$this, 'AddAdminPage'));
-            add_action('init', array(&$this, 'Init'));
-            add_action('parse_request', array(&$this, 'ParseRequest'));
+            $this->AddFilter('wp_head');
+            $this->AddFilter('wp_title');
+            $this->AddFilter('the_title');
+            $this->AddFilter('wp_list_pages');
+            $this->AddFilter('wp_list_pages_excludes');
+            $this->AddFilter('login_redirect', 'LoginRedirect', 10, 3);
+            $this->AddFilter('site_url', 'SiteURL', 10, 2);
+            $this->AddFilter('retrieve_password_title', 'RetrievePasswordTitle', 10, 2);
+            $this->AddFilter('retrieve_password_message', 'RetrievePasswordMessage', 10, 3);
+            $this->AddFilter('password_reset_title', 'PasswordResetTitle', 10, 2);
+            $this->AddFilter('password_reset_message', 'PasswordResetMessage', 10, 3);
             
-            add_filter('wp_head', array(&$this, 'WPHead'));
-            add_filter('wp_title', array(&$this, 'WPTitle'));
-            add_filter('the_title', array(&$this, 'TheTitle'));
-            add_filter('wp_list_pages_excludes', array(&$this, 'ListPagesExcludes'));
-            add_filter('the_content', array(&$this, 'TheContent'));
-            add_filter('site_url', array(&$this, 'SiteURLFilter'), 10, 2);
+            $this->AddShortcode('theme-my-login-page');
+            $this->AddShortcode('theme-my-login');
+            
+            if ( file_exists(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.css') )
+                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css');
+            else
+                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login.css');
+            
+            $this->AddAdminStyle('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login-admin.css.php');
+
+            if ( version_compare($wp_version, '2.8', '>=') ) {
+                $this->AddAdminScript('jquery-ui-tabs');
+            } else {
+                global $wp_scripts;
+                
+                if ( empty($wp_scripts) )
+                    $wp_scripts = new WP_Scripts();
+
+                $wp_scripts->dequeue('jquery');
+                $wp_scripts->dequeue('jquery-ui-core');
+                $wp_scripts->dequeue('jquery-ui-tabs');
+                $wp_scripts->remove('jquery');
+                $wp_scripts->remove('jquery-ui-core');
+                $wp_scripts->remove('jquery-ui-tabs');
+                $this->AddAdminScript('jquery', WP_PLUGIN_URL . '/theme-my-login/js/jquery/jquery.js', false, '1.7.2');
+                $this->AddAdminScript('jquery-ui-core', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.core.js', array('jquery'), '1.7.2');
+                $this->AddAdminScript('jquery-ui-tabs', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.tabs.js', array('jquery', 'jquery-ui-core'), '1.7.2');
+            }
+            
+            $this->AddAdminScript('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/js/theme-my-login-admin.js.php');
+
+            $this->AddAdminPage('options', 'Theme My Login', 'Theme My Login', 8, '/theme-my-login/includes/admin-page.php');
             
             $this->LoadOptions();
+            
+            $this->WPPluginShell();
+            
         }
 
         function Activate() {
-            $theme_my_login = get_page_by_title('Login');
-            if ( !$theme_my_login ) {
-                $insert = array(
+            $insert = array(
                 'post_title' => 'Login',
                 'post_status' => 'publish',
                 'post_type' => 'page',
                 'post_author' => 1,
-                'post_content' => '[theme-my-login]',
+                'post_content' => '[theme-my-login-page]',
                 'comment_status' => 'closed',
                 'ping_status' => 'closed'
                 );
+                
+            $theme_my_login = get_page_by_title('Login');
+            if ( !$theme_my_login ) {
                 $page_id = wp_insert_post($insert);
-            } else $page_id = $theme_my_login->ID;
+            } else {
+                $page_id = $theme_my_login->ID;
+                $insert['ID'] = $page_id;
+                wp_update_post($insert);
+            }
             
-            $this->SetOption('page_id', $page_id);
-            $this->SetOption('version', $this->version);
+            $opts = get_option('theme_my_login');
+            if ( $opts ) {
+                if ( version_compare($opts['version'], '4.0', '<') ) {
+                    delete_option('theme_my_login');
+                    delete_option('widget_theme-my-login');
+                }
+            }
+            
+            $options = array('page_id' => $page_id, 'version' => $this->version);
+            $this->SetOption('general', $options);
             $this->SaveOptions();
         }
 
         function Deactivate() {
-            if ($this->GetOption('uninstall')) {
+            if ( $this->GetOption('uninstall') ) {
                 delete_option('theme_my_login');
-                wp_delete_post($this->GetOption('page_id'));
+                wp_delete_post($this->options['general']['page_id']);
             }
         }
 
-        function InitOptions() {
-            $this->options['uninstall']             = 0;
-            $this->options['page_id']               = 0;
-            $this->options['show_page']             = 0;
-            $this->options['login_title']           = __('Log In');
-            $this->options['register_title']        = __('Register');
-            $this->options['register_msg']          = __('A password will be e-mailed to you.');
-            $this->options['register_complete']     = __('Registration complete. Please check your e-mail.');
-            $this->options['password_title']        = __('Lost Password');
-            $this->options['password_msg']          = __('Please enter your username or e-mail address. You will receive a new password via e-mail.');
+        function InitOptions($save = false) {
+
+            $this->options['general']['uninstall']      = 0;
+            $this->options['general']['defaults']       = 0;
+            $this->options['general']['show_page']      = 0;
+            $this->options['general']['page_id']        = 3;
             
-            // Widget options
-            $this->options['widget_allow_register'] = 1;
-            $this->options['widget_allow_password'] = 1;
-            $this->options['widget_show_logged_in'] = 1;
-            $this->options['widget_show_gravatar'] = 1;
-            $this->options['widget_gravatar_size'] = 50;
+            $this->options['titles']['welcome']         = __('Welcome') . ', %display_name%';
+            $this->options['titles']['login']           = __('Log In');
+            $this->options['titles']['register']        = __('Register');
+            $this->options['titles']['lostpassword']    = __('Lost Password');
+            $this->options['titles']['logout']          = __('Log Out');
+            
+            $this->options['messages']['register']      = __('A password will be e-mailed to you.');
+            $this->options['messages']['success']       = __('Registration complete. Please check your e-mail.');
+            $this->options['messages']['lostpassword']  = __('Please enter your username or e-mail address. You will receive a new password via e-mail.');
+            
+            $this->options['widget']['default_action']  = 'login';
+            $this->options['widget']['show_all_msgs']   = 0;
+            $this->options['widget']['show_title']      = 1;
+            $this->options['widget']['show_links']      = 1;
+            $this->options['widget']['registration']    = 1;
+            $this->options['widget']['lostpassword']    = 1;
+            $this->options['widget']['show_logged']     = 1;
+            $this->options['widget']['show_gravatar']   = 1;
+            $this->options['widget']['gravatar_size']   = 50;
+            $this->options['widget']['before_widget']   = '<li>';
+            $this->options['widget']['after_widget']    = '</li>';
+            $this->options['widget']['before_title']    = '<h2>';
+            $this->options['widget']['after_title']     = '</h2>';
+            
+            $this->options['emails']['retrievepassword']['subject']         = '';
+            $this->options['emails']['retrievepassword']['message']         = '';
+            $this->options['emails']['resetpassword']['subject']            = '';
+            $this->options['emails']['resetpassword']['message']            = '';
+            $this->options['emails']['resetpassword']['admin-disable']      = 0;
+            $this->options['emails']['newregistration']['subject']          = '';
+            $this->options['emails']['newregistration']['message']          = '';
+            $this->options['emails']['newregistration']['admin-disable']    = 0;
+            $this->options['emails']['newregistration']['user-disable']     = 0;
 
             global $wp_roles;
-            if (empty($wp_roles))
+            if ( empty($wp_roles) )
                 $wp_roles = new WP_Roles();
                 
             $user_roles = $wp_roles->get_names();
-            foreach ($user_roles as $role => $title) {
-                $dashboard_link[$role] = 1;
-                $profile_link[$role] = 1;
-                $dashboard_url[$role] = '';
-                $profile_url[$role] = '';
+            foreach ( $user_roles as $role => $title ) {
+                $this->options['links'][$role][] = array('title' => 'Dashboard', 'url' => admin_url());
+                $this->options['links'][$role][] = array('title' => 'Profile', 'url' => admin_url('profile.php'));
+                $this->options['redirects'][$role] = array('login_url' => '', 'logout_url' => '');
             }
-            $this->options['widget_dashboard_link'] = $dashboard_link;
-            $this->options['widget_profile_link'] = $profile_link;
-            $this->options['widget_dashboard_url'] = $dashboard_url;
-            $this->options['widget_profile_url'] = $profile_url;
+            
+            if ( $save )
+                $this->SaveOptions();
         }
 
-        function LoadOptions() {
-
-            $this->InitOptions();
-
-            $storedoptions = get_option( 'theme_my_login' );
-            if ( $storedoptions && is_array( $storedoptions ) ) {
-                foreach ( $storedoptions as $key => $value ) {
-                    $this->options[$key] = $value;
-                }
-            } else update_option( 'theme_my_login', $this->options );
-        }
-
-        function GetOption( $key ) {
-            if ( array_key_exists( $key, $this->options ) ) {
-                return $this->options[$key];
-            } else return null;
-        }
-
-        function SetOption( $key, $value ) {
-            $this->options[$key] = $value;
-        }
-
-        function SaveOptions() {
-            $oldvalue = get_option( 'theme_my_login' );
-            if( $oldvalue == $this->options ) {
-                return true;
-            } else return update_option( 'theme_my_login', $this->options );
-        }
-
-        function AddAdminPage(){
-            add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, 'theme-my-login', array(&$this, 'AdminPage'));
-        }
-
-        function AdminPage(){
-            require (WP_PLUGIN_DIR . '/theme-my-login/includes/admin-page.php');
-        }
-        
         function ParseRequest() {
-            global $wp, $login_errors;
-
+            global $WPLogin, $wp;
+            
             $page_id = isset($wp->query_vars['page_id']) ? $wp->query_vars['page_id'] : 0;
             $pagename = isset($wp->query_vars['pagename']) ? $wp->query_vars['pagename'] : '';
 
-            if ( isset($page_id) && $page_id == $this->GetOption('page_id') || isset($pagename) && strtolower($pagename) == 'login' ) {
+            if ( isset($page_id) && $page_id == $this->options['general']['page_id'] || isset($pagename) && strtolower($pagename) == 'login' ) {
                 if ( is_user_logged_in() && 'logout' != $_GET['action'] ) {
                     wp_redirect(get_bloginfo('home'));
-                    exit;
+                    exit();
                 }
             }
-            if (strpos($_SERVER['REQUEST_URI'], '/wp-admin') === false) {
-                $login_errors = new WP_Error();
-                require (WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-actions.php');
-            }
+            if ( strpos($_SERVER['REQUEST_URI'], '/wp-admin') === false )
+                $WPLogin = new WPLogin('theme-my-login', $this->options);
         }
         
         function Init() {
-            global $pagenow;
-            
-            $this->permalink = get_permalink($this->GetOption('page_id'));
+            global $user_ID, $pagenow, $wp_version;
+
+            $this->permalink = get_permalink($this->options['general']['page_id']);
             
             switch ($pagenow) {
                 case 'wp-register.php':
                 case 'wp-login.php':
                     $redirect_to = add_query_arg($_GET, $this->permalink);
                     wp_redirect($redirect_to);
-                    exit;
+                    exit();
                 break;
             }
-        }
-        
-        function TheContent($content) {
-            global $login_errors;
             
-            if (strpos($content, '[theme-my-login]') !== false)
-                return str_replace('[theme-my-login]', $this->DisplayLogin(), $content);
-            else
-                return $content;
-        }
-        
-        function DisplayLogin($type = 'page', $action = '') {
-            global $login_errors;
-
-            $login_forms = WP_PLUGIN_DIR . '/theme-my-login/includes/wp-login-forms.php';
-            if (is_file($login_forms)) {
-                ob_start();
-                include $login_forms;
-                $contents = ob_get_contents();
-                ob_end_clean();
-                return $contents;
+            if ( is_admin() && is_user_logged_in() && version_compare($wp_version, '2.8', '>=') ) {
+                $admin_color = get_usermeta($user_ID, 'admin_color');
+                if ( 'classic' == $admin_color ) {
+                    $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
+                } else {
+                    $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+                }
+            } elseif ( is_admin() && is_user_logged_in() && version_compare($wp_version, '2.7', '>=') ) {
+                $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+            } elseif ( is_admin() && is_user_logged_in() && version_compare($wp_version, '2.5', '>=') ) {
+                $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
             }
-            return false;
         }
-        
+
         function WPHead() {
-            echo '<!-- Theme My Login Version ' . $this->version . ' -->' . "\n";
-            echo '<link rel="stylesheet" type="text/css" href="' . WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css" />' . "\n";
-            do_action('login_head');
+            if ( !is_admin() )
+                do_action('login_head');
         }
 
         function WPTitle($title) {
-            if ( is_page($this->GetOption('page_id')) ) {
-                    
-                $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
+            global $WPLogin;
+            
+            if ( is_page($this->options['general']['page_id']) ) {
+            
+                $titles = $this->GetOption('titles');
 
+                $action = ( isset($WPLogin->options['action']) ) ? $WPLogin->options['action'] : '';
+                if ( 'tml-1' == $WPLogin->instance )
+                    $action = $WPLogin->action;
+
+                if ( is_user_logged_in() )
+                    return str_replace('Login', $titles['logout'], $title);
+                    
                 switch ($action) {
                     case 'register':
-                        return str_replace('Login', $this->GetOption('register_title'), $title);
+                        return str_replace('Login', $titles['register'], $title);
                         break;
                     case 'lostpassword':
                     case 'retrievepassword':
                     case 'resetpass':
                     case 'rp':
-                        return str_replace('Login', $this->GetOption('password_title'), $title);
+                        return str_replace('Login', $titles['lostpassword'], $title);
                         break;
                     case 'login':
                     default:
-                        return str_replace('Login', $this->GetOption('login_title'), $title);
+                        return str_replace('Login', $titles['login'], $title);
                 }
             } return $title;
         }
         
-        function TheTitle($title, $action = '') {
-            if ($title == 'Login') {
+        function TheTitle($title) {
+            global $WPLogin;
+            
+            if ( is_admin() )
+                return $title;
+            
+            if ( $title == 'Login' ) {
+            
+                 $titles = $this->GetOption('titles');
 
-                if (empty($action))
-                    $action = (empty($_REQUEST['action'])) ? 'login' : $_REQUEST['action'];
+                if ( is_user_logged_in() )
+                    return $titles['logout'];
+            
+                $action = ( isset($WPLogin->options['action']) ) ? $WPLogin->options['action'] : '';
+                if ( 'tml-1' == $WPLogin->instance )
+                    $action = $WPLogin->action;
                     
                 switch ($action) {
                     case 'register':
-                        return $this->GetOption('register_title');
+                        return $titles['register'];
                         break;
                     case 'lostpassword':
                     case 'retrievepassword':
                     case 'resetpass':
                     case 'rp':
-                        return $this->GetOption('password_title');
+                        return $titles['lostpassword'];
                         break;
                     case 'login':
                     default:
-                        return $this->GetOption('login_title');
+                        return $titles['login'];
                 }
             } return $title;
         }
         
-        function ListPagesExcludes($excludes) {
-            if (!$this->GetOption('show_page'))
-                $excludes[] = $this->GetOption( 'page_id' );
+        function WPListPages($pages) {
+            global $wp_version, $WPLogin;
+            
+            if ( $this->options['general']['show_page'] && is_user_logged_in() ) {
+                $redirect = $WPLogin->GuessURL();
+                $logout_url = ( version_compare($wp_version, '2.7', '>=') ) ? wp_logout_url($redirect) : site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login');
+                $pages = str_replace($this->permalink, $logout_url, $pages);
+            }
+
+            return $pages;
+        }
+        
+        function WPListPagesExcludes($excludes) {
+            if ( !$this->options['general']['show_page'] )
+                $excludes[] = $this->options['general']['page_id'];
 
             return $excludes;
         }
         
-        function SiteURLFilter($url, $path) {
+        function LoginRedirect($redirect_to, $request, $user) {
+            global $pagenow;
+
+            $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+            $self =  $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+            if ( empty($redirect_to) || admin_url() == $redirect_to) {
+                if ( empty($request) )
+                    $redirect_to = ( 'wp-login.php' == $pagenow ) ? $_SERVER['HTTP_REFERER'] : $self;
+                else
+                    $redirect_to = $request;
+            }
+
+            if ( is_object($user) && !is_wp_error($user) ) {
+                $user_role = array_shift($user->roles);
+                $redirects = $this->GetOption('redirects');
+                if ( '' != $redirects[$user_role]['login_url'] )
+                    $redirect_to = $redirects[$user_role]['login_url'];
+            }
+            return $redirect_to;
+        }
+        
+        function SiteURL($url, $path) {
             global $wp_rewrite;
             
             if ( preg_match('/wp-login.php/', $url) ) {
@@ -281,79 +353,163 @@ if (!class_exists('ThemeMyLogin')) {
             }
             return $url;
         }
+        
+        function RetrievePasswordTitle($title, $user) {
+            if ( !empty($this->options['emails']['retrievepassword']['subject']) ) {
+                $replace_this = array('/%blogname%/', '/%siteurl%/', '/%reseturl%/', '/%user_login%/', '/%user_email%/', '/%user_ip%/');
+                $replace_with = array(get_option('blogname'), get_option('siteurl'), site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login'), $user->user_login, $user->user_email, $_SERVER['REMOTE_ADDR']);
+                $title = preg_replace($replace_this, $replace_with, $this->options['emails']['retrievepassword']['subject']);
+            }
+            return $title;
+        }
+        
+        function RetrievePasswordMessage($message, $key, $user) {
+            if ( !empty($this->options['emails']['retrievepassword']['message']) ) {
+                $replace_this = array('/%blogname%/', '/%siteurl%/', '/%reseturl%/', '/%user_login%/', '/%user_email%/', '/%key%/', '/%user_ip%/');
+                $replace_with = array(get_option('blogname'), get_option('siteurl'), site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login'), $user->user_login, $user->user_email, $key, $_SERVER['REMOTE_ADDR']);
+                $message = preg_replace($replace_this, $replace_with, $this->options['emails']['retrievepassword']['message']);
+            }
+            return $message;
+        }
+        
+        function PasswordResetTitle($title, $user) {
+            if ( !empty($this->options['emails']['resetpassword']['subject']) ) {
+                $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_ip%/');
+                $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $_SERVER['REMOTE_ADDR']);
+                $title = preg_replace($replace_this, $replace_with, $this->options['emails']['resetpassword']['subject']);
+            }
+            return $title;
+        }
+        
+        function PasswordResetMessage($message, $new_pass, $user) {
+            if ( !empty($this->options['emails']['resetpassword']['message']) ) {
+                $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/', '/%user_ip%/');
+                $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $new_pass, $_SERVER['REMOTE_ADDR']);
+                $message = preg_replace($replace_this, $replace_with, $this->options['emails']['resetpassword']['message']);
+            }
+            return $message;
+        }
+
+        function ThemeMyLoginShortcode($args = '', $is_page = false) {
+            global $WPLogin;
+            
+            if ( empty($WPLogin) )
+                $WPLogin = new WPLogin();
+
+            if ( is_page($this->options['general']['page_id']) && !$is_page )
+                return;
+                
+            $instance = ( isset($args['instance']) ) ? $args['instance'] : $this->NewInstance();
+            
+            $options = $this->options;
+            foreach ( $args as $key => $value ) {
+                if ( !is_array($value) ) {
+                    if ( in_array($key, array('welcome', 'login', 'register', 'lostpassword', 'logout')) )
+                        $options['titles'][$key] = $value;
+                    elseif ( in_array($key, array('register', 'success', 'lostpassword')) )
+                        $options['messages'][$key] = $value;
+                    elseif ( in_array($key, array('default_action', 'show_all_msgs', 'show_title', 'show_links', 'registration', 'lostpassword', 'show_logged', 'show_gravatar', 'gravatar_size', 'before_widget', 'after_widget', 'before_title', 'after_title')) )
+                        $options['widget'][$key] = $value;
+                } else {
+                    foreach ( $value as $k => $v )
+                        $options[$key][$k] = $v;
+                }
+            }
+            /*
+            foreach ( $this->options as $type => $tmp ) {
+                if ( isset($args[$type]) )
+                    $options[$type] = array_merge($tmp, $args[$type]);
+                else
+                    $options[$type] = $tmp;
+            }
+            */
+
+            return $WPLogin->Display($instance, $options);
+        }
+        
+        
+        function ThemeMyLoginPageShortcode($args = '') {
+            $args['widget']['default_action'] = 'login';
+            $args['widget']['show_title'] = '0';
+            $args['widget']['show_all_msgs'] = '1';
+            $args['widget']['before_widget'] = '';
+            $args['widget']['after_widget'] = '';
+            return $this->ThemeMyLoginShortcode($args, true);
+        }
+        
+        function TemplateTag($args = '') {
+            $args = wp_parse_args($args);
+            return $this->ThemeMyLoginShortcode($args);
+        }
+        
+        function NewInstance() {
+            $this->instances++;
+            return 'tml-' . $this->instances;
+        }
     }
 }
 
-//instantiate the class
 if (class_exists('ThemeMyLogin')) {
     global $wp_version;
     
     $ThemeMyLogin = new ThemeMyLogin();
-    
-    if ($wp_version >= '2.8') {
-        require (WP_PLUGIN_DIR . '/theme-my-login/includes/widget-new.php');
+
+    if ( version_compare($wp_version, '2.8', '>=') ) {
+        require (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-new.php');
     } else {
-        require (WP_PLUGIN_DIR . '/theme-my-login/includes/widget-old.php');
+        require (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-old.php');
     }
     
-    function theme_my_login($args = array()) {
-        global $ThemeMyLogin, $wp_version, $user_ID, $current_user, $login_errors, $wp_roles;
-
-        if (empty($wp_roles))
-            $wp_roles = new WP_Roles();
-
-        $user_roles = $wp_roles->get_names();
-
-        //Defaults
-        $defaults['before_widget'] = '<li>';
-        $defaults['after_widget'] = '</li>';
-        $defaults['before_title'] = '<h2>';
-        $defaults['after_title'] = '</h2>';
-        $defaults['action'] = 'login';
-        $defaults['show_logged_in'] = 1;
-        $defaults['show_gravatar'] = 1;
-        $defaults['gravatar_size'] = 50;
-        foreach ($user_roles as $role => $value) {
-            $defaults['dashboard_link_' . $role] = 1;
-            $defaults['profile_link_' . $role] = 1;
-        }
+    function theme_my_login($args = '') {
+        global $ThemeMyLogin;
         
-        $args = wp_parse_args( $args, (array) $defaults );
-
-        if ($user_ID != '' && $args['show_logged_in']) {
-            get_currentuserinfo();
-            $user_role = reset($current_user->roles);
-            $dashboard_url = $ThemeMyLogin->GetOption('widget_dashboard_url');
-            $profile_url = $ThemeMyLogin->GetOption('widget_profile_url');
-            $user_dashboard_url = (empty($dashboard_url[$user_role])) ? site_url('wp-admin/', 'admin') : $dashboard_url[$user_role];
-            $user_profile_url = (empty($profile_url[$user_role])) ? site_url('wp-admin/profile.php', 'admin') : $profile_url[$user_role];
-            echo $args['before_widget'] . $args['before_title'] . __('Welcome', 'theme-my-login') . ', ' . $current_user->display_name . $args['after_title'] . "\n";
-            if ($args['show_gravatar']) :
-                echo '<div class="theme-my-login-avatar">' . get_avatar( $user_ID, $size = $args['gravatar_size'] ) . '</div>' . "\n";
-            endif;
-            do_action('theme_my_login_avatar', $current_user);
-            echo '<ul class="theme-my-login-links">' . "\n";
-            if ($args['dashboard_link_' . $user_role]) :
-                echo '<li><a href="' . $user_dashboard_url . '">' . __('Dashboard') . '</a></li>' . "\n";
-            endif;
-            if ($args['profile_link_' . $user_role]) :
-                echo '<li><a href="' . $user_profile_url . '">' . __('Profile') . '</a></li>' . "\n";
-            endif;
-            do_action('theme_my_login_links', $user_role);
-            $redirect = wp_guess_url();
-            if (version_compare($wp_version, '2.7', '>='))
-                echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
-            else
-                echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
-            echo '</ul>' . "\n";
-            echo $args['after_widget'] . "\n";
-        } elseif (empty($user_ID)) {
-            $action = (empty($_GET['action'])) ? (empty($args['action'])) ? '' : $args['action'] : $_GET['action'];
-            echo $args['before_widget'] . $args['before_title'] . $ThemeMyLogin->TheTitle('Login', $action) . $args['after_title'] . "\n";
-            echo $ThemeMyLogin->DisplayLogin('widget', $action);
-            echo $args['after_widget'] . "\n";
-        }
+        echo $ThemeMyLogin->TemplateTag($args);
     }
+    
+    if ( !function_exists('wp_new_user_notification') ) :
+    function wp_new_user_notification($user_id, $plaintext_pass = '') {
+        global $ThemeMyLogin;
+        
+        $user = new WP_User($user_id);
+        
+        $user_login = stripslashes($user->user_login);
+        $user_email = stripslashes($user->user_email);
+        
+        if ( !$ThemeMyLogin->options['emails']['newregistration']['admin-disable'] ) {
+            $message  = sprintf(__('New user registration on your blog %s:'), get_option('blogname')) . "\r\n\r\n";
+            $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
+            $message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";
+
+            @wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), get_option('blogname')), $message);
+        }
+
+        if ( empty($plaintext_pass) )
+            return;
+
+        if ( !$ThemeMyLogin->options['emails']['newregistration']['user-disable'] ) {
+            $subject = $ThemeMyLogin->options['emails']['newregistration']['subject'];
+            $message = $ThemeMyLogin->options['emails']['newregistration']['message'];
+            $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/', '/%user_ip%/');
+            $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $plaintext_pass, $_SERVER['REMOTE_ADDR']);
+            
+            if ( !empty($subject) )
+                $subject = preg_replace($replace_this, $replace_with, $subject);
+            else
+                $subject = sprintf(__('[%s] Your username and password'), get_option('blogname'));
+            if ( !empty($message) )
+                $message = preg_replace($replace_this, $replace_with, $message);
+            else {
+                $message  = sprintf(__('Username: %s'), $user_login) . "\r\n";
+                $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
+                $message .= wp_login_url() . "\r\n";
+            }
+
+            wp_mail($user_email, $subject, $message);
+        }
+
+    }
+    endif;
+
 }
 
 ?>

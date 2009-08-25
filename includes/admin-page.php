@@ -1,38 +1,55 @@
 <?php
 
-global $wp_roles;
+global $ThemeMyLogin, $wp_roles, $wp_version;
 $user_roles = $wp_roles->get_names();
 
 if ( $_POST ) {
 
-    check_admin_referer('theme-my-login');
+    check_admin_referer('theme-my-login-settings');
 
-    $this->SetOption('uninstall', isset($_POST['uninstall']));
-    $this->SetOption('show_page', isset($_POST['show_page']));
-    $this->SetOption('login_title', stripslashes($_POST['login_title']));
-    $this->SetOption('register_title', stripslashes($_POST['register_title']));
-    $this->SetOption('register_msg', stripslashes($_POST['register_msg']));
-    $this->SetOption('register_complete', stripslashes($_POST['register_complete']));
-    $this->SetOption('password_title', stripslashes($_POST['password_title']));
-    $this->SetOption('password_msg', stripslashes($_POST['password_msg']));
-    $this->SetOption('widget_allow_register', isset($_POST['widget_allow_register']));
-    $this->SetOption('widget_allow_password', isset($_POST['widget_allow_password']));
-    foreach ($user_roles as $role => $value) {
-        $dashboard_url[$role] = $_POST['widget_dashboard_url'][$role];
-        $profile_url[$role] = $_POST['widget_profile_url'][$role];
+    $ThemeMyLogin->options['general']['uninstall'] = isset($_POST['general']['uninstall']);
+    $ThemeMyLogin->options['general']['defaults'] = isset($_POST['general']['defaults']);
+    $ThemeMyLogin->options['general']['show_page'] = isset($_POST['general']['show_page']);
+    
+    $ThemeMyLogin->SetOption('titles', stripslashes_deep($_POST['titles']));
+    $ThemeMyLogin->SetOption('messages', stripslashes_deep($_POST['messages']));
+
+    $ThemeMyLogin->SetOption('widget_allow_register', isset($_POST['widget_allow_register']));
+    $ThemeMyLogin->SetOption('widget_allow_password', isset($_POST['widget_allow_password']));
+    foreach ( $_POST['links'] as $role => $tmp ) {
+        foreach ( $tmp as $key => $data ) {
+            $links[$role][] = array('title' => $data['title'], 'url' => $data['url']);
+        }
     }
-    $this->SetOption('widget_dashboard_url', $dashboard_url);
-    $this->SetOption('widget_profile_url', $profile_url);
-    $this->SaveOptions();
+    $ThemeMyLogin->SetOption('links', $links);
+    foreach ( $_POST['redirects'] as $role => $data ) {
+        $redirects[$role] = array('login_url' => $data['login_url']);
+    }
+    $ThemeMyLogin->SetOption('redirects', $redirects);
+    foreach ( $_POST['emails'] as $email => $data ) {
+        $emails[$email] = array('subject' => stripslashes($data['subject']), 'message' => stripslashes($data['message']));
+        if ( isset($data['admin-disable']) )
+            $emails[$email]['admin-disable'] = $data['admin-disable'];
+        if ( isset($data['user-disable']) )
+            $emails[$email]['user-disable'] = $data['user-disable'];
+    }
+    $ThemeMyLogin->SetOption('emails', $emails);
+    $ThemeMyLogin->SaveOptions();
 
-    if (isset($_POST['uninstall']))
-        $success = __('To complete uninstall, deactivate this plugin. If you do not wish to uninstall, please uncheck the "Complete Uninstall" checkbox.', 'theme-my-login');
-    else
-        $success =__('Settings saved.', 'theme-my-login');
+    if ( isset($_POST['general']['uninstall']) ) {
+        $info_message = __('To complete uninstall, deactivate this plugin. If you do not wish to uninstall, please uncheck the "Complete Uninstall" checkbox.', 'theme-my-login');
+    } elseif ( isset($_POST['general']['defaults']) ) {
+        $ThemeMyLogin->options = '';
+        $ThemeMyLogin->InitOptions(true);
+        $info_message = __('All settings restored to default state.', 'theme-my-login');
+    } else $info_message =__('Settings saved.', 'theme-my-login');
 }
 
-$dashboard_url = $this->GetOption('widget_dashboard_url');
-$profile_url = $this->GetOption('widget_profile_url');
+$titles = $ThemeMyLogin->GetOption('titles');
+$messages = $ThemeMyLogin->GetOption('messages');
+$links = $ThemeMyLogin->GetOption('links');
+$redirects = $ThemeMyLogin->GetOption('redirects');
+$emails = $ThemeMyLogin->GetOption('emails');
 
 ?>
 
@@ -41,118 +58,282 @@ $profile_url = $this->GetOption('widget_profile_url');
 </div>
 
 <div class="wrap">
-<?php if ( isset($success) && strlen($success) > 0 ) { ?>
+<?php if ( function_exists('screen_icon') ) screen_icon('options-general'); ?>
+
+    <h2><?php _e('Theme My Login Settings'); ?></h2>
+
+    <?php if ( isset($info_message) && !empty($info_message) ) : ?>
     <div id="message" class="updated fade">
-        <p><strong><?php echo $success; ?></strong></p>
+        <p><strong><?php echo $info_message ?></strong></p>
     </div>
-<?php } ?>
-    <div id="icon-options-general" class="icon32"><br /></div>
-    <h2><?php _e('Theme My Login Settings', 'theme-my-login'); ?></h2>
+    <?php endif; ?>
 
-    <form action="" method="post" id="tml-settings">
-    <?php if ( function_exists('wp_nonce_field') ) wp_nonce_field('theme-my-login'); ?>
+    <?php if(  isset($error_message) && !empty($error_message) ) : ?>
+    <div id="message" class="error">
+        <p><strong><?php echo $error_message ?></strong></p>
+    </div>
+    <?php endif; ?>
 
-    <h3><?php _e('General Settings', 'theme-my-login'); ?></h3>
-    <table class="form-table">
-        <tr valign="top">
-            <th scope="row"><?php _e('Plugin', 'theme-my-login'); ?></th>
-            <td>
-                <input name="uninstall" type="checkbox" id="uninstall" value="1" <?php if ($this->GetOption('uninstall')) { echo 'checked="checked"'; } ?> />
-                <label for="uninstall"><?php _e('Uninstall', 'theme-my-login'); ?></label>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><?php _e('Page List', 'theme-my-login'); ?></th>
-            <td>
-                <input name="show_page" type="checkbox" id="show_page" value="1" <?php if ($this->GetOption('show_page')) { echo 'checked="checked"'; } ?> />
-                <label for="show_page"><?php _e('Show Login Page', 'theme-my-login'); ?></label>
-            </td>
-        </tr>
-    </table>
+    <form id="bs-settings" action="" method="post">
+    <?php wp_nonce_field('theme-my-login-settings'); ?>
+    
+    <div id="container" class="tabs">
 
-    <h3><?php _e('Template Settings', 'theme-my-login'); ?></h3>
-    <table class="form-table">
-        <tr valign="top">
-            <th scope="row"><label for="register_title"><?php _e('Register Title', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="register_title" type="text" id="register_title" value="<?php echo( htmlspecialchars ( $this->GetOption('register_title') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><label for="register_msg"><?php _e('Register Message', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="register_msg" type="text" id="register_msg" value="<?php echo( htmlspecialchars ( $this->GetOption('register_msg') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><label for="register_complete"><?php _e('Registration Complete Message', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="register_complete" type="text" id="register_complete" value="<?php echo( htmlspecialchars ( $this->GetOption('register_complete') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><label for="login_title"><?php _e('Login Title', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="login_title" type="text" id="login_title" value="<?php echo( htmlspecialchars ( $this->GetOption('login_title') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><label for="password_title"><?php _e('Lost Password Title', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="password_title" type="text" id="password_title" value="<?php echo( htmlspecialchars ( $this->GetOption('password_title') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><label for="password_msg"><?php _e('Lost Password Message', 'theme-my-login'); ?></label></th>
-            <td>
-                <input name="password_msg" type="text" id="password_msg" value="<?php echo( htmlspecialchars ( $this->GetOption('password_msg') ) ); ?>" class="regular-text" />
-            </td>
-        </tr>
-    </table>
+        <ul class="tabs-nav">
+            <li><a href="#fragment-1">General</a></li>
+            <li><a href="#fragment-2">Template</a></li>
+            <li><a href="#fragment-3">Links</a></li>
+            <li><a href="#fragment-4">Redirection</a></li>
+            <li><a href="#fragment-5">E-mail</a></li>
+        </ul>
+        
+        <div id="fragment-1" class="tabs-div">
+            
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row"><?php _e('Plugin', 'theme-my-login'); ?></th>
+                    <td>
+                        <input name="general[uninstall]" type="checkbox" id="general[uninstall]" value="1" <?php if ($ThemeMyLogin->options['general']['uninstall']) { echo 'checked="checked"'; } ?> />
+                        <label for="general[uninstall]"><?php _e('Uninstall', 'theme-my-login'); ?></label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Defaults', 'theme-my-login'); ?></th>
+                    <td>
+                        <input name="general[defaults]" type="checkbox" id="general[defaults]" value="1" <?php if ($ThemeMyLogin->options['general']['defaults']) { echo 'checked="checked"'; } ?> />
+                        <label for="general[defaults]"><?php _e('Reset Defaults', 'theme-my-login'); ?></label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Page List', 'theme-my-login'); ?></th>
+                    <td>
+                        <input name="general[show_page]" type="checkbox" id="general[show_page]" value="1" <?php if ($ThemeMyLogin->options['general']['show_page']) { echo 'checked="checked"'; } ?> />
+                        <label for="general[show_page]"><?php _e('Show Login Page', 'theme-my-login'); ?></label>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+
+        <div id="fragment-2" class="tabs-div">
+        
+            <ul class="tabs-nav">
+                <li><a href="#fragment-2-1">Titles</a></li>
+                <li><a href="#fragment-2-2">Messages</a></li>
+            </ul>
+            
+            <div id="fragment-2-1" class="tabs-div">
+                <table class="form-table">
+                    <tr valign="top">
+                        <th scope="row"><label for="titles[welcome]"><?php _e('Welcome', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="titles[welcome]" type="text" id="titles[welcome]" value="<?php echo htmlspecialchars($titles['welcome']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="titles[login]"><?php _e('Log In', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="titles[login]" type="text" id="titles[login]" value="<?php echo htmlspecialchars($titles['login']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="titles[register]"><?php _e('Register', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="titles[register]" type="text" id="titles[register]" value="<?php echo htmlspecialchars($titles['register']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="titles[lostpassword]"><?php _e('Lost Password', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="titles[lostpassword]" type="text" id="titles[lostpassword]" value="<?php echo htmlspecialchars($titles['lostpassword']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="titles[logout]"><?php _e('Log Out', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="titles[logout]" type="text" id="titles[logout]" value="<?php echo htmlspecialchars($titles['logout']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-2-2" class="tabs-div">
+                <table class="form-table">
+                    <tr valign="top">
+                        <th scope="row"><label for="register_msg"><?php _e('Register', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="messages[register]" type="text" id="messages[register]" value="<?php echo htmlspecialchars($messages['register']); ?>" class="extended-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="register_complete"><?php _e('Registration Complete', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="messages[success]" type="text" id="messages[success]" value="<?php echo htmlspecialchars($messages['success']); ?>" class="extended-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><label for="password_msg"><?php _e('Lost Password', 'theme-my-login'); ?></label></th>
+                        <td>
+                            <input name="messages[lostpassword]" type="text" id="messages[lostpassword]" value="<?php echo htmlspecialchars($messages['lostpassword']); ?>" class="extended-text" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+        </div>
+
+        <div id="fragment-3" class="tabs-div">
+        
+            <ul class="tabs-nav">
+                <?php
+                $i = 1;
+                foreach ($user_roles as $role => $value) {
+                    echo '<li><a href="#fragment-3-' . $i . '">' . ucwords($role) . '</a></li>' . "\n";
+                    $i++;
+                }
+                ?>
+            </ul>
+
+            <?php
+            $i1 = 1;
+            foreach ($user_roles as $role => $value) {
+            ?>
+            <div id="fragment-3-<?php echo $i1; ?>" class="tabs-div">
+            
+                <table id="links-<?php echo $role; ?>" class="form-table link-table">
+                    <?php $i2 = 0; ?>
+                    <?php $alt = 'alternate'; ?>
+                    <?php foreach ( $links[$role] as $key => $data ) {
+                        $alt = ('alternate' == $alt) ? '' : 'alternate';
+                        ?>
+                    <tr id="link-row-<?php echo $i2; ?>" class="<?php echo $alt; ?>">
+                        <td>
+                            Title<br />
+                            <input name="links[<?php echo $role; ?>][<?php echo $i2; ?>][title]" type="text" id="links[<?php echo $role; ?>][<?php echo $i2; ?>][title]" value="<?php echo htmlspecialchars($data['title']); ?>" class="regular-text link-title" /><br />
+                            URL<br />
+                            <input name="links[<?php echo $role; ?>][<?php echo $i2; ?>][url]" type="text" id="links[<?php echo $role; ?>][<?php echo $i2; ?>][url]" value="<?php echo $data['url']; ?>" class="extended-text link-url" /><br />
+                            <p>
+                            <a class="link remove <?php echo $role; ?>" href="" title="Remove This Link"><img src="<?php echo WP_PLUGIN_URL; ?>/theme-my-login/images/remove.gif" /></a>
+                            <a class="link add <?php echo $role; ?>" href="" title="Add Another Link"><img src="<?php echo WP_PLUGIN_URL; ?>/theme-my-login/images/add.gif" /></a>
+                            </p>
+                        </td>
+                    </tr>
+                        <?php
+                            $i2++;
+                        }
+                        ?>
+                </table>
+                
+            </div>
+            
+            <?php
+                $i1++;
+            }
+            ?>
+
+        </div>
+
+        <div id="fragment-4" class="tabs-div">
+
+            <ul class="tabs-nav">
+                <?php
+                $i = 1;
+                foreach ($user_roles as $role => $value) {
+                    echo '<li><a href="#fragment-4-' . $i . '">' . ucwords($role) . '</a></li>' . "\n";
+                    $i++;
+                }
+                ?>
+            </ul>
+
+            <?php
+            $i1 = 1;
+            foreach ($user_roles as $role => $value) {
+            ?>
+            <div id="fragment-4-<?php echo $i1; ?>" class="tabs-div">
+
+                <table id="redirection-<?php echo $role; ?>" class="form-table redirection-table">
+                    <tr id="redirect-row-<?php echo $i2; ?>">
+                        <td>
+                            Log In URL<br />
+                            <input name="redirects[<?php echo $role; ?>][login_url]" type="text" id="redirects[<?php echo $role; ?>][login_url]" value="<?php echo $redirects[$role]['login_url']; ?>" class="extended-text redirect-url" />
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <?php
+                $i1++;
+            }
+            ?>
+
+        </div>
+
+        <div id="fragment-5" class="tabs-div">
+
+            <ul class="tabs-nav">
+                <li><a href="#fragment-5-1">New Registration</a></li>
+                <li><a href="#fragment-5-2">Password Retrieval</a></li>
+                <li><a href="#fragment-5-3">Password Reset</a></li>
+            </ul>
+            
+            <div id="fragment-5-1" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</em></p>
+                            Subject<br />
+                            <input name="emails[newregistration][subject]" type="text" id="emails[newregistration][subject]" value="<?php echo htmlspecialchars($emails['newregistration']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="emails[newregistration][message]" id="emails[newregistration][message]" class="large-text"><?php echo htmlspecialchars($emails['newregistration']['message']); ?></textarea><br />
+                            <p>
+                            <label for "emails[newregistration][admin-disable]"><input name="emails[newregistration][admin-disable]" type="checkbox" id="emails[newregistration][admin-disable]" value="1" <?php if ( isset($emails['newregistration']['admin-disable']) && true == $emails['newregistration']['admin-disable'] ) { echo 'checked="checked"'; } ?> /> Disable Admin Notification</label>&nbsp;
+                            <label for "emails[newregistration][user-disable]"><input name="emails[newregistration][user-disable]" type="checkbox" id="emails[newregistration][useradmin-disable]" value="1" <?php if ( isset($emails['newregistration']['user-disable']) && true == $emails['newregistration']['user-disable'] ) { echo 'checked="checked"'; } ?> /> Disable User Notification</label>&nbsp;
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-5-2" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %reseturl%, %user_login%, %user_email%, %user_ip%</em></p>
+                            Subject<br />
+                            <input name="emails[retrievepassword][subject]" type="text" id="emails[retrievepassword][subject]" value="<?php echo htmlspecialchars($emails['retrievepassword']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="emails[retrievepassword][message]" id="emails[retrievepassword][message]" class="large-text"><?php echo htmlspecialchars($emails['retrievepassword']['message']); ?></textarea><br />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-5-3" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</em></p>
+                            Subject<br />
+                            <input name="emails[resetpassword][subject]" type="text" id="emails[resetpassword][subject]" value="<?php echo htmlspecialchars($emails['resetpassword']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="emails[resetpassword][message]" id="emails[resetpassword][message]" class="large-text"><?php echo htmlspecialchars($emails['resetpassword']['message']); ?></textarea><br />
+                            <p>
+                            <label for "emails[resetpassword][admin-disable]"><input name="emails[resetpassword][admin-disable]" type="checkbox" id="emails[resetpassword][admin-disable]" value="1" <?php if ( isset($ThemeMyLogin->options['emails']['resetpassword']['admin-disable']) && true == $emails['resetpassword']['admin-disable'] ) { echo 'checked="checked"'; } ?> /> Disable Admin Notification</label>&nbsp;
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+        
+    </div>
     
-    <h3><?php _e('Widget Settings', 'theme-my-login'); ?></h3>
-    <table class="form-table">
-        <tr valign="top">
-            <th scope="row"><?php _e('Registration', 'theme-my-login'); ?></th>
-            <td>
-                <input name="widget_allow_register" type="checkbox" id="widget_allow_register" value="1" <?php if ($this->GetOption('widget_allow_register')) { echo 'checked="checked"'; } ?> />
-                <label for="widget_allow_register"><?php _e('Allow Registration in Widget', 'theme-my-login'); ?></label>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><?php _e('Lost Password', 'theme-my-login'); ?></th>
-            <td>
-                <input name="widget_allow_password" type="checkbox" id="widget_allow_password" value="1" <?php if ($this->GetOption('widget_allow_password')) { echo 'checked="checked"'; } ?> />
-                <label for="widget_allow_password"><?php _e('Allow Password Recovery in Widget', 'theme-my-login'); ?></label>
-            </td>
-        </tr>
-    </table>
-    <h4><?php _e('Dashboard URL'); ?></h4>
-    <p class="setting-description">Leave blank for default</p>
-    <table class="form-table">
-        <?php foreach ($user_roles as $role => $value) : ?>
-        <tr valign="top">
-            <th scope="row"><?php echo ucwords($role); ?></th>
-            <td>
-                <input name="widget_dashboard_url[<?php echo $role; ?>]" type="text" id="widget_dashboard_url[<?php echo $role; ?>]" value="<?php echo $dashboard_url[$role]; ?>" class="regular-text" />
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
+    <?php if ( version_compare($wp_version, '2.7', '>=') ) : ?>
+    <p><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes'); ?>" /></p>
+    <?php else : ?>
+    <p><input type="submit" name="Submit" class="button" value="<?php _e('Save Changes'); ?>" /></p>
+    <?php endif; ?>
     
-    <h4><?php _e('Profile URL'); ?></h4>
-    <p class="setting-description">Leave blank for default</p>
-    <table class="form-table">
-        <?php foreach ($user_roles as $role => $value) : ?>
-        <tr valign="top">
-            <th scope="row"><?php echo ucwords($role); ?></th>
-            <td>
-                <input name="widget_profile_url[<?php echo $role; ?>]" type="text" id="widget_profile_url[<?php echo $role; ?>]" value="<?php echo $profile_url[$role]; ?>" class="regular-text" />
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-    
-    <p class="submit"><input type="submit" name="Submit" class="button-primary" value="<?php _e('Save Changes'); ?>" />
-    </form>
 </div>
