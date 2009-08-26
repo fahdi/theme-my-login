@@ -7,15 +7,13 @@ if ( $_POST ) {
 
     check_admin_referer('theme-my-login-settings');
 
-    $ThemeMyLogin->options['general']['uninstall'] = isset($_POST['general']['uninstall']);
-    $ThemeMyLogin->options['general']['defaults'] = isset($_POST['general']['defaults']);
-    $ThemeMyLogin->options['general']['show_page'] = isset($_POST['general']['show_page']);
+    $ThemeMyLogin->options['general']['uninstall'] = ( isset($_POST['general']['uninstall']) ) ? 1 : 0;
+    $ThemeMyLogin->options['general']['defaults'] = ( isset($_POST['general']['defaults']) ) ? 1 : 0;
+    $ThemeMyLogin->options['general']['show_page'] = ( isset($_POST['general']['show_page']) ) ? 1 : 0;
     
     $ThemeMyLogin->SetOption('titles', stripslashes_deep($_POST['titles']));
     $ThemeMyLogin->SetOption('messages', stripslashes_deep($_POST['messages']));
 
-    $ThemeMyLogin->SetOption('widget_allow_register', isset($_POST['widget_allow_register']));
-    $ThemeMyLogin->SetOption('widget_allow_password', isset($_POST['widget_allow_password']));
     foreach ( $_POST['links'] as $role => $tmp ) {
         foreach ( $tmp as $key => $data ) {
             $links[$role][] = array('title' => $data['title'], 'url' => $data['url']);
@@ -28,11 +26,10 @@ if ( $_POST ) {
     $ThemeMyLogin->SetOption('redirects', $redirects);
     foreach ( $_POST['emails'] as $email => $data ) {
         $emails[$email] = array('subject' => stripslashes($data['subject']), 'message' => stripslashes($data['message']));
-        if ( isset($data['admin-disable']) )
-            $emails[$email]['admin-disable'] = $data['admin-disable'];
-        if ( isset($data['user-disable']) )
-            $emails[$email]['user-disable'] = $data['user-disable'];
     }
+    $ThemeMyLogin->options['emails']['newregistration']['admin-disable'] = ( isset($_POST['emails']['newregistration']['admin-disable']) ) ? 1 : 0;
+    $ThemeMyLogin->options['emails']['newregistration']['user-disable'] = ( isset($_POST['emails']['newregistration']['user-disable']) ) ? 1 : 0;
+    $ThemeMyLogin->options['emails']['resetpassword']['admin-disable'] = ( isset($_POST['emails']['resetpassword']['admin-disable']) ) ? 1 : 0;
     $ThemeMyLogin->SetOption('emails', $emails);
     $ThemeMyLogin->SaveOptions();
 

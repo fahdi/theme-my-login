@@ -195,7 +195,7 @@ if (!class_exists('ThemeMyLogin')) {
             $pagename = isset($wp->query_vars['pagename']) ? $wp->query_vars['pagename'] : '';
 
             if ( isset($page_id) && $page_id == $this->options['general']['page_id'] || isset($pagename) && strtolower($pagename) == 'login' ) {
-                if ( is_user_logged_in() && 'logout' != $_GET['action'] ) {
+                if ( is_user_logged_in() && (isset($_GET['action']) && 'logout' != $_GET['action']) || !isset($_GET['action']) ) {
                     wp_redirect(get_bloginfo('home'));
                     exit();
                 }
@@ -392,16 +392,15 @@ if (!class_exists('ThemeMyLogin')) {
             return $message;
         }
 
-        function ThemeMyLoginShortcode($args = '', $is_page = false) {
+        function ThemeMyLoginShortcode($args = array(), $is_page = false) {
             global $WPLogin;
-            
-            if ( empty($WPLogin) )
-                $WPLogin = new WPLogin();
 
             if ( is_page($this->options['general']['page_id']) && !$is_page )
                 return;
                 
             $instance = ( isset($args['instance']) ) ? $args['instance'] : $this->NewInstance();
+            
+            $args = wp_parse_args($args);
             
             $options = $this->options;
             foreach ( $args as $key => $value ) {
@@ -417,20 +416,12 @@ if (!class_exists('ThemeMyLogin')) {
                         $options[$key][$k] = $v;
                 }
             }
-            /*
-            foreach ( $this->options as $type => $tmp ) {
-                if ( isset($args[$type]) )
-                    $options[$type] = array_merge($tmp, $args[$type]);
-                else
-                    $options[$type] = $tmp;
-            }
-            */
 
             return $WPLogin->Display($instance, $options);
         }
         
         
-        function ThemeMyLoginPageShortcode($args = '') {
+        function ThemeMyLoginPageShortcode($args = array()) {
             $args['widget']['default_action'] = 'login';
             $args['widget']['show_title'] = '0';
             $args['widget']['show_all_msgs'] = '1';
@@ -439,8 +430,7 @@ if (!class_exists('ThemeMyLogin')) {
             return $this->ThemeMyLoginShortcode($args, true);
         }
         
-        function TemplateTag($args = '') {
-            $args = wp_parse_args($args);
+        function TemplateTag($args = array()) {
             return $this->ThemeMyLoginShortcode($args);
         }
         
