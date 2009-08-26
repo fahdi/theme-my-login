@@ -195,7 +195,8 @@ if (!class_exists('ThemeMyLogin')) {
             $pagename = isset($wp->query_vars['pagename']) ? $wp->query_vars['pagename'] : '';
 
             if ( isset($page_id) && $page_id == $this->options['general']['page_id'] || isset($pagename) && strtolower($pagename) == 'login' ) {
-                if ( is_user_logged_in() && (isset($_GET['action']) && 'logout' != $_GET['action']) || !isset($_GET['action']) ) {
+                $action = ( isset($_GET['action']) ) ? $_GET['action'] : '';
+                if ( is_user_logged_in() && 'logout' != $action ) {
                     wp_redirect(get_bloginfo('home'));
                     exit();
                 }
