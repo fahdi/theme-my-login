@@ -7,7 +7,7 @@
     border: 1px solid #ff0000;
     background-color: #f08080;
     }
-.login p.error a:link, a:hover, a:visited, a:active {
+.login p.error a:link {
     color: #333333;
     }
 
