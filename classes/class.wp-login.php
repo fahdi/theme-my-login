@@ -27,7 +27,7 @@ if ( !class_exists('WPLogin') ) {
             $this->ForceSSL();
             
             $this->action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-            $this->instance = isset($_REQUEST['instance']) ? $_REQUEST['instance'] : '';
+            $this->instance = isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-1';
             $this->errors = new WP_Error();
             
             if ( isset($_GET['key']) )
