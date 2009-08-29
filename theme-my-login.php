@@ -86,7 +86,7 @@ if (!class_exists('ThemeMyLogin')) {
             
             $this->AddAdminScript('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/js/theme-my-login-admin.js.php');
 
-            $this->AddAdminPage('options', 'Theme My Login', 'Theme My Login', 8, '/theme-my-login/includes/admin-page.php');
+            $this->AddAdminPage('options', __('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, '/theme-my-login/includes/admin-page.php');
             
             $this->LoadOptions();
             
