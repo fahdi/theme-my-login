@@ -448,9 +448,9 @@ if (class_exists('ThemeMyLogin')) {
     $ThemeMyLogin = new ThemeMyLogin();
 
     if ( version_compare($wp_version, '2.8', '>=') ) {
-        require (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-new.php');
+        require_once (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-new.php');
     } else {
-        require (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-old.php');
+        require_once (WP_PLUGIN_DIR . '/theme-my-login/classes/class.widget-old.php');
     }
     
     function theme_my_login($args = '') {
