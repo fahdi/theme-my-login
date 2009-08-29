@@ -10,6 +10,9 @@ if ( $_POST ) {
     $ThemeMyLogin->options['general']['uninstall'] = ( isset($_POST['general']['uninstall']) ) ? 1 : 0;
     $ThemeMyLogin->options['general']['defaults'] = ( isset($_POST['general']['defaults']) ) ? 1 : 0;
     $ThemeMyLogin->options['general']['show_page'] = ( isset($_POST['general']['show_page']) ) ? 1 : 0;
+    $ThemeMyLogin->options['general']['custom_pass'] = ( isset($_POST['general']['custom_pass']) ) ? 1 : 0;
+    $ThemeMyLogin->options['general']['from_name'] = stripslashes($_POST['general']['from_name']);
+    $ThemeMyLogin->options['general']['from_email'] = stripslashes($_POST['general']['from_email']);
     
     $ThemeMyLogin->SetOption('titles', stripslashes_deep($_POST['titles']));
     $ThemeMyLogin->SetOption('messages', stripslashes_deep($_POST['messages']));
@@ -27,9 +30,9 @@ if ( $_POST ) {
     foreach ( $_POST['emails'] as $email => $data ) {
         $emails[$email] = array('subject' => stripslashes($data['subject']), 'message' => stripslashes($data['message']));
     }
-    $ThemeMyLogin->options['emails']['newregistration']['admin-disable'] = ( isset($_POST['emails']['newregistration']['admin-disable']) ) ? 1 : 0;
-    $ThemeMyLogin->options['emails']['newregistration']['user-disable'] = ( isset($_POST['emails']['newregistration']['user-disable']) ) ? 1 : 0;
-    $ThemeMyLogin->options['emails']['resetpassword']['admin-disable'] = ( isset($_POST['emails']['resetpassword']['admin-disable']) ) ? 1 : 0;
+    $emails['newregistration']['admin-disable'] = ( isset($_POST['emails']['newregistration']['admin-disable']) ) ? 1 : 0;
+    $emails['newregistration']['user-disable'] = ( isset($_POST['emails']['newregistration']['user-disable']) ) ? 1 : 0;
+    $emails['resetpassword']['admin-disable'] = ( isset($_POST['emails']['resetpassword']['admin-disable']) ) ? 1 : 0;
     $ThemeMyLogin->SetOption('emails', $emails);
     $ThemeMyLogin->SaveOptions();
 
@@ -90,22 +93,29 @@ $emails = $ThemeMyLogin->GetOption('emails');
                 <tr valign="top">
                     <th scope="row"><?php _e('Plugin', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="general[uninstall]" type="checkbox" id="general[uninstall]" value="1" <?php if ($ThemeMyLogin->options['general']['uninstall']) { echo 'checked="checked"'; } ?> />
+                        <input name="general[uninstall]" type="checkbox" id="general[uninstall]" value="1" <?php if ( isset($ThemeMyLogin->options['general']['uninstall']) && true == $ThemeMyLogin->options['general']['uninstall'] ) { echo 'checked="checked"'; } ?> />
                         <label for="general[uninstall]"><?php _e('Uninstall', 'theme-my-login'); ?></label>
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e('Defaults', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="general[defaults]" type="checkbox" id="general[defaults]" value="1" <?php if ($ThemeMyLogin->options['general']['defaults']) { echo 'checked="checked"'; } ?> />
+                        <input name="general[defaults]" type="checkbox" id="general[defaults]" value="1" <?php if ( isset($ThemeMyLogin->options['general']['defaults']) && true == $ThemeMyLogin->options['general']['defaults'] ) { echo 'checked="checked"'; } ?> />
                         <label for="general[defaults]"><?php _e('Reset Defaults', 'theme-my-login'); ?></label>
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e('Page List', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="general[show_page]" type="checkbox" id="general[show_page]" value="1" <?php if ($ThemeMyLogin->options['general']['show_page']) { echo 'checked="checked"'; } ?> />
+                        <input name="general[show_page]" type="checkbox" id="general[show_page]" value="1" <?php if ( isset($ThemeMyLogin->options['general']['show_page']) && $ThemeMyLogin->options['general']['show_page'] ) { echo 'checked="checked"'; } ?> />
                         <label for="general[show_page]"><?php _e('Show Login Page', 'theme-my-login'); ?></label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Registration', 'theme-my-login'); ?></th>
+                    <td>
+                        <input name="general[custom_pass]" type="checkbox" id="general[custom_pass]" value="1" <?php if ( isset($ThemeMyLogin->options['general']['custom_pass']) && true == $ThemeMyLogin->options['general']['custom_pass'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="general[custom_pass]"><?php _e('Allow Users To Set Their Own Password', 'theme-my-login'); ?></label>
                     </td>
                 </tr>
             </table>
@@ -269,12 +279,30 @@ $emails = $ThemeMyLogin->GetOption('emails');
         <div id="fragment-5" class="tabs-div">
 
             <ul class="tabs-nav">
-                <li><a href="#fragment-5-1">New Registration</a></li>
-                <li><a href="#fragment-5-2">Password Retrieval</a></li>
-                <li><a href="#fragment-5-3">Password Reset</a></li>
+                <li><a href="#fragment-5-1">General</a></li>
+                <li><a href="#fragment-5-2">New Registration</a></li>
+                <li><a href="#fragment-5-3">Password Retrieval</a></li>
+                <li><a href="#fragment-5-4">Password Reset</a></li>
             </ul>
             
             <div id="fragment-5-1" class="tabs-div">
+                <table class="form-table">
+                    <tr valign="top">
+                        <td>
+                            <label for="general[from_name]"><?php _e('From Name', 'theme-my-login'); ?></label><br />
+                            <input name="general[from_name]" type="text" id="general[from_name]" value="<?php echo htmlspecialchars($ThemeMyLogin->options['general']['from_name']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                            <label for="general[from_email]"><?php _e('From E-mail', 'theme-my-login'); ?></label><br />
+                            <input name="general[from_email]" type="text" id="general[from_email]" value="<?php echo htmlspecialchars($ThemeMyLogin->options['general']['from_email']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-5-2" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -292,7 +320,7 @@ $emails = $ThemeMyLogin->GetOption('emails');
                 </table>
             </div>
             
-            <div id="fragment-5-2" class="tabs-div">
+            <div id="fragment-5-3" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -306,7 +334,7 @@ $emails = $ThemeMyLogin->GetOption('emails');
                 </table>
             </div>
             
-            <div id="fragment-5-3" class="tabs-div">
+            <div id="fragment-5-4" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>

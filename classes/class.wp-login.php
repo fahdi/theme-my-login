@@ -27,7 +27,7 @@ if ( !class_exists('WPLogin') ) {
             $this->ForceSSL();
             
             $this->action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
-            $this->instance = isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-1';
+            $this->instance = isset($_REQUEST['instance']) ? $_REQUEST['instance'] : '';
             $this->errors = new WP_Error();
             
             if ( isset($_GET['key']) )
@@ -89,7 +89,7 @@ if ( !class_exists('WPLogin') ) {
             $this->LoadOptions($args);
 
             $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
-            if ($instance == $this->instance)
+            if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
                 
             ob_start();
@@ -112,7 +112,7 @@ if ( !class_exists('WPLogin') ) {
                     }
                     do_action('login_links', $current_user);
                     $redirect = $this->GuessURL();
-                    if ($wp_version >= '2.7')
+                    if ( version_compare($wp_version, '2.7', '>=') )
                         echo '<li><a href="' . wp_logout_url($redirect) . '">' . __('Log Out') . '</a></li>' . "\n";
                     else
                         echo '<li><a href="' . site_url('wp-login.php?action=logout&redirect_to='.$redirect, 'login') . '">' . __('Log Out') . '</a></li>' . "\n";
@@ -121,7 +121,7 @@ if ( !class_exists('WPLogin') ) {
             } else {
                 if ( $this->options['widget']['show_title'] )
                     echo $this->options['widget']['before_title'] . $this->GetTitle($instance) . $this->options['widget']['after_title'] . "\n";
-                if ($instance == $this->instance || !empty($action)) {
+                if ( $instance == $this->instance || !empty($action) ) {
                     switch ($action) {
                         case 'lostpassword' :
                         case 'retrievepassword' :
@@ -151,9 +151,9 @@ if ( !class_exists('WPLogin') ) {
         
         function GetTitle($instance) {
             $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
-            if ($instance == $this->instance)
+            if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
-                
+
             switch ($action) {
                 case 'register':
                     return $this->options['titles']['register'];
@@ -182,7 +182,7 @@ if ( !class_exists('WPLogin') ) {
                 unset($error);
             }
 
-            if ( $instance == $this->instance || $this->options['widget']['show_all_msgs'] ) {
+            if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) ) {
                 if ( $this->errors->get_error_code() ) {
                     $errors = '';
                     $messages = '';
@@ -205,7 +205,7 @@ if ( !class_exists('WPLogin') ) {
         
         function PageFooter($instance) {
             $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
-            if ($instance == $this->instance)
+            if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
                 
             if ( isset($this->options['widget']['show_links']) && true == $this->options['widget']['show_links'] ) {
@@ -266,7 +266,7 @@ if ( !class_exists('WPLogin') ) {
                         <label><?php _e('Password') ?><br />
                         <input type="password" name="pwd" id="user_pass-<?php echo $instance; ?>" class="input" value="" size="20" /></label>
                     </p>
-                <?php do_action('login_form'); ?>
+                <?php do_action('login_form', $instance); ?>
                     <p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <?php _e('Remember Me'); ?></label></p>
                     <p class="submit">
                         <input type="submit" name="login-submit" id="login-submit-<?php echo $instance; ?>" value="<?php _e('Log In'); ?>" />
@@ -307,7 +307,7 @@ if ( !class_exists('WPLogin') ) {
                     <label><?php _e('E-mail') ?><br />
                     <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" /></label>
                 </p>
-                <?php do_action('register_form'); ?>
+                <?php do_action('register_form', $instance); ?>
                 <p id="reg_passmail-<?php echo $instance; ?>"><?php echo $this->options['messages']['register']; ?></p>
                 <p class="submit">
                     <input type="submit" name="register-submit" id="register-submit-<?php echo $instance; ?>" value="<?php _e('Register'); ?>" />
@@ -323,7 +323,7 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function RetrievePasswordForm($instance) {
-            do_action('lost_password');
+            do_action('lost_password', $instance);
             $this->PageHeader($instance, $this->options['messages']['lostpassword']);
             $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
             ?>
@@ -332,7 +332,7 @@ if ( !class_exists('WPLogin') ) {
                     <label><?php _e('Username or E-mail:') ?><br />
                     <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" /></label>
                 </p>
-                <?php do_action('lostpassword_form'); ?>
+                <?php do_action('lostpassword_form', $instance); ?>
                 <p class="submit">
                     <input type="submit" name="lostpassword-submit" id="lostpassword-submit-<?php echo $instance; ?>" value="<?php _e('Get New Password'); ?>" />
                 </p>
@@ -424,16 +424,7 @@ if ( !class_exists('WPLogin') ) {
                     }
                 }
             }
-            /*
-            if ( !empty( $_REQUEST['redirect_to'] ) ) {
-                $this->redirect_to = $_REQUEST['redirect_to'];
-                // Redirect to https if user wants ssl
-                if ( $this->secure_cookie && false !== strpos($this->redirect_to, 'wp-admin') )
-                    $this->redirect_to = preg_replace('|^http://|', 'https://', $this->redirect_to);
-            } else {
-                $this->redirect_to = admin_url();
-            }
-            */
+
             if ( !$this->secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() )
                 $this->secure_cookie = false;
 
@@ -487,15 +478,6 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function GuessURL($args = array()) {
-            /*
-            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
-
-            if ($_SERVER["SERVER_PORT"] != "80") {
-                $url .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-            } else {
-                $url .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
-            }
-            */
             $keys = array('action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key');
             $url = remove_query_arg($keys);
 
@@ -656,5 +638,22 @@ if ( !class_exists('WPLogin') ) {
 
     }
 }
+
+if ( !function_exists('wp_generate_password') ) :
+function wp_generate_password($length = 12, $special_chars = true) {
+
+    if ( isset($_POST['user_pw']) && '' != $_POST['user_pw'] )
+        return stripslashes($_POST['user_pw']);
+        
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    if ( $special_chars )
+        $chars .= '!@#$%^&*()';
+
+    $password = '';
+    for ( $i = 0; $i < $length; $i++ )
+        $password .= substr($chars, wp_rand(0, strlen($chars) - 1), 1);
+    return $password;
+}
+endif;
 
 ?>

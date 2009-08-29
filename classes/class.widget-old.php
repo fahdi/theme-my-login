@@ -1,5 +1,6 @@
 <?php
 
+if ( !function_exists('ThemeMyLoginWidget') ) :
 class ThemeMyLoginWidget {
 
     function ThemeMyLoginWidget() {
@@ -66,6 +67,7 @@ class ThemeMyLoginWidget {
     }
     
 }
+endif;
 
 if (class_exists('ThemeMyLoginWidget')) {
     $ThemeMyLoginWidget = new ThemeMyLoginWidget();

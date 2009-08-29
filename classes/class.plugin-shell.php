@@ -161,8 +161,9 @@ if ( !class_exists('WPPluginShell')) {
             $this->footer_code .= $code;
         }
         
-        function SetMailFrom($email, $name = false) {
-            $this->mail_from['email'] = $email;
+        function SetMailFrom($email = '', $name = '') {
+            if (!empty($email))
+                $this->mail_from['email'] = $email;
             if (!empty($name))
                 $this->mail_from['name'] = $name;
         }
@@ -262,7 +263,7 @@ if ( !class_exists('WPPluginShell')) {
         }
 
         function _WPMailFromName_($from_name) {
-            return (empty($this->mail_from['name'])) ? $from_email : $this->mail_from['name'];
+            return (empty($this->mail_from['name'])) ? $from_name : $this->mail_from['name'];
         }
 
         function _handle_enqueues($type, $to_enqueue) {

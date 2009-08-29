@@ -1,5 +1,6 @@
 <?php
 
+if ( !class_exists('ThemeMyLoginWidget') ) :
 class ThemeMyLoginWidget extends WP_Widget {
 
     function ThemeMyLoginWidget(){
@@ -70,10 +71,13 @@ class ThemeMyLoginWidget extends WP_Widget {
     }
 
 }// END class
+endif;
 
+if ( !function_exists('ThemeMyLoginWidgetInit') ) :
 function ThemeMyLoginWidgetInit() {
     register_widget('ThemeMyLoginWidget');
 }
+endif;
 add_action('widgets_init', 'ThemeMyLoginWidgetInit');
 
 ?>
