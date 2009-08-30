@@ -113,14 +113,17 @@ if (!class_exists('ThemeMyLogin')) {
             } else {
                 $page_id = $theme_my_login->ID;
                 $insert['ID'] = $page_id;
+                $insert['post_content'] = str_replace('[theme-my-login]', '[theme-my-login-page]', $theme_my_login->post_content);
                 wp_update_post($insert);
             }
             
             $opts = get_option('theme_my_login');
             if ( $opts ) {
-                if ( version_compare($opts['version'], '4.0', '<') ) {
-                    delete_option('theme_my_login');
-                    delete_option('widget_theme-my-login');
+                if ( is_array($opts) ) {
+                    if ( version_compare($opts['version'], '4.0', '<') ) {
+                        delete_option('theme_my_login');
+                        delete_option('widget_theme-my-login');
+                    }
                 }
             }
             
@@ -132,6 +135,7 @@ if (!class_exists('ThemeMyLogin')) {
         function Deactivate() {
             if ( $this->options['general']['uninstall'] ) {
                 delete_option('theme_my_login');
+                delete_option('widget_theme-my-login');
                 wp_delete_post($this->options['general']['page_id']);
             }
         }
