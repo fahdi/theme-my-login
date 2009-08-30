@@ -13,9 +13,7 @@ class ThemeMyLoginWidget extends WP_Widget {
         
         $new_args['widget'] = array_merge($args, $instance);
 
-        if (!is_page($ThemeMyLogin->GetOption('page_id'))) {
-            echo $ThemeMyLogin->ThemeMyLoginShortcode($new_args);
-        }
+        echo $ThemeMyLogin->ThemeMyLoginShortcode($new_args);
     }
 
     function update($new_instance, $old_instance){
