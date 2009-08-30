@@ -349,7 +349,7 @@ if ( !class_exists('WPLogin') ) {
         function LogoutAction() {
             global $wp_version;
             
-            if ($wp_version >= '2.7')
+            if ( version_compare($wp_version, '2.7', '>=') )
                 check_admin_referer('log-out');
             wp_logout();
 
