@@ -62,8 +62,6 @@ if (!class_exists('ThemeMyLogin')) {
                 $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css');
             else
                 $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login.css');
-            
-            $this->AddAdminStyle('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login-admin.css.php');
 
             if ( version_compare($wp_version, '2.8', '>=') ) {
                 $this->AddAdminScript('jquery-ui-tabs');
@@ -218,21 +216,26 @@ if (!class_exists('ThemeMyLogin')) {
         function AdminInit() {
             global $user_ID, $wp_version, $pagenow;
             
-            if ( version_compare($wp_version, '2.8', '>=') ) {
-                $admin_color = get_usermeta($user_ID, 'admin_color');
-                if ( 'classic' == $admin_color ) {
-                    $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
-                } else {
+            if ( 'options-general.php' == $pagenow && (isset($_GET['page']) && 'theme-my-login/includes/admin-page.php' == $_GET['page']) ) {
+            
+                $this->AddAdminStyle('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login-admin.css.php');
+            
+                if ( version_compare($wp_version, '2.8', '>=') ) {
+                    $admin_color = get_usermeta($user_ID, 'admin_color');
+                    if ( 'classic' == $admin_color ) {
+                        $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
+                    } else {
+                        $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+                    }
+                } elseif ( version_compare($wp_version, '2.7', '>=') ) {
                     $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+                } elseif ( version_compare($wp_version, '2.5', '>=') ) {
+                    $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
                 }
-            } elseif ( version_compare($wp_version, '2.7', '>=') ) {
-                $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
-            } elseif ( version_compare($wp_version, '2.5', '>=') ) {
-                $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
-            }
 
-            if ( 'page.php' == $pagenow && (isset($_REQUEST['post']) && $this->options['general']['page_id'] == $_REQUEST['post']) )
-                add_action('admin_notices', array(&$this, 'PageEditNotice'));
+                if ( 'page.php' == $pagenow && (isset($_REQUEST['post']) && $this->options['general']['page_id'] == $_REQUEST['post']) )
+                    add_action('admin_notices', array(&$this, 'PageEditNotice'));
+            }
         }
         
         function PageEditNotice() {
