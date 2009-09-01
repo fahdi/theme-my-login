@@ -446,9 +446,9 @@ if (!class_exists('ThemeMyLogin')) {
 
         function ThemeMyLoginShortcode($args = array()) {
             global $WPLogin;
-            
+
             $args = wp_parse_args($args);
-            
+
             $options = $this->options;
             foreach ( $args as $key => $value ) {
                 if ( !is_array($value) ) {
@@ -463,7 +463,7 @@ if (!class_exists('ThemeMyLogin')) {
                         $options[$key][$k] = $v;
                 }
             }
-            
+
             $instance = ( isset($options['widget']['instance']) ) ? $options['widget']['instance'] : $this->NewInstance();
 
             return $WPLogin->Display($instance, $options);

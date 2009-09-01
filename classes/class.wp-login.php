@@ -216,13 +216,13 @@ if ( !class_exists('WPLogin') ) {
                 }
                 if (get_option('users_can_register')) {
                     if ( 'register' != $action ) {
-                        $url = ($this->options['widget']['registration']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'register')) : site_url('wp-login.php?instance='.$instance.'&action=register', 'login');
+                        $url = ($this->options['widget']['registration']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'register')) : site_url('wp-login.php?action=register', 'login');
                         $url = apply_filters('login_footer_registration_link', $url);
                         echo '<li><a href="' . $url . '">' . $this->options['titles']['register'] . '</a></li>' . "\n";
                     }
                 }
                 if ( 'lostpassword' != $action ) {
-                    $url = ($this->options['widget']['lostpassword']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')) : site_url('wp-login.php?instance='.$instance.'&action=lostpassword', 'login');
+                    $url = ($this->options['widget']['lostpassword']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')) : site_url('wp-login.php?action=lostpassword', 'login');
                     $url = apply_filters('login_footer_forgotpassword_link', $url);
                     echo '<li><a href="' . $url . '">' . $this->options['titles']['lostpassword'] . '</a></li>' . "\n";
                 }
