@@ -4,15 +4,12 @@
     
 .login p.error {
     padding: 5px;
-    border: 1px solid #ff0000;
-    background-color: #f08080;
-    }
-.login p.error a:link {
-    color: #333333;
+    border: 1px solid #c00;
+    background-color: #ffebe8;
     }
 
 .login p.message {
     padding: 5px;
-    border: 1px solid #ffff00;
+    border: 1px solid #e6db55;
     background-color: #ffffe0;
     }

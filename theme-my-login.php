@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.1
+Version: 4.1.1
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -21,7 +21,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '4.1';
+        var $version = '4.1.1';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -118,7 +118,7 @@ if (!class_exists('ThemeMyLogin')) {
             $opts = get_option('theme_my_login');
             if ( $opts ) {
                 if ( is_array($opts) ) {
-                    if ( version_compare($opts['version'], '4.0', '<') ) {
+                    if ( isset($opts['version']) && version_compare($opts['version'], '4.0', '<') ) {
                         delete_option('theme_my_login');
                         delete_option('widget_theme-my-login');
                     }
@@ -140,8 +140,10 @@ if (!class_exists('ThemeMyLogin')) {
 
         function InitOptions($save = false) {
         
-            $login_page = get_page_by_title('login');
-            $this->options['general']['page_id']        = ( $login_page ) ? $login_page->ID : 0;
+            if ( !isset($this->options['page_id']) || empty($this->options['page_id']) || $save ) {
+                $login_page = get_page_by_title('login');
+                $this->options['general']['page_id']        = ( $login_page ) ? $login_page->ID : 0;
+            }
             
             $this->options['general']['uninstall']      = 0;
             $this->options['general']['defaults']       = 0;
