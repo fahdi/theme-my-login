@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.1.1
+Version: 4.1.2
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -21,7 +21,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '4.1.1';
+        var $version = '4.1.2';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -35,6 +35,8 @@ if (!class_exists('ThemeMyLogin')) {
 
             register_activation_hook ( __FILE__, array( &$this, 'Activate' ) );
             register_deactivation_hook ( __FILE__, array( &$this, 'Deactivate' ) );
+            
+            $this->AddAdminPage('options', __('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, '/theme-my-login/includes/admin-page.php');
 
             $this->AddAction('init');
             $this->AddAction('admin_init');
@@ -58,35 +60,16 @@ if (!class_exists('ThemeMyLogin')) {
             $this->AddShortcode('theme-my-login-page');
             $this->AddShortcode('theme-my-login');
             
-            if ( file_exists(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.css') )
-                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css');
-            else
-                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login.css');
-
-            if ( version_compare($wp_version, '2.8', '>=') ) {
-                $this->AddAdminScript('jquery-ui-tabs');
-            } else {
-                global $wp_scripts;
-                
-                if ( empty($wp_scripts) )
-                    $wp_scripts = new WP_Scripts();
-
-                $wp_scripts->dequeue('jquery');
-                $wp_scripts->dequeue('jquery-ui-core');
-                $wp_scripts->dequeue('jquery-ui-tabs');
-                $wp_scripts->remove('jquery');
-                $wp_scripts->remove('jquery-ui-core');
-                $wp_scripts->remove('jquery-ui-tabs');
-                $this->AddAdminScript('jquery', WP_PLUGIN_URL . '/theme-my-login/js/jquery/jquery.js', false, '1.7.2');
-                $this->AddAdminScript('jquery-ui-core', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.core.js', array('jquery'), '1.7.2');
-                $this->AddAdminScript('jquery-ui-tabs', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.tabs.js', array('jquery', 'jquery-ui-core'), '1.7.2');
+            $this->LoadOptions();
+            
+            if ( !isset($this->options['page_id']) || empty($this->options['page_id']) ) {
+                $login_page = get_page_by_title('Login');
+                $this->options['general']['page_id'] = ( $login_page ) ? $login_page->ID : 0;
+                $this->SaveOptions();
             }
             
-            $this->AddAdminScript('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/js/theme-my-login-admin.js.php');
-
-            $this->AddAdminPage('options', __('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, '/theme-my-login/includes/admin-page.php');
-            
-            $this->LoadOptions();
+            //if ( empty($this->options['general']['page_id']) )
+                //return;
             
             $this->SetMailFrom($this->options['general']['from_email'], $this->options['general']['from_name']);
             
@@ -139,12 +122,8 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function InitOptions($save = false) {
-        
-            if ( !isset($this->options['page_id']) || empty($this->options['page_id']) || $save ) {
-                $login_page = get_page_by_title('login');
-                $this->options['general']['page_id']        = ( $login_page ) ? $login_page->ID : 0;
-            }
             
+            $this->options['general']['page_id']        = 0;
             $this->options['general']['uninstall']      = 0;
             $this->options['general']['defaults']       = 0;
             $this->options['general']['show_page']      = 0;
@@ -208,17 +187,46 @@ if (!class_exists('ThemeMyLogin')) {
             switch ( $pagenow ) {
                 case 'wp-register.php':
                 case 'wp-login.php':
-                    $redirect_to = add_query_arg($_GET, $this->permalink);
-                    wp_redirect($redirect_to);
-                    exit();
+                    if ( !empty($this->options['general']['page_id']) ) {
+                        $redirect_to = add_query_arg($_GET, $this->permalink);
+                        wp_redirect($redirect_to);
+                        exit();
+                    }
                 break;
             }
+            
+            if ( file_exists(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.css') )
+                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css');
+            else
+                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login.css');
+                
         }
         
         function AdminInit() {
             global $user_ID, $wp_version, $pagenow;
             
             if ( 'options-general.php' == $pagenow && (isset($_GET['page']) && 'theme-my-login/includes/admin-page.php' == $_GET['page']) ) {
+            
+                if ( version_compare($wp_version, '2.8', '>=') ) {
+                    $this->AddAdminScript('jquery-ui-tabs');
+                } else {
+                    global $wp_scripts;
+
+                    if ( empty($wp_scripts) )
+                        $wp_scripts = new WP_Scripts();
+
+                    $wp_scripts->dequeue('jquery');
+                    $wp_scripts->dequeue('jquery-ui-core');
+                    $wp_scripts->dequeue('jquery-ui-tabs');
+                    $wp_scripts->remove('jquery');
+                    $wp_scripts->remove('jquery-ui-core');
+                    $wp_scripts->remove('jquery-ui-tabs');
+                    $this->AddAdminScript('jquery', WP_PLUGIN_URL . '/theme-my-login/js/jquery/jquery.js', false, '1.7.2');
+                    $this->AddAdminScript('jquery-ui-core', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.core.js', array('jquery'), '1.7.2');
+                    $this->AddAdminScript('jquery-ui-tabs', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.tabs.js', array('jquery', 'jquery-ui-core'), '1.7.2');
+                }
+
+                $this->AddAdminScript('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/js/theme-my-login-admin.js.php');
             
                 $this->AddAdminStyle('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login-admin.css.php');
             
@@ -400,12 +408,14 @@ if (!class_exists('ThemeMyLogin')) {
         function SiteURL($url, $path) {
             global $wp_rewrite;
             
-            if ( preg_match('/wp-login.php/', $url) ) {
-                $parsed_url = parse_url($url);
-                if ( isset($parsed_url['query']) )
-                    $url = $wp_rewrite->using_permalinks() ? $this->permalink.'?'.$parsed_url['query'] : $this->permalink.'&'.$parsed_url['query'];
-                else
-                    $url = $this->permalink;
+            if ( !empty($this->options['general']['page_id']) ) {
+                if ( preg_match('/wp-login.php/', $url) ) {
+                    $parsed_url = parse_url($url);
+                    if ( isset($parsed_url['query']) )
+                        $url = $wp_rewrite->using_permalinks() ? $this->permalink.'?'.$parsed_url['query'] : $this->permalink.'&'.$parsed_url['query'];
+                    else
+                        $url = $this->permalink;
+                }
             }
             return $url;
         }

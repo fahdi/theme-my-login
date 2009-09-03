@@ -11,6 +11,7 @@ if ( $_POST ) {
     $ThemeMyLogin->options['general']['defaults'] = ( isset($_POST['general']['defaults']) ) ? 1 : 0;
     $ThemeMyLogin->options['general']['show_page'] = ( isset($_POST['general']['show_page']) ) ? 1 : 0;
     $ThemeMyLogin->options['general']['custom_pass'] = ( isset($_POST['general']['custom_pass']) ) ? 1 : 0;
+    $ThemeMyLogin->options['general']['page_id'] = (int) $_POST['general']['page_id'];
     $ThemeMyLogin->options['general']['from_name'] = stripslashes($_POST['general']['from_name']);
     $ThemeMyLogin->options['general']['from_email'] = stripslashes($_POST['general']['from_email']);
     
@@ -116,6 +117,13 @@ $emails = $ThemeMyLogin->GetOption('emails');
                     <td>
                         <input name="general[custom_pass]" type="checkbox" id="general[custom_pass]" value="1" <?php if ( isset($ThemeMyLogin->options['general']['custom_pass']) && true == $ThemeMyLogin->options['general']['custom_pass'] ) { echo 'checked="checked"'; } ?> />
                         <label for="general[custom_pass]"><?php _e('Allow Users To Set Their Own Password', 'theme-my-login'); ?></label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><label for="general[page_id]"><?php _e('Page ID', 'theme-my-login'); ?></label></th>
+                    <td>
+                        <input name="general[page_id]" type="text" id="general[page_id]" value="<?php echo $ThemeMyLogin->options['general']['page_id']; ?>" size="1" />
+                        <span class="description"><strong>DO NOT</strong> change this unless you are <strong>ABSOLUTELY POSITIVE</strong> you know what you are doing!</span>
                     </td>
                 </tr>
             </table>

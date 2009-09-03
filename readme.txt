@@ -37,10 +37,13 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.1.2 =
+* Added the ability to change main login page ID (Only needed for debugging)
+* The login will now revert to default wp-login in the case of plugin failure
+
 = 4.1.1 =
 * Fixed a major bug dealing with saving options that broke the plugin
 * Fixed a CSS bug causing interference with other interfaces that use jQuery UI Tabs
-
 
 = 4.1 =
 * Implemented custom user passwords
