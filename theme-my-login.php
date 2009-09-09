@@ -27,7 +27,6 @@ if (!class_exists('ThemeMyLogin')) {
         var $instances = 0;
 
         function ThemeMyLogin() {
-            global $wp_version;
             
             $this->SetPluginTitle('Theme My Login');
             
@@ -62,14 +61,11 @@ if (!class_exists('ThemeMyLogin')) {
             
             $this->LoadOptions();
             
-            if ( !isset($this->options['page_id']) || empty($this->options['page_id']) ) {
+            if ( !isset($this->options['general']['page_id']) || empty($this->options['general']['page_id']) ) {
                 $login_page = get_page_by_title('Login');
                 $this->options['general']['page_id'] = ( $login_page ) ? $login_page->ID : 0;
                 $this->SaveOptions();
             }
-            
-            //if ( empty($this->options['general']['page_id']) )
-                //return;
             
             $this->SetMailFrom($this->options['general']['from_email'], $this->options['general']['from_name']);
             
@@ -295,7 +291,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function WPHead() {
-            if ( !is_admin() && $this->instances > 0 )
+            if ( !is_admin() )
                 do_action('login_head');
         }
 
