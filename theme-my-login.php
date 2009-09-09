@@ -192,9 +192,9 @@ if (!class_exists('ThemeMyLogin')) {
             }
             
             if ( file_exists(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.css') )
-                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/theme-my-login.css');
+                $this->AddStyle('theme-my-login', plugins_url('/theme-my-login/theme-my-login.css'));
             else
-                $this->AddStyle('theme-my-login', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login.css');
+                $this->AddStyle('theme-my-login', plugins_url('/theme-my-login/css/theme-my-login.css'));
                 
         }
         
@@ -217,26 +217,26 @@ if (!class_exists('ThemeMyLogin')) {
                     $wp_scripts->remove('jquery');
                     $wp_scripts->remove('jquery-ui-core');
                     $wp_scripts->remove('jquery-ui-tabs');
-                    $this->AddAdminScript('jquery', WP_PLUGIN_URL . '/theme-my-login/js/jquery/jquery.js', false, '1.7.2');
-                    $this->AddAdminScript('jquery-ui-core', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.core.js', array('jquery'), '1.7.2');
-                    $this->AddAdminScript('jquery-ui-tabs', WP_PLUGIN_URL . '/theme-my-login/js/jquery/ui.tabs.js', array('jquery', 'jquery-ui-core'), '1.7.2');
+                    $this->AddAdminScript('jquery', plugins_url('/theme-my-login/js/jquery/jquery.js'), false, '1.7.2');
+                    $this->AddAdminScript('jquery-ui-core', plugins_url('/theme-my-login/js/jquery/ui.core.js'), array('jquery'), '1.7.2');
+                    $this->AddAdminScript('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
                 }
 
-                $this->AddAdminScript('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/js/theme-my-login-admin.js.php');
+                $this->AddAdminScript('theme-my-login-admin', plugins_url('/theme-my-login/js/theme-my-login-admin.js.php'));
             
-                $this->AddAdminStyle('theme-my-login-admin', WP_PLUGIN_URL . '/theme-my-login/css/theme-my-login-admin.css.php');
+                $this->AddAdminStyle('theme-my-login-admin', plugins_url('/theme-my-login/css/theme-my-login-admin.css.php'));
             
                 if ( version_compare($wp_version, '2.8', '>=') ) {
                     $admin_color = get_usermeta($user_ID, 'admin_color');
                     if ( 'classic' == $admin_color ) {
-                        $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
+                        $this->AddAdminStyle('jquery-colors-classic', plugins_url('/theme-my-login/css/wp-colors-classic/wp-colors-classic.css'));
                     } else {
-                        $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+                        $this->AddAdminStyle('jquery-colors-fresh', plugins_url('/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css'));
                     }
                 } elseif ( version_compare($wp_version, '2.7', '>=') ) {
-                    $this->AddAdminStyle('jquery-colors-fresh', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css');
+                    $this->AddAdminStyle('jquery-colors-fresh', plugins_url('/theme-my-login/css/wp-colors-fresh/wp-colors-fresh.css'));
                 } elseif ( version_compare($wp_version, '2.5', '>=') ) {
-                    $this->AddAdminStyle('jquery-colors-classic', WP_PLUGIN_URL . '/theme-my-login/css/wp-colors-classic/wp-colors-classic.css');
+                    $this->AddAdminStyle('jquery-colors-classic', plugins_url('/theme-my-login/css/wp-colors-classic/wp-colors-classic.css'));
                 }
 
                 if ( 'page.php' == $pagenow && (isset($_REQUEST['post']) && $this->options['general']['page_id'] == $_REQUEST['post']) )

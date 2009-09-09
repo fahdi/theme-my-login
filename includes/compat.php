@@ -48,6 +48,49 @@ function admin_url($path = '') {
 }
 endif;
 
+if ( !function_exists('includes_url') ) :
+function includes_url($path = '') {
+    $url = site_url() . '/' . WPINC . '/';
+
+    if ( !empty($path) && is_string($path) && strpos($path, '..') === false )
+        $url .= ltrim($path, '/');
+
+    return $url;
+}
+endif;
+
+if ( !function_exists('content_url') ) :
+function content_url($path = '') {
+    $scheme = ( is_ssl() ? 'https' : 'http' );
+    $url = WP_CONTENT_URL;
+    if ( 0 === strpos($url, 'http') ) {
+        if ( is_ssl() )
+            $url = str_replace( 'http://', "{$scheme}://", $url );
+    }
+
+    if ( !empty($path) && is_string($path) && strpos($path, '..') === false )
+        $url .= '/' . ltrim($path, '/');
+
+    return $url;
+}
+endif;
+
+if ( !function_exists('plugin_url') ) :
+function plugins_url($path = '') {
+    $scheme = ( is_ssl() ? 'https' : 'http' );
+    $url = WP_PLUGIN_URL;
+    if ( 0 === strpos($url, 'http') ) {
+        if ( is_ssl() )
+            $url = str_replace( 'http://', "{$scheme}://", $url );
+    }
+
+    if ( !empty($path) && is_string($path) && strpos($path, '..') === false )
+        $url .= '/' . ltrim($path, '/');
+
+    return $url;
+}
+endif;
+
 if ( !function_exists('force_ssl_login') ) :
 function force_ssl_login($force = '') {
     static $forced;
