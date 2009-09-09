@@ -75,7 +75,7 @@ $emails = $ThemeMyLogin->GetOption('emails');
     </div>
     <?php endif; ?>
 
-    <form id="bs-settings" action="" method="post">
+    <form id="theme-my-login-settings" action="" method="post">
     <?php wp_nonce_field('theme-my-login-settings'); ?>
     
     <div id="container" class="tabs">
@@ -368,5 +368,6 @@ $emails = $ThemeMyLogin->GetOption('emails');
     <?php else : ?>
     <p><input type="submit" name="Submit" class="button" value="<?php _e('Save Changes'); ?>" /></p>
     <?php endif; ?>
+    </form>
     
 </div>
