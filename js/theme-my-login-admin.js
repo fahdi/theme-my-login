@@ -1,11 +1,3 @@
-<?php
-
-$version = ( isset($_GET['ver']) ) ? $_GET['ver'] : '';
-
-header("content-type: application/x-javascript");
-
-?>
-
 jQuery(document).ready(function($){
 
     $("#container, #container div").tabs({ fx: { opacity: 'toggle', duration: 'fast' } });
@@ -14,7 +6,8 @@ jQuery(document).ready(function($){
         var arr = $(this).attr("class").split(" ");
         var action = arr[1];
         var role = arr[2];
-        var count = $("#links-" + role + " tbody>tr").size();
+        var lastrow = $("#links-" + role + " tbody>tr:last").attr("id");
+        var count = Number(lastrow.substring(9, lastrow.length)) + 1;
         if ('add' == action) {
             $("#links-" + role + " tbody>tr:last").clone(true).insertAfter("#links-" + role + " tbody>tr:last");
             var curclass = $("#links-" + role + " tbody>tr:last").attr("class");

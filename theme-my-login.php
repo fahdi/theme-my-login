@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.1.2
+Version: 4.2
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -21,7 +21,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '4.1.2';
+        var $version = '4.2';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -68,6 +68,7 @@ if (!class_exists('ThemeMyLogin')) {
             }
             
             $this->SetMailFrom($this->options['general']['from_email'], $this->options['general']['from_name']);
+            $this->SetMailContentType($this->options['general']['email_format']);
             
             $this->WPPluginShell();
             
@@ -126,6 +127,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['general']['custom_pass']    = 0;
             $this->options['general']['from_name']      = '';
             $this->options['general']['from_email']     = '';
+            $this->options['general']['email_format']   = 'text/plain';
             
             $this->options['titles']['welcome']         = __('Welcome') . ', %display_name%';
             $this->options['titles']['login']           = __('Log In');
@@ -222,7 +224,7 @@ if (!class_exists('ThemeMyLogin')) {
                     $this->AddAdminScript('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
                 }
 
-                $this->AddAdminScript('theme-my-login-admin', plugins_url('/theme-my-login/js/theme-my-login-admin.js.php'));
+                $this->AddAdminScript('theme-my-login-admin', plugins_url('/theme-my-login/js/theme-my-login-admin.js'));
             
                 $this->AddAdminStyle('theme-my-login-admin', plugins_url('/theme-my-login/css/theme-my-login-admin.css.php'));
             

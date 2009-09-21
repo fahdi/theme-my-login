@@ -14,6 +14,7 @@ if ( $_POST ) {
     $ThemeMyLogin->options['general']['page_id'] = (int) $_POST['general']['page_id'];
     $ThemeMyLogin->options['general']['from_name'] = stripslashes($_POST['general']['from_name']);
     $ThemeMyLogin->options['general']['from_email'] = stripslashes($_POST['general']['from_email']);
+    $ThemeMyLogin->options['general']['email_format'] = stripslashes($_POST['general']['email_format']);
     
     $ThemeMyLogin->SetOption('titles', stripslashes_deep($_POST['titles']));
     $ThemeMyLogin->SetOption('messages', stripslashes_deep($_POST['messages']));
@@ -218,9 +219,10 @@ $emails = $ThemeMyLogin->GetOption('emails');
                 <table id="links-<?php echo $role; ?>" class="form-table link-table">
                     <?php $i2 = 0; ?>
                     <?php $alt = 'alternate'; ?>
-                    <?php foreach ( $links[$role] as $key => $data ) {
-                        $alt = ('alternate' == $alt) ? '' : 'alternate';
-                        ?>
+                    <?php if ( is_array($links[$role]) ) { ?>
+                        <?php foreach ( $links[$role] as $key => $data ) {
+                            $alt = ('alternate' == $alt) ? '' : 'alternate';
+                            ?>
                     <tr id="link-row-<?php echo $i2; ?>" class="<?php echo $alt; ?>">
                         <td>
                             Title<br />
@@ -233,10 +235,23 @@ $emails = $ThemeMyLogin->GetOption('emails');
                             </p>
                         </td>
                     </tr>
-                        <?php
+                            <?php
                             $i2++;
                         }
-                        ?>
+                    } else { ?>
+                    <tr id="link-row-0" class="">
+                        <td>
+                            Title<br />
+                            <input name="links[<?php echo $role; ?>][0][title]" type="text" id="links[<?php echo $role; ?>][0][title]" value="" class="regular-text link-title" /><br />
+                            URL<br />
+                            <input name="links[<?php echo $role; ?>][0][url]" type="text" id="links[<?php echo $role; ?>][0][url]" value="" class="extended-text link-url" /><br />
+                            <p>
+                            <a class="link remove <?php echo $role; ?>" href="" title="Remove This Link"><img src="<?php echo WP_PLUGIN_URL; ?>/theme-my-login/images/remove.gif" /></a>
+                            <a class="link add <?php echo $role; ?>" href="" title="Add Another Link"><img src="<?php echo WP_PLUGIN_URL; ?>/theme-my-login/images/add.gif" /></a>
+                            </p>
+                        </td>
+                    </tr>
+                    <?php } ?>
                 </table>
                 
             </div>
@@ -305,6 +320,15 @@ $emails = $ThemeMyLogin->GetOption('emails');
                         <td>
                             <label for="general[from_email]"><?php _e('From E-mail', 'theme-my-login'); ?></label><br />
                             <input name="general[from_email]" type="text" id="general[from_email]" value="<?php echo htmlspecialchars($ThemeMyLogin->options['general']['from_email']); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>
+                        <label for"general[email_format]"><?php _e('E-mail Format', 'theme-my-login'); ?></label><br />
+                        <select name="general[email_format]" id="general[email_format]">
+                        <option value="text/plain"<?php if ('text/plain' == $ThemeMyLogin->options['general']['email_format']) echo ' selected="selected"'; ?>>Plain Text</option>
+                        <option value="text/html"<?php if ('text/html' == $ThemeMyLogin->options['general']['email_format']) echo ' selected="selected"'; ?>>HTML</option>
+                        </select>
                         </td>
                     </tr>
                 </table>

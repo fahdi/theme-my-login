@@ -21,6 +21,7 @@ This plugin themes the WordPress login, registration and forgot password pages a
 * Show gravatar to users who are logged in
 * Assign custom links to users who are logged in based on their role
 * Customize user emails for registration and/or password recovery
+* Send user emails in HTML format
 * Allow users to set their own password upon registration
 
 
@@ -36,6 +37,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 4.2 =
+* Added the option to send e-mails in HTML format
+* Fixed a bug that broke custom user role links if all links were deleted
 
 = 4.1.2 =
 * Added the ability to change main login page ID (Only needed for debugging)

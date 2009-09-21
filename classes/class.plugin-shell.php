@@ -37,6 +37,7 @@ if ( !class_exists('WPPluginShell')) {
         var $options;
         
         var $mail_from;
+        var $mail_content_type;
         
         var $wp_version;
         
@@ -60,6 +61,7 @@ if ( !class_exists('WPPluginShell')) {
             
             $this->AddFilter('wp_mail_from', '_WPMailFrom_');
             $this->AddFilter('wp_mail_from_name', '_WPMailFromName_');
+            $this->AddFilter('wp_mail_content_type', '_WPMailContentType_');
             
             $this->ActivateHooks('actions');
             $this->ActivateHooks('filters');
@@ -168,6 +170,11 @@ if ( !class_exists('WPPluginShell')) {
                 $this->mail_from['name'] = $name;
         }
         
+        function SetMailContentType($format) {
+            if (!empty($format))
+                $this->mail_content_type = $format;
+        }
+        
         function _WPHead_() {
             if ( version_compare($this->wp_version, '2.6', '<') ) {
                 if ( is_array($this->styles) && !empty($this->styles) ) {
@@ -264,6 +271,10 @@ if ( !class_exists('WPPluginShell')) {
 
         function _WPMailFromName_($from_name) {
             return (empty($this->mail_from['name'])) ? $from_name : $this->mail_from['name'];
+        }
+        
+        function _WPMailContentType_($format) {
+            return (empty($this->mail_content_type)) ? $format : $this->mail_content_type;
         }
 
         function _handle_enqueues($type, $to_enqueue) {
