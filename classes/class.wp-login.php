@@ -23,7 +23,7 @@ if ( !class_exists('WPLogin') ) {
             $this->textdomain = $textdomain;
             
             $this->LoadOptions($options);
-        
+
             $this->ForceSSL();
             
             $this->action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
@@ -547,9 +547,11 @@ if ( !class_exists('WPLogin') ) {
             $title = apply_filters('retrieve_password_title', $title, $user_data);
             $message = apply_filters('retrieve_password_message', $message, $key, $user_data);
 
+            add_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
             if ( $message && !wp_mail($user_email, $title, $message) )
                 die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
-
+            remove_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
+            
             return true;
         }
         
@@ -584,9 +586,11 @@ if ( !class_exists('WPLogin') ) {
             $title = apply_filters('password_reset_title', $title, $user);
             $message = apply_filters('password_reset_message', $message, $new_pass, $user);
 
+            add_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
             if ( $message && !wp_mail($user->user_email, $title, $message) )
                 die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
-
+            remove_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
+            
             if ( !$this->options['emails']['resetpassword']['admin-disable'] )
                 wp_password_change_notification($user);
 

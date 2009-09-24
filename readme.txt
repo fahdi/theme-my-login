@@ -38,6 +38,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.2.1 =
+* Fixed a bug that broke other plugins e-mail format
+* Fixed a bug that could break plugin upon upgrade
+
 = 4.2 =
 * Added the option to send e-mails in HTML format
 * Fixed a bug that broke custom user role links if all links were deleted

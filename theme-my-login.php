@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.2
+Version: 4.2.1
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -21,7 +21,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '4.2';
+        var $version = '4.2.1';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -68,7 +68,7 @@ if (!class_exists('ThemeMyLogin')) {
             }
             
             $this->SetMailFrom($this->options['general']['from_email'], $this->options['general']['from_name']);
-            $this->SetMailContentType($this->options['general']['email_format']);
+            //$this->SetMailContentType($this->options['general']['email_format']);
             
             $this->WPPluginShell();
             
@@ -104,9 +104,9 @@ if (!class_exists('ThemeMyLogin')) {
                     }
                 }
             }
-            
-            $options = array('page_id' => $page_id, 'version' => $this->version);
-            $this->SetOption('general', $options);
+
+            $this->options['general']['page_id'] = $page_id;
+            $this->options['general']['version'] = $this->version;
             $this->SaveOptions();
         }
 
@@ -453,6 +453,10 @@ if (!class_exists('ThemeMyLogin')) {
             }
             return $message;
         }
+        
+        function WPMailContentType() {
+            return $this->options['general']['email_format'];
+        }
 
         function ThemeMyLoginShortcode($args = array()) {
             global $WPLogin;
@@ -552,12 +556,18 @@ if (class_exists('ThemeMyLogin')) {
                 $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
                 $message .= ( version_compare($wp_version, '2.7', '>=') ) ? wp_login_url() . "\r\n" : site_url('wp-login.php', 'login') . "\r\n";
             }
-
+            add_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
             wp_mail($user_email, $subject, $message);
+            remove_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
         }
 
     }
     endif;
+    
+    function tml_wp_mail_content_type() {
+        global $ThemeMyLogin;
+        return $ThemeMyLogin->options['general']['email_format'];
+    }
 
 }
 
