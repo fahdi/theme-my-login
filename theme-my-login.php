@@ -564,10 +564,12 @@ if (class_exists('ThemeMyLogin')) {
     }
     endif;
     
+    if ( !function_exists('tml_wp_mail_content_type')) :
     function tml_wp_mail_content_type() {
         global $ThemeMyLogin;
         return $ThemeMyLogin->options['general']['email_format'];
     }
+    endif;
 
 }
 
