@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.2.1
+Version: 4.2.2
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -21,7 +21,7 @@ if ($wp_version < '2.6') {
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin extends WPPluginShell {
 
-        var $version = '4.2.1';
+        var $version = '4.2.2';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -66,9 +66,6 @@ if (!class_exists('ThemeMyLogin')) {
                 $this->options['general']['page_id'] = ( $login_page ) ? $login_page->ID : 0;
                 $this->SaveOptions();
             }
-            
-            $this->SetMailFrom($this->options['general']['from_email'], $this->options['general']['from_name']);
-            //$this->SetMailContentType($this->options['general']['email_format']);
             
             $this->WPPluginShell();
             
@@ -142,6 +139,8 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['widget']['default_action']  = 'login';
             $this->options['widget']['show_title']      = 1;
             $this->options['widget']['show_links']      = 1;
+            $this->options['widget']['show_reg_link']   = 1;
+            $this->options['widget']['show_pass_link']  = 1;
             $this->options['widget']['registration']    = 1;
             $this->options['widget']['lostpassword']    = 1;
             $this->options['widget']['show_logged']     = 1;
@@ -470,7 +469,7 @@ if (!class_exists('ThemeMyLogin')) {
                         $options['titles'][$key] = $value;
                     elseif ( in_array($key, array('register', 'success', 'lostpassword')) )
                         $options['messages'][$key] = $value;
-                    elseif ( in_array($key, array('instance', 'default_action', 'show_title', 'show_links', 'registration', 'lostpassword', 'show_logged', 'show_gravatar', 'gravatar_size', 'before_widget', 'after_widget', 'before_title', 'after_title')) )
+                    elseif ( in_array($key, array('instance', 'default_action', 'show_title', 'show_links', 'show_reg_link', 'show_pass_link', 'registration', 'lostpassword', 'show_logged', 'show_gravatar', 'gravatar_size', 'before_widget', 'after_widget', 'before_title', 'after_title')) )
                         $options['widget'][$key] = $value;
                 } else {
                     foreach ( $value as $k => $v )
@@ -556,18 +555,48 @@ if (class_exists('ThemeMyLogin')) {
                 $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
                 $message .= ( version_compare($wp_version, '2.7', '>=') ) ? wp_login_url() . "\r\n" : site_url('wp-login.php', 'login') . "\r\n";
             }
-            add_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
+            tml_apply_mail_filters();
             wp_mail($user_email, $subject, $message);
-            remove_filter('wp_mail_content_type', 'tml_wp_mail_content_type');
+            tml_remove_mail_filters();
         }
 
     }
     endif;
     
-    if ( !function_exists('tml_wp_mail_content_type')) :
+    if ( !function_exists('tml_wp_mail_from') ) :
+    function tml_wp_mail_from($from) {
+        global $ThemeMyLogin;
+        return empty($ThemeMyLogin->options['general']['from_email']) ? $from : $ThemeMyLogin->options['general']['from_email'];
+    }
+    endif;
+    
+    if ( !function_exists('tml_wp_mail_from_name') ) :
+    function tml_wp_mail_from_name($from_name) {
+        global $ThemeMyLogin;
+        return empty($ThemeMyLogin->options['general']['from_name']) ? $from_name : $ThemeMyLogin->options['general']['from_name'];
+    }
+    endif;
+    
+    if ( !function_exists('tml_wp_mail_content_type') ) :
     function tml_wp_mail_content_type() {
         global $ThemeMyLogin;
         return $ThemeMyLogin->options['general']['email_format'];
+    }
+    endif;
+    
+    if ( !function_exists('tml_apply_mail_filters') ) :
+    function tml_apply_mail_filters() {
+        $filters = array('wp_mail_from', 'wp_mail_from_name', 'wp_mail_content_type');
+        foreach ( $filters as $filter )
+            add_filter($filter, 'tml_'.$filter);
+    }
+    endif;
+    
+    if ( !function_exists('tml_remove_mail_filters') ) :
+    function tml_remove_mail_filters() {
+        $filters = array('wp_mail_from', 'wp_mail_from_name', 'wp_mail_content_type');
+        foreach ( $filters as $filter )
+            remove_filter($filter, 'tml_'.$filter);
     }
     endif;
 

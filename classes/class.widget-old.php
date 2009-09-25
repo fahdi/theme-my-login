@@ -30,6 +30,8 @@ class ThemeMyLoginWidget {
             $widget['show_logged'] = (empty($_POST['tml_show_logged'])) ? false : true;
             $widget['show_title'] = (empty($_POST['tml_show_title'])) ? false : true;
             $widget['show_links'] = (empty($_POST['tml_show_links'])) ? false: true;
+            $widget['show_reg_link'] = (empty($_POST['tml_show_reg_link'])) ? false: true;
+            $widget['show_pass_link'] = (empty($_POST['tml_show_pass_link'])) ? false: true;
             $widget['show_gravatar'] = (empty($_POST['tml_show_gravatar'])) ? false : true;
             $widget['gravatar_size'] = absint($_POST['tml_gravatar_size']);
             $widget['registration'] = (empty($_POST['tml_registration'])) ? false : true;
@@ -55,6 +57,10 @@ class ThemeMyLoginWidget {
         echo '<p><input name="tml_show_title" type="checkbox" id="tml_show_title" value="1" ' . $is_checked . '/> <label for="tml_show_title">' . __('Show Title', 'theme-my-login') . '</label></p>' . "\n";
         $is_checked = (empty($widget['show_links'])) ? '' : 'checked="checked" ';
         echo '<p><input name="tml_show_links" type="checkbox" id="tml_show_links" value="1" ' . $is_checked . '/> <label for="tml_show_links">' . __('Show Action Links', 'theme-my-login') . '</label></p>' . "\n";
+        $is_checked = (empty($widget['show_reg_link'])) ? '' : 'checked="checked" ';
+        echo '<p><input name="tml_show_reg_link" type="checkbox" id="tml_show_reg_link" value="1" ' . $is_checked . '/> <label for="tml_show_reg_link">' . __('Show Registration Link', 'theme-my-login') . '</label></p>' . "\n";
+        $is_checked = (empty($widget['show_pass_link'])) ? '' : 'checked="checked" ';
+        echo '<p><input name="tml_show_pass_link" type="checkbox" id="tml_show_pass_link" value="1" ' . $is_checked . '/> <label for="tml_show_pass_link">' . __('Show Lost Password Link', 'theme-my-login') . '</label></p>' . "\n";
         $is_checked = (empty($widget['show_gravatar'])) ? '' : 'checked="checked" ';
         echo '<p><input name="tml_show_gravatar" type="checkbox" id="tml_show_gravatar" value="1" ' . $is_checked . '/> <label for="tml_show_gravatar">' . __('Show Gravatar', 'theme-my-login') . '</label></p>' . "\n";
         echo '<p>' . __('Gravatar Size', 'theme-my-login') . ': <input name="tml_gravatar_size" type="text" id="tml_gravatar_size" value="' . $widget['gravatar_size'] . '" size="3" /> <label for="tml_gravatar_size"></label></p>' . "\n";

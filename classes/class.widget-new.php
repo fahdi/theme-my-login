@@ -23,6 +23,8 @@ class ThemeMyLoginWidget extends WP_Widget {
         $instance['show_logged'] = (empty($new_instance['show_logged'])) ? false : true;
         $instance['show_title'] = (empty($new_instance['show_title'])) ? false : true;
         $instance['show_links'] = (empty($new_instance['show_links'])) ? false: true;
+        $instance['show_reg_link'] = (empty($new_instance['show_reg_link'])) ? false: true;
+        $instance['show_pass_link'] = (empty($new_instance['show_pass_link'])) ? false: true;
         $instance['show_gravatar'] = (empty($new_instance['show_gravatar'])) ? false : true;
         $instance['gravatar_size'] = absint($new_instance['gravatar_size']);
         $instance['registration'] = (empty($new_instance['registration'])) ? false : true;
@@ -40,6 +42,8 @@ class ThemeMyLoginWidget extends WP_Widget {
         $defaults['show_logged'] = 1;
         $defaults['show_title'] = 1;
         $defaults['show_links'] = 1;
+        $defaults['show_reg_link'] = 1;
+        $defaults['show_pass_link'] = 1;
         $defaults['show_gravatar'] = 1;
         $defaults['gravatar_size'] = 50;
         $defaults['registration'] = 1;
@@ -59,6 +63,10 @@ class ThemeMyLoginWidget extends WP_Widget {
         echo '<p><input name="' . $this->get_field_name('show_title') . '" type="checkbox" id="' . $this->get_field_id('show_title') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_title') . '">' . __('Show Title', 'theme-my-login') . '</label></p>' . "\n";
         $is_checked = (empty($instance['show_links'])) ? '' : 'checked="checked" ';
         echo '<p><input name="' . $this->get_field_name('show_links') . '" type="checkbox" id="' . $this->get_field_id('show_links') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_links') . '">' . __('Show Action Links', 'theme-my-login') . '</label></p>' . "\n";
+        $is_checked = (empty($instance['show_reg_link'])) ? '' : 'checked="checked" ';
+        echo '<p><input name="' . $this->get_field_name('show_reg_link') . '" type="checkbox" id="' . $this->get_field_id('show_reg_link') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_reg_link') . '">' . __('Show Register Link', 'theme-my-login') . '</label></p>' . "\n";
+        $is_checked = (empty($instance['show_pass_link'])) ? '' : 'checked="checked" ';
+        echo '<p><input name="' . $this->get_field_name('show_pass_link') . '" type="checkbox" id="' . $this->get_field_id('show_pass_link') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_pass_link') . '">' . __('Show Lost Password Link', 'theme-my-login') . '</label></p>' . "\n";
         $is_checked = (empty($instance['show_gravatar'])) ? '' : 'checked="checked" ';
         echo '<p><input name="' . $this->get_field_name('show_gravatar') . '" type="checkbox" id="' . $this->get_field_id('show_gravatar') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('show_gravatar') . '">' . __('Show Gravatar', 'theme-my-login') . '</label></p>' . "\n";
         echo '<p>' . __('Gravatar Size', 'theme-my-login') . ': <input name="' . $this->get_field_name('gravatar_size') . '" type="text" id="' . $this->get_field_id('gravatar_size') . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id('gravatar_size') . '"></label></p>' . "\n";

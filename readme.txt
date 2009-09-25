@@ -38,6 +38,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.2.2 =
+* Added the option to remove 'Register' and/or 'Lost Password' links
+* Fixed a bug that sent e-mail from all plugins from this plugins setting
+
 = 4.2.1 =
 * Fixed a bug that broke other plugins e-mail format
 * Fixed a bug that could break plugin upon upgrade
