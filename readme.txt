@@ -38,6 +38,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.3 =
+* Dropped support for WordPress versions older than 2.6
+
 = 4.2.2 =
 * Added the option to remove 'Register' and/or 'Lost Password' links
 * Fixed a bug that sent e-mail from all plugins from this plugins setting

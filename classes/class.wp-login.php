@@ -88,23 +88,23 @@ if ( !class_exists('WPLogin') ) {
             
             $this->LoadOptions($args);
 
-            $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
+            $action = (isset($this->options['default_action'])) ? $this->options['default_action'] : 'login';
             if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
                 
             ob_start();
-            echo $this->options['widget']['before_widget'];
+            echo $this->options['before_widget'];
             if ( is_user_logged_in() ) {
-                if ( $this->options['widget']['show_logged'] ) {
+                if ( $this->options['logged_in_widget'] ) {
                     $user = new WP_User($user_ID);
                     $user_role = array_shift($user->roles);
                     $replace_this = array('/%user_login%/', '/%display_name%/');
                     $replace_with = array($user->user_login, $user->display_name);
-                    $welcome = preg_replace($replace_this, $replace_with, $this->options['titles']['welcome']);
-                    if ( $this->options['widget']['show_title'] )
-                        echo $this->options['widget']['before_title'] . $welcome . $this->options['widget']['after_title'] . "\n";
-                    if ($this->options['widget']['show_gravatar'])
-                        echo '<div class="login-avatar">' . get_avatar( $user_ID, $size = $this->options['widget']['gravatar_size'] ) . '</div>' . "\n";
+                    $welcome = preg_replace($replace_this, $replace_with, $this->options['welcome_title']);
+                    if ( $this->options['show_title'] )
+                        echo $this->options['before_title'] . $welcome . $this->options['after_title'] . "\n";
+                    if ($this->options['show_gravatar'])
+                        echo '<div class="login-avatar">' . get_avatar( $user_ID, $size = $this->options['gravatar_size'] ) . '</div>' . "\n";
                     do_action('login_avatar', $current_user);
                     echo '<ul class="login-links">' . "\n";
                     foreach ($this->options['links'][$user_role] as $key => $data) {
@@ -119,8 +119,8 @@ if ( !class_exists('WPLogin') ) {
                     echo '</ul>' . "\n";
                 }
             } else {
-                if ( $this->options['widget']['show_title'] )
-                    echo $this->options['widget']['before_title'] . $this->GetTitle($instance) . $this->options['widget']['after_title'] . "\n";
+                if ( $this->options['show_title'] )
+                    echo $this->options['before_title'] . $this->GetTitle($instance) . $this->options['after_title'] . "\n";
                 if ( $instance == $this->instance || !empty($action) ) {
                     switch ($action) {
                         case 'lostpassword' :
@@ -139,7 +139,7 @@ if ( !class_exists('WPLogin') ) {
                     echo $this->LoginForm($instance);
                 }
             }
-            echo $this->options['widget']['after_widget'] . "\n";
+            echo $this->options['after_widget'] . "\n";
             $contents = ob_get_contents();
             ob_end_clean();
             return $contents;
@@ -150,21 +150,21 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function GetTitle($instance) {
-            $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
+            $action = (isset($this->options['default_action'])) ? $this->options['default_action'] : 'login';
             if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
 
             switch ($action) {
                 case 'register':
-                    return $this->options['titles']['register'];
+                    return $this->options['register_title'];
                     break;
                 case 'lostpassword':
                 case 'retrievepassword':
-                    return $this->options['titles']['lostpassword'];
+                    return $this->options['lost_pass_title'];
                     break;
                 case 'login':
                 default:
-                    return $this->options['titles']['login'];
+                    return $this->options['login_title'];
                     break;
             }
         }
@@ -204,32 +204,30 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function PageFooter($instance) {
-            $action = (isset($this->options['widget']['default_action'])) ? $this->options['widget']['default_action'] : 'login';
+            $action = (isset($this->options['default_action'])) ? $this->options['default_action'] : 'login';
             if ( $instance == $this->instance || (empty($this->instance) && 'tml-main' == $instance) )
                 $action = $this->action;
                 
-            if ( isset($this->options['widget']['show_links']) && true == $this->options['widget']['show_links'] ) {
-                echo '<ul class="links">' . "\n";
-                if (in_array($action, array('register', 'lostpassword')) || $action == 'login' && isset($_GET['checkemail']) && 'registered' != $_GET['checkemail']) {
-                    $url = $this->GuessURL(array('instance' => $instance, 'action' => 'login'));
-                    echo '<li><a href="' . $url . '">' . $this->options['titles']['login'] . '</a></li>' . "\n";
-                }
-                if ( isset($this->options['widget']['show_reg_link']) && true == $this->options['widget']['show_reg_link'] && get_option('users_can_register') ) {
-                    if ( 'register' != $action ) {
-                        $url = ($this->options['widget']['registration']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'register')) : site_url('wp-login.php?action=register', 'login');
-                        $url = apply_filters('login_footer_registration_link', $url);
-                        echo '<li><a href="' . $url . '">' . $this->options['titles']['register'] . '</a></li>' . "\n";
-                    }
-                }
-                if ( isset($this->options['widget']['show_pass_link']) && true == $this->options['widget']['show_pass_link'] ) {
-                    if ( 'lostpassword' != $action ) {
-                        $url = ($this->options['widget']['lostpassword']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')) : site_url('wp-login.php?action=lostpassword', 'login');
-                        $url = apply_filters('login_footer_forgotpassword_link', $url);
-                        echo '<li><a href="' . $url . '">' . $this->options['titles']['lostpassword'] . '</a></li>' . "\n";
-                    }
-                }
-                echo '</ul>' . "\n";
+            echo '<ul class="links">' . "\n";
+            if ( $this->options['show_log_link'] && in_array($action, array('register', 'lostpassword')) || $action == 'login' && isset($_GET['checkemail']) && 'registered' != $_GET['checkemail'] ) {
+                $url = $this->GuessURL(array('instance' => $instance, 'action' => 'login'));
+                echo '<li><a href="' . $url . '">' . $this->options['login_title'] . '</a></li>' . "\n";
             }
+            if ( $this->options['show_reg_link'] && get_option('users_can_register') ) {
+                if ( 'register' != $action ) {
+                    $url = ($this->options['register_widget']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'register')) : site_url('wp-login.php?action=register', 'login');
+                    $url = apply_filters('login_footer_registration_link', $url);
+                    echo '<li><a href="' . $url . '">' . $this->options['register_title'] . '</a></li>' . "\n";
+                }
+            }
+            if ( $this->options['show_pass_link'] ) {
+                if ( 'lostpassword' != $action ) {
+                    $url = ($this->options['lost_pass_widget']) ? $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')) : site_url('wp-login.php?action=lostpassword', 'login');
+                    $url = apply_filters('login_footer_forgotpassword_link', $url);
+                    echo '<li><a href="' . $url . '">' . $this->options['lost_pass_title'] . '</a></li>' . "\n";
+                }
+            }
+            echo '</ul>' . "\n";
             echo '</div>' . "\n";
         }
         
@@ -248,7 +246,7 @@ if ( !class_exists('WPLogin') ) {
             elseif    ( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )    $this->errors->add('registerdisabled', __('User registration is currently not allowed.'));
             elseif    ( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )    $this->errors->add('confirm', __('Check your e-mail for the confirmation link.'), 'message');
             elseif    ( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )    $this->errors->add('newpass', __('Check your e-mail for your new password.'), 'message');
-            elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $this->errors->add('registered', $this->options['messages']['success'], 'message');
+            elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )    $this->errors->add('registered', $this->options['success_message'], 'message');
             
             $this->PageHeader($instance);
 
@@ -310,7 +308,7 @@ if ( !class_exists('WPLogin') ) {
                     <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" /></label>
                 </p>
                 <?php do_action('register_form', $instance); ?>
-                <p id="reg_passmail-<?php echo $instance; ?>"><?php echo $this->options['messages']['register']; ?></p>
+                <p id="reg_passmail-<?php echo $instance; ?>"><?php echo $this->options['register_message']; ?></p>
                 <p class="submit">
                     <input type="submit" name="register-submit" id="register-submit-<?php echo $instance; ?>" value="<?php _e('Register'); ?>" />
                 </p>
@@ -326,7 +324,7 @@ if ( !class_exists('WPLogin') ) {
         
         function RetrievePasswordForm($instance) {
             do_action('lost_password', $instance);
-            $this->PageHeader($instance, $this->options['messages']['lostpassword']);
+            $this->PageHeader($instance, $this->options['lost_pass_message']);
             $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
             ?>
             <form name="lostpasswordform" id="lostpasswordform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')); ?>" method="post">
@@ -593,7 +591,7 @@ if ( !class_exists('WPLogin') ) {
                 die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
             tml_remove_mail_filters();
             
-            if ( !$this->options['emails']['resetpassword']['admin-disable'] )
+            if ( !$this->options['reset_pass_email']['admin_disable'] )
                 wp_password_change_notification($user);
 
             return true;
@@ -644,22 +642,5 @@ if ( !class_exists('WPLogin') ) {
 
     }
 }
-
-if ( !function_exists('wp_generate_password') ) :
-function wp_generate_password($length = 12, $special_chars = true) {
-
-    if ( isset($_POST['user_pw']) && '' != $_POST['user_pw'] )
-        return stripslashes($_POST['user_pw']);
-        
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    if ( $special_chars )
-        $chars .= '!@#$%^&*()';
-
-    $password = '';
-    for ( $i = 0; $i < $length; $i++ )
-        $password .= substr($chars, wp_rand(0, strlen($chars) - 1), 1);
-    return $password;
-}
-endif;
 
 ?>
