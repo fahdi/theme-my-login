@@ -414,7 +414,7 @@ if (!class_exists('ThemeMyLogin')) {
             // Widget
             $this->options['default_action']        = 'login';
             $this->options['show_title']            = 1;
-            $this->options['show_login_link']       = 1;
+            $this->options['show_log_link']         = 1;
             $this->options['show_reg_link']         = 1;
             $this->options['show_pass_link']        = 1;
             $this->options['register_widget']       = 1;
