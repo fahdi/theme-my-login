@@ -1,9 +1,22 @@
             <ul class="tabs-nav">
-                <li><a href="#fragment-2-1">Titles</a></li>
-                <li><a href="#fragment-2-2">Messages</a></li>
+                <li><a href="#fragment-2-1">General</a></li>
+                <li><a href="#fragment-2-2">Titles</a></li>
+                <li><a href="#fragment-2-3">Messages</a></li>
             </ul>
-
+            
             <div id="fragment-2-1" class="tabs-div">
+                <table class="form-table">
+                    <tr valign="top">
+                        <th scope="row"><?php _e('Stylesheet', 'theme-my-login'); ?></th>
+                        <td>
+                            <input name="use_css" type="checkbox" id="use_css" value="1" <?php if ( $ThemeMyLogin->options['use_css'] ) { echo 'checked="checked"'; } ?> />
+                            <label for="use_css"><?php _e('Use theme-my-login.css', 'theme-my-login'); ?></label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="fragment-2-2" class="tabs-div">
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row"><label for="welcome_title"><?php _e('Welcome', 'theme-my-login'); ?></label></th>
@@ -38,7 +51,7 @@
                 </table>
             </div>
 
-            <div id="fragment-2-2" class="tabs-div">
+            <div id="fragment-2-3" class="tabs-div">
                 <table class="form-table">
                     <tr valign="top">
                         <th scope="row"><label for="register_message"><?php _e('Register', 'theme-my-login'); ?></label></th>
