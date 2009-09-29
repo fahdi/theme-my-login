@@ -85,8 +85,8 @@ if (!class_exists('ThemeMyLogin')) {
         function AdminInit() {
             global $user_ID, $wp_version, $pagenow;
             
-            if ( 'options-general.php' == $pagenow ) {
-            
+            if ( 'options-general.php' == $pagenow && isset($_GET['page']) ) {
+
                 switch ( $_GET['page'] ) {
                 
                     case 'theme-my-login/admin/admin.php' :
