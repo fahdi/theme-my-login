@@ -78,7 +78,7 @@ if (!class_exists('ThemeMyLogin')) {
             }
             
             if ( $this->options['use_css'] )
-                wp_enqueue_style('theme-my-login', plugins_url('/theme-my-login/theme-my-login.css'));
+                wp_enqueue_style('theme-my-login', plugins_url('/theme-my-login/css/theme-my-login.css'));
                 
         }
         
