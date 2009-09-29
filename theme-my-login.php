@@ -139,7 +139,7 @@ if (!class_exists('ThemeMyLogin')) {
             if ( is_page($this->options['page_id']) ) {
                 $action = ( isset($_GET['action']) ) ? $_GET['action'] : '';
                 if ( is_user_logged_in() && 'logout' != $action ) {
-                    wp_redirect(site_url('wp-login.php', 'login'));
+                    wp_redirect(get_option('siteurl'));
                     exit();
                 }
             }
