@@ -6,12 +6,14 @@
     padding: 5px;
     border: 1px solid #c00;
     background-color: #ffebe8;
+    color: #333;
     }
 
 .login p.message {
     padding: 5px;
     border: 1px solid #e6db55;
     background-color: #ffffe0;
+    color: #333;
     }
     
 .login form label {
