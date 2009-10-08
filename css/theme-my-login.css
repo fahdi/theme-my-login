@@ -13,3 +13,7 @@
     border: 1px solid #e6db55;
     background-color: #ffffe0;
     }
+    
+.login form label {
+      display: block;
+      }

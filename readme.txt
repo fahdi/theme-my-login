@@ -39,6 +39,7 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 == Changelog ==
 
 = 4.3 =
+* Removed form input fields from label tags
 * Dropped support for WordPress versions older than 2.6
 
 = 4.2.2 =

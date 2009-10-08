@@ -259,15 +259,15 @@ if ( !class_exists('WPLogin') ) {
                 ?>
                 <form name="loginform" id="loginform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'login')); ?>" method="post">
                     <p>
-                        <label><?php _e('Username') ?><br />
-                        <input type="text" name="log" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" /></label>
+                        <label><?php _e('Username') ?></label>
+                        <input type="text" name="log" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
                     </p>
                     <p>
-                        <label><?php _e('Password') ?><br />
-                        <input type="password" name="pwd" id="user_pass-<?php echo $instance; ?>" class="input" value="" size="20" /></label>
+                        <label><?php _e('Password') ?></label>
+                        <input type="password" name="pwd" id="user_pass-<?php echo $instance; ?>" class="input" value="" size="20" />
                     </p>
                 <?php do_action('login_form', $instance); ?>
-                    <p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <?php _e('Remember Me'); ?></label></p>
+                    <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label><?php _e('Remember Me'); ?></label></p>
                     <p class="submit">
                         <input type="submit" name="login-submit" id="login-submit-<?php echo $instance; ?>" value="<?php _e('Log In'); ?>" />
                         <input type="hidden" name="redirect_to" value="<?php echo attribute_escape($this->redirect_to); ?>" />
@@ -300,12 +300,12 @@ if ( !class_exists('WPLogin') ) {
             ?>
             <form name="registerform" id="registerform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'register')); ?>" method="post">
                 <p>
-                    <label><?php _e('Username') ?><br />
-                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" /></label>
+                    <label><?php _e('Username') ?></label>
+                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
                 </p>
                 <p>
-                    <label><?php _e('E-mail') ?><br />
-                    <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" /></label>
+                    <label><?php _e('E-mail') ?></label>
+                    <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
                 </p>
                 <?php do_action('register_form', $instance); ?>
                 <p id="reg_passmail-<?php echo $instance; ?>"><?php echo $this->options['register_message']; ?></p>
@@ -329,8 +329,8 @@ if ( !class_exists('WPLogin') ) {
             ?>
             <form name="lostpasswordform" id="lostpasswordform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')); ?>" method="post">
                 <p>
-                    <label><?php _e('Username or E-mail:') ?><br />
-                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" /></label>
+                    <label><?php _e('Username or E-mail:') ?></label>
+                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
                 </p>
                 <?php do_action('lostpassword_form', $instance); ?>
                 <p class="submit">
