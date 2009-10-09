@@ -3,6 +3,8 @@
                 <li><a href="#fragment-5-2">New Registration</a></li>
                 <li><a href="#fragment-5-3">Password Retrieval</a></li>
                 <li><a href="#fragment-5-4">Password Reset</a></li>
+                <li><a href="#fragment-5-5">User Approval</a></li>
+                <li><a href="#fragment-5-6">User Denial</a></li>
             </ul>
 
             <div id="fragment-5-1" class="tabs-div">
@@ -75,6 +77,34 @@
                             <p>
                             <label for "reset_pass_admin_disable"><input name="reset_pass_admin_disable" type="checkbox" id="reset_pass_admin_disable" value="1" <?php if ( $ThemeMyLogin->options['reset_pass_email']['admin_disable'] ) { echo 'checked="checked"'; } ?> /> Disable Admin Notification</label>&nbsp;
                             </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-5-5" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %user_login%, %user_email%, %user_pass%</em></p>
+                            Subject<br />
+                            <input name="user_approval_subject" type="text" id="user_approval_subject" value="<?php echo htmlspecialchars($ThemeMyLogin->options['user_approval_email']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="user_approval_message" id="user_approval_message" class="large-text"><?php echo htmlspecialchars($ThemeMyLogin->options['user_approval_email']['message']); ?></textarea><br />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-5-6" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %user_login%, %user_email%</em></p>
+                            Subject<br />
+                            <input name="user_denial_subject" type="text" id="user_denial_subject" value="<?php echo htmlspecialchars($ThemeMyLogin->options['user_denial_email']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="user_denial_message" id="user_denial_message" class="large-text"><?php echo htmlspecialchars($ThemeMyLogin->options['user_denial_email']['message']); ?></textarea><br />
                         </td>
                     </tr>
                 </table>

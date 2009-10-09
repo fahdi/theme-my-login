@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.2.2
+Version: 4.3
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -16,7 +16,7 @@ require_once ('classes/class.wp-login.php');
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '4.2.2';
+        var $version = '4.3';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -33,6 +33,10 @@ if (!class_exists('ThemeMyLogin')) {
 
             add_action('register_form', array(&$this, 'RegisterForm'));
             add_action('registration_errors', array(&$this, 'RegistrationErrors'));
+            
+            add_action('authenticate', array(&$this, 'Authenticate'), 100, 3);
+            
+            add_filter('allow_password_reset', array(&$this, 'AllowPasswordReset'), 10, 2);
 
             add_filter('wp_head', array(&$this, 'WPHead'));
             add_filter('wp_title', array(&$this, 'WPTitle'));
@@ -51,6 +55,8 @@ if (!class_exists('ThemeMyLogin')) {
             
             add_action('admin_init', array(&$this, 'AdminInit'));
             add_action('admin_menu', array(&$this, 'AdminMenu'));
+            
+            add_filter('user_row_actions', array(&$this, 'UserRowActions'), 10, 2);
             
             $this->LoadOptions();
             
@@ -85,8 +91,8 @@ if (!class_exists('ThemeMyLogin')) {
         function AdminInit() {
             global $user_ID, $wp_version, $pagenow;
             
-            if ( 'options-general.php' == $pagenow && isset($_GET['page']) ) {
-
+            if ( 'options-general.php' == $pagenow ) {
+            
                 switch ( $_GET['page'] ) {
                 
                     case 'theme-my-login/admin/admin.php' :
@@ -100,8 +106,8 @@ if (!class_exists('ThemeMyLogin')) {
                             wp_deregister_script('jquery-ui-core');
                             wp_deregister_script('jquery-ui-tabs');
                             wp_enqueue_script('jquery', plugins_url('/theme-my-login/js/jquery/jquery.js'), false, '1.7.2');
-                            wp_enqueue_script('jquery-ui-core', plugins_url('/theme-my-login/js/jquery/ui.core.js'), array('jquery'), '1.7.2');
-                            wp_enqueue_script('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
+                            wp_enquque_script('jquery-ui-core', plugins_url('/theme-my-login/js/jquery/ui.core.js'), array('jquery'), '1.7.2');
+                            wp_enquque_script('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
                         }
             
                         wp_enqueue_style('theme-my-login-admin', plugins_url('/theme-my-login/css/theme-my-login-admin.css'));
@@ -122,6 +128,78 @@ if (!class_exists('ThemeMyLogin')) {
 
             } elseif ( 'page.php' == $pagenow && (isset($_REQUEST['post']) && $this->options['page_id'] == $_REQUEST['post']) ) {
                     add_action('admin_notices', array(&$this, 'PageEditNotice'));
+            } elseif ( 'users.php' == $pagenow && $this->options['moderate_users'] ) {
+                if ( isset($_GET['action']) && in_array($_GET['action'], array('approve', 'deny')) ) {
+
+                    check_admin_referer('moderate-user');
+
+                    $user = isset($_GET['user']) ? $_GET['user'] : '';
+                    if ( !$user )
+                        wp_die(__('You can&#8217;t edit that user.'));
+
+                    if ( !current_user_can('edit_user', $user) )
+                        wp_die(__('You can&#8217;t edit that user.'));
+                        
+                    switch ( $_GET['action'] ) {
+                        case 'approve' :
+                            $user = new WP_User($user);
+                            $user->set_role('subscriber');
+
+                            $subject = $this->options['user_approval_email']['subject'];
+                            $message = $this->options['user_approval_email']['message'];
+                            
+                            $plaintext_pass = wp_generate_password();
+                            wp_set_password($plaintext_pass, $user->ID);
+                            
+                            $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/');
+                            $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $plaintext_pass);
+
+                            if ( !empty($subject) )
+                                $subject = preg_replace($replace_this, $replace_with, $subject);
+                            else
+                                $subject = sprintf(__('[%s] Registration Approved'), get_option('blogname'));
+                            if ( !empty($message) )
+                                $message = preg_replace($replace_this, $replace_with, $message);
+                            else {
+                                $message  = sprintf(__('You have been approved to access %s '."\r\n\r\n"), get_option('blogname'));
+                                $message .= sprintf(__('Username: %s'), $user->user_login) . "\r\n";
+                                $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n\r\n";
+                                $message .= site_url('wp-login.php', 'login') . "\r\n";
+                            }
+                            tml_apply_mail_filters();
+                            @wp_mail($user->user_email, $subject, $message);
+                            tml_remove_mail_filters();
+                            
+                            add_action('admin_notices', array(&$this, 'ApprovalNotice'));
+                            break;
+
+                        case 'deny' :
+                            $user = new WP_User($user);
+                            $user->set_role('denied');
+                            
+                            $subject = $this->options['user_denial_email']['subject'];
+                            $message = $this->options['user_denial_email']['message'];
+                            $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/');
+                            $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email);
+
+                            if ( !empty($subject) )
+                                $subject = preg_replace($replace_this, $replace_with, $subject);
+                            else
+                                $subject = sprintf(__('[%s] Registration Denied'), get_option('blogname'));
+                            if ( !empty($message) )
+                                $message = preg_replace($replace_this, $replace_with, $message);
+                            else
+                                $message = sprintf(__('You have been denied access to %s'), get_option('blogname'));
+
+                            tml_apply_mail_filters();
+                            @wp_mail($user->user_email, $subject, $message);
+                            tml_remove_mail_filters();
+                            
+                            add_action('admin_notices', array(&$this, 'DenialNotice'));
+                            break;
+
+                    }
+                }
             }
         }
         
@@ -129,8 +207,36 @@ if (!class_exists('ThemeMyLogin')) {
             echo '<div class="error"><p>' . __('NOTICE: This page is integral to the operation of Theme My Login. <strong>DO NOT</strong> edit the title or remove the short code from the contents.') . '</p></div>';
         }
         
+        function ApprovalNotice() {
+            echo '<div id="message" class="updated fade"><p>' . __('User approved.') . '</p></div>';
+        }
+        
+        function DenialNotice() {
+            echo '<div id="message" class="updated fade"><p>' . __('User denied.') . '</p></div>';
+        }
+        
         function AdminMenu() {
             add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, 'theme-my-login/admin/admin.php');
+        }
+        
+        function UserRowActions($actions, $user_object) {
+            global $current_user;
+            
+            if ( $this->options['moderate_users'] ) {
+                $user_role = reset($user_object->roles);
+                if ( $current_user->ID != $user_object->ID ) {
+                    if ( 'pending' == $user_role ) {
+                        $approve['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url("users.php?action=approve&amp;user=$user_object->ID", 'moderate-user') ) . '">Approve</a>';
+                        $approve['deny-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url("users.php?action=deny&amp;user=$user_object->ID", 'moderate-user') ) . '">Deny</a>';
+                    } elseif ( 'denied' == $user_role ) {
+                        $approve['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url("users.php?action=approve&amp;user=$user_object->ID", 'moderate-user') ) . '">Approve</a>';
+                    } else {
+                        $approve['deny-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url("users.php?action=deny&amp;user=$user_object->ID", 'moderate-user') ) . '">Deny</a>';
+                    }
+                    $actions = array_merge($approve, $actions);
+                }
+            }
+            return $actions;
         }
 
         function TemplateRedirect() {
@@ -149,10 +255,10 @@ if (!class_exists('ThemeMyLogin')) {
         function RegisterForm($instance) {
             if ( $this->options['custom_pass'] ) {
                 ?>
-            <p><label><?php _e('Password:');?></label>
-            <input autocomplete="off" name="pass1" id="pass1-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /><br />
-            <label><?php _e('Confirm Password:');?></label>
-            <input autocomplete="off" name="pass2" id="pass2-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></p>
+            <p><label><?php _e('Password:');?> <br />
+            <input autocomplete="off" name="pass1" id="pass1-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></label><br />
+            <label><?php _e('Confirm Password:');?> <br />
+            <input autocomplete="off" name="pass2" id="pass2-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></label></p>
                 <?php
             }
         }
@@ -171,6 +277,25 @@ if (!class_exists('ThemeMyLogin')) {
             }
 
             return $errors;
+        }
+        
+        function Authenticate($user, $username, $password) {
+            $user_data = get_userdatabylogin($username);
+            $user = new WP_User($user_data->ID);
+            $user_role = reset($user->roles);
+            if ( in_array($user_role, array('pending', 'denied')) ) {
+                return new WP_Error('pending', 'Your registration has not yet been approved.');
+            }
+            return $user;
+        }
+        
+        function AllowPasswordReset($allow, $user_id) {
+            $user = new WP_User($user_id);
+            $user_role = reset($user->roles);
+            if ( in_array($user_role, array('pending', 'denied')) )
+                $allow = false;
+                
+            return $allow;
         }
 
         function WPHead() {
@@ -269,7 +394,7 @@ if (!class_exists('ThemeMyLogin')) {
             }
 
             if ( is_object($user) && !is_wp_error($user) ) {
-                $user_role = array_shift($user->roles);
+                $user_role = reset($user->roles);
                 $redirects = $this->options['redirects'];
                 if ( '' != $redirects[$user_role]['login_url'] )
                     $redirect_to = $redirects[$user_role]['login_url'];
@@ -377,6 +502,9 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['page_id'] = $page_id;
             $this->options['version'] = $this->version;
             update_option('theme_my_login', $this->options);
+            
+            add_role('pending', 'Pending', array());
+            add_role('denied', 'Denied', array());
         }
 
         function Deactivate() {
@@ -384,6 +512,8 @@ if (!class_exists('ThemeMyLogin')) {
                 delete_option('theme_my_login');
                 delete_option('widget_theme-my-login');
                 wp_delete_post($this->options['page_id']);
+                remove_role('pending');
+                remove_role('denied');
             }
         }
         
@@ -431,6 +561,8 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['retrieve_pass_email']   = array('subject' => '', 'message' => '');
             $this->options['reset_pass_email']      = array('subject' => '', 'message' => '', 'admin_disable' => 0);
             $this->options['registration_email']    = array('subject' => '', 'message' => '', 'admin_disable' => 0, 'user_disable' => 0);
+            $this->options['user_approval_email']   = array('subject' => '', 'message' => '');
+            $this->options['user_denial_email']     = array('subject' => '', 'message' => '');
 
             // Links & Redirects
             global $wp_roles;
@@ -501,45 +633,56 @@ if (class_exists('ThemeMyLogin')) {
     if ( !function_exists('wp_new_user_notification') ) :
     function wp_new_user_notification($user_id, $plaintext_pass = '') {
         global $ThemeMyLogin, $wp_version;
-        
+
         $user = new WP_User($user_id);
-        
+
         $user_login = stripslashes($user->user_login);
         $user_email = stripslashes($user->user_email);
-        
-        if ( !$ThemeMyLogin->options['registration_email']['admin_disable'] ) {
-            $message  = sprintf(__('New user registration on your blog %s:'), get_option('blogname')) . "\r\n\r\n";
+
+        if ( $ThemeMyLogin->options['moderate_users'] ) {
+            $message  = sprintf(__('New user requires approval on your blog %s:'), get_option('blogname')) . "\r\n\r\n";
             $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-            $message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";
+            $message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n\r\n";
+            $message .= __('To approve or deny this user:', 'theme-my-login') . "\r\n";
+            $message .= admin_url('users.php');
 
-            @wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), get_option('blogname')), $message);
-        }
+            @wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Awaiting Approval'), get_option('blogname')), $message);
 
-        if ( empty($plaintext_pass) )
-            return;
+            $user->set_role('pending');
+        } else {
+            if ( !$ThemeMyLogin->options['registration_email']['admin_disable'] ) {
+                $message  = sprintf(__('New user registration on your blog %s:'), get_option('blogname')) . "\r\n\r\n";
+                $message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
+                $message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";
 
-        if ( !$ThemeMyLogin->options['registration_email']['user_disable'] ) {
-            $subject = $ThemeMyLogin->options['registration_email']['subject'];
-            $message = $ThemeMyLogin->options['registration_email']['message'];
-            $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/', '/%user_ip%/');
-            $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $plaintext_pass, $_SERVER['REMOTE_ADDR']);
-            
-            if ( !empty($subject) )
-                $subject = preg_replace($replace_this, $replace_with, $subject);
-            else
-                $subject = sprintf(__('[%s] Your username and password'), get_option('blogname'));
-            if ( !empty($message) )
-                $message = preg_replace($replace_this, $replace_with, $message);
-            else {
-                $message  = sprintf(__('Username: %s'), $user_login) . "\r\n";
-                $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
-                $message .= ( version_compare($wp_version, '2.7', '>=') ) ? wp_login_url() . "\r\n" : site_url('wp-login.php', 'login') . "\r\n";
+                @wp_mail(get_option('admin_email'), sprintf(__('[%s] New User Registration'), get_option('blogname')), $message);
             }
-            tml_apply_mail_filters();
-            wp_mail($user_email, $subject, $message);
-            tml_remove_mail_filters();
-        }
 
+            if ( empty($plaintext_pass) )
+                return;
+
+            if ( !$ThemeMyLogin->options['registration_email']['user_disable'] ) {
+                $subject = $ThemeMyLogin->options['registration_email']['subject'];
+                $message = $ThemeMyLogin->options['registration_email']['message'];
+                $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/', '/%user_ip%/');
+                $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $plaintext_pass, $_SERVER['REMOTE_ADDR']);
+
+                if ( !empty($subject) )
+                    $subject = preg_replace($replace_this, $replace_with, $subject);
+                else
+                    $subject = sprintf(__('[%s] Your username and password'), get_option('blogname'));
+                if ( !empty($message) )
+                    $message = preg_replace($replace_this, $replace_with, $message);
+                else {
+                    $message  = sprintf(__('Username: %s'), $user_login) . "\r\n";
+                    $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
+                    $message .= ( version_compare($wp_version, '2.7', '>=') ) ? wp_login_url() . "\r\n" : site_url('wp-login.php', 'login') . "\r\n";
+                }
+                tml_apply_mail_filters();
+                wp_mail($user_email, $subject, $message);
+                tml_remove_mail_filters();
+            }
+        }
     }
     endif;
     

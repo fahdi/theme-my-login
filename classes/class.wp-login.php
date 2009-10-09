@@ -49,9 +49,9 @@ if ( !class_exists('WPLogin') ) {
             } else {
                 $this->redirect_to = admin_url();
             }
-            
+
             $this->redirect_to = apply_filters('login_redirect', $this->redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', '');
-            
+
             // allow plugins to override the default actions, and to add extra actions if they want
             do_action('login_form_' . $this->action);
 
@@ -259,15 +259,15 @@ if ( !class_exists('WPLogin') ) {
                 ?>
                 <form name="loginform" id="loginform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'login')); ?>" method="post">
                     <p>
-                        <label><?php _e('Username') ?></label>
+                        <label for="log"><?php _e('Username') ?></label>
                         <input type="text" name="log" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
                     </p>
                     <p>
-                        <label><?php _e('Password') ?></label>
+                        <label for="pwd"><?php _e('Password') ?></label>
                         <input type="password" name="pwd" id="user_pass-<?php echo $instance; ?>" class="input" value="" size="20" />
                     </p>
                 <?php do_action('login_form', $instance); ?>
-                    <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label><?php _e('Remember Me'); ?></label></p>
+                    <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label for="rememberme"><?php _e('Remember Me'); ?></label></p>
                     <p class="submit">
                         <input type="submit" name="login-submit" id="login-submit-<?php echo $instance; ?>" value="<?php _e('Log In'); ?>" />
                         <input type="hidden" name="redirect_to" value="<?php echo attribute_escape($this->redirect_to); ?>" />
@@ -300,11 +300,11 @@ if ( !class_exists('WPLogin') ) {
             ?>
             <form name="registerform" id="registerform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'register')); ?>" method="post">
                 <p>
-                    <label><?php _e('Username') ?></label>
+                    <label for="user_login"><?php _e('Username') ?></label>
                     <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
                 </p>
                 <p>
-                    <label><?php _e('E-mail') ?></label>
+                    <label for="user_email"><?php _e('E-mail') ?></label>
                     <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
                 </p>
                 <?php do_action('register_form', $instance); ?>
@@ -329,7 +329,7 @@ if ( !class_exists('WPLogin') ) {
             ?>
             <form name="lostpasswordform" id="lostpasswordform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')); ?>" method="post">
                 <p>
-                    <label><?php _e('Username or E-mail:') ?></label>
+                    <label for="user_login"><?php _e('Username or E-mail:') ?></label>
                     <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
                 </p>
                 <?php do_action('lostpassword_form', $instance); ?>

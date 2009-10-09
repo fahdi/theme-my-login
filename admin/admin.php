@@ -10,6 +10,15 @@ if ( $_POST ) {
     $ThemeMyLogin->options['uninstall'] = isset($_POST['uninstall']) ? 1 : 0;
     $ThemeMyLogin->options['show_page'] = isset($_POST['show_page']) ? 1 : 0;
     $ThemeMyLogin->options['custom_pass'] = isset($_POST['custom_pass']) ? 1 : 0;
+    if ( isset($_POST['moderate_users']) ) {
+        $ThemeMyLogin->options['moderate_users'] = 1;
+        add_role('pending', 'Pending', array());
+        add_role('denied', 'Denied', array());
+    } else {
+        $ThemeMyLogin->options['moderate_users'] = 0;
+        remove_role('pending');
+        remove_role('denied');
+    }
     $ThemeMyLogin->options['use_css'] = isset($_POST['use_css']) ? 1 : 0;
     $ThemeMyLogin->options['page_id'] = (int) $_POST['page_id'];
     $ThemeMyLogin->options['email_from_name'] = stripslashes($_POST['email_from_name']);
@@ -53,7 +62,15 @@ if ( $_POST ) {
         'admin_disable' => isset($_POST['registration_admin_disable']) ? 1 : 0,
         'user_disable' => isset($_POST['registration_user_disable']) ? 1 : 0
         );
-            
+    $ThemeMyLogin->options['user_approval_email'] = array(
+        'subject' => stripslashes($_POST['user_approval_subject']),
+        'message' => stripslashes($_POST['user_approval_message'])
+        );
+    $ThemeMyLogin->options['user_denial_email'] = array(
+        'subject' => stripslashes($_POST['user_denial_subject']),
+        'message' => stripslashes($_POST['user_denial_message'])
+        );
+        
     $ThemeMyLogin->SaveOptions();
 
     if ( isset($_POST['uninstall']) ) {

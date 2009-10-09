@@ -23,6 +23,7 @@ This plugin themes the WordPress login, registration and forgot password pages a
 * Customize user emails for registration and/or password recovery
 * Send user emails in HTML format
 * Allow users to set their own password upon registration
+* Optionally require users to be approved upon registration
 
 
 == Installation ==
@@ -39,6 +40,8 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 == Changelog ==
 
 = 4.3 =
+* Added the option to require approval for new registrations
+* Added the option to enable/disable plugin stylesheet
 * Removed form input fields from label tags
 * Dropped support for WordPress versions older than 2.6
 

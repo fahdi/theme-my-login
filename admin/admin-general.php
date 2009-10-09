@@ -25,6 +25,9 @@
                     <td>
                         <input name="custom_pass" type="checkbox" id="custom_pass" value="1" <?php if ( $ThemeMyLogin->options['custom_pass'] ) { echo 'checked="checked"'; } ?> />
                         <label for="custom_pass"><?php _e('Allow Users To Set Their Own Password', 'theme-my-login'); ?></label>
+                        <br />
+                        <input name="moderate_users" type="checkbox" id="moderate_users" value="1" <?php if ( $ThemeMyLogin->options['moderate_users'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="moderate_users"><?php _e('New Users Must Approved', 'theme-my-login'); ?></label>
                     </td>
                 </tr>
                 <tr valign="top">
