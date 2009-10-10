@@ -255,9 +255,9 @@ if (!class_exists('ThemeMyLogin')) {
         function RegisterForm($instance) {
             if ( $this->options['custom_pass'] ) {
                 ?>
-            <p><label for="pass1"><?php _e('Password:');?></label>
+            <p><label for="pass1-<?php echo $instance; ?>"><?php _e('Password:');?></label>
             <input autocomplete="off" name="pass1" id="pass1-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /><br />
-            <label for="pass2"><?php _e('Confirm Password:');?></label>
+            <label for="pass2-<?php echo $instance; ?>"><?php _e('Confirm Password:');?></label>
             <input autocomplete="off" name="pass2" id="pass2-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></p>
                 <?php
             }
