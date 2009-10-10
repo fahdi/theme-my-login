@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.3
+Version: 4.3.1
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -255,10 +255,10 @@ if (!class_exists('ThemeMyLogin')) {
         function RegisterForm($instance) {
             if ( $this->options['custom_pass'] ) {
                 ?>
-            <p><label><?php _e('Password:');?> <br />
-            <input autocomplete="off" name="pass1" id="pass1-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></label><br />
-            <label><?php _e('Confirm Password:');?> <br />
-            <input autocomplete="off" name="pass2" id="pass2-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></label></p>
+            <p><label for="pass1"><?php _e('Password:');?></label>
+            <input autocomplete="off" name="pass1" id="pass1-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /><br />
+            <label for="pass2"><?php _e('Confirm Password:');?></label>
+            <input autocomplete="off" name="pass2" id="pass2-<?php echo $instance; ?>" class="input" size="20" value="" type="password" /></p>
                 <?php
             }
         }
@@ -280,11 +280,13 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function Authenticate($user, $username, $password) {
-            $user_data = get_userdatabylogin($username);
-            $user = new WP_User($user_data->ID);
-            $user_role = reset($user->roles);
-            if ( in_array($user_role, array('pending', 'denied')) ) {
-                return new WP_Error('pending', 'Your registration has not yet been approved.');
+            global $wpdb;
+            
+            if ( is_a($user, 'WP_User') ) {
+                $user_role = reset($user->roles);
+                if ( in_array($user_role, array('pending', 'denied')) ) {
+                    return new WP_Error('pending', '<strong>ERROR</strong>: Your registration has not yet been approved.');
+                }
             }
             return $user;
         }

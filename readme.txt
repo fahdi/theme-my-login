@@ -39,6 +39,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.3.1 =
+* Fixed a MAJOR security hole that allowed anyone to login without a password!!
+
 = 4.3 =
 * Added the option to require approval for new registrations
 * Added the option to enable/disable plugin stylesheet
