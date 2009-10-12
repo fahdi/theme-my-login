@@ -260,11 +260,11 @@ if ( !class_exists('WPLogin') ) {
                 <form name="loginform" id="loginform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'login')); ?>" method="post">
                     <p>
                         <label for="log-<?php echo $instance; ?>"><?php _e('Username') ?></label>
-                        <input type="text" name="log" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
+                        <input type="text" name="log" id="log-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
                     </p>
                     <p>
                         <label for="pwd-<?php echo $instance; ?>"><?php _e('Password') ?></label>
-                        <input type="password" name="pwd" id="user_pass-<?php echo $instance; ?>" class="input" value="" size="20" />
+                        <input type="password" name="pwd" id="pwd-<?php echo $instance; ?>" class="input" value="" size="20" />
                     </p>
                 <?php do_action('login_form', $instance); ?>
                     <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label for="rememberme-<?php echo $instance; ?>"><?php _e('Remember Me'); ?></label></p>
@@ -484,7 +484,7 @@ if ( !class_exists('WPLogin') ) {
             if (!empty($args))
                 $url = add_query_arg($args, $url);
 
-            return $url;
+            return htmlspecialchars($url);
         }
         
         function RetrievePassword() {
