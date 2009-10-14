@@ -484,7 +484,7 @@ if ( !class_exists('WPLogin') ) {
             if (!empty($args))
                 $url = add_query_arg($args, $url);
 
-            return htmlspecialchars($url);
+            return $url;
         }
         
         function RetrievePassword() {
