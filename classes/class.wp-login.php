@@ -396,7 +396,7 @@ if ( !class_exists('WPLogin') ) {
                 exit();
             }
 
-            if ( isset($_POST['register-submit']) ) {
+            if ( isset($_POST['register-submit-'.$this->instance]) ) {
                 require_once (ABSPATH . WPINC . '/registration.php');
 
                 $user_login = $_POST['user_login-'.$this->instance];
