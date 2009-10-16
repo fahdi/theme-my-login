@@ -257,19 +257,19 @@ if ( !class_exists('WPLogin') ) {
 
             if ( !isset($_GET['checkemail']) || (isset($_GET['checkemail']) && $instance != $this->instance) || (!in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && $instance == $this->instance) || (in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && $instance != $this->instance) ) {
                 ?>
-                <form name="loginform" id="loginform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'login')); ?>" method="post">
+                <form name="loginform-<?php echo $instance; ?>" id="loginform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'login')); ?>" method="post">
                     <p>
                         <label for="log-<?php echo $instance; ?>"><?php _e('Username') ?></label>
-                        <input type="text" name="log" id="log-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
+                        <input type="text" name="log-<?php echo $instance; ?>" id="log-<?php echo $instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
                     </p>
                     <p>
                         <label for="pwd-<?php echo $instance; ?>"><?php _e('Password') ?></label>
-                        <input type="password" name="pwd" id="pwd-<?php echo $instance; ?>" class="input" value="" size="20" />
+                        <input type="password" name="pwd-<?php echo $instance; ?>" id="pwd-<?php echo $instance; ?>" class="input" value="" size="20" />
                     </p>
                 <?php do_action('login_form', $instance); ?>
-                    <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label for="rememberme-<?php echo $instance; ?>"><?php _e('Remember Me'); ?></label></p>
+                    <p class="forgetmenot"><input name="rememberme-<?php echo $instance; ?>" type="checkbox" id="rememberme-<?php echo $instance; ?>" value="forever" /> <label for="rememberme-<?php echo $instance; ?>"><?php _e('Remember Me'); ?></label></p>
                     <p class="submit">
-                        <input type="submit" name="login-submit" id="login-submit-<?php echo $instance; ?>" value="<?php _e('Log In'); ?>" />
+                        <input type="submit" name="login-submit-<?php echo $instance; ?>" id="login-submit-<?php echo $instance; ?>" value="<?php _e('Log In'); ?>" />
                         <input type="hidden" name="redirect_to" value="<?php echo attribute_escape($this->redirect_to); ?>" />
                         <input type="hidden" name="testcookie" value="1" />
                     </p>
@@ -294,23 +294,23 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function RegisterForm($instance) {
-            $user_login = isset($_POST['user_login']) ? $_POST['user_login'] : '';
-            $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : '';
+            $user_login = isset($_POST['user_login-'.$instance]) ? $_POST['user_login-'.$instance] : '';
+            $user_email = isset($_POST['user_email-'.$instance]) ? $_POST['user_email-'.$instance] : '';
             $this->PageHeader($instance);
             ?>
-            <form name="registerform" id="registerform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'register')); ?>" method="post">
+            <form name="registerform-<?php echo $instance; ?>" id="registerform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'register')); ?>" method="post">
                 <p>
                     <label for="user_login-<?php echo $instance; ?>"><?php _e('Username') ?></label>
-                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
+                    <input type="text" name="user_login-<?php echo $instance; ?>" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
                 </p>
                 <p>
                     <label for="user_email-<?php echo $instance; ?>"><?php _e('E-mail') ?></label>
-                    <input type="text" name="user_email" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
+                    <input type="text" name="user_email-<?php echo $instance; ?>" id="user_email-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
                 </p>
                 <?php do_action('register_form', $instance); ?>
                 <p id="reg_passmail-<?php echo $instance; ?>"><?php echo $this->options['register_message']; ?></p>
                 <p class="submit">
-                    <input type="submit" name="register-submit" id="register-submit-<?php echo $instance; ?>" value="<?php _e('Register'); ?>" />
+                    <input type="submit" name="register-submit-<?php echo $instance; ?>" id="register-submit-<?php echo $instance; ?>" value="<?php _e('Register'); ?>" />
                 </p>
             </form>
             <?php
@@ -325,16 +325,16 @@ if ( !class_exists('WPLogin') ) {
         function RetrievePasswordForm($instance) {
             do_action('lost_password', $instance);
             $this->PageHeader($instance, $this->options['lost_pass_message']);
-            $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
+            $user_login = isset($_POST['user_login-'.$this->instance]) ? stripslashes($_POST['user_login-'.$this->instance]) : '';
             ?>
-            <form name="lostpasswordform" id="lostpasswordform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')); ?>" method="post">
+            <form name="lostpasswordform-<?php echo $instance; ?>" id="lostpasswordform-<?php echo $instance; ?>" action="<?php echo $this->GuessURL(array('instance' => $instance, 'action' => 'lostpassword')); ?>" method="post">
                 <p>
                     <label for="user_login-<?php echo $instance; ?>"><?php _e('Username or E-mail:') ?></label>
-                    <input type="text" name="user_login" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
+                    <input type="text" name="user_login-<?php echo $instance; ?>" id="user_login-<?php echo $instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
                 </p>
                 <?php do_action('lostpassword_form', $instance); ?>
                 <p class="submit">
-                    <input type="submit" name="lostpassword-submit" id="lostpassword-submit-<?php echo $instance; ?>" value="<?php _e('Get New Password'); ?>" />
+                    <input type="submit" name="lostpassword-submit-<?php echo $instance; ?>" id="lostpassword-submit-<?php echo $instance; ?>" value="<?php _e('Get New Password'); ?>" />
                 </p>
             </form>
             <?php
@@ -362,7 +362,7 @@ if ( !class_exists('WPLogin') ) {
         }
         
         function RetrievePasswordAction() {
-            if ( isset($_POST['lostpassword-submit']) ) {
+            if ( isset($_POST['lostpassword-submit-'.$this->instance]) ) {
                 $this->errors = $this->RetrievePassword();
                 if ( !is_wp_error($this->errors) ) {
                     $this->redirect_to = ( isset($this->instance) ) ? $this->GuessURL(array('instance' => $this->instance, 'checkemail' => 'confirm')) : site_url('wp-login.php?instance='.$this->instance.'&checkemail=confirm', 'login');
@@ -399,8 +399,8 @@ if ( !class_exists('WPLogin') ) {
             if ( isset($_POST['register-submit']) ) {
                 require_once (ABSPATH . WPINC . '/registration.php');
 
-                $user_login = $_POST['user_login'];
-                $user_email = $_POST['user_email'];
+                $user_login = $_POST['user_login-'.$this->instance];
+                $user_email = $_POST['user_email-'.$this->instance];
                 $this->errors = $this->RegisterNewUser($user_login, $user_email);
 
                 if ( !is_wp_error($this->errors) ) {
@@ -415,8 +415,8 @@ if ( !class_exists('WPLogin') ) {
             $this->secure_cookie = '';
 
             // If the user wants ssl but the session is not ssl, force a secure cookie.
-            if ( !empty($_POST['log']) && !force_ssl_admin() ) {
-                $user_name = sanitize_user($_POST['log']);
+            if ( !empty($_POST['log-'.$this->instance]) && !force_ssl_admin() ) {
+                $user_name = sanitize_user($_POST['log-'.$this->instance]);
                 if ( $user = get_userdatabylogin($user_name) ) {
                     if ( get_user_option('use_ssl', $user->ID) ) {
                         $this->secure_cookie = true;
@@ -428,7 +428,11 @@ if ( !class_exists('WPLogin') ) {
             if ( !$this->secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() )
                 $this->secure_cookie = false;
 
-            if ( isset($_POST['login-submit']) ) {
+            if ( isset($_POST['login-submit-'.$this->instance]) ) {
+                $_POST['log'] = $_POST['log-'.$this->instance];
+                $_POST['pwd'] = $_POST['pwd-'.$this->instance];
+                $_POST['rememberme'] = $_POST['rememberme-'.$this->instance];
+                
                 $user = wp_signon('', $this->secure_cookie);
 
                 $this->redirect_to = apply_filters('login_redirect', $this->redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
@@ -491,6 +495,8 @@ if ( !class_exists('WPLogin') ) {
             global $wpdb;
 
             $errors = new WP_Error();
+            
+            $_POST['user_login'] = $_POST['user_login-'.$this->instance];
 
             if ( empty( $_POST['user_login'] ) && empty( $_POST['user_email'] ) )
                 $errors->add('empty_username', __('<strong>ERROR</strong>: Enter a username or e-mail address.'));
