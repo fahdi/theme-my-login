@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.3.1
+Version: 4.3.2
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -16,7 +16,7 @@ require_once ('classes/class.wp-login.php');
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '4.3';
+        var $version = '4.3.2';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -93,7 +93,9 @@ if (!class_exists('ThemeMyLogin')) {
             
             if ( 'options-general.php' == $pagenow ) {
             
-                switch ( $_GET['page'] ) {
+                $page = isset($_GET['page']) ? $_GET['page'] : '';
+
+                switch ( $page ) {
                 
                     case 'theme-my-login/admin/admin.php' :
                     
@@ -148,8 +150,10 @@ if (!class_exists('ThemeMyLogin')) {
                             $subject = $this->options['user_approval_email']['subject'];
                             $message = $this->options['user_approval_email']['message'];
                             
-                            $plaintext_pass = wp_generate_password();
-                            wp_set_password($plaintext_pass, $user->ID);
+                            if ( !$this->options['custom_pass'] ) {
+                                $plaintext_pass = wp_generate_password();
+                                wp_set_password($plaintext_pass, $user->ID);
+                            }
                             
                             $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/');
                             $replace_with = array(get_option('blogname'), get_option('siteurl'), $user->user_login, $user->user_email, $plaintext_pass);
@@ -163,7 +167,9 @@ if (!class_exists('ThemeMyLogin')) {
                             else {
                                 $message  = sprintf(__('You have been approved to access %s '."\r\n\r\n"), get_option('blogname'));
                                 $message .= sprintf(__('Username: %s'), $user->user_login) . "\r\n";
-                                $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n\r\n";
+                                if ( !$this->options['custom_pass'] )
+                                    $message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
+                                $message .= "\r\n";
                                 $message .= site_url('wp-login.php', 'login') . "\r\n";
                             }
                             tml_apply_mail_filters();
@@ -285,7 +291,12 @@ if (!class_exists('ThemeMyLogin')) {
             if ( is_a($user, 'WP_User') ) {
                 $user_role = reset($user->roles);
                 if ( in_array($user_role, array('pending', 'denied')) ) {
-                    return new WP_Error('pending', '<strong>ERROR</strong>: Your registration has not yet been approved.');
+                    if ( $this->options['redirects'][$user_role]['login_url'] ) {
+                        wp_safe_redirect($this->options['redirects'][$user_role]['login_url']);
+                        exit();
+                    } else {
+                        return new WP_Error('pending', '<strong>ERROR</strong>: Your registration has not yet been approved.');
+                    }
                 }
             }
             return $user;

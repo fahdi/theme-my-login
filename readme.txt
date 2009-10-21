@@ -39,6 +39,11 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.3.2 =
+* Added the option to redirect unapproved and/or denied users to a custom URL upon login attempt
+* Fixed a bug where custom user password is lost if user moderation is enabled
+* Fixed a PHP notice in the admin (Wish more plugin authors would do this; WP_DEBUG is your friend!)
+
 = 4.3.1 =
 * Fixed a MAJOR security hole that allowed anyone to login without a password!!
 
