@@ -19,3 +19,7 @@
 .login form label {
     display: block;
     }
+    
+.login p.forgetmenow label {
+    display: inline;
+    }

@@ -39,6 +39,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.3.3 =
+* Fixed a redirection bug where WordPress is installed in a sub-directory
+* Add CSS style to keep "Remember Me" label inline with checkbox
+
 = 4.3.2 =
 * Added the option to redirect unapproved and/or denied users to a custom URL upon login attempt
 * Fixed a bug where custom user password is lost if user moderation is enabled
