@@ -68,7 +68,7 @@ if (!class_exists('ThemeMyLogin')) {
         }
         
         function Init() {
-            global $pagenow;
+            global $WPLogin, $pagenow;
             
             $this->permalink = get_permalink($this->options['page_id']);
 
@@ -86,6 +86,7 @@ if (!class_exists('ThemeMyLogin')) {
             if ( $this->options['use_css'] )
                 wp_enqueue_style('theme-my-login', plugins_url('/theme-my-login/css/theme-my-login.css'));
                 
+            $WPLogin = new WPLogin('theme-my-login', $this->options);
         }
         
         function AdminInit() {
@@ -246,8 +247,6 @@ if (!class_exists('ThemeMyLogin')) {
         }
 
         function TemplateRedirect() {
-            global $WPLogin;
-
             if ( is_page($this->options['page_id']) ) {
                 $action = ( isset($_GET['action']) ) ? $_GET['action'] : '';
                 if ( is_user_logged_in() && 'logout' != $action ) {
@@ -255,7 +254,6 @@ if (!class_exists('ThemeMyLogin')) {
                     exit();
                 }
             }
-            $WPLogin = new WPLogin('theme-my-login', $this->options);
         }
         
         function RegisterForm($instance) {

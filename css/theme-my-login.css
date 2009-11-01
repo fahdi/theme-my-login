@@ -20,6 +20,6 @@
     display: block;
     }
     
-.login p.forgetmenow label {
+.login form p.forgetmenot label {
     display: inline;
     }
