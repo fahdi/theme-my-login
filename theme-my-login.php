@@ -109,8 +109,8 @@ if (!class_exists('ThemeMyLogin')) {
                             wp_deregister_script('jquery-ui-core');
                             wp_deregister_script('jquery-ui-tabs');
                             wp_enqueue_script('jquery', plugins_url('/theme-my-login/js/jquery/jquery.js'), false, '1.7.2');
-                            wp_enquque_script('jquery-ui-core', plugins_url('/theme-my-login/js/jquery/ui.core.js'), array('jquery'), '1.7.2');
-                            wp_enquque_script('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
+                            wp_enqueue_script('jquery-ui-core', plugins_url('/theme-my-login/js/jquery/ui.core.js'), array('jquery'), '1.7.2');
+                            wp_enqueue_script('jquery-ui-tabs', plugins_url('/theme-my-login/js/jquery/ui.tabs.js'), array('jquery', 'jquery-ui-core'), '1.7.2');
                         }
             
                         wp_enqueue_style('theme-my-login-admin', plugins_url('/theme-my-login/css/theme-my-login-admin.css'));
