@@ -42,6 +42,7 @@ if ( $_POST ) {
     }
     $ThemeMyLogin->options['links'] = $links;
     
+    $ThemeMyLogin->options['override_redirect'] = isset($_POST['override_redirect']) ? 1 : 0;
     foreach ( $_POST['redirects'] as $role => $data ) {
         $redirects[$role] = array('login_url' => $data['login_url']);
     }

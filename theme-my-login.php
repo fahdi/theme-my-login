@@ -3,7 +3,7 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login-plugin
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 4.3.2
+Version: 4.3.4
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
@@ -16,7 +16,7 @@ require_once ('classes/class.wp-login.php');
 if (!class_exists('ThemeMyLogin')) {
     class ThemeMyLogin {
 
-        var $version = '4.3.2';
+        var $version = '4.3.4';
         var $options = array();
         var $permalink = '';
         var $instances = 0;
@@ -393,28 +393,34 @@ if (!class_exists('ThemeMyLogin')) {
         
         function LoginRedirect($redirect_to, $request, $user) {
             global $pagenow;
-
+            
             $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
             $self =  $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
+            
             if ( empty($redirect_to) || admin_url() == $redirect_to) {
                 if ( empty($request) )
                     $redirect_to = ( 'wp-login.php' == $pagenow ) ? $_SERVER['HTTP_REFERER'] : $self;
                 else
                     $redirect_to = $request;
             }
-
+            
             if ( is_object($user) && !is_wp_error($user) ) {
                 $user_role = reset($user->roles);
                 $redirects = $this->options['redirects'];
-                if ( '' != $redirects[$user_role]['login_url'] )
-                    $redirect_to = $redirects[$user_role]['login_url'];
+                if ( '' != $redirects[$user_role]['login_url'] ) {
+                    if ( $this->options['override_redirect'] )
+                        return $redirects[$user_role]['login_url'];
+                }
             }
+
             return $redirect_to;
         }
         
         function SiteURL($url, $path) {
             global $wp_rewrite;
+            
+            $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
+            $self =  $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             
             if ( !empty($this->options['page_id']) ) {
                 if ( preg_match('/wp-login.php/', $url) ) {
@@ -423,6 +429,9 @@ if (!class_exists('ThemeMyLogin')) {
                         $url = $wp_rewrite->using_permalinks() ? $this->permalink.'?'.$parsed_url['query'] : $this->permalink.'&'.$parsed_url['query'];
                     else
                         $url = $this->permalink;
+
+                    $self = remove_query_arg('redirect_to');
+                    $url = add_query_arg('redirect_to', $self, $url);
                 }
             }
             return $url;
@@ -539,6 +548,7 @@ if (!class_exists('ThemeMyLogin')) {
             $this->options['email_from_name']       = '';
             $this->options['email_content_type']    = 'text/plain';
             $this->options['use_css']               = 1;
+            $this->options['override_redirect']     = 1;
 
             // Titles
             $this->options['welcome_title']         = __('Welcome') . ', %display_name%';

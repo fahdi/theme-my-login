@@ -39,6 +39,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 4.3.4 =
+* Added the option to force redirect upon login
+
 = 4.3.3 =
 * Fixed a redirection bug where WordPress is installed in a sub-directory
 * Add CSS style to keep "Remember Me" label inline with checkbox
