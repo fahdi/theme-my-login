@@ -10,8 +10,10 @@ class ThemeMyLoginWidget extends WP_Widget {
 
     function widget($args, $instance){
         global $ThemeMyLogin;
+        if ( is_user_logged_in() && !$instance['logged_in_widget'] )
+            return;
         $args = array_merge($args, $instance);
-        echo $ThemeMyLogin->ThemeMyLoginShortcode($args);
+        echo $ThemeMyLogin->shortcode($args);
     }
 
     function update($new_instance, $old_instance){

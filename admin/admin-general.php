@@ -1,40 +1,30 @@
             <table class="form-table">
                 <tr valign="top">
-                    <th scope="row"><?php _e('Plugin', 'theme-my-login'); ?></th>
+                    <th scope="row"><?php _e('Passwords', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="uninstall" type="checkbox" id="uninstall" value="1" <?php if ( $ThemeMyLogin->options['uninstall'] ) { echo 'checked="checked"'; } ?> />
-                        <label for="uninstall"><?php _e('Uninstall', 'theme-my-login'); ?></label>
+                        <input name="custom_pass" type="radio" id="custom_pass_off" value="0" <?php if ( 0 == $ThemeMyLogin->options['custom_pass'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="custom_pass_off"><?php _e('Auto-Generated', 'theme-my-login'); ?></label><br />
+                        <input name="custom_pass" type="radio" id="custom_pass_on" value="1" <?php if ( 1 == $ThemeMyLogin->options['custom_pass'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="custom_pass_on"><?php _e('Custom', 'theme-my-login'); ?></label><br />
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row"><?php _e('Defaults', 'theme-my-login'); ?></th>
+                    <th scope="row"><?php _e('User Moderation', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="defaults" type="checkbox" id="defaults" value="1" />
-                        <label for="defaults"><?php _e('Reset Defaults', 'theme-my-login'); ?></label>
+                        <input name="moderation" type="radio" id="moderation_none" value="none" <?php if ( 'none' == $ThemeMyLogin->options['moderation'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="moderation_none"><?php _e('None', 'theme-my-login'); ?></label><br />
+                        <input name="moderation" type="radio" id="moderation_email" value="email" <?php if ( 'email' == $ThemeMyLogin->options['moderation'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="moderation_email"><?php _e('E-mail Confirmation', 'theme-my-login'); ?></label><br />
+                        <input name="moderation" type="radio" id="moderation_admin" value="admin" <?php if ( 'admin' == $ThemeMyLogin->options['moderation'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="moderation_admin"><?php _e('Admin Approval', 'theme-my-login'); ?></label>
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row"><?php _e('Page List', 'theme-my-login'); ?></th>
+                    <th scope="row"><?php _e('Stylesheet', 'theme-my-login'); ?></th>
                     <td>
-                        <input name="show_page" type="checkbox" id="show_page" value="1" <?php if ( $ThemeMyLogin->options['show_page'] ) { echo 'checked="checked"'; } ?> />
-                        <label for="show_page"><?php _e('Show Login Page', 'theme-my-login'); ?></label>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Registration', 'theme-my-login'); ?></th>
-                    <td>
-                        <input name="custom_pass" type="checkbox" id="custom_pass" value="1" <?php if ( $ThemeMyLogin->options['custom_pass'] ) { echo 'checked="checked"'; } ?> />
-                        <label for="custom_pass"><?php _e('Allow Users To Set Their Own Password', 'theme-my-login'); ?></label>
-                        <br />
-                        <input name="moderate_users" type="checkbox" id="moderate_users" value="1" <?php if ( $ThemeMyLogin->options['moderate_users'] ) { echo 'checked="checked"'; } ?> />
-                        <label for="moderate_users"><?php _e('New Users Must Approved', 'theme-my-login'); ?></label>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><label for="page_id"><?php _e('Page ID', 'theme-my-login'); ?></label></th>
-                    <td>
-                        <input name="page_id" type="text" id="page_id" value="<?php echo $ThemeMyLogin->options['page_id']; ?>" size="1" />
-                        <span class="description"><strong>DO NOT</strong> change this unless you are <strong>ABSOLUTELY POSITIVE</strong> you know what you are doing!</span>
+                        <input name="use_css" type="checkbox" id="use_css" value="1" <?php if ( $ThemeMyLogin->options['use_css'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="use_css"><?php _e('Use theme-my-login.css', 'theme-my-login'); ?></label>
+                        <p class="description"><?php _e('In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login'); ?></p>
                     </td>
                 </tr>
             </table>

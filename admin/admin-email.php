@@ -1,13 +1,14 @@
             <ul class="tabs-nav">
-                <li><a href="#fragment-5-1">General</a></li>
-                <li><a href="#fragment-5-2">New Registration</a></li>
-                <li><a href="#fragment-5-3">Password Retrieval</a></li>
-                <li><a href="#fragment-5-4">Password Reset</a></li>
-                <li><a href="#fragment-5-5">User Approval</a></li>
-                <li><a href="#fragment-5-6">User Denial</a></li>
+                <li><a href="#fragment-4-1">General</a></li>
+                <li><a href="#fragment-4-2">New Registration</a></li>
+                <li><a href="#fragment-4-3">Password Retrieval</a></li>
+                <li><a href="#fragment-4-4">Password Reset</a></li>
+                <li><a href="#fragment-4-5">E-mail Confirmation</a></li>
+                <li><a href="#fragment-4-6">User Approval</a></li>
+                <li><a href="#fragment-4-7">User Denial</a></li>
             </ul>
 
-            <div id="fragment-5-1" class="tabs-div">
+            <div id="fragment-4-1" class="tabs-div">
                 <table class="form-table">
                     <tr valign="top">
                         <td>
@@ -33,7 +34,7 @@
                 </table>
             </div>
 
-            <div id="fragment-5-2" class="tabs-div">
+            <div id="fragment-4-2" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -44,14 +45,13 @@
                             <textarea name="registration_message" id="registration_message" class="large-text"><?php echo htmlspecialchars($ThemeMyLogin->options['registration_email']['message']); ?></textarea><br />
                             <p>
                             <label for "registration_admin_disable"><input name="registration_admin_disable" type="checkbox" id="registration_admin_disable" value="1" <?php if ( $ThemeMyLogin->options['registration_email']['admin_disable'] ) { echo 'checked="checked"'; } ?> /> Disable Admin Notification</label>&nbsp;
-                            <label for "registration_user_disable"><input name="registration_user_disable" type="checkbox" id="registration_user_disable" value="1" <?php if ( $ThemeMyLogin->options['registration_email']['user_disable'] ) { echo 'checked="checked"'; } ?> /> Disable User Notification</label>&nbsp;
                             </p>
                         </td>
                     </tr>
                 </table>
             </div>
 
-            <div id="fragment-5-3" class="tabs-div">
+            <div id="fragment-4-3" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -65,7 +65,7 @@
                 </table>
             </div>
 
-            <div id="fragment-5-4" class="tabs-div">
+            <div id="fragment-4-4" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -82,7 +82,21 @@
                 </table>
             </div>
             
-            <div id="fragment-5-5" class="tabs-div">
+            <div id="fragment-4-5" class="tabs-div">
+                <table class="form-table">
+                    <tr>
+                        <td>
+                            <p><em>Avilable Variables: %blogname%, %siteurl%, %confirmurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</em></p>
+                            Subject<br />
+                            <input name="confirmation_subject" type="text" id="confirmation_subject" value="<?php echo htmlspecialchars($ThemeMyLogin->options['confirmation_email']['subject']); ?>" class="full-text" /><br />
+                            Message<br />
+                            <textarea name="confirmation_message" id="confirmation_message" class="large-text"><?php echo htmlspecialchars($ThemeMyLogin->options['confirmation_email']['message']); ?></textarea><br />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="fragment-4-6" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>
@@ -96,7 +110,7 @@
                 </table>
             </div>
             
-            <div id="fragment-5-6" class="tabs-div">
+            <div id="fragment-4-7" class="tabs-div">
                 <table class="form-table">
                     <tr>
                         <td>

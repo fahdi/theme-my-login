@@ -2,7 +2,9 @@
                 <?php
                 $i = 1;
                 foreach ($user_roles as $role => $value) {
-                    echo '<li><a href="#fragment-3-' . $i . '">' . ucwords($role) . '</a></li>' . "\n";
+                    if ( 'pending' == $role )
+                        continue;
+                    echo '<li><a href="#fragment-2-' . $i . '">' . ucwords($role) . '</a></li>' . "\n";
                     $i++;
                 }
                 ?>
@@ -11,8 +13,12 @@
             <?php
             $i1 = 1;
             foreach ($user_roles as $role => $value) {
+                if ( 'pending' == $role )
+                    continue;
             ?>
-            <div id="fragment-3-<?php echo $i1; ?>" class="tabs-div">
+            <div id="fragment-2-<?php echo $i1; ?>" class="tabs-div">
+            
+                <p class="description"><?php _e('These links will show up in the widget when a user is logged in, according to their role.', 'theme-my-login'); ?></p>
 
                 <table id="links-<?php echo $role; ?>" class="form-table link-table">
                     <?php $i2 = 0; ?>

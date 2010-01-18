@@ -2,8 +2,8 @@
 Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
-Requires at least: 2.5
-Tested up to: 2.9-rare
+Requires at least: 2.8
+Tested up to: 2.9.1
 Stable tag: trunk
 
 Themes the WordPress login pages according to your theme.
@@ -38,6 +38,13 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 4.4 =
+* Added the option to require new registrations to confirm e-mail address
+* Added the option to redirect users upon log out according to their role
+* Allow 'theme-my-login.css' to be loaded from current theme directory
+* Cleaned up and rewrote most code
+* Drop support for WP versions below 2.8
 
 = 4.3.4 =
 * Added the option to force redirect upon login
