@@ -883,6 +883,15 @@ if ( !class_exists('ThemeMyLogin') ) {
         }
         
         function install() {
+            $previous_install = get_option('theme_my_login');
+            if ( $previous_install ) {
+                if ( version_compare($previous_install['version'], '4.4', '<') ) {
+                    global $wp_roles;
+                    if ( $wp_roles->is_role('denied') )
+                        $wp_roles->remove_role('denied');
+                }
+            }
+            
             $plugin_data = get_plugin_data(__FILE__);
             $this->setOption('version', $plugin_data['Version']);
             $this->saveOptions();
