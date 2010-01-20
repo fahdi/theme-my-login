@@ -298,8 +298,6 @@ function approve_new_user($id, $newpass = false) {
     }
     $ThemeMyLogin->sendEmail($user->user_email, $subject, $message);
 
-    wp_new_user_notification($user->ID, $pass);
-
     return true;
 }
 

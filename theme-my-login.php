@@ -142,7 +142,9 @@ if ( !class_exists('ThemeMyLogin') ) {
                         wp_die(__('You can&#8217;t edit that user.', 'theme-my-login'));
 
                     require_once(WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
-                    if ( !approve_new_user($user) )
+                    
+                    $newpass = ( $this->options['custom_pass'] ) ? 0 : 1;
+                    if ( !approve_new_user($user, $newpass) )
                         wp_die(__('You can&#8217;t edit that user.', 'theme-my-login'));
 
                     add_action('admin_notices', create_function('', "echo '<div id=\"message\" class=\"updated fade\"><p>' . __('User approved.', 'theme-my-login') . '</p></div>';"));
