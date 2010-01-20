@@ -399,15 +399,15 @@ if ( !class_exists('ThemeMyLogin') ) {
 
         function getFooter($login_link = true, $register_link = true, $password_link = true) {
             echo '<ul class="tml-links">' . "\n";
-            if ( $login_link ) {
+            if ( $login_link && $this->instance_options['show_log_link'] ) {
                 $url = $this->getCurrentURL('instance=' . $this->current_instance);
                 echo '<li><a href="' . $url . '">' . $this->getTitle('login') . '</a></li>' . "\n";
             }
-            if ( $register_link && get_option('users_can_register') ) {
+            if ( $register_link && $this->instance_options['show_reg_link'] && get_option('users_can_register') ) {
                 $url = ($this->instance_options['register_widget']) ? $this->getCurrentURL('action=register&instance=' . $this->current_instance) : site_url('wp-login.php?action=register', 'login');
                 echo '<li><a href="' . $url . '">' . $this->getTitle('register') . '</a></li>' . "\n";
             }
-            if ( $password_link ) {
+            if ( $password_link && $this->instance_options['show_pass_link'] ) {
                 $url = ($this->instance_options['lost_pass_widget']) ? $this->getCurrentURL('action=lostpassword&instance=' . $this->current_instance) : site_url('wp-login.php?action=lostpassword', 'login');
                 echo '<li><a href="' . $url . '">' . $this->getTitle('lostpassword') . '</a></li>' . "\n";
             }
