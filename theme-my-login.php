@@ -83,6 +83,9 @@ if ( !class_exists('ThemeMyLogin') ) {
 
             if ( defined('IS_TML') && IS_TML )
                 return $posts;
+                
+            if ( $page = get_page_by_title('login') )
+                return $posts;
 
             $pagename = get_query_var('pagename');
             
