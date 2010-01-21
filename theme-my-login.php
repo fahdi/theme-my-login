@@ -339,7 +339,8 @@ if ( !class_exists('ThemeMyLogin') ) {
                 echo '<ul class="tml-user-links">' . "\n";
                 if ( $this->instance_options['links'][$user_role] ) {
                     foreach ( $this->instance_options['links'][$user_role] as $key => $data ) {
-                        echo '<li><a href="' . $data['url'] . '">' . $data['title'] . '</a></li>' . "\n";
+                        $url = str_replace('%user_id%', $user->ID, $data['url']);
+                        echo '<li><a href="' . $url . '">' . $data['title'] . '</a></li>' . "\n";
                     }
                 }
                 echo '<li><a href="' . wp_logout_url() . '">' . __('Log Out', 'theme-my-login') . '</a></li>' . "\n" . '</ul>' . "\n";
