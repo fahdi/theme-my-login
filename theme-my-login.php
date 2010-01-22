@@ -42,7 +42,6 @@ if ( !class_exists('ThemeMyLogin') ) {
             if ( $this->options['custom_pass'] ) {
                 add_action('register_form', array(&$this, 'customPassForm'));
                 add_action('registration_errors', array(&$this, 'customPassErrors'));
-                add_action('user_register', array(&$this, 'setUserPassword'));
             }
             
             if ( in_array($this->options['moderation'], array('email', 'admin')) ) {
@@ -255,13 +254,16 @@ if ( !class_exists('ThemeMyLogin') ) {
 
                         $user_login = '';
                         $user_email = '';
+                        $user_pass = '';
                         if ( $http_post ) {
                             require_once(ABSPATH . WPINC . '/registration.php');
                             require_once(WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
 
                             $user_login = $_POST['user_login'];
                             $user_email = $_POST['user_email'];
-                            $this->errors = register_new_user($user_login, $user_email);
+                            if ( $this->options['custom_pass'] && isset($_POST['pass1']) && '' != $_POST['pass1'] )
+                                $user_pass = stripslashes($_POST['pass1']);
+                            $this->errors = register_new_user($user_login, $user_email, $user_pass);
                             if ( !is_wp_error($this->errors) ) {
                                 if ( 'email' == $this->options['moderation'] )
                                     $redirect_to = $this->getCurrentURL('pending=activation&instance=' . $this->request_instance);
@@ -701,11 +703,6 @@ if ( !class_exists('ThemeMyLogin') ) {
             return $errors;
         }
 
-        function setUserPassword($user_id) {
-            if ( $this->options['custom_pass'] && isset($_POST['user_pw']) && '' != $_POST['user_pw'] )
-                wp_set_password(stripslashes($_POST['user_pw']), $user_id);
-        }
-        
         function userModeration($user_id) {
             $user = new WP_User($user_id);
             $user->set_role('pending');
@@ -976,7 +973,7 @@ if ( !class_exists('ThemeMyLogin') ) {
                     @$ThemeMyLogin->sendEmail(get_option('admin_email'), sprintf(__('[%s] New User Registration', 'theme-my-login'), $blogname), $message);
                 }
                 
-                if ( empty($plaintext_pass) || $ThemeMyLogin->options['custom_pass'] )
+                if ( empty($plaintext_pass) )
                     return;
                     
                 $replace_this = array('/%blogname%/', '/%siteurl%/', '/%user_login%/', '/%user_email%/', '/%user_pass%/', '/%user_ip%/');
