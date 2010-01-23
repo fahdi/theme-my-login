@@ -30,6 +30,7 @@ This plugin themes the WordPress login, registration and forgot password pages a
 
 1. Upload the plugin to your 'wp-content/plugins' directory
 1. Activate the plugin
+1. Visit the [Theme My Login Official Usage Thread](http://www.jfarthing.com/forum/theme-my-login/theme-my-login-official-usage-thread/) for further instruction.
 
 
 == Frequently Asked Questions ==

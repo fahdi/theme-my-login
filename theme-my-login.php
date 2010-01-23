@@ -92,6 +92,7 @@ if ( !class_exists('ThemeMyLogin') ) {
 
             if ( 'login' == $pagename ) {
                 $posts[] = (object) array(
+                    'ID' => -10,
                     'post_content' => '[theme-my-login show_title="0" before_widget="" after_widget="" instance="tml-page"]',
                     'post_title' => $this->getTitle($action),
                     'post_excerpt' => '',
