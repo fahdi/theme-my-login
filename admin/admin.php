@@ -17,7 +17,8 @@ if ( $_POST ) {
             remove_role('pending');
     }
     $ThemeMyLogin->options['use_css'] = isset($_POST['use_css']) ? 1 : 0;
-    $ThemeMyLogin->options['template_tag'] = isset($_POST['template_tag']) ? 1 : 0;
+    $ThemeMyLogin->options['enable_widget'] = isset($_POST['enable_widget']) ? 1 : 0;
+    $ThemeMyLogin->options['enable_template_tag'] = isset($_POST['enable_template_tag']) ? 1 : 0;
     $ThemeMyLogin->options['email_from_name'] = stripslashes($_POST['email_from_name']);
     $ThemeMyLogin->options['email_from'] = stripslashes($_POST['email_from']);
     $ThemeMyLogin->options['email_content_type'] = stripslashes($_POST['email_content_type']);

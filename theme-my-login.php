@@ -814,7 +814,8 @@ if ( !class_exists('ThemeMyLogin') ) {
             $this->options['email_from_name']       = '';
             $this->options['email_content_type']    = 'text/plain';
             $this->options['use_css']               = 1;
-            $this->options['template_tag']          = 0;
+            $this->options['enable_widget']         = 1;
+            $this->options['enable_template_tag']   = 0;
             $this->options['override_redirect']     = 1;
 
             // Widget
@@ -910,13 +911,12 @@ if ( !class_exists('ThemeMyLogin') ) {
     if ( class_exists('ThemeMyLogin') ) {
         $ThemeMyLogin = new ThemeMyLogin();
         
-        require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php');
+        if ( $ThemeMyLogin->options['enable_widget'] )
+            require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php');
         
         if ( !function_exists('theme_my_login') ) :
         function theme_my_login($args = '') {
             global $ThemeMyLogin;
-            if ( !$ThemeMyLogin->options['template_tag'] )
-                return false;
             $args = wp_parse_args($args);
             echo $ThemeMyLogin->shortcode($args);
         }
