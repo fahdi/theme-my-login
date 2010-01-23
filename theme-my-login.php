@@ -406,15 +406,15 @@ if ( !class_exists('ThemeMyLogin') ) {
             echo '<ul class="tml-links">' . "\n";
             if ( $login_link && $this->instance_options['show_log_link'] ) {
                 $url = $this->getCurrentURL('instance=' . $this->current_instance);
-                echo '<li><a href="' . $url . '">' . $this->getTitle('login') . '</a></li>' . "\n";
+                echo '<li><a href="' . esc_url($url) . '">' . $this->getTitle('login') . '</a></li>' . "\n";
             }
             if ( $register_link && $this->instance_options['show_reg_link'] && get_option('users_can_register') ) {
                 $url = ($this->instance_options['register_widget']) ? $this->getCurrentURL('action=register&instance=' . $this->current_instance) : site_url('wp-login.php?action=register', 'login');
-                echo '<li><a href="' . $url . '">' . $this->getTitle('register') . '</a></li>' . "\n";
+                echo '<li><a href="' . esc_url($url) . '">' . $this->getTitle('register') . '</a></li>' . "\n";
             }
             if ( $password_link && $this->instance_options['show_pass_link'] ) {
                 $url = ($this->instance_options['lost_pass_widget']) ? $this->getCurrentURL('action=lostpassword&instance=' . $this->current_instance) : site_url('wp-login.php?action=lostpassword', 'login');
-                echo '<li><a href="' . $url . '">' . $this->getTitle('lostpassword') . '</a></li>' . "\n";
+                echo '<li><a href="' . esc_url($url) . '">' . $this->getTitle('lostpassword') . '</a></li>' . "\n";
             }
             echo '</ul>' . "\n";
             echo '</div>' . "\n";
@@ -472,7 +472,7 @@ if ( !class_exists('ThemeMyLogin') ) {
                 ( !in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && $this->request_instance == $this->current_instance ) ||
                 ( in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && $this->request_instance != $this->current_instance ) ) {
                 ?>
-                <form name="loginform" id="loginform-<?php echo $this->current_instance; ?>" action="<?php echo $this->getCurrentURL('action=login&instance=' . $this->current_instance); ?>" method="post">
+                <form name="loginform" id="loginform-<?php echo $this->current_instance; ?>" action="<?php echo esc_url($this->getCurrentURL('action=login&instance=' . $this->current_instance)); ?>" method="post">
                     <p>
                         <label for="log-<?php echo $this->current_instance; ?>"><?php _e('Username', 'theme-my-login') ?></label>
                         <input type="text" name="log" id="log-<?php echo $this->current_instance; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
@@ -511,7 +511,7 @@ if ( !class_exists('ThemeMyLogin') ) {
             
             $this->getHeader($message);
             ?>
-            <form name="registerform" id="registerform-<?php echo $this->current_instance; ?>" action="<?php echo $this->getCurrentURL('action=register&instance=' . $this->current_instance); ?>" method="post">
+            <form name="registerform" id="registerform-<?php echo $this->current_instance; ?>" action="<?php echo esc_url($this->getCurrentURL('action=register&instance=' . $this->current_instance)); ?>" method="post">
                 <p>
                     <label for="user_login-<?php echo $this->current_instance; ?>"><?php _e('Username', 'theme-my-login') ?></label>
                     <input type="text" name="user_login" id="user_login-<?php echo $this->current_instance; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
@@ -534,7 +534,7 @@ if ( !class_exists('ThemeMyLogin') ) {
             $this->getHeader(__('Please enter your username or e-mail address. You will receive a new password via e-mail.', 'theme-my-login'));
             $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
             ?>
-            <form name="lostpasswordform" id="lostpasswordform-<?php echo $this->current_instance; ?>" action="<?php echo $this->getCurrentURL('action=lostpassword&instance=' . $this->current_instance); ?>" method="post">
+            <form name="lostpasswordform" id="lostpasswordform-<?php echo $this->current_instance; ?>" action="<?php echo esc_url($this->getCurrentURL('action=lostpassword&instance=' . $this->current_instance)); ?>" method="post">
                 <p>
                     <label for="user_login-<?php echo $this->current_instance; ?>"><?php _e('Username or E-mail:', 'theme-my-login') ?></label>
                     <input type="text" name="user_login" id="user_login-<?php echo $this->current_instance; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
