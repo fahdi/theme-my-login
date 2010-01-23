@@ -27,4 +27,12 @@
                         <p class="description"><?php _e('In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login'); ?></p>
                     </td>
                 </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Template Tag', 'theme-my-login'); ?></th>
+                    <td>
+                        <input name="template_tag" type="checkbox" id="template_tag" value="1" <?php if ( $ThemeMyLogin->options['template_tag'] ) { echo 'checked="checked"'; } ?> />
+                        <label for="template_tag"><?php _e('Enable Template Tag', 'theme-my-login'); ?></label>
+                        <p class="description"><?php _e('Enable this setting to activate the template tag. If you do not intend to use the template tag, leave this disabled for optimization.', 'theme-my-login'); ?></p>
+                    </td>
+                </tr>
             </table>

@@ -173,7 +173,7 @@ if ( !class_exists('ThemeMyLogin') ) {
             if ( is_page('login') )
                 define('IS_TML', true);
 
-            if ( is_page('login') || is_active_widget(false, null, 'theme-my-login') ) {
+            if ( is_page('login') || is_active_widget(false, null, 'theme-my-login') || $this->options['template_tag'] ) {
 
                 if ( $this->options['use_css'] ) {
                     if ( file_exists(get_stylesheet_directory() . '/theme-my-login.css') )
@@ -814,6 +814,7 @@ if ( !class_exists('ThemeMyLogin') ) {
             $this->options['email_from_name']       = '';
             $this->options['email_content_type']    = 'text/plain';
             $this->options['use_css']               = 1;
+            $this->options['template_tag']          = 0;
             $this->options['override_redirect']     = 1;
 
             // Widget
@@ -914,6 +915,8 @@ if ( !class_exists('ThemeMyLogin') ) {
         if ( !function_exists('theme_my_login') ) :
         function theme_my_login($args = '') {
             global $ThemeMyLogin;
+            if ( !$ThemeMyLogin->options['template_tag'] )
+                return false;
             $args = wp_parse_args($args);
             echo $ThemeMyLogin->shortcode($args);
         }
