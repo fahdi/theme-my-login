@@ -1,55 +1,50 @@
 <?php
 
-if ( !class_exists('ThemeMyLoginWidget') ) :
-class ThemeMyLoginWidget extends WP_Widget {
+if ( !class_exists('Theme_My_Login_Widget') ) :
+class Theme_My_Login_Widget extends WP_Widget {
 
-    function ThemeMyLoginWidget(){
+    function Theme_My_Login_Widget(){
         $widget_ops = array('classname' => 'widget_theme_my_login', 'description' => __('A login form for your blog.', 'theme-my-login') );
-        $this->WP_Widget('theme-my-login', __('Theme My Login', 'theme-my-login'), $widget_ops);
+        parent::WP_Widget('theme-my-login', __('Theme My Login', 'theme-my-login'), $widget_ops);
     }
 
     function widget($args, $instance){
-        global $ThemeMyLogin;
         if ( is_user_logged_in() && !$instance['logged_in_widget'] )
             return;
         $args = array_merge($args, $instance);
-        echo $ThemeMyLogin->shortcode($args);
+        echo jkf_tml_shortcode($args);
     }
 
     function update($new_instance, $old_instance){
-        
         $instance = $old_instance;
-        $instance['default_action'] = $new_instance['default_action'];
-        $instance['logged_in_widget'] = (empty($new_instance['logged_in_widget'])) ? false : true;
-        $instance['show_title'] = (empty($new_instance['show_title'])) ? false : true;
-        $instance['show_log_link'] = (empty($new_instance['show_log_link'])) ? false: true;
-        $instance['show_reg_link'] = (empty($new_instance['show_reg_link'])) ? false: true;
-        $instance['show_pass_link'] = (empty($new_instance['show_pass_link'])) ? false: true;
-        $instance['show_gravatar'] = (empty($new_instance['show_gravatar'])) ? false : true;
-        $instance['gravatar_size'] = absint($new_instance['gravatar_size']);
-        $instance['register_widget'] = (empty($new_instance['register_widget'])) ? false : true;
-        $instance['lost_pass_widget'] = (empty($new_instance['lost_pass_widget'])) ? false : true;
-
+        $instance['default_action']     = in_array($new_instance['default_action'], array('login', 'register', 'lostpassword')) ? $new_instance['default_action'] : 'login';
+        $instance['logged_in_widget']   = empty($new_instance['logged_in_widget']) ? false : true;
+        $instance['show_title']         = empty($new_instance['show_title']) ? false : true;
+        $instance['show_log_link']      = empty($new_instance['show_log_link']) ? false: true;
+        $instance['show_reg_link']      = empty($new_instance['show_reg_link']) ? false: true;
+        $instance['show_pass_link']     = empty($new_instance['show_pass_link']) ? false: true;
+        $instance['show_gravatar']      = empty($new_instance['show_gravatar']) ? false : true;
+        $instance['gravatar_size']      = absint($new_instance['gravatar_size']);
+        $instance['register_widget']    = empty($new_instance['register_widget']) ? false : true;
+        $instance['lost_pass_widget']   = empty($new_instance['lost_pass_widget']) ? false : true;
         return $instance;
     }
 
     function form($instance){
-        global $wp_roles;
-        $user_roles = $wp_roles->get_names();
+        $defaults = array(
+            'default_action' => 'login',
+            'logged_in_widget' => 1,
+            'show_title' => 1,
+            'show_log_link' => 1,
+            'show_reg_link' => 1,
+            'show_pass_link' => 1,
+            'show_gravatar' => 1,
+            'gravatar_size' => 50,
+            'register_widget' => 1,
+            'lost_pass_widget' => 1
+            );
 
-        //Defaults
-        $defaults['default_action'] = 'login';
-        $defaults['logged_in_widget'] = 1;
-        $defaults['show_title'] = 1;
-        $defaults['show_log_link'] = 1;
-        $defaults['show_reg_link'] = 1;
-        $defaults['show_pass_link'] = 1;
-        $defaults['show_gravatar'] = 1;
-        $defaults['gravatar_size'] = 50;
-        $defaults['register_widget'] = 1;
-        $defaults['lost_pass_widget'] = 1;
-
-        $instance = wp_parse_args( (array) $instance, (array) $defaults );
+        $instance = wp_parse_args($instance, $defaults);
         $actions = array('login' => 'Login', 'register' => 'Register', 'lostpassword' => 'Lost Password');
         echo '<p>Default Action<br /><select name="' . $this->get_field_name('default_action') . '" id="' . $this->get_field_id('default_action') . '">';
         foreach ($actions as $action => $title) {
@@ -76,14 +71,7 @@ class ThemeMyLoginWidget extends WP_Widget {
         echo '<p><input name="' . $this->get_field_name('lost_pass_widget') . '" type="checkbox" id="' . $this->get_field_id('lost_pass_widget') . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id('lost_pass_widget') . '">' . __('Allow Password Recovery', 'theme-my-login') . '</label></p>' . "\n";
     }
 
-}// END class
-endif;
-
-if ( !function_exists('ThemeMyLoginWidgetInit') ) :
-function ThemeMyLoginWidgetInit() {
-    register_widget('ThemeMyLoginWidget');
 }
 endif;
-add_action('widgets_init', 'ThemeMyLoginWidgetInit');
 
 ?>

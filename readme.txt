@@ -17,13 +17,12 @@ This plugin themes the WordPress login, registration and forgot password pages a
 * Your registration, log in and password recovery pages will all match the rest of your website
 * Includes a customizeable widget to login anywhere from your blog
 * Redirect users upon log in based on their role
-* Customize titles and messages for the registration, log in and password recovery forms
 * Show gravatar to users who are logged in
 * Assign custom links to users who are logged in based on their role
 * Customize user emails for registration and/or password recovery
 * Send user emails in HTML format
 * Allow users to set their own password upon registration
-* Optionally require users to be approved upon registration
+* Optionally require users to be approved or confirm e-mail address upon registration
 
 
 == Installation ==
@@ -39,6 +38,13 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 5.0 =
+* Rewrite code in a modular fashion in order to speed up plugin
+* Convert custom passwords, e-mails, redirection and user moderation to "modules"
+* Add the option to enable/disable link rewriting, widget and template tag
+* Simplify/optimize admin tabs style
+* Remember current admin tab after save
 
 = 4.4 =
 * Added the option to require new registrations to confirm e-mail address
