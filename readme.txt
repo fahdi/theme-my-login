@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 2.9.1
-Stable tag: trunk
+Stable tag: 4.4
 
 Themes the WordPress login pages according to your theme.
 
