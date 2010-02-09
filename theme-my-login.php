@@ -34,7 +34,7 @@ function jkf_tml_default_settings($empty = false) {
         'enable_widget' => 0,
         'active_modules' => array()
         );
-    return $options;
+    return apply_filters('tml_default_settings', $options);
 }
 
 // Main action hook that will spawn all other hooks/filter
