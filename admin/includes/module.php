@@ -92,7 +92,8 @@ function jkf_tml_add_menu_page($menu_title, $file, $function = '', $position = N
 
     $file = plugin_basename($file);
 
-    $hookname = 'tml_admin_page_' . sanitize_title($menu_title);
+    $hookname = get_plugin_page_hookname($file, '');
+	$hookname = preg_replace('|[^a-zA-Z0-9_:.]|', '-', $hookname);
     if ( !empty($function) && !empty($hookname) )
         add_action($hookname, $function);
 
@@ -106,8 +107,20 @@ function jkf_tml_add_menu_page($menu_title, $file, $function = '', $position = N
     return $hookname;
 }
 
-function jkf_tml_add_submenu_page() {
-
+function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '') {
+	global $jkf_tml_admin_submenu;
+	
+	$file = plugin_basename($file);
+	$parent = plugin_basename($parent);
+	
+	$hookname = get_plugin_page_hookname($file, 'options-general.php');
+	$hookname = preg_replace('|[^a-zA-Z0-9_:.]|', '-', $hookname);
+	if ( !empty($function) && !empty($hookname) )
+		add_action($hookname, $function);
+	
+	$jkf_tml_admin_submenu[$parent][] = array($menu_title, $file, $hookname);
+	
+	return $hookname;
 }
 
 function jkf_tml_load_admin_page($file, $hook = '') {
