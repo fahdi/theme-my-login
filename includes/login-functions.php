@@ -68,8 +68,8 @@ function retrieve_password() {
 
     $title = sprintf(__('[%s] Password Reset'), $blogname);
 
-    $title = apply_filters('retrieve_password_title', $title, $user_data);
-    $message = apply_filters('retrieve_password_message', $message, $key, $user_data);
+    $title = apply_filters('retrieve_password_title', $title, $user_data->ID);
+    $message = apply_filters('retrieve_password_message', $message, $key, $user_data->ID);
 
     if ( $message && !wp_mail($user_email, $title, $message) )
         die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
@@ -117,12 +117,12 @@ function reset_password($key, $login) {
 
     $title = sprintf(__('[%s] Your new password'), $blogname);
 
-    $title = apply_filters('password_reset_title', $title, $user);
-    $message = apply_filters('password_reset_message', $message, $new_pass, $user);
+    $title = apply_filters('password_reset_title', $title, $user->ID);
+    $message = apply_filters('password_reset_message', $message, $new_pass, $user->ID);
 
     if ( $message && !wp_mail($user->user_email, $title, $message) )
           die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
-
+	
     wp_password_change_notification($user);
 
     return true;
