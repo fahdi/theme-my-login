@@ -125,8 +125,8 @@ function jkf_tml_custom_pass_reset_pass() {
 
     $title = sprintf(__('[%s] Your new password'), $blogname);
 
-    $title = apply_filters('password_reset_title', $title);
-    $message = apply_filters('password_reset_message', $message, $new_pass);
+    $title = apply_filters('password_reset_title', $title, $user);
+    $message = apply_filters('password_reset_message', $message, $new_pass, $user);
 
     if ( $message && !wp_mail($user->user_email, $title, $message) )
 		die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
