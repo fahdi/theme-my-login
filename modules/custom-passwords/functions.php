@@ -115,6 +115,7 @@ function jkf_tml_custom_pass_reset_pass() {
     do_action('password_reset', $user->user_login, $new_pass);
 
     wp_set_password($new_pass, $user->ID);
+	update_usermeta($user->ID, 'default_password_nag', false);
     $message  = sprintf(__('Username: %s'), $user->user_login) . "\r\n";
     $message .= sprintf(__('Password: %s'), $new_pass) . "\r\n";
     $message .= site_url('wp-login.php', 'login') . "\r\n";
