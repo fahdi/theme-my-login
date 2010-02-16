@@ -54,12 +54,16 @@ function jkf_tml_page_link($link, $id) {
 
 function jkf_tml_get_pages($pages, $attributes) {
 	global $theme_my_login;
+	if ( is_admin() )
+		return $pages;
 	// It sucks there's not really a better way to do this
 	if ( $theme_my_login->options['show_page'] ) {
 		foreach ( $pages as $page ) {
 			if ( $page->ID == $theme_my_login->options['page_id'] ) {
 				if ( is_user_logged_in() )
 					$page->post_title = __('Log out');
+				else
+					$page->post_title = __('Log In');
 			}
 		}
 	}
