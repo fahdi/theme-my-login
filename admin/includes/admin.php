@@ -166,10 +166,29 @@ function jkf_tml_install() {
 
 function jkf_tml_uninstall() {
     $options = get_option('theme_my_login');
-    do_action('tml_uninstall', $options);
+	
+	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	
+	// Run module uninstall hooks
+	$modules = get_plugins('/theme-my-login/modules');
+	foreach ( array_keys($modules) as $module ) {
+		$module = plugin_basename(trim($module));
+
+		$valid = jkf_tml_validate_module($module);
+		if ( is_wp_error($valid) )
+			continue;
+			
+		@include (TML_MODULE_DIR . '/' . $module);
+		do_action('uninstall_' . trim($module));
+	}
+
+	// Delete the page
     if ( get_page($options['page_id']) )
-        delete_page($options['page_id']);
+        wp_delete_post($options['page_id']);
+		
+	// Delete options
     delete_option('theme_my_login');
+	delete_option('widget_theme-my-login');
 }
 
 ?>
