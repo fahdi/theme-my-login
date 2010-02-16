@@ -113,7 +113,9 @@ function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '') {
 	$file = plugin_basename($file);
 	$parent = plugin_basename($parent);
 	
-	$hookname = get_plugin_page_hookname($file, 'options-general.php');
+	$count = is_array($jkf_tml_admin_submenu[$parent]) ? count($jkf_tml_admin_submenu[$parent]) + 1 : 1;
+	
+	$hookname = get_plugin_page_hookname($parent . '-' . $count, '');
 	$hookname = preg_replace('|[^a-zA-Z0-9_:.]|', '-', $hookname);
 	if ( !empty($function) && !empty($hookname) )
 		add_action($hookname, $function);

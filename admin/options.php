@@ -1,10 +1,10 @@
 <?php
 
 // Default menu
-$jkf_tml_admin_menu[0] = array(__('General', 'theme-my-login'), 'theme-my-login/admin/options.php', 'tml_admin_page_general');
-    $jkf_tml_admin_submenu['theme-my-login/admin/options.php'][0] = array(__('Basic', 'theme-my-login'), 'theme-my-login/admin/options-basic.php', 'tml_options_basic');
-    $jkf_tml_admin_submenu['theme-my-login/admin/options.php'][5] = array(__('Modules', 'theme-my-login'), 'theme-my-login/admin/options-modules.php', 'tml_options_modules');
-    $jkf_tml_admin_submenu['theme-my-login/admin/options.php'][10] = array(__('Optimization', 'theme-my-login'), 'theme-my-login/admin/options-optimization.php', 'tml_options_optimization');
+jkf_tml_add_menu_page(__('General', 'theme-my-login'), 'theme-my-login/admin/options.php');
+jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Basic', 'theme-my-login'), 'theme-my-login/admin/options-basic.php');
+jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Modules', 'theme-my-login'), 'theme-my-login/admin/options-modules.php');
+jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Optimization', 'theme-my-login'), 'theme-my-login/admin/options-optimization.php');
 
 // Allow plugins to add to menu
 do_action('tml_admin_menu');
