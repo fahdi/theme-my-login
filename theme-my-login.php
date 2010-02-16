@@ -65,7 +65,6 @@ function jkf_tml_load() {
 		add_filter('site_url', 'jkf_tml_site_url', 10, 3);
 	
 	if ( $theme_my_login->options['show_page'] ) {
-		add_filter('page_link', 'jkf_tml_page_link', 10, 2);
 		add_filter('get_pages', 'jkf_tml_get_pages', 10, 2);
 	} elseif ( !$theme_my_login->options['show_page'] ) {
 		add_filter('wp_list_pages_excludes', 'jkf_tml_list_pages_excludes');
@@ -82,10 +81,13 @@ function jkf_tml_load() {
     }
 }
 
+add_action('init', 'jkf_tml_init');
+function jkf_tml_init() {
+	do_action('tml_init');
+}
+
 function jkf_tml_template_redirect() {
     global $theme_my_login;
-	
-	do_action('tml_init');
         
     if ( is_page($theme_my_login->options['page_id']) || is_active_widget(false, null, 'theme-my-login') || $theme_my_login->options['enable_template_tag'] ) {
 
