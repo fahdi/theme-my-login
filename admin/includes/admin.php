@@ -154,13 +154,18 @@ function jkf_tml_install() {
         'ping_status' => 'closed'
         );
 
-    $login_page = get_page_by_title('Login');
-    $page_id = ( $login_page ) ? $login_page->ID : wp_insert_post($insert);
-
+	if ( $page = get_page_by_title('Login') ) {
+		$page_id = $page->ID;
+		if ( 'trash' == $page->post_status )
+			wp_untrash_post($page_id);
+	} else
+		wp_insert_post($insert);
+	
     $options = wp_parse_args($previous_install, jkf_tml_default_settings());
         
     $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php');
-    $options = array_merge(array('version' => $plugin_data['Version'], 'page_id' => $page_id), $options);
+	$options['version'] = $plugin_data['Version'];
+	$options['page_id'] = $page_id;
     return update_option('theme_my_login', $options);
 }
 
