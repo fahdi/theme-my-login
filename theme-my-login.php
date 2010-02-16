@@ -9,6 +9,10 @@ Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
 
+// Bailout if we're at the default login
+if ( 'wp-login.php' == $pagenow )
+	return;
+
 // Set the default module directory
 if ( !defined('TML_MODULE_DIR') )
     define('TML_MODULE_DIR', WP_PLUGIN_DIR . '/theme-my-login/modules');
