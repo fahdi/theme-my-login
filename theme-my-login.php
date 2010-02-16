@@ -9,20 +9,56 @@ Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
 
+// Set the default module directory
 if ( !defined('TML_MODULE_DIR') )
     define('TML_MODULE_DIR', WP_PLUGIN_DIR . '/theme-my-login/modules');
+
+// Initialize global configuration object
+$theme_my_login = (object) array(
+    'options' => get_option('theme_my_login', jkf_tml_default_settings()),
+    'errors' => '',
+    'request_action' => isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login',
+    'request_instance' => isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-page',
+    'current_instance' => '',
+    'redirect_to' => ''
+    );
+
+// Load the plugin textdomain
+load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
 
 require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
 require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php');
 
-load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
+// Load active modules
+$current_modules = apply_filters( 'tml_active_modules', $theme_my_login->options['active_modules'] );
+if ( is_array($current_modules) ) {
+	foreach ( $current_modules as $module ) {
+		// check the $plugin filename
+		// Validate plugin filename	
+		if ( validate_file($module) // $module must validate as file
+			|| '.php' != substr($module, -4) // $module must end with '.php'
+			|| !file_exists(TML_MODULE_DIR . '/' . $module)	// $module must exist
+			)
+			continue;
+
+		include_once(TML_MODULE_DIR . '/' . $module);
+	}
+	unset($module);
+}
+unset($current_modules);
+
+do_action('tml_modules_loaded');
 
 // Include admin-functions.php for install/uninstall process
 if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
     require_once (WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php');
     require_once (WP_PLUGIN_DIR . '/theme-my-login/admin/includes/module.php');
+	
     register_activation_hook(__FILE__, 'jkf_tml_install');
     register_uninstall_hook(__FILE__, 'jkf_tml_uninstall');
+	
+	add_action('admin_init', 'jkf_tml_admin_init');
+    add_action('admin_menu', 'jkf_tml_admin_menu');
 }
 
 function jkf_tml_default_settings($empty = false) {
@@ -37,28 +73,11 @@ function jkf_tml_default_settings($empty = false) {
     return apply_filters('tml_default_settings', $options);
 }
 
-// Main action hook that will spawn all other hooks/filter
 add_action('plugins_loaded', 'jkf_tml_load');
 function jkf_tml_load() {
     global $theme_my_login;
-
-    $theme_my_login = (object) array(
-        'options' => get_option('theme_my_login', jkf_tml_default_settings()),
-        'errors' => '',
-        'request_action' => isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login',
-        'request_instance' => isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-page',
-        'current_instance' => '',
-        'redirect_to' => ''
-        );
-    
-	jkf_tml_load_active_modules();
 	
     do_action('tml_load', $theme_my_login);
-    
-    if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
-        add_action('admin_init', 'jkf_tml_admin_init');
-        add_action('admin_menu', 'jkf_tml_admin_menu');
-    }
 
     add_action('template_redirect', 'jkf_tml_template_redirect');
     
@@ -69,16 +88,20 @@ function jkf_tml_load() {
 		add_filter('site_url', 'jkf_tml_site_url', 10, 3);
 	
 	if ( $theme_my_login->options['show_page'] ) {
-		add_filter('wp_list_pages_excludes', 'jkf_tml_list_pages_excludes');
 		add_filter('page_link', 'jkf_tml_page_link', 10, 2);
 		add_filter('get_pages', 'jkf_tml_get_pages', 10, 2);
+	} elseif ( !$theme_my_login->options['show_page'] ) {
+		add_filter('wp_list_pages_excludes', 'jkf_tml_list_pages_excludes');
 	}
     
-    add_shortcode('theme-my-login', 'jkf_tml_shortcode');
+	add_shortcode('theme-my-login', 'jkf_tml_shortcode');
     
     if ( $theme_my_login->options['enable_widget'] ) {
         require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php');
-        add_action('widgets_init', create_function('', 'return register_widget("Theme_My_Login_Widget");'));
+		function jkf_tml_register_widget() {
+			return register_widget("Theme_My_Login_Widget");
+		}
+        add_action('widgets_init', 'jkf_tml_register_widget');
     }
 }
 
