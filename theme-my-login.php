@@ -27,32 +27,15 @@ $theme_my_login = (object) array(
 load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
 
 require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
-require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php');
 
-// Load active modules
-$current_modules = apply_filters( 'tml_active_modules', $theme_my_login->options['active_modules'] );
-if ( is_array($current_modules) ) {
-	foreach ( $current_modules as $module ) {
-		// check the $plugin filename
-		// Validate plugin filename	
-		if ( validate_file($module) // $module must validate as file
-			|| '.php' != substr($module, -4) // $module must end with '.php'
-			|| !file_exists(TML_MODULE_DIR . '/' . $module)	// $module must exist
-			)
-			continue;
+jkf_tml_load_active_modules();
 
-		include_once(TML_MODULE_DIR . '/' . $module);
-	}
-	unset($module);
-}
-unset($current_modules);
-
-do_action('tml_modules_loaded');
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php' );
 
 // Include admin-functions.php for install/uninstall process
 if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
-    require_once (WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php');
-    require_once (WP_PLUGIN_DIR . '/theme-my-login/admin/includes/module.php');
+    require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php' );
+    require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/module.php' );
 	
     register_activation_hook(__FILE__, 'jkf_tml_install');
     register_uninstall_hook(__FILE__, 'jkf_tml_uninstall');
@@ -76,6 +59,8 @@ function jkf_tml_default_settings($empty = false) {
 add_action('plugins_loaded', 'jkf_tml_load');
 function jkf_tml_load() {
     global $theme_my_login;
+	
+	require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php');
 	
     do_action('tml_load', $theme_my_login);
 
