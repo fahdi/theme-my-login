@@ -56,6 +56,10 @@ function jkf_tml_get_pages($pages, $attributes) {
 	global $theme_my_login;
 	if ( is_admin() )
 		return $pages;
+	
+	// Change to logout link if user is logged in
+	add_filter('page_link', 'jkf_tml_page_link', 10, 2);
+	
 	// It sucks there's not really a better way to do this
 	if ( $theme_my_login->options['show_page'] ) {
 		foreach ( $pages as $page ) {
