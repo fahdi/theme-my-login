@@ -32,4 +32,27 @@ function jkf_tml_get_css($file = 'theme-my-login.css') {
     wp_enqueue_style('theme-my-login', $css_file);
 }
 
+function jkf_tml_load_active_modules() {
+	global $theme_my_login;
+	
+	$current_modules = apply_filters( 'tml_active_modules', $theme_my_login->options['active_modules'] );
+	if ( is_array($current_modules) ) {
+		foreach ( $current_modules as $module ) {
+			// check the $plugin filename
+			// Validate plugin filename	
+			if ( validate_file($module) // $module must validate as file
+				|| '.php' != substr($module, -4) // $module must end with '.php'
+				|| !file_exists(TML_MODULE_DIR . '/' . $module)	// $module must exist
+				)
+				continue;
+
+			include_once(TML_MODULE_DIR . '/' . $module);
+		}
+		unset($module);
+	}
+	unset($current_modules);
+
+	do_action('tml_modules_loaded');
+}
+
 ?>
