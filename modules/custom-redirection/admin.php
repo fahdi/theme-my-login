@@ -16,6 +16,8 @@ function jkf_tml_custom_redirect_admin_login() {
 	
 	$user_roles = $wp_roles->get_names();
 	foreach ( $user_roles as $role => $label ) {
+		if ( 'pending' == $role )
+			continue;
 		?>
 <table class="form-table">
     <tr valign="top">
@@ -37,6 +39,8 @@ function jkf_tml_custom_redirect_admin_logout() {
 	
 	$user_roles = $wp_roles->get_names();
 	foreach ( $user_roles as $role => $label ) {
+		if ( 'pending' == $role )
+			continue;
 		?>
 <table class="form-table">
     <tr valign="top">
