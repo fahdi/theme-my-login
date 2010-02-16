@@ -8,8 +8,6 @@ if ( function_exists('wp_new_user_notification') )
 	add_action('admin_notices', 'jkf_tml_custom_email_new_user_notification_override_notice');
 if ( function_exists('wp_password_change_notification') )
 	add_action('admin_notices', 'jkf_tml_custom_email_password_change_notification_override_notice');
-	
-require_once (TML_MODULE_DIR . '/custom-email/includes/pluggable-functions.php');
 
 add_action('tml_init', 'jkf_tml_custom_email_init');
 function jkf_tml_custom_email_init() {
@@ -25,8 +23,8 @@ function jkf_tml_custom_email_admin_init() {
 	add_filter('tml_save_settings', 'jkf_tml_custom_email_save_settings');
 }
 
-add_action('activate_custom-email/custom-email.php', 'jkf_tml_custom_email_install');
-function jkf_tml_custom_email_install() {
+add_action('activate_custom-email/custom-email.php', 'jkf_tml_custom_email_activate');
+function jkf_tml_custom_email_activate() {
 	global $theme_my_login;
 	
 	if ( ! isset($theme_my_login->options['email']) )
@@ -70,13 +68,15 @@ function jkf_tml_custom_email_reset_pass_filters($user, $new_pass) {
 	jkf_tml_custom_email_headers();
 	add_filter('password_reset_title', 'jkf_tml_custom_email_reset_pass_title', 10, 2);
 	add_filter('password_reset_message', 'jkf_tml_custom_email_reset_pass_message', 10, 3);
-	add_action('password_change_notification', create_function('', 'return false;'));
+	add_filter('password_change_notification', 'jkf_tml_custom_email_reset_pass_disable');
 }
 
 function jkf_tml_custom_email_new_user_filters($user_id, $user_pass) {
 	require_once (TML_MODULE_DIR . '/custom-email/includes/hook-functions.php');
 	jkf_tml_custom_email_headers();
-	add_filter('wp_mail', 'jkf_tml_custom_email_filter');
+	add_filter('new_user_notification_title', 'jkf_tml_custom_email_new_user_title', 10, 2);
+	add_filter('new_user_notification_message', 'jkf_tml_custom_email_new_user_message', 10, 3);
+	add_filter('new_user_admin_notification', 'jkf_tml_custom_email_new_user_admin_disable');
 }
 
 function jkf_tml_custom_email_new_user_notification_override_notice() {
