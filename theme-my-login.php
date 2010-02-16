@@ -12,6 +12,8 @@ Text Domain: theme-my-login
 // Set the default module directory
 if ( !defined('TML_MODULE_DIR') )
     define('TML_MODULE_DIR', WP_PLUGIN_DIR . '/theme-my-login/modules');
+	
+require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
 
 // Initialize global configuration object
 $theme_my_login = (object) array(
@@ -25,8 +27,6 @@ $theme_my_login = (object) array(
 
 // Load the plugin textdomain
 load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
-
-require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
 
 jkf_tml_load_active_modules();
 
@@ -42,18 +42,6 @@ if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
 	
 	add_action('admin_init', 'jkf_tml_admin_init');
     add_action('admin_menu', 'jkf_tml_admin_menu');
-}
-
-function jkf_tml_default_settings($empty = false) {
-    $options = array(
-        'show_page' => 1,
-		'rewrite_links' => 1,
-        'enable_css' => 1,
-        'enable_template_tag' => 0,
-        'enable_widget' => 0,
-        'active_modules' => array()
-        );
-    return apply_filters('tml_default_settings', $options);
 }
 
 add_action('plugins_loaded', 'jkf_tml_load');
