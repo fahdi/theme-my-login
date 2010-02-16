@@ -1,5 +1,17 @@
 <?php
 
+function jkf_tml_default_settings($empty = false) {
+    $options = array(
+        'show_page' => 1,
+		'rewrite_links' => 1,
+        'enable_css' => 1,
+        'enable_template_tag' => 0,
+        'enable_widget' => 0,
+        'active_modules' => array()
+        );
+    return apply_filters('tml_default_settings', $options);
+}
+
 function jkf_tml_get_instance() {
     static $instance = 0;
     ++$instance;
