@@ -137,8 +137,28 @@ function jkf_tml_custom_pass_reset_pass() {
     return true;
 }
 
+function jkf_tml_custom_pass_register_redirect($redirect_to) {
+	global $theme_my_login;
+	$redirect_to = site_url('wp-login.php?registration=complete');
+	if ( 'tml-page' != $theme_my_login->request_instance )
+		$redirect_to = jkf_tml_get_current_url('registration=complete&instance=' . $theme_my_login->request_instance);	
+	return $redirect_to;
+}
+
+function jkf_tml_custom_pass_resetpass_redirect($redirect_to) {
+	global $theme_my_login;
+	$redirect_to = site_url('wp-login.php?resetpass=complete');
+	if ( 'tml-page' != $theme_my_login->request_instance )
+		$redirect_to = jkf_tml_get_current_url('resetpass=complete&instance=' . $theme_my_login->request_instance);	
+	return $redirect_to;
+}
+
 function jkf_tml_custom_pass_login_message($message) {
-	if ( isset($_GET['resetpass']) && 'complete' == $_GET['resetpass'] )
+	if ( isset($_GET['action']) && 'register' == $_GET['action'] )
+		$message = '';
+	elseif ( isset($_GET['registration']) && 'complete' == $_GET['registration'] )
+		$message = __('Registration complete. You may now log in.', 'theme-my-login');
+	elseif ( isset($_GET['resetpass']) && 'complete' == $_GET['resetpass'] )
 		$message = __('Your password has been saved. You may now log in.', 'theme-my-login');
 	return $message;
 }
