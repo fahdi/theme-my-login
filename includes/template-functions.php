@@ -192,10 +192,8 @@ function jkf_tml_get_login_form() {
 
     $user_login = ( $theme_my_login->current_instance['is_active'] && isset($user_login) ) ? $user_login : '';
 
-    if ( !isset($_GET['checkemail']) ||
-        ( isset($_GET['checkemail']) && !$theme_my_login->current_instance['is_active'] ) ||
-        ( !in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && $theme_my_login->current_instance['is_active'] ) ||
-        ( in_array( $_GET['checkemail'], array('confirm', 'newpass') ) && !$theme_my_login->current_instance['is_active'] ) ) {
+    if ( ( ! ( isset($_GET['checkemail']) && $theme_my_login->current_instance['is_active'] ) ) ||
+		( ! ( in_array($_GET['checkemail'], array('confirm', 'newpass') ) && $theme_my_login->current_instance['is_active'] ) ) ) {
         ?>
         <form name="loginform" id="loginform-<?php echo $theme_my_login->current_instance['instance_id']; ?>" action="<?php echo esc_url(jkf_tml_get_current_url('action=login&instance=' . $theme_my_login->current_instance['instance_id'])); ?>" method="post">
             <p>
