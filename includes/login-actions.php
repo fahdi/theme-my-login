@@ -26,9 +26,6 @@ switch ( $theme_my_login->request_action ) {
         $user = wp_get_current_user();
 
         $redirect_to = site_url('wp-login.php?loggedout=true');
-        if ( isset($_REQUEST['redirect_to']) )
-            $redirect_to = $_REQUEST['redirect_to'];
-
         $redirect_to = apply_filters('logout_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user);
 
         wp_logout();
@@ -61,6 +58,7 @@ switch ( $theme_my_login->request_action ) {
             $redirect_to = site_url('wp-login.php?checkemail=newpass');
             if ( 'tml-page' != $theme_my_login->request_instance )
                 $redirect_to = jkf_tml_get_current_url('checkemail=newpass&instance=' . $theme_my_login->request_instance);
+			$redirect_to = apply_filters('resetpass_redirect', $redirect_to);
             wp_redirect($redirect_to);
             exit();
         }
@@ -90,12 +88,10 @@ switch ( $theme_my_login->request_action ) {
                 $user_pass = stripslashes($_POST['pass1']);
             $theme_my_login->errors = register_new_user($user_login, $user_email);
             if ( !is_wp_error($theme_my_login->errors) ) {
-                if ( 'email' == $options['moderation'] )
-                    $redirect_to = jkf_tml_get_current_url('pending=activation&instance=' . $theme_my_login->request_instance);
-                elseif ( 'admin' == $options['moderation'] )
-                    $redirect_to = jkf_tml_get_current_url('pending=approval&instance=' . $theme_my_login->request_instance);
-                else
-                    $redirect_to = jkf_tml_get_current_url('checkemail=registered&instance=' . $theme_my_login->request_instance);
+				$redirect_to = site_url('wp-login.php?checkemail=registered');
+				if ( 'tml-page' != $theme_my_login->request_instance )
+					$redirect_to = jkf_tml_get_current_url('checkemail=registered&instance=' . $theme_my_login->request_instance);
+				$redirect_to = apply_filters('register_redirect', $redirect_to);
                 wp_redirect($redirect_to);
                 exit();
             }
