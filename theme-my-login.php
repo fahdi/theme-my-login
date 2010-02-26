@@ -98,4 +98,14 @@ function jkf_tml_template_redirect() {
     }
 }
 
+function theme_my_login($args = '') {
+	global $theme_my_login;
+	
+	if ( !$theme_my_login->options['enable_template_tag'] )
+		return false;
+		
+	$args = wp_parse_args($args);
+	echo jkf_tml_shortcode($args);
+}
+
 ?>
