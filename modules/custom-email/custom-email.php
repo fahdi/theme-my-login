@@ -27,7 +27,9 @@ add_action('activate_custom-email/custom-email.php', 'jkf_tml_custom_email_activ
 function jkf_tml_custom_email_activate() {
 	global $theme_my_login;
 	
-	if ( ! isset($theme_my_login->options['email']) )
+	if ( isset($theme_my_login->options['email']) && is_array($theme_my_login->options['email']) )
+		$theme_my_login->options['email'] = array_merge(jkf_tml_custom_email_default_settings(), $theme_my_login->options['email']);
+	else
 		$theme_my_login->options['email'] = jkf_tml_custom_email_default_settings();
 		
 	update_option('theme_my_login', $theme_my_login->options);

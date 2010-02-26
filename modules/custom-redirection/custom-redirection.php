@@ -23,7 +23,9 @@ add_action('activate_custom-redirection/custom-redirection.php', 'jkf_tml_custom
 function jkf_tml_custom_redirection_install() {
 	global $theme_my_login;
 	
-	if ( ! isset($theme_my_login->options['redirection']) )
+	if ( isset($theme_my_login->options['redirection']) && is_array($theme_my_login->options['redirection']) )
+		$theme_my_login->options['redirection'] = array_merge(jkf_tml_custom_redirect_default_settings(), $theme_my_login->options['redirection']);
+	else
 		$theme_my_login->options['redirection'] = jkf_tml_custom_redirect_default_settings();
 		
 	update_option('theme_my_login', $theme_my_login->options);
