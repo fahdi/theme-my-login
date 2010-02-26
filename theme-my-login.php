@@ -81,15 +81,12 @@ function jkf_tml_load() {
     }
 }
 
-add_action('init', 'jkf_tml_init');
-function jkf_tml_init() {
-	do_action('tml_init');
-}
-
 function jkf_tml_template_redirect() {
     global $theme_my_login;
         
     if ( is_page($theme_my_login->options['page_id']) || is_active_widget(false, null, 'theme-my-login') || $theme_my_login->options['enable_template_tag'] ) {
+	
+		do_action('tml_init');
 
         if ( $theme_my_login->options['enable_css'] )
             jkf_tml_get_css();
