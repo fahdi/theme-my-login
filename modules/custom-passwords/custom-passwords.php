@@ -17,6 +17,7 @@ function jkf_tml_custom_pass_init() {
 		add_action('login_form_rp', 'jkf_tml_custom_pass_reset_form');
 		add_filter('user_registration_pass', 'jkf_tml_custom_pass_set_pass');
 		add_filter('login_message', 'jkf_tml_custom_pass_login_message');
+		add_filter('lostpassword_message', 'jkf_tml_custom_pass_lostpassword_message');
 		add_filter('register_redirect', 'jkf_tml_custom_pass_register_redirect');
 		add_filter('resetpass_redirect', 'jkf_tml_custom_pass_resetpass_redirect');
 	}

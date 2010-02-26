@@ -163,4 +163,9 @@ function jkf_tml_custom_pass_login_message($message) {
 	return $message;
 }
 
+function jkf_tml_custom_pass_lostpassword_message($message) {
+	$message = __('Please enter your username or e-mail address. You will recieve an e-mail with a link to reset your password.', 'theme-my-login');
+	return $message;
+}
+
 ?>
