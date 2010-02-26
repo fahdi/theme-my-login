@@ -19,7 +19,8 @@ function jkf_tml_display() {
         echo '<ul class="tml-user-links">' . "\n";
         $user_links = array(
             array('title' => __('Dashboard'), 'url' => admin_url()),
-            array('title' => __('Profile'), 'url' => admin_url('profile.php'))
+            array('title' => __('Profile'), 'url' => admin_url('profile.php')),
+			array('title' => __('Log out'), 'url' => wp_logout_url())
             );
         $user_links = apply_filters('tml_user_links', $user_links);
         if ( $user_links ) {
@@ -27,7 +28,6 @@ function jkf_tml_display() {
                 echo '<li><a href="' . $link_data['url'] . '">' . $link_data['title'] . '</a></li>' . "\n";
             }
         }
-        echo '<li><a href="' . wp_logout_url() . '">' . __('Log out') . '</a></li>' . "\n" . '</ul>' . "\n";
     } else {
 		if ( has_filter('login_form_' . $action) ) {
 			do_action('login_form_' . $action);
