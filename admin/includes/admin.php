@@ -113,20 +113,16 @@ function jkf_tml_save_settings($settings) {
 	$settings['enable_css'] = isset($settings['enable_css']) ? 1 : 0;
 	$settings['enable_template_tag'] = isset($settings['enable_template_tag']) ? 1 : 0;
 	$settings['enable_widget'] = isset($settings['enable_widget']) ? 1 : 0;
-	//$settings['active_modules'] = isset($settings['active_modules']) ? (array) $settings['active_modules'] : array();
-	$settings['modules'] = isset($settings['modules']) ? (array) $settings['modules'] : array();
+	$settings['active_modules'] = isset($settings['active_modules']) ? (array) $settings['active_modules'] : array();
 	
 	// Set modules to be activated
-	if ( $activate = array_diff($settings['modules'], (array) $current['active_modules']) )
+	if ( $activate = array_diff($settings['active_modules'], (array) $current['active_modules']) )
 		$settings['activate_modules'] = $activate;
 		
 	// Set modules to be deactivated
-	if ( $deactivate = array_diff((array) $current['active_modules'], $settings['modules']) )
+	if ( $deactivate = array_diff((array) $current['active_modules'], $settings['active_modules']) )
 		$settings['deactivate_modules'] = $deactivate;
-		
-	// Unset 'modules' as it is only relevent here
-	unset($settings['modules']);
-	
+
 	// Merge current settings
     $settings = wp_parse_args($settings, $current);
 	
