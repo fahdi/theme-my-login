@@ -7,7 +7,7 @@
 			<label for="theme_my_login_new_user_message"><?php _e('Message', 'theme-my-login'); ?></label><br />
 			<textarea name="theme_my_login[email][new_user][message]" id="theme_my_login_new_user_message" class="large-text" rows="10"><?php echo $theme_my_login->options['email']['new_user']['message']; ?></textarea><br />
 			<p>
-				<label for "theme_my_login_new_user_admin_disable"><input name="theme_my_login[email][new_user][admin_disable]" type="checkbox" id="theme_my_login_new_user_admin_disable" value="1"<?php checked(1, $theme_my_login->options['email']['new_user']['admin_disable']); ?> /> Disable Admin Notification</label>
+				<label for="theme_my_login_new_user_admin_disable"><input name="theme_my_login[email][new_user][admin_disable]" type="checkbox" id="theme_my_login_new_user_admin_disable" value="1"<?php checked(1, $theme_my_login->options['email']['new_user']['admin_disable']); ?> /> Disable Admin Notification</label>
 			</p>
 		</td>
 	</tr>
