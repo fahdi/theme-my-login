@@ -87,7 +87,7 @@ function jkf_tml_validate_module($module) {
 	return 0;
 }
 
-function jkf_tml_add_menu_page($menu_title, $file, $function = '', $position = NULL) {
+function jkf_tml_add_menu_page($menu_title, $file, $function = '', $function_args = '', $position = NULL) {
     global $jkf_tml_admin_menu;
 
     $file = plugin_basename($file);
@@ -107,7 +107,7 @@ function jkf_tml_add_menu_page($menu_title, $file, $function = '', $position = N
     return $hookname;
 }
 
-function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '') {
+function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $function_args = '') {
 	global $jkf_tml_admin_submenu;
 	
 	$file = plugin_basename($file);
