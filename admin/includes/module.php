@@ -97,7 +97,7 @@ function jkf_tml_add_menu_page($menu_title, $file, $function = '', $function_arg
     if ( !empty($function) && !empty($hookname) )
         add_action($hookname, $function);
 
-    $new_menu = array($menu_title, $file, $hookname);
+    $new_menu = array($menu_title, $file, $hookname, $function_args);
 
     if ( NULL === $position )
         $jkf_tml_admin_menu[] = $new_menu;
@@ -120,27 +120,9 @@ function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $
 	if ( !empty($function) && !empty($hookname) )
 		add_action($hookname, $function);
 	
-	$jkf_tml_admin_submenu[$parent][] = array($menu_title, $file, $hookname);
+	$jkf_tml_admin_submenu[$parent][] = array($menu_title, $file, $hookname, $function_args);
 	
 	return $hookname;
-}
-
-function jkf_tml_load_admin_page($file, $hook = '') {
-	global $theme_my_login;
-    if ( $hook && has_action($hook) ) {
-        do_action("load-$hook");
-        do_action($hook);
-    } else {
-        if ( validate_file($file) )
-            return false;
-
-        if ( ! ( file_exists(WP_PLUGIN_DIR . "/$file") && is_file(WP_PLUGIN_DIR . "/$file") ) )
-            return false;
-
-        do_action("load-$file");
-        include (WP_PLUGIN_DIR . "/$file");
-    }
-    return true;
 }
 
 ?>

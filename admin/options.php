@@ -42,11 +42,35 @@ do_action('tml_admin_menu');
                 
                 foreach ( $jkf_tml_admin_submenu[$tml_menu[1]] as $tml_submenu ) {
                     echo '<div id="' . $tml_submenu[2] . '">' . "\n";
-                    jkf_tml_load_admin_page($tml_submenu[1], $tml_submenu[2]);
+					if ( has_action($tml_submenu[2]) ) {
+						do_action('load-' . $tml_submenu[2]);
+						do_action($tml_submenu[2]);
+					} else {
+						if ( validate_file($tml_submenu[1]) )
+							return false;
+
+						if ( ! ( file_exists(WP_PLUGIN_DIR . '/' . $tml_submenu[1]) && is_file(WP_PLUGIN_DIR . '/' . $tml_submenu[1]) ) )
+							return false;
+
+						do_action('load-' . $tml_submenu[1]);
+						include (WP_PLUGIN_DIR . '/' . $tml_submenu[1]);
+					}
                     echo '</div>' . "\n";
                 }
             } else {
-                jkf_tml_load_admin_page($tml_menu[1], $tml_menu[2]);
+				if ( has_action($tml_menu[2]) ) {
+					do_action('load-' . $tml_menu[2]);
+					do_action($tml_menu[2]);
+				} else {
+					if ( validate_file($tml_menu[1]) )
+						return false;
+
+					if ( ! ( file_exists(WP_PLUGIN_DIR . '/' . $tml_menu[1]) && is_file(WP_PLUGIN_DIR . '/' . $tml_menu[1]) ) )
+						return false;
+
+					do_action('load-' . $tml_menu[1]);
+					include (WP_PLUGIN_DIR . '/' . $tml_menu[1]);
+				}
             }
             echo '</div>' . "\n";
         } ?>
