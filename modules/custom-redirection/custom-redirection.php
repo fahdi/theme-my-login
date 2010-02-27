@@ -19,8 +19,8 @@ function jkf_tml_custom_redirect_admin_init() {
 	add_filter('tml_save_settings', 'jkf_tml_custom_redirect_save_settings');
 }
 
-add_action('activate_custom-redirection/custom-redirection.php', 'jkf_tml_custom_redirection_install');
-function jkf_tml_custom_redirection_install() {
+add_action('activate_custom-redirection/custom-redirection.php', 'jkf_tml_custom_redirection_activate');
+function jkf_tml_custom_redirection_activate() {
 	global $theme_my_login;
 	
 	if ( isset($theme_my_login->options['redirection']) && is_array($theme_my_login->options['redirection']) )
