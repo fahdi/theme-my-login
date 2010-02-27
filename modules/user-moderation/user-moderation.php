@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: User Moderation
-Description: Enabling this module will initialize user moderation. You will then have to configure the settings.
+Description: Enabling this module will initialize user moderation. You will then have to configure the settings via the "Moderation" tab.
 */
 
 add_action('tml_init', 'jkf_tml_user_mod_init');
