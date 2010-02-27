@@ -19,6 +19,8 @@ function jkf_tml_admin_init() {
 function jkf_tml_load_settings_page() {
 	global $theme_my_login, $user_ID;
 	
+	do_action('tml_settings_page');
+	
 	// Enqueue neccessary scripts and styles
     wp_enqueue_script('theme-my-login-admin', plugins_url('/theme-my-login/admin/js/theme-my-login-admin.js'));
     wp_enqueue_script('jquery-ui-tabs');
