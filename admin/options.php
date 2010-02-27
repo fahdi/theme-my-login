@@ -44,7 +44,7 @@ do_action('tml_admin_menu');
                     echo '<div id="' . $tml_submenu[2] . '">' . "\n";
 					if ( has_action($tml_submenu[2]) ) {
 						do_action('load-' . $tml_submenu[2]);
-						do_action($tml_submenu[2]);
+						do_action($tml_submenu[2], $tml_submenu[3]);
 					} else {
 						if ( validate_file($tml_submenu[1]) )
 							return false;
@@ -60,7 +60,7 @@ do_action('tml_admin_menu');
             } else {
 				if ( has_action($tml_menu[2]) ) {
 					do_action('load-' . $tml_menu[2]);
-					do_action($tml_menu[2]);
+					do_action($tml_menu[2], $tml_menu[3]);
 				} else {
 					if ( validate_file($tml_menu[1]) )
 						return false;
