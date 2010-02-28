@@ -1,11 +1,5 @@
 <?php
 
-function jkf_tml_is_module_active($module) {
-    global $theme_my_login;
-	$current = apply_filters('tml_active_modules', $theme_my_login->options['active_modules']);
-    return in_array($module, $current);
-}
-
 function jkf_tml_activate_module($module) {
 	global $theme_my_login;
 	$module = plugin_basename(trim($module));
@@ -123,64 +117,6 @@ function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $
 	$jkf_tml_admin_submenu[$parent][] = array($menu_title, $file, $hookname, $function_args);
 	
 	return $hookname;
-}
-
-function jkf_tml_update_option() {
-	global $theme_my_login;
-	
-	$args = func_get_args();
-	if ( !is_array($args) )
-		return false;
-		
-	$value = array_shift($args);
-
-	$option = 'options';
-	foreach ( $args as $arg ) {
-		$option .= "['$arg']";
-	}
-	eval("\$theme_my_login->{$option} = \$value;");
-	return true;
-}
-
-function jkf_tml_delete_option() {
-	global $theme_my_login;
-	
-	$args = func_get_args();
-	if ( !is_array($args) )
-		return false;
-
-	$option = 'options';
-	foreach ( $args as $arg ) {
-		$option .= "['$arg']";
-	}
-	eval("unset(\$theme_my_login->{$option});");
-	return true;
-}
-
-function jkf_tml_get_option() {
-	global $theme_my_login;
-	
-	$args = func_get_args();
-	if ( !is_array($args) )
-		return false;
-
-	$option = $theme_my_login->options;
-	foreach ( $args as $arg ) {
-		if ( !isset($option[$arg]) )
-			return $option;
-		$option = $option[$arg];
-	}
-	return $option;
-}
-
-function jkf_tml_save_options($sanitize = true) {
-	global $theme_my_login;
-	if ( !$sanitize )
-		define('TML_EDITING_MODULES', true);
-	$result = update_option('theme_my_login', $theme_my_login->options);
-	if ( !$sanitize )
-		define('TML_EDITING_MODULES', false);
-	return $result;
 }
 
 ?>
