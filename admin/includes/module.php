@@ -125,22 +125,35 @@ function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $
 	return $hookname;
 }
 
-function jkf_tml_set_option() {
+function jkf_tml_update_option() {
 	global $theme_my_login;
 	
 	$args = func_get_args();
 	if ( !is_array($args) )
 		return false;
 		
-	$key = array_shift($args);
 	$value = array_shift($args);
-	
-	$option = array($key => $value);
-	foreach ( array_reverse($args) as $arg ) {
-		$_option = array($arg => $option);
-		$option = $_option;
+
+	$option = 'options';
+	foreach ( $args as $arg ) {
+		$option .= "['$arg']";
 	}
-	$theme_my_login->options = jkf_tml_array_merge_recursive_distinct($theme_my_login->options, $option);
+	eval("\$theme_my_login->{$option} = \$value;");
+	return true;
+}
+
+function jkf_tml_delete_option() {
+	global $theme_my_login;
+	
+	$args = func_get_args();
+	if ( !is_array($args) )
+		return false;
+
+	$option = 'options';
+	foreach ( $args as $arg ) {
+		$option .= "['$arg']";
+	}
+	eval("unset(\$theme_my_login->{$option});");
 	return true;
 }
 
@@ -160,12 +173,12 @@ function jkf_tml_get_option() {
 	return $option;
 }
 
-function jkf_tml_save_options($skip_sanitation = false) {
+function jkf_tml_save_options($sanitize = true) {
 	global $theme_my_login;
-	if ( $skip_sanitation )
+	if ( !$sanitize )
 		define('TML_EDITING_MODULES', true);
 	$result = update_option('theme_my_login', $theme_my_login->options);
-	if ( $skip_sanitation )
+	if ( !$sanitize )
 		define('TML_EDITING_MODULES', false);
 	return $result;
 }
