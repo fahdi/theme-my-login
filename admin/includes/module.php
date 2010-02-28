@@ -125,4 +125,49 @@ function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $
 	return $hookname;
 }
 
+function jkf_tml_set_option() {
+	global $theme_my_login;
+	
+	$args = func_get_args();
+	if ( !is_array($args) )
+		return false;
+		
+	$key = array_shift($args);
+	$value = array_shift($args);
+	
+	$option = array($key => $value);
+	foreach ( array_reverse($args) as $arg ) {
+		$_option = array($arg => $option);
+		$option = $_option;
+	}
+	$theme_my_login->options = jkf_tml_array_merge_recursive_distinct($theme_my_login->options, $option);
+	return true;
+}
+
+function jkf_tml_get_option() {
+	global $theme_my_login;
+	
+	$args = func_get_args();
+	if ( !is_array($args) )
+		return false;
+
+	$option = $theme_my_login->options;
+	foreach ( $args as $arg ) {
+		if ( !isset($option[$arg]) )
+			return $option;
+		$option = $option[$arg];
+	}
+	return $option;
+}
+
+function jkf_tml_save_options($skip_sanitation = false) {
+	global $theme_my_login;
+	if ( $skip_sanitation )
+		define('TML_EDITING_MODULES', true);
+	$result = update_option('theme_my_login', $theme_my_login->options);
+	if ( $skip_sanitation )
+		define('TML_EDITING_MODULES', false);
+	return $result;
+}
+
 ?>
