@@ -143,4 +143,11 @@ function jkf_tml_set_error($error, $code = '', $data = '') {
 		$theme_my_login->errors = new WP_Error($code, $error, $data);
 }
 
+function jkf_tml_get_error($code = '') {
+	global $theme_my_login;
+	if ( is_a($theme_my_login->errors, 'WP_Error') )
+		return $theme_my_login->errors->get_error_message($code);
+	return false;
+}
+
 ?>
