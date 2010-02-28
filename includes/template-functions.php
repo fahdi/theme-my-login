@@ -30,7 +30,7 @@ function jkf_tml_display() {
 		echo '<li><a href="' . wp_logout_url() . '">' . __('Log out') . '</a></li>' . "\n";
     } else {
 		if ( has_filter('login_form_' . $action) ) {
-			do_action('login_form_' . $action);
+			do_action('login_form_' . $action, $theme_my_login->current_instance['instance_id']);
 		} else {
 			switch ( $action ) {
 				case 'lostpassword' :

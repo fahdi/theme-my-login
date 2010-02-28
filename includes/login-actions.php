@@ -14,7 +14,7 @@ if ( SITECOOKIEPATH != COOKIEPATH )
 // allow plugins to override the default actions, and to add extra actions if they want
 if ( has_filter('login_action_' . $theme_my_login->request_action) ) :
 
-do_action('login_action_' . $theme_my_login->request_action);
+do_action('login_action_' . $theme_my_login->request_action, $theme_my_login->request_instance);
 
 else :
 
