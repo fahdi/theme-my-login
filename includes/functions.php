@@ -131,4 +131,16 @@ function jkf_tml_save_options($sanitize = true) {
 	return $result;
 }
 
+function jkf_tml_set_error($error, $code = '', $data = '') {
+	global $theme_my_login;
+	if ( empty($code) )
+		$code = 'tml_error';
+	if ( is_a($error, 'WP_Error') )
+		$theme_my_login->errors = $error;
+	elseif ( is_a($theme_my_login->errors, 'WP_Error') )
+		$theme_my_login->errors->add($code, $error, $data);
+	else
+		$theme_my_login->errors = new WP_Error($code, $error, $data);
+}
+
 ?>
