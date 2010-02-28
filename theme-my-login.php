@@ -16,28 +16,27 @@ if ( 'wp-login.php' == $pagenow )
 // Set the default module directory
 if ( !defined('TML_MODULE_DIR') )
     define('TML_MODULE_DIR', WP_PLUGIN_DIR . '/theme-my-login/modules');
-	
-require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php');
 
-// Initialize global configuration object
-$theme_my_login = (object) array(
-    'options' => get_option('theme_my_login', jkf_tml_default_settings()),
-    'errors' => '',
-    'request_action' => isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login',
-    'request_instance' => isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-page',
-    'current_instance' => '',
-    'redirect_to' => ''
-    );
+// Require global configuration class file
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class.php' );
+
+// Initialize global configuration class
+$theme_my_login = new Theme_My_Login();
+
+// Require general plugin functions file
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php' );
 
 // Load the plugin textdomain
 load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
 
+// Load active modules
 jkf_tml_load_active_modules();
 
+// Load pluggable functions after modules (in case a module needs to override a function)
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php' );
 
 // Include admin-functions.php for install/uninstall process
-if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
+if ( is_admin() ) {
     require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php' );
     require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/module.php' );
 	
@@ -50,57 +49,50 @@ if ( defined('WP_ADMIN') && true == WP_ADMIN ) {
 
 add_action('plugins_loaded', 'jkf_tml_load');
 function jkf_tml_load() {
-    global $theme_my_login;
+	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php' );
 	
-	require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php');
-	
-    do_action('tml_load', $theme_my_login);
+    do_action('tml_load');
 
     add_action('template_redirect', 'jkf_tml_template_redirect');
     
     add_filter('the_title', 'jkf_tml_the_title', 10, 2);
     add_filter('single_post_title', 'jkf_tml_single_post_title');
 	
-	if ( $theme_my_login->options['rewrite_links'] )
+	if ( jkf_tml_get_option('rewrite_links') )
 		add_filter('site_url', 'jkf_tml_site_url', 10, 3);
 	
-	if ( $theme_my_login->options['show_page'] ) {
+	if ( jkf_tml_get_option('show_page') )
 		add_filter('get_pages', 'jkf_tml_get_pages', 10, 2);
-	} elseif ( !$theme_my_login->options['show_page'] ) {
+	else
 		add_filter('wp_list_pages_excludes', 'jkf_tml_list_pages_excludes');
-	}
     
 	add_shortcode('theme-my-login', 'jkf_tml_shortcode');
     
-    if ( $theme_my_login->options['enable_widget'] ) {
-        require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php');
+    if ( jkf_tml_get_option('enable_widget') ) {
+        require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php' );
+		add_action('widgets_init', 'jkf_tml_register_widget');
 		function jkf_tml_register_widget() {
 			return register_widget("Theme_My_Login_Widget");
 		}
-        add_action('widgets_init', 'jkf_tml_register_widget');
     }
 }
 
 function jkf_tml_template_redirect() {
-    global $theme_my_login;
-        
-    if ( is_page($theme_my_login->options['page_id']) || is_active_widget(false, null, 'theme-my-login') || $theme_my_login->options['enable_template_tag'] ) {
+    if ( is_page(jkf_tml_get_option('page_id')) || jkf_tml_get_option('enable_template_tag') || is_active_widget(false, null, 'theme-my-login') ) {
 	
 		do_action('tml_init');
 
-        if ( $theme_my_login->options['enable_css'] )
+        if ( jkf_tml_get_option('enable_css') )
             jkf_tml_get_css();
             
-        require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/login-actions.php');
+        require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/login-actions.php' );
     }
 }
 
+// Template tag
 function theme_my_login($args = '') {
-	global $theme_my_login;
-	
-	if ( !$theme_my_login->options['enable_template_tag'] )
-		return false;
-		
+	if ( ! jkf_tml_get_option('enable_template_tag') )
+		return false;		
 	$args = wp_parse_args($args);
 	echo jkf_tml_shortcode($args);
 }
