@@ -161,7 +161,7 @@ function jkf_tml_install() {
 		if ( 'trash' == $page->post_status )
 			wp_untrash_post($page_id);
 	} else
-		wp_insert_post($insert);
+		$page_id = wp_insert_post($insert);
 	
     $options = wp_parse_args($previous_install, jkf_tml_default_settings());
         
