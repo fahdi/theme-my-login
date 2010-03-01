@@ -16,26 +16,25 @@ add_action('tml_admin_init', 'jkf_tml_custom_redirect_admin_init');
 function jkf_tml_custom_redirect_admin_init() {
     require_once (TML_MODULE_DIR . '/custom-redirection/admin.php');
 	add_action('tml_admin_menu', 'jkf_tml_custom_redirect_admin_menu');
-	add_filter('tml_save_settings', 'jkf_tml_custom_redirect_save_settings');
 }
 
 add_action('activate_custom-redirection/custom-redirection.php', 'jkf_tml_custom_redirection_activate');
 function jkf_tml_custom_redirection_activate() {
-	global $theme_my_login;
+	$current = jkf_tml_get_option('redirection');
+	$default = jkf_tml_custom_redirect_default_settings();	
 	
-	if ( isset($theme_my_login->options['redirection']) && is_array($theme_my_login->options['redirection']) )
-		$theme_my_login->options['redirection'] = array_merge(jkf_tml_custom_redirect_default_settings(), $theme_my_login->options['redirection']);
+	if ( is_array($current) )
+		jkf_tml_update_option(array_merge($default, $current), 'redirection');
 	else
-		$theme_my_login->options['redirection'] = jkf_tml_custom_redirect_default_settings();
-		
-	update_option('theme_my_login', $theme_my_login->options);
+		jkf_tml_update_option($default, 'redirection');
+	
+	unset($current, $default);
+	jkf_tml_save_options(false);
 }
 
 function jkf_tml_custom_redirect_default_settings() {
-	global $wp_roles;
-	
-	$user_roles = $wp_roles->get_names();
-	foreach ( $user_roles as $role => $label ) {
+	global $wp_roles;	
+	foreach ( $wp_roles->get_names() as $role => $label ) {
 		$options[$role] = array('login_type' => 'default', 'login_url' => '', 'logout_type' => 'default', 'logout_url' => '');
 	}
     return $options;
