@@ -32,8 +32,8 @@ function jkf_tml_custom_pass_reset_action() {
 	$user = jkf_tml_custom_pass_validate_reset_key($_GET['key'], $_GET['login']);
 	if ( is_wp_error($user) ) {
        $redirect_to = site_url('wp-login.php?action=lostpassword&error=invalidkey');
-        if ( 'tml-page' != $theme_my_login->request_instance )
-            $redirect_to = jkf_tml_get_current_url('action=lostpassword&error=invalidkey&instance=' . $theme_my_login->request_instance);
+        if ( 'tml-page' != jkf_tml_get_var('request_instance') )
+            $redirect_to = jkf_tml_get_current_url('action=lostpassword&error=invalidkey&instance=' . jkf_tml_get_var('request_instance'));
         wp_redirect($redirect_to);
         exit();
 	}
@@ -42,8 +42,8 @@ function jkf_tml_custom_pass_reset_action() {
 		$errors = jkf_tml_custom_pass_reset_pass();
         if ( ! is_wp_error($errors) ) {
             $redirect_to = site_url('wp-login.php?resetpass=complete');
-            if ( 'tml-page' != $theme_my_login->request_instance )
-                $redirect_to = jkf_tml_get_current_url('resetpass=complete&instance=' . $theme_my_login->request_instance);
+            if ( 'tml-page' != jkf_tml_get_var('request_instance') )
+                $redirect_to = jkf_tml_get_current_url('resetpass=complete&instance=' . jkf_tml_get_var('request_instance'));
             wp_redirect($redirect_to);
             exit();
         } else jkf_tml_set_error($errors);

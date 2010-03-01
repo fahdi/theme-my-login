@@ -38,12 +38,12 @@ function jkf_tml_custom_user_links_admin_init() {
 add_action('activate_custom-user-links/custom-user-links.php', 'jkf_tml_custom_user_links_activate');
 function jkf_tml_custom_user_links_activate() {
 	$current = jkf_tml_get_option('user_links');
-	$default = jkf_tml_user_links_default_settings();
+	$default = jkf_tml_custom_user_links_default_settings();
 	
 	if ( is_array($current) )
-		jkf_tml_set_option(array_merge($default, $current), 'user_links');
+		jkf_tml_update_option(array_merge($default, $current), 'user_links');
 	else
-		jkf_tml_set_option($default, 'user_links');
+		jkf_tml_update_option($default, 'user_links');
 	
 	unset($current, $default);
 	jkf_tml_save_options(false);

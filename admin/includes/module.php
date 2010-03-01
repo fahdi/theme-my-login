@@ -1,21 +1,21 @@
 <?php
 
 function jkf_tml_activate_module($module) {
-	global $theme_my_login;
 	$module = plugin_basename(trim($module));
-
 	$valid = jkf_tml_validate_module($module);
 	if ( is_wp_error($valid) )
 		return $valid;
-		
-	if ( !in_array($module, $theme_my_login->options['active_modules']) ) {
+	
+	$current = jkf_tml_get_option('active_modules');
+	if ( ! jkf_tml_is_module_active($module) ) {
 		//ob_start();
 		@include (TML_MODULE_DIR . '/' . $module);
-		$theme_my_login->options['active_modules'][] = $module;
-		sort($theme_my_login->options['active_modules']);
+		$current[] = $module;
+		sort($current);
 		do_action('tml_activate_module', trim($module));
 		// We will not use this since our function modifies the global plugin object instead of saving to the DB
 		//update_option('theme_my_login', $current);
+		jkf_tml_update_option($current, 'active_modules');
 		do_action('activate_' . trim($module));
 		do_action('tml_activated_module', trim($module));
 		//ob_end_clean();
@@ -25,8 +25,8 @@ function jkf_tml_activate_module($module) {
 }
 
 function jkf_tml_deactivate_modules($modules, $silent= false) {
-	global $theme_my_login;
-
+	$current = jkf_tml_get_option('active_modules');
+	
 	if ( ! is_array($modules) )
 		$modules = array($modules);
 
@@ -37,10 +37,10 @@ function jkf_tml_deactivate_modules($modules, $silent= false) {
 		if ( ! $silent )
 			do_action('tml_deactivate_module', trim($module));
 
-		$key = array_search( $module, (array) $theme_my_login->options['active_modules'] );
+		$key = array_search( $module, (array) $current );
 
 		if ( false !== $key )
-			array_splice( $theme_my_login->options['active_modules'], $key, 1 );
+			array_splice( $current, $key, 1 );
 
 		if ( ! $silent ) {
 			do_action( 'deactivate_' . trim( $module ) );
@@ -50,6 +50,7 @@ function jkf_tml_deactivate_modules($modules, $silent= false) {
 	
 	// We will not use this since the function modifies our global plugin object instead of saving to the DB
 	//update_option('theme_my_login', $current);
+	jkf_tml_update_option($current, 'active_modules');
 }
 
 function jkf_tml_activate_modules($modules) {

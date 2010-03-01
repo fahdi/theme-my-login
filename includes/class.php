@@ -71,7 +71,7 @@ class Theme_My_Login {
 			$this->errors = new WP_Error();
 		elseif ( is_a($code, 'WP_Error') )
 			$this->errors = $code;
-		elseif ( is_a($theme_my_login->errors, 'WP_Error') )
+		elseif ( is_a($this->errors, 'WP_Error') )
 			$this->errors->add($code, $error, $data);
 		else
 			$this->errors = new WP_Error($code, $error, $data);
