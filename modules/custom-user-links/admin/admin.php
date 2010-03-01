@@ -130,10 +130,6 @@ function jkf_tml_custom_user_links_list_links($links, $role) {
 }
 
 function _jkf_tml_custom_user_links_link_row( $link, $role, &$count ) {
-	static $update_nonce = false;
-	if ( !$update_nonce )
-		$update_nonce = wp_create_nonce( 'add-' . $role . '-link' );
-
 	$r = '';
 	++ $count;
 	if ( $count % 2 )
@@ -144,6 +140,7 @@ function _jkf_tml_custom_user_links_link_row( $link, $role, &$count ) {
 	$link = (object) $link;
 
 	$delete_nonce = wp_create_nonce( 'delete-' . $role . '-link_' . $link->id );
+	$update_nonce = wp_create_nonce( 'add-' . $role . '-link' );
 
 	$r .= "\n\t<tr id='$role-link-$link->id' class='$style'>";
 	$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='user_links[$role][$link->id][title]'>" . __( 'Title', 'theme-my-login' ) . "</label><input name='user_links[$role][$link->id][title]' id='user_links[$role][$link->id][title]' tabindex='6' type='text' size='20' value='$link->title' />";
