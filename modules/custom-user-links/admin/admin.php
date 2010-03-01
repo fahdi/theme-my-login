@@ -4,8 +4,7 @@ function jkf_tml_custom_user_links_admin_menu() {
 	global $wp_roles;
 	$parent = plugin_basename(TML_MODULE_DIR . '/custom-user-links/admin/options.php');
 	jkf_tml_add_menu_page(__('User Links', 'theme-my-login'), $parent);
-	$user_roles = $wp_roles->get_names();
-	foreach ( $user_roles as $role => $label ) {
+	foreach ( $wp_roles->get_names() as $role => $label ) {
 		if ( 'pending' == $role )
 			continue;
 		jkf_tml_add_submenu_page($parent, translate_user_role($label), '', 'jkf_tml_custom_user_links_user_role_admin_page', array('role' => $role));
@@ -13,7 +12,6 @@ function jkf_tml_custom_user_links_admin_menu() {
 }
 
 function jkf_tml_custom_user_links_save_settings($settings) {
-	global $wp_roles;
 	if ( isset($_POST['user_links']) && is_array($_POST['user_links']) && !empty($_POST['user_links']) ) {
 		foreach ( $_POST['user_links'] as $role => $links ) {
 			foreach ( $links as $key => $link_data ) {
@@ -73,13 +71,14 @@ function jkf_tml_custom_user_links_admin_scripts() {
 }
 
 function jkf_tml_custom_user_links_user_role_admin_page($args = '') {
-	global $theme_my_login;
 	extract($args);
 	
 	if ( empty($role) )
 		$role = get_option('default_role');
-		
-	$links = isset($theme_my_login->options['user_links'][$role]) ? (array) $theme_my_login->options['user_links'][$role] : array();
+	
+	$links = jkf_tml_get_option('user_links', $role);
+	if ( empty($links) )
+		$links = array();
 	?>
 <div id="<?php echo $role; ?>-user-links" class="user-links">
 <div id="ajax-response-<?php echo $role; ?>" class="ajax-response"></div>
@@ -188,7 +187,7 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 	
 	$user_role = isset($_POST['user_role']) ? $_POST['user_role'] : '';
 	
-	//check_ajax_referer( 'add-' . $user_role . '-link' );
+	check_ajax_referer( 'add-' . $user_role . '-link' );
 	
 	$c = 0;
 	if ( isset($_POST['new_user_link'][$user_role]['title']) || isset($_POST['new_user_link'][$user_role]['url']) ) {
