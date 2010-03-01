@@ -1,9 +1,7 @@
 <?php
 
 function jkf_tml_user_mod_load_users_page() {
-	global $theme_my_login;
-	
-    if ( 'admin' == $theme_my_login->options['moderation']['type'] ) {
+    if ( 'admin' == jkf_tml_get_option('moderation', 'type') ) {
 	    add_action('delete_user', 'jkf_tml_user_mod_deny_user');
         add_filter('user_row_actions', 'jkf_tml_user_mod_user_row_actions', 10, 2);
         if ( isset($_GET['action']) && 'approve' == $_GET['action'] ) {
@@ -44,6 +42,8 @@ function jkf_tml_user_mod_deny_user($user_id) {
     $user_role = reset($user->roles);
     if ( 'pending' != $user_role )
         return;
+		
+	do_action('deny_user', $user->ID);
 
     // The blogname option is escaped with esc_html on the way into the database in sanitize_option
     // we want to reverse this for the plain text arena of emails.
@@ -60,40 +60,34 @@ function jkf_tml_user_mod_deny_user($user_id) {
 }
 
 function jkf_tml_user_mod_admin_menu() {
-	global $theme_my_login;
-	
     jkf_tml_add_menu_page(__('Moderation', 'theme-my-login'), __FILE__, 'jkf_tml_user_mod_admin_page');
-	
-	if ( in_array('custom-email/custom-email.php', $theme_my_login->options['active_modules']) ) {
+	if ( jkf_tml_is_module_active('custom-email/custom-email.php') ) {
 		$parent = plugin_basename(TML_MODULE_DIR . '/custom-email/admin/options.php');
+		jkf_tml_add_submenu_page($parent, __('User Activation', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-activation-email.php');
 		jkf_tml_add_submenu_page($parent, __('User Approval', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-approval-email.php');
 		jkf_tml_add_submenu_page($parent, __('User Denial', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-denial-email.php');
 	}	
 }
 
 function jkf_tml_user_mod_admin_page() {
-	global $theme_my_login;
+	$moderation = jkf_tml_get_option('moderation', 'type');
     ?>
 <table class="form-table">
 	<tr valign="top">
 		<th scope="row"><?php _e('User Moderation', 'theme-my-login'); ?></th>
 		<td>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->options['moderation']['type'] ) { echo 'checked="checked"'; } ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_none"><?php _e('None', 'theme-my-login'); ?></label>
 			<br />
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->options['moderation']['type'] ) { echo 'checked="checked"'; } ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_email"><?php _e('E-mail Confirmation', 'theme-my-login'); ?></label>
 			<br />
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->options['moderation']['type'] ) { echo 'checked="checked"'; } ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_admin"><?php _e('Admin Approval', 'theme-my-login'); ?></label>
 		</td>
 	</tr>
 </table>
 <?php
-}
-
-function jkf_tml_user_mod_save_settings($settings) {
-	return $settings;
 }
 
 ?>

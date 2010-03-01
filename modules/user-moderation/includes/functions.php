@@ -64,6 +64,8 @@ function jkf_tml_user_mod_approve_new_user($id, $newpass = false) {
     $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE ID = %d", $id));
     if ( empty( $user ) )
         return false;
+		
+	do_action('approve_user', $user->ID);
 
     $wpdb->update($wpdb->users, array('user_activation_key' => ''), array('ID' => $id) );
 
@@ -125,8 +127,8 @@ function jkf_tml_user_mod_new_user_activation_notification($user_id, $key = '') 
 		$message  = sprintf(__('Thanks for registering at %s! To complete the activation of your account please click the following link: ', 'theme-my-login'), $blogname) . "\r\n\r\n";
 		$message .=  $activation_url . "\r\n";
 		
-		$title = apply_filters('new_user_activation_title', $title, $user_id);
-		$message = apply_filters('new_user_activation_message', $message, $user_id, $activation_url);
+		$title = apply_filters('user_activation_title', $title, $user_id);
+		$message = apply_filters('user_activation_message', $message, $user_id, $activation_url);
 
 		wp_mail($user_email, $title, $message);
 	}
