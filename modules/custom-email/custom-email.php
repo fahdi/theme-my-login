@@ -35,7 +35,7 @@ function jkf_tml_custom_email_activate() {
 		jkf_tml_update_option($current, 'email');
 		
 	unset($current, $default);
-	jkf_tml_save_options();
+	jkf_tml_save_options(false);
 }
 
 function jkf_tml_custom_email_default_settings() {
