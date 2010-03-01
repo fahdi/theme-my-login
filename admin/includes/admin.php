@@ -137,13 +137,12 @@ function jkf_tml_save_settings($settings) {
 }
 
 function jkf_tml_install() {
+	global $theme_my_login;
+	
     $previous_install = get_option('theme_my_login');
     if ( $previous_install ) {
-        if ( version_compare($previous_install['version'], '4.4', '<') ) {
-            global $wp_roles;
-            if ( $wp_roles->is_role('denied') )
-                $wp_roles->remove_role('denied');
-        }
+        if ( version_compare($previous_install['version'], '4.4', '<') )
+            remove_role('denied');
     }
 
     $insert = array(
@@ -163,7 +162,7 @@ function jkf_tml_install() {
 	} else
 		$page_id = wp_insert_post($insert);
 	
-    $options = wp_parse_args($previous_install, jkf_tml_default_settings());
+    $options = wp_parse_args($previous_install, Theme_My_Login::default_options());
         
     $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php');
 	$options['version'] = $plugin_data['Version'];
