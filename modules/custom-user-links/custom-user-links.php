@@ -10,15 +10,15 @@ function jkf_tml_custom_user_links_init() {
 }
 
 function jkf_tml_custom_user_links($links) {
-	global $theme_my_login;
-	
 	if ( !is_user_logged_in() )
 		return $links;
-	
+
 	$current_user = wp_get_current_user();
 	$user_role = reset($current_user->roles);
 	
-	$links = isset($theme_my_login->options['user_links'][$user_role]) ? (array) $theme_my_login->options['user_links'][$user_role] : array();
+	$links = jkf_tml_get_option('user_links', $user_role);
+	if ( !is_array($links) || empty($links) )
+		$links = array();
 	return $links;
 }
 
@@ -37,21 +37,21 @@ function jkf_tml_custom_user_links_admin_init() {
 
 add_action('activate_custom-user-links/custom-user-links.php', 'jkf_tml_custom_user_links_activate');
 function jkf_tml_custom_user_links_activate() {
-	global $theme_my_login;
+	$current = jkf_tml_get_option('user_links');
+	$default = jkf_tml_user_links_default_settings();
 	
-	if ( isset($theme_my_login->options['user_links']) && is_array($theme_my_login->options['user_links']) )
-		$theme_my_login->options['user_links'] = array_merge(jkf_tml_custom_user_links_default_settings(), $theme_my_login->options['user_links']);
+	if ( is_array($current) )
+		jkf_tml_set_option(array_merge($default, $current), 'user_links');
 	else
-		$theme_my_login->options['user_links'] = jkf_tml_custom_user_links_default_settings();
-		
-	update_option('theme_my_login', $theme_my_login->options);
+		jkf_tml_set_option($default, 'user_links');
+	
+	unset($current, $default);
+	jkf_tml_save_options(false);
 }
 
 function jkf_tml_custom_user_links_default_settings() {
 	global $wp_roles;
-	
-	$user_roles = $wp_roles->get_names();
-	foreach ( $user_roles as $role => $label ) {
+	foreach ( $wp_roles->get_names() as $role => $label ) {
 		$options[$role] = array(
             array('title' => __('Dashboard'), 'url' => admin_url()),
             array('title' => __('Profile'), 'url' => admin_url('profile.php'))
