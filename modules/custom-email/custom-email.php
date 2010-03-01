@@ -26,14 +26,16 @@ function jkf_tml_custom_email_admin_init() {
 
 add_action('activate_custom-email/custom-email.php', 'jkf_tml_custom_email_activate');
 function jkf_tml_custom_email_activate() {
-	global $theme_my_login;
+	$current = jkf_tml_get_option('email');
+	$default = jkf_tml_custom_email_default_settings();
 	
-	if ( isset($theme_my_login->options['email']) && is_array($theme_my_login->options['email']) )
-		$theme_my_login->options['email'] = array_merge(jkf_tml_custom_email_default_settings(), $theme_my_login->options['email']);
+	if ( is_array($current) )
+		jkf_tml_update_option(array_merge($default, $current), 'email');
 	else
-		$theme_my_login->options['email'] = jkf_tml_custom_email_default_settings();
+		jkf_tml_update_option($current, 'email');
 		
-	update_option('theme_my_login', $theme_my_login->options);
+	unset($current, $default);
+	jkf_tml_save_options();
 }
 
 function jkf_tml_custom_email_default_settings() {
