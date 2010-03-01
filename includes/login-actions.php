@@ -1,7 +1,5 @@
 <?php
 
-jkf_tml_set_error();
-
 $instance = jkf_tml_get_var('request_instance');
 $action = jkf_tml_get_var('request_action');
 

@@ -80,6 +80,8 @@ function jkf_tml_load() {
 function jkf_tml_template_redirect() {
     if ( is_page(jkf_tml_get_option('page_id')) || jkf_tml_get_option('enable_template_tag') || is_active_widget(false, null, 'theme-my-login') ) {
 	
+		jkf_tml_set_error();
+	
 		do_action('tml_init');
 
         if ( jkf_tml_get_option('enable_css') )
