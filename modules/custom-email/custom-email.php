@@ -11,6 +11,7 @@ if ( function_exists('wp_password_change_notification') )
 
 add_action('tml_init', 'jkf_tml_custom_email_init');
 function jkf_tml_custom_email_init() {
+	require_once( TML_MODULE_DIR . '/custom-email/includes/hook-functions.php' );
 	add_action('retrieve_password', 'jkf_tml_custom_email_retrieve_pass_filters');
 	add_action('password_reset', 'jkf_tml_custom_email_reset_pass_filters', 10, 2);
 	add_action('register_post', 'jkf_tml_custom_email_new_user_filters', 10, 2);
@@ -18,7 +19,7 @@ function jkf_tml_custom_email_init() {
 
 add_action('tml_admin_init', 'jkf_tml_custom_email_admin_init');
 function jkf_tml_custom_email_admin_init() {
-    require_once (TML_MODULE_DIR . '/custom-email/admin/admin.php');
+    require_once( TML_MODULE_DIR . '/custom-email/admin/admin.php' );
 	add_action('tml_admin_menu', 'jkf_tml_custom_email_admin_menu');
 	add_filter('tml_save_settings', 'jkf_tml_custom_email_save_settings');
 }
@@ -56,29 +57,6 @@ function jkf_tml_custom_email_default_settings() {
 			)
 		);
 	return $options;
-}
-
-function jkf_tml_custom_email_retrieve_pass_filters($user_login) {
-	require_once (TML_MODULE_DIR . '/custom-email/includes/hook-functions.php');
-	jkf_tml_custom_email_headers();
-	add_filter('retrieve_password_title', 'jkf_tml_custom_email_retrieve_pass_title', 10, 2);
-	add_filter('retrieve_password_message', 'jkf_tml_custom_email_retrieve_pass_message', 10, 3);
-}
-
-function jkf_tml_custom_email_reset_pass_filters($user, $new_pass) {
-	require_once (TML_MODULE_DIR . '/custom-email/includes/hook-functions.php');
-	jkf_tml_custom_email_headers();
-	add_filter('password_reset_title', 'jkf_tml_custom_email_reset_pass_title', 10, 2);
-	add_filter('password_reset_message', 'jkf_tml_custom_email_reset_pass_message', 10, 3);
-	add_filter('password_change_notification', 'jkf_tml_custom_email_reset_pass_disable');
-}
-
-function jkf_tml_custom_email_new_user_filters($user_id, $user_pass) {
-	require_once (TML_MODULE_DIR . '/custom-email/includes/hook-functions.php');
-	jkf_tml_custom_email_headers();
-	add_filter('new_user_notification_title', 'jkf_tml_custom_email_new_user_title', 10, 2);
-	add_filter('new_user_notification_message', 'jkf_tml_custom_email_new_user_message', 10, 3);
-	add_filter('new_user_admin_notification', 'jkf_tml_custom_email_new_user_admin_disable');
 }
 
 function jkf_tml_custom_email_new_user_notification_override_notice() {
