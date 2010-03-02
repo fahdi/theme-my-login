@@ -30,8 +30,12 @@ function jkf_tml_custom_redirect_login($redirect_to, $request, $user) {
 			$redirect_to = $orig_redirect;
 		elseif ( 'referer' == $redirection['login_type'] )
 			$redirect_to = $http_referer;
-		else
+		else {
 			$redirect_to = $redirection['login_url'];
+			// Allow a few user specific variables
+			$replace = array('%user_id%' => $user->ID, '%user_login%' => $user->user_login);
+			$redirect_to = str_replace(array_keys($replace), array_values($replace), $redirect_to);
+		}
 	}
 	
 	if ( isset($request) && admin_url() != $request )
@@ -57,8 +61,12 @@ function jkf_tml_custom_redirect_logout($redirect_to, $request, $user) {
 			$redirect_to = $orig_redirect;
 		elseif ( 'referer' == $redirection['logout_type'] )
 			$redirect_to = $http_referer;
-		else
+		else {
 			$redirect_to = $redirection['logout_url'];
+			// Allow a few user specific variables
+			$replace = array('%user_id%' => $user->ID, '%user_login%' => $user->user_login);
+			$redirect_to = str_replace(array_keys($replace), array_values($replace), $redirect_to);
+		}
 	}
 	
 	if ( strpos($redirect_to, 'wp-admin') !== false )
