@@ -2,17 +2,20 @@
 
 function jkf_tml_update_option() {
 	global $theme_my_login;
-	return call_user_func_array(array($theme_my_login, 'update_option'), func_get_args());
+	$args = func_get_args();
+	return call_user_func_array(array($theme_my_login, 'update_option'), $args);
 }
 
 function jkf_tml_delete_option() {
 	global $theme_my_login;
-	return call_user_func_array(array($theme_my_login, 'delete_option'), func_get_args());
+	$args = func_get_args();
+	return call_user_func_array(array($theme_my_login, 'delete_option'), $args);
 }
 
 function jkf_tml_get_option() {
 	global $theme_my_login;
-	return call_user_func_array(array($theme_my_login, 'get_option'), func_get_args());
+	$args = func_get_args();
+	return call_user_func_array(array($theme_my_login, 'get_option'), $args);
 }
 
 function jkf_tml_save_options($sanitize = true) {
@@ -32,12 +35,14 @@ function jkf_tml_get_error($code = '') {
 
 function jkf_tml_get_var() {
 	global $theme_my_login;
-	return call_user_func_array(array($theme_my_login, 'get_var'), func_get_args());
+	$args = func_get_args();
+	return call_user_func_array(array($theme_my_login, 'get_var'), $args);
 }
 
 function jkf_tml_set_var() {
 	global $theme_my_login;
-	return call_user_func_array(array($theme_my_login, 'set_var'), func_get_args());
+	$args = func_get_args();
+	return call_user_func_array(array($theme_my_login, 'set_var'), $args);
 }
 
 function jkf_tml_get_new_instance() {
