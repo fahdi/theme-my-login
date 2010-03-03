@@ -4,11 +4,6 @@ Plugin Name: Custom E-mail
 Description: Enabling this module will initialize custom e-mails. You will then have to configure the settings via the "E-mail" tab.
 */
 
-if ( function_exists('wp_new_user_notification') )
-	add_action('admin_notices', 'jkf_tml_custom_email_new_user_notification_override_notice');
-if ( function_exists('wp_password_change_notification') )
-	add_action('admin_notices', 'jkf_tml_custom_email_password_change_notification_override_notice');
-
 add_action('tml_init', 'jkf_tml_custom_email_init');
 function jkf_tml_custom_email_init() {
 	require_once( TML_MODULE_DIR . '/custom-email/includes/hook-functions.php' );
@@ -59,18 +54,6 @@ function jkf_tml_custom_email_default_settings() {
 			)
 		);
 	return $options;
-}
-
-function jkf_tml_custom_email_new_user_notification_override_notice() {
-	$message = __('<strong>WARNING</strong>: The function <em>wp_new_user_notification</em> has already been overriden by another plugin. ', 'theme-my-login');
-	$message .= __('Some features of the <em>Custom E-mails</em> module will not function properly.', 'theme-my-login');
-	echo '<div class="error"><p>' . $message . '</p></div>';
-}
-
-function jkf_tml_custom_email_password_change_notification_override_notice() {
-	$message = __('<strong>WARNING</strong>: The function <em>wp_password_change_notification</em> has already been overriden by another plugin. ', 'theme-my-login');
-	$message .= __('Some features of the <em>Custom E-mails</em> module will not function properly.', 'theme-my-login');
-	echo '<div class="error"><p>' . $message . '</p></div>';
 }
 
 ?>

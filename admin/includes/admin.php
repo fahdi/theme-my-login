@@ -1,5 +1,17 @@
 <?php
 
+function jkf_tml_new_user_notification_override_notice() {
+	$message = __('<strong>WARNING</strong>: The function <em>wp_new_user_notification</em> has already been overridden by another plugin. ', 'theme-my-login');
+	$message .= __('Some features of <em>Theme My Login</em> may not function properly.', 'theme-my-login');
+	echo '<div class="error"><p>' . $message . '</p></div>';
+}
+
+function jkf_tml_password_change_notification_override_notice() {
+	$message = __('<strong>WARNING</strong>: The function <em>wp_password_change_notification</em> has already been overridden by another plugin. ', 'theme-my-login');
+	$message .= __('Some features of <em>Theme My Login</em> may not function properly.', 'theme-my-login');
+	echo '<div class="error"><p>' . $message . '</p></div>';
+}
+
 function jkf_tml_admin_menu() {
 	// Create our settings link in the default WP "Settings" menu
     add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, 'theme-my-login/admin/options.php');

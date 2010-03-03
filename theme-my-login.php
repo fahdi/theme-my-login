@@ -32,9 +32,6 @@ load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
 // Load active modules
 jkf_tml_load_active_modules();
 
-// Load pluggable functions after modules (in case a module needs to override a function)
-require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php' );
-
 // Include admin-functions.php for install/uninstall process
 if ( is_admin() ) {
     require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php' );
@@ -45,7 +42,15 @@ if ( is_admin() ) {
 	
 	add_action('admin_init', 'jkf_tml_admin_init');
     add_action('admin_menu', 'jkf_tml_admin_menu');
+	
+	if ( function_exists('wp_new_user_notification') )
+		add_action('admin_notices', 'jkf_tml_new_user_notification_override_notice');
+	if ( function_exists('wp_password_change_notification') )
+		add_action('admin_notices', 'jkf_tml_password_change_notification_override_notice');
 }
+
+// Load pluggable functions after modules (in case a module needs to override a function)
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php' );
 
 add_action('plugins_loaded', 'jkf_tml_load');
 function jkf_tml_load() {
