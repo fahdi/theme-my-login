@@ -46,7 +46,6 @@ function jkf_tml_custom_user_links_activate() {
 		jkf_tml_update_option($default, 'user_links');
 	
 	unset($current, $default);
-	jkf_tml_save_options();
 }
 
 function jkf_tml_custom_user_links_default_settings() {

@@ -66,10 +66,9 @@ function jkf_tml_user_mod_activate() {
 	if ( is_array($current) )
 		jkf_tml_update_option(array_merge($default, $current), 'moderation');
 	else
-		jkf_tml_update_option($current, 'moderation');
+		jkf_tml_update_option($default, 'moderation');
 
 	unset($current, $default);
-	jkf_tml_save_options();
 }
 
 add_action('deactivate_user-moderation/user-moderation.php', 'jkf_tml_user_mod_deactivate');

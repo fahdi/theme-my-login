@@ -27,10 +27,9 @@ function jkf_tml_custom_email_activate() {
 	if ( is_array($current) )
 		jkf_tml_update_option(array_merge($default, $current), 'email');
 	else
-		jkf_tml_update_option($current, 'email');
+		jkf_tml_update_option($default, 'email');
 		
 	unset($current, $default);
-	jkf_tml_save_options();
 }
 
 function jkf_tml_custom_email_default_settings() {
