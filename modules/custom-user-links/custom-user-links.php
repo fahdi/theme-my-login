@@ -51,6 +51,8 @@ function wdbj_tml_custom_user_links_activate() {
 function wdbj_tml_custom_user_links_default_settings() {
 	global $wp_roles;
 	foreach ( $wp_roles->get_names() as $role => $label ) {
+		if ( 'pending' == $role )
+			continue;
 		$options[$role] = array(
             array('title' => __('Dashboard'), 'url' => admin_url()),
             array('title' => __('Profile'), 'url' => admin_url('profile.php'))
