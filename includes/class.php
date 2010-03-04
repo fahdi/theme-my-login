@@ -21,12 +21,12 @@ class Theme_My_Login {
 			return false;
 			
 		$value = array_shift($args);
-
-		$option = 'options';
+		
+		$option =& $this->options;
 		foreach ( $args as $arg ) {
-			$option .= "['$arg']";
+			$option =& $option[$arg];
 		}
-		eval("\$this->{$option} = \$value;");
+		$option = $value;
 		return true;
 	}
 
