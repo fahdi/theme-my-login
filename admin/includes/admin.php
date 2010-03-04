@@ -1,34 +1,34 @@
 <?php
 
-function jkf_tml_new_user_notification_override_notice() {
+function wdbj_tml_new_user_notification_override_notice() {
 	$message = __('<strong>WARNING</strong>: The function <em>wp_new_user_notification</em> has already been overridden by another plugin. ', 'theme-my-login');
 	$message .= __('Some features of <em>Theme My Login</em> may not function properly.', 'theme-my-login');
 	echo '<div class="error"><p>' . $message . '</p></div>';
 }
 
-function jkf_tml_password_change_notification_override_notice() {
+function wdbj_tml_password_change_notification_override_notice() {
 	$message = __('<strong>WARNING</strong>: The function <em>wp_password_change_notification</em> has already been overridden by another plugin. ', 'theme-my-login');
 	$message .= __('Some features of <em>Theme My Login</em> may not function properly.', 'theme-my-login');
 	echo '<div class="error"><p>' . $message . '</p></div>';
 }
 
-function jkf_tml_admin_menu() {
+function wdbj_tml_admin_menu() {
 	// Create our settings link in the default WP "Settings" menu
     add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, 'theme-my-login/admin/options.php');
 }
 
-function jkf_tml_admin_init() {
+function wdbj_tml_admin_init() {
 	// Register our settings in the global 'whitelist_settings'
-    register_setting('theme_my_login', 'theme_my_login',  'jkf_tml_save_settings');
+    register_setting('theme_my_login', 'theme_my_login',  'wdbj_tml_save_settings');
 	
 	// Hook into the loading of our dedicated settings page
-	add_action('load-theme-my-login/admin/options.php', 'jkf_tml_load_settings_page');
+	add_action('load-theme-my-login/admin/options.php', 'wdbj_tml_load_settings_page');
 	
 	// Create a hook for modules to use
     do_action('tml_admin_init');
 }
 
-function jkf_tml_load_settings_page() {
+function wdbj_tml_load_settings_page() {
 	global $theme_my_login, $user_ID;
 	
 	do_action('tml_settings_page');
@@ -50,7 +50,7 @@ function jkf_tml_load_settings_page() {
 		// If we have modules to activate
 		if ( isset($theme_my_login->options['activate_modules']) ) {
 			// Attempt to activate them
-			$result = jkf_tml_activate_modules($theme_my_login->options['activate_modules']);
+			$result = wdbj_tml_activate_modules($theme_my_login->options['activate_modules']);
 			// Check for WP_Error
 			if ( is_wp_error($result) ) {
 				// Loop through each module in the WP_Error object
@@ -67,13 +67,13 @@ function jkf_tml_load_settings_page() {
 		// If we have modules to deactivate
 		if ( isset($theme_my_login->options['deactivate_modules']) ) {
 			// Deactive them
-			jkf_tml_deactivate_modules($theme_my_login->options['deactivate_modules']);
+			wdbj_tml_deactivate_modules($theme_my_login->options['deactivate_modules']);
 			// Unset the 'deactivate_modules' array
 			unset($theme_my_login->options['deactivate_modules']);
 		}
 		
 		// Update the options in the DB
-		jkf_tml_save_options();
+		wdbj_tml_save_options();
 		
 		// Redirect so that the newly activated modules can be included and newly unactivated modules can not be included
 		$redirect = isset($theme_my_login->options['module_errors']) ? admin_url('options-general.php?page=theme-my-login/admin/options.php') : add_query_arg('updated', 'true');
@@ -83,10 +83,10 @@ function jkf_tml_load_settings_page() {
 	
 	// If we have errors to display, hook into 'admin_notices' to display them
 	if ( isset($theme_my_login->options['module_errors']) && $theme_my_login->options['module_errors'] )
-		add_action('admin_notices', 'jkf_tml_module_error_notice');
+		add_action('admin_notices', 'wdbj_tml_module_error_notice');
 }
 
-function jkf_tml_module_error_notice() {
+function wdbj_tml_module_error_notice() {
 	global $theme_my_login;
 	
 	// If we have errors to display
@@ -100,11 +100,11 @@ function jkf_tml_module_error_notice() {
 		// Unset the error array
 		unset($theme_my_login->options['module_errors']);
 		// Update the options in the DB
-		jkf_tml_save_options();
+		wdbj_tml_save_options();
 	}
 }
 
-function jkf_tml_save_settings($settings) {
+function wdbj_tml_save_settings($settings) {
 	global $theme_my_login;
 	
 	// Assign current settings
@@ -141,7 +141,7 @@ function jkf_tml_save_settings($settings) {
 	return $settings;
 }
 
-function jkf_tml_install() {
+function wdbj_tml_install() {
 	global $theme_my_login;
 	
     $previous_install = get_option('theme_my_login');
@@ -175,7 +175,7 @@ function jkf_tml_install() {
     return update_option('theme_my_login', $options);
 }
 
-function jkf_tml_uninstall() {
+function wdbj_tml_uninstall() {
     $options = get_option('theme_my_login');
 	
 	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -185,7 +185,7 @@ function jkf_tml_uninstall() {
 	foreach ( array_keys($modules) as $module ) {
 		$module = plugin_basename(trim($module));
 
-		$valid = jkf_tml_validate_module($module);
+		$valid = wdbj_tml_validate_module($module);
 		if ( is_wp_error($valid) )
 			continue;
 			

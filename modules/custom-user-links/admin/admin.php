@@ -1,17 +1,17 @@
 <?php
 
-function jkf_tml_custom_user_links_admin_menu() {
+function wdbj_tml_custom_user_links_admin_menu() {
 	global $wp_roles;
 	$parent = plugin_basename(TML_MODULE_DIR . '/custom-user-links/admin/options.php');
-	jkf_tml_add_menu_page(__('User Links', 'theme-my-login'), $parent);
+	wdbj_tml_add_menu_page(__('User Links', 'theme-my-login'), $parent);
 	foreach ( $wp_roles->get_names() as $role => $label ) {
 		if ( 'pending' == $role )
 			continue;
-		jkf_tml_add_submenu_page($parent, translate_user_role($label), '', 'jkf_tml_custom_user_links_user_role_admin_page', array('role' => $role));
+		wdbj_tml_add_submenu_page($parent, translate_user_role($label), '', 'wdbj_tml_custom_user_links_user_role_admin_page', array('role' => $role));
 	}
 }
 
-function jkf_tml_custom_user_links_save_settings($settings) {
+function wdbj_tml_custom_user_links_save_settings($settings) {
 	if ( isset($_POST['user_links']) && is_array($_POST['user_links']) && !empty($_POST['user_links']) ) {
 		foreach ( $_POST['user_links'] as $role => $links ) {
 			foreach ( $links as $key => $link_data ) {
@@ -37,14 +37,14 @@ function jkf_tml_custom_user_links_save_settings($settings) {
 	return $settings;
 }
 
-function jkf_tml_custom_user_links_admin_styles() {
+function wdbj_tml_custom_user_links_admin_styles() {
 	wp_enqueue_style('theme-my-login-custom-user-links-admin', plugins_url('theme-my-login/modules/custom-user-links/admin/admin.css'));
 	wp_enqueue_script('jquery');
 	wp_enqueue_script('wp-lists');
-	add_action('admin_print_footer_scripts', 'jkf_tml_custom_user_links_admin_scripts', 20);
+	add_action('admin_print_footer_scripts', 'wdbj_tml_custom_user_links_admin_scripts', 20);
 }
 
-function jkf_tml_custom_user_links_admin_scripts() {
+function wdbj_tml_custom_user_links_admin_scripts() {
 	global $wp_roles;
 	
 	echo '<script type="text/javascript">' . "\n";
@@ -70,21 +70,21 @@ function jkf_tml_custom_user_links_admin_scripts() {
 	echo '</script>' . "\n";
 }
 
-function jkf_tml_custom_user_links_user_role_admin_page($role) {
-	$links = jkf_tml_get_option('user_links', $role);
+function wdbj_tml_custom_user_links_user_role_admin_page($role) {
+	$links = wdbj_tml_get_option('user_links', $role);
 	if ( empty($links) )
 		$links = array();
 	?>
 <div id="<?php echo $role; ?>-user-links" class="user-links">
 <div id="ajax-response-<?php echo $role; ?>" class="ajax-response"></div>
 <?php
-jkf_tml_custom_user_links_list_links($links, $role);
-jkf_tml_custom_user_links_link_form($role); ?>
+wdbj_tml_custom_user_links_list_links($links, $role);
+wdbj_tml_custom_user_links_link_form($role); ?>
 </div>	
 <?php
 }
 
-function jkf_tml_custom_user_links_list_links($links, $role) {
+function wdbj_tml_custom_user_links_list_links($links, $role) {
 	// Exit if no links
 	if ( ! $links ) {
 		echo '
@@ -116,7 +116,7 @@ function jkf_tml_custom_user_links_list_links($links, $role) {
 <?php
 	foreach ( $links as $key => $link ) {
 		$link['id'] = $key + 1; // Artificially inflate as not to use 0 as a key
-		echo _jkf_tml_custom_user_links_link_row( $link, $role, $count );
+		echo _wdbj_tml_custom_user_links_link_row( $link, $role, $count );
 	}
 ?>
 	</tbody>
@@ -124,7 +124,7 @@ function jkf_tml_custom_user_links_list_links($links, $role) {
 <?php
 }
 
-function _jkf_tml_custom_user_links_link_row( $link, $role, &$count ) {
+function _wdbj_tml_custom_user_links_link_row( $link, $role, &$count ) {
 	$r = '';
 	++ $count;
 	if ( $count % 2 )
@@ -149,7 +149,7 @@ function _jkf_tml_custom_user_links_link_row( $link, $role, &$count ) {
 	return $r;
 }
 
-function jkf_tml_custom_user_links_link_form($role) {
+function wdbj_tml_custom_user_links_link_form($role) {
 ?>
 <p><strong><?php _e( 'Add New link:' ) ?></strong></p>
 <table id="new-<?php echo $role; ?>-link">
@@ -175,7 +175,7 @@ function jkf_tml_custom_user_links_link_form($role) {
 <?php
 }
 
-function jkf_tml_custom_user_links_add_user_link_ajax() {
+function wdbj_tml_custom_user_links_add_user_link_ajax() {
 	
 	$user_role = isset($_POST['user_role']) ? $_POST['user_role'] : '';
 	
@@ -193,22 +193,22 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 			die('1');
 
 		// Get current links
-		$links = jkf_tml_get_option('user_links', $user_role);
+		$links = wdbj_tml_get_option('user_links', $user_role);
 		// Add new link
 		$links[] = array('title' => $clean_title, 'url' => $clean_url);
 		// Reset keys
 		$links = array_values($links);
 		// Update links
-		jkf_tml_update_option($links, 'user_links', $user_role);
+		wdbj_tml_update_option($links, 'user_links', $user_role);
 		// Save links
-		jkf_tml_save_options();
+		wdbj_tml_save_options();
 		
 		$link_row = array_merge( array('id' => count($links)), array_pop($links) );
 
 		$x = new WP_Ajax_Response( array(
 			'what' => 'tml-user-link',
 			'id' => $link_row['id'],
-			'data' => _jkf_tml_custom_user_links_link_row( $link_row, $user_role, $c ),
+			'data' => _wdbj_tml_custom_user_links_link_row( $link_row, $user_role, $c ),
 			'position' => 1,
 			'supplemental' => array('user_role' => $user_role)
 		) );
@@ -218,15 +218,15 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 		$clean_title = wp_kses($user_links[$id]['title'], null);
 		$clean_url = wp_kses($user_links[$id]['url'], null);
 		--$id; // Fix id offset
-		if ( !$link = jkf_tml_get_option( 'user_links', $user_role, $id ) )
+		if ( !$link = wdbj_tml_get_option( 'user_links', $user_role, $id ) )
 			die('0'); // if link doesn't exist
 		if ( !current_user_can( 'manage_options' ) )
 			die('-1');
 		if ( $link['title'] != $clean_title || $link['url'] != $clean_url ) {
 			$link_row = array('title' => $clean_title, 'url' => $clean_url);
-			if ( !$u = jkf_tml_update_option( $link_row, 'user_links', $user_role, $id ) )
+			if ( !$u = wdbj_tml_update_option( $link_row, 'user_links', $user_role, $id ) )
 				die('0'); // We know link exists; we also know it's unchanged (or DB error, in which case there are bigger problems).
-			jkf_tml_save_options();
+			wdbj_tml_save_options();
 		}
 		
 		++$id;
@@ -235,7 +235,7 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 		$x = new WP_Ajax_Response( array(
 			'what' => $user_role . '-link',
 			'id' => $id, 'old_id' => $id,
-			'data' => _jkf_tml_custom_user_links_link_row( $link_row, $user_role, $c ),
+			'data' => _wdbj_tml_custom_user_links_link_row( $link_row, $user_role, $c ),
 			'position' => 0,
 			'supplemental' => array('user_role' => $user_role)
 		) );
@@ -243,7 +243,7 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 	$x->send();
 }
 
-function jkf_tml_custom_user_links_delete_user_link_ajax() {
+function wdbj_tml_custom_user_links_delete_user_link_ajax() {
 	global $id;
 	
 	$user_role = isset($_POST['user_role']) ? $_POST['user_role'] : '';
@@ -253,16 +253,16 @@ function jkf_tml_custom_user_links_delete_user_link_ajax() {
 	--$id; // Fix id offset
 	
 	// Get current links
-	if ( $links = jkf_tml_get_option('user_links', $user_role) ) {
+	if ( $links = wdbj_tml_get_option('user_links', $user_role) ) {
 		if ( isset($links[$id]) ) {
 			// Delete link
 			unset($links[$id]);
 			// Reset keys
 			$links = array_values($links);
 			// Update links
-			jkf_tml_update_option($links, 'user_links', $user_role);
+			wdbj_tml_update_option($links, 'user_links', $user_role);
 			// Save links
-			jkf_tml_save_options();
+			wdbj_tml_save_options();
 		}
 		die('1');
 	}

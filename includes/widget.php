@@ -12,7 +12,7 @@ class Theme_My_Login_Widget extends WP_Widget {
         if ( is_user_logged_in() && !$instance['logged_in_widget'] )
             return;
         $args = array_merge($args, $instance);
-        echo jkf_tml_shortcode($args);
+        echo wdbj_tml_shortcode($args);
     }
 
     function update($new_instance, $old_instance){

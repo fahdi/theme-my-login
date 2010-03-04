@@ -1,56 +1,56 @@
 <?php
 
-function jkf_tml_update_option() {
+function wdbj_tml_update_option() {
 	global $theme_my_login;
 	$args = func_get_args();
 	return call_user_func_array(array($theme_my_login, 'update_option'), $args);
 }
 
-function jkf_tml_delete_option() {
+function wdbj_tml_delete_option() {
 	global $theme_my_login;
 	$args = func_get_args();
 	return call_user_func_array(array($theme_my_login, 'delete_option'), $args);
 }
 
-function jkf_tml_get_option() {
+function wdbj_tml_get_option() {
 	global $theme_my_login;
 	$args = func_get_args();
 	return call_user_func_array(array($theme_my_login, 'get_option'), $args);
 }
 
-function jkf_tml_save_options() {
+function wdbj_tml_save_options() {
 	global $theme_my_login;
 	return $theme_my_login->save_options();
 }
 
-function jkf_tml_set_error($code = '', $error = '', $data = '') {
+function wdbj_tml_set_error($code = '', $error = '', $data = '') {
 	global $theme_my_login;
 	return $theme_my_login->set_error($code, $error, $data);
 }
 
-function jkf_tml_get_error($code = '') {
+function wdbj_tml_get_error($code = '') {
 	global $theme_my_login;
 	return $theme_my_login->get_error($code);
 }
 
-function jkf_tml_get_var() {
+function wdbj_tml_get_var() {
 	global $theme_my_login;
 	$args = func_get_args();
 	return call_user_func_array(array($theme_my_login, 'get_var'), $args);
 }
 
-function jkf_tml_set_var() {
+function wdbj_tml_set_var() {
 	global $theme_my_login;
 	$args = func_get_args();
 	return call_user_func_array(array($theme_my_login, 'set_var'), $args);
 }
 
-function jkf_tml_get_new_instance() {
+function wdbj_tml_get_new_instance() {
 	global $theme_my_login;
 	return $theme_my_login->get_new_instance();
 }
 
-function jkf_tml_get_current_url($query = '') {
+function wdbj_tml_get_current_url($query = '') {
     $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
     $self =  $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
@@ -64,7 +64,7 @@ function jkf_tml_get_current_url($query = '') {
     return $url;
 }
 
-function jkf_tml_get_css($file = 'theme-my-login.css') {
+function wdbj_tml_get_css($file = 'theme-my-login.css') {
     if ( file_exists(get_stylesheet_directory() . "/$file") )
         $css_file = get_stylesheet_directory_uri() . "/$file";
     elseif ( file_exists(get_template_directory() . "/$file") )
@@ -75,13 +75,13 @@ function jkf_tml_get_css($file = 'theme-my-login.css') {
     wp_enqueue_style('theme-my-login', $css_file);
 }
 
-function jkf_tml_is_module_active($module) {
-	$modules = apply_filters('tml_active_modules', jkf_tml_get_option('active_modules'));
+function wdbj_tml_is_module_active($module) {
+	$modules = apply_filters('tml_active_modules', wdbj_tml_get_option('active_modules'));
     return in_array($module, $modules);
 }
 
-function jkf_tml_load_active_modules() {
-	$modules = apply_filters('tml_active_modules', jkf_tml_get_option('active_modules'));
+function wdbj_tml_load_active_modules() {
+	$modules = apply_filters('tml_active_modules', wdbj_tml_get_option('active_modules'));
 	if ( is_array($modules) ) {
 		foreach ( $modules as $module ) {
 			// check the $plugin filename

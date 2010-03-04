@@ -1,19 +1,19 @@
 <?php
 
-function jkf_tml_custom_redirect_admin_menu() {
+function wdbj_tml_custom_redirect_admin_menu() {
 	global $wp_roles;
 	$parent = plugin_basename(TML_MODULE_DIR . '/custom-redirection/admin/options.php');
-	jkf_tml_add_menu_page(__('Redirection', 'theme-my-login'), $parent);
+	wdbj_tml_add_menu_page(__('Redirection', 'theme-my-login'), $parent);
 	$user_roles = $wp_roles->get_names();
 	foreach ( $user_roles as $role => $label ) {
 		if ( 'pending' == $role )
 			continue;
-		jkf_tml_add_submenu_page($parent, translate_user_role($label), '', 'jkf_tml_custom_redirect_user_role_admin_page', array('role' => $role));
+		wdbj_tml_add_submenu_page($parent, translate_user_role($label), '', 'wdbj_tml_custom_redirect_user_role_admin_page', array('role' => $role));
 	}
 }
 
-function jkf_tml_custom_redirect_user_role_admin_page($role) {
-	$redirection = jkf_tml_get_option('redirection', $role);
+function wdbj_tml_custom_redirect_user_role_admin_page($role) {
+	$redirection = wdbj_tml_get_option('redirection', $role);
 	?>
 <table class="form-table">
     <tr valign="top">

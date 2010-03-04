@@ -8,7 +8,7 @@
  * @param bool $newpass Whether or not to assign a new password
  * @return bool|WP_Error
  */
-function jkf_tml_user_mod_activate_new_user($key, $login, $newpass = false) {
+function wdbj_tml_user_mod_activate_new_user($key, $login, $newpass = false) {
     global $wpdb;
 
     $key = preg_replace('/[^a-z0-9]/i', '', $key);
@@ -56,7 +56,7 @@ function jkf_tml_user_mod_activate_new_user($key, $login, $newpass = false) {
  * @param bool $newpass Whether or not to assign a new password
  * @return bool Returns false if not a valid user
  */
-function jkf_tml_user_mod_approve_new_user($id, $newpass = false) {
+function wdbj_tml_user_mod_approve_new_user($id, $newpass = false) {
     global $wpdb;
 
     $id = (int) $id;
@@ -99,7 +99,7 @@ function jkf_tml_user_mod_approve_new_user($id, $newpass = false) {
     return true;
 }
 
-function jkf_tml_user_mod_new_user_activation_notification($user_id, $key = '') {
+function wdbj_tml_user_mod_new_user_activation_notification($user_id, $key = '') {
 	global $wpdb;
 	
 	if ( apply_filters('new_user_activation_notification', true) ) {	
@@ -134,7 +134,7 @@ function jkf_tml_user_mod_new_user_activation_notification($user_id, $key = '') 
 	}
 }
 
-function jkf_tml_user_mod_new_user_approval_admin_notification($user_id) {
+function wdbj_tml_user_mod_new_user_approval_admin_notification($user_id) {
 	if ( apply_filters('new_user_approval_admin_notification', true) ) {	
 	
 		$user = new WP_User($user_id);

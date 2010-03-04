@@ -30,67 +30,67 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php' );
 load_plugin_textdomain('theme-my-login', '', 'theme-my-login/language');
 
 // Load active modules
-jkf_tml_load_active_modules();
+wdbj_tml_load_active_modules();
 
 // Include admin-functions.php for install/uninstall process
 if ( is_admin() ) {
     require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/admin.php' );
     require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/includes/module.php' );
 	
-    register_activation_hook(__FILE__, 'jkf_tml_install');
-    register_uninstall_hook(__FILE__, 'jkf_tml_uninstall');
+    register_activation_hook(__FILE__, 'wdbj_tml_install');
+    register_uninstall_hook(__FILE__, 'wdbj_tml_uninstall');
 	
-	add_action('admin_init', 'jkf_tml_admin_init');
-    add_action('admin_menu', 'jkf_tml_admin_menu');
+	add_action('admin_init', 'wdbj_tml_admin_init');
+    add_action('admin_menu', 'wdbj_tml_admin_menu');
 	
 	if ( function_exists('wp_new_user_notification') )
-		add_action('admin_notices', 'jkf_tml_new_user_notification_override_notice');
+		add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
 	if ( function_exists('wp_password_change_notification') )
-		add_action('admin_notices', 'jkf_tml_password_change_notification_override_notice');
+		add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
 }
 
 // Load pluggable functions after modules (in case a module needs to override a function)
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php' );
 
-add_action('plugins_loaded', 'jkf_tml_load');
-function jkf_tml_load() {
+add_action('plugins_loaded', 'wdbj_tml_load');
+function wdbj_tml_load() {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php' );
 	
     do_action('tml_load');
 
-    add_action('template_redirect', 'jkf_tml_template_redirect');
+    add_action('template_redirect', 'wdbj_tml_template_redirect');
     
-    add_filter('the_title', 'jkf_tml_the_title', 10, 2);
-    add_filter('single_post_title', 'jkf_tml_single_post_title');
+    add_filter('the_title', 'wdbj_tml_the_title', 10, 2);
+    add_filter('single_post_title', 'wdbj_tml_single_post_title');
 	
-	if ( jkf_tml_get_option('rewrite_links') )
-		add_filter('site_url', 'jkf_tml_site_url', 10, 3);
+	if ( wdbj_tml_get_option('rewrite_links') )
+		add_filter('site_url', 'wdbj_tml_site_url', 10, 3);
 	
-	if ( jkf_tml_get_option('show_page') )
-		add_filter('get_pages', 'jkf_tml_get_pages', 10, 2);
+	if ( wdbj_tml_get_option('show_page') )
+		add_filter('get_pages', 'wdbj_tml_get_pages', 10, 2);
 	else
-		add_filter('wp_list_pages_excludes', 'jkf_tml_list_pages_excludes');
+		add_filter('wp_list_pages_excludes', 'wdbj_tml_list_pages_excludes');
     
-	add_shortcode('theme-my-login', 'jkf_tml_shortcode');
+	add_shortcode('theme-my-login', 'wdbj_tml_shortcode');
     
-    if ( jkf_tml_get_option('enable_widget') ) {
+    if ( wdbj_tml_get_option('enable_widget') ) {
         require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php' );
-		add_action('widgets_init', 'jkf_tml_register_widget');
-		function jkf_tml_register_widget() {
+		add_action('widgets_init', 'wdbj_tml_register_widget');
+		function wdbj_tml_register_widget() {
 			return register_widget("Theme_My_Login_Widget");
 		}
     }
 }
 
-function jkf_tml_template_redirect() {
-    if ( is_page(jkf_tml_get_option('page_id')) || jkf_tml_get_option('enable_template_tag') || is_active_widget(false, null, 'theme-my-login') ) {
+function wdbj_tml_template_redirect() {
+    if ( is_page(wdbj_tml_get_option('page_id')) || wdbj_tml_get_option('enable_template_tag') || is_active_widget(false, null, 'theme-my-login') ) {
 	
-		jkf_tml_set_error();
+		wdbj_tml_set_error();
 	
 		do_action('tml_init');
 
-        if ( jkf_tml_get_option('enable_css') )
-            jkf_tml_get_css();
+        if ( wdbj_tml_get_option('enable_css') )
+            wdbj_tml_get_css();
             
         require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/login-actions.php' );
     }
@@ -98,10 +98,10 @@ function jkf_tml_template_redirect() {
 
 // Template tag
 function theme_my_login($args = '') {
-	if ( ! jkf_tml_get_option('enable_template_tag') )
+	if ( ! wdbj_tml_get_option('enable_template_tag') )
 		return false;		
 	$args = wp_parse_args($args);
-	echo jkf_tml_shortcode($args);
+	echo wdbj_tml_shortcode($args);
 }
 
 ?>

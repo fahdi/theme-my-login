@@ -1,10 +1,10 @@
 <?php
 
 // Default menu
-jkf_tml_add_menu_page(__('General', 'theme-my-login'), 'theme-my-login/admin/options.php');
-jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Basic', 'theme-my-login'), 'theme-my-login/admin/options-basic.php');
-jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Modules', 'theme-my-login'), 'theme-my-login/admin/options-modules.php');
-jkf_tml_add_submenu_page('theme-my-login/admin/options.php', __('Optimization', 'theme-my-login'), 'theme-my-login/admin/options-optimization.php');
+wdbj_tml_add_menu_page(__('General', 'theme-my-login'), 'theme-my-login/admin/options.php');
+wdbj_tml_add_submenu_page('theme-my-login/admin/options.php', __('Basic', 'theme-my-login'), 'theme-my-login/admin/options-basic.php');
+wdbj_tml_add_submenu_page('theme-my-login/admin/options.php', __('Modules', 'theme-my-login'), 'theme-my-login/admin/options-modules.php');
+wdbj_tml_add_submenu_page('theme-my-login/admin/options.php', __('Optimization', 'theme-my-login'), 'theme-my-login/admin/options-optimization.php');
 
 // Allow plugins to add to menu
 do_action('tml_admin_menu');
@@ -29,22 +29,22 @@ do_action('tml_admin_menu');
     <div id="tml-container">
 
         <ul>
-            <?php foreach ( $jkf_tml_admin_menu as $tml_menu ) {
+            <?php foreach ( $wdbj_tml_admin_menu as $tml_menu ) {
                 echo '<li><a href="#' . $tml_menu[2] . '">' . $tml_menu[0] . '</a></li>' . "\n";
             }?>
         </ul>
         
         
-        <?php foreach ( $jkf_tml_admin_menu as $tml_menu ) {
+        <?php foreach ( $wdbj_tml_admin_menu as $tml_menu ) {
             echo '<div id="' . $tml_menu[2] . '">' . "\n";
-            if ( isset($jkf_tml_admin_submenu[$tml_menu[1]]) ) {
+            if ( isset($wdbj_tml_admin_submenu[$tml_menu[1]]) ) {
                 echo '<ul>' . "\n";
-                foreach ( $jkf_tml_admin_submenu[$tml_menu[1]] as $tml_submenu ) {
+                foreach ( $wdbj_tml_admin_submenu[$tml_menu[1]] as $tml_submenu ) {
                     echo '<li><a href="#' . $tml_submenu[2] . '">' . $tml_submenu[0] . '</a></li>' . "\n";
                 }
                 echo '</ul>' . "\n";
                 
-                foreach ( $jkf_tml_admin_submenu[$tml_menu[1]] as $tml_submenu ) {
+                foreach ( $wdbj_tml_admin_submenu[$tml_menu[1]] as $tml_submenu ) {
                     echo '<div id="' . $tml_submenu[2] . '">' . "\n";
 					if ( has_action($tml_submenu[2]) ) {
 						do_action('load-' . $tml_submenu[2]);

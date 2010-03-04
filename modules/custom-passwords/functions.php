@@ -1,6 +1,6 @@
 <?php
 
-function jkf_tml_custom_pass_validate_reset_key($key, $login) {
+function wdbj_tml_custom_pass_validate_reset_key($key, $login) {
     global $wpdb;
 
     $key = preg_replace('/[^a-z0-9]/i', '', $key);
@@ -18,13 +18,13 @@ function jkf_tml_custom_pass_validate_reset_key($key, $login) {
 	return $user;
 }
 
-function jkf_tml_custom_pass_reset_pass() {
+function wdbj_tml_custom_pass_reset_pass() {
 	
-	$user = jkf_tml_custom_pass_validate_reset_key($_REQUEST['key'], $_REQUEST['login']);
+	$user = wdbj_tml_custom_pass_validate_reset_key($_REQUEST['key'], $_REQUEST['login']);
 	if ( is_wp_error($user) )
 		return $user;
 	
-	$errors = jkf_tml_custom_pass_errors(new WP_Error());
+	$errors = wdbj_tml_custom_pass_errors(new WP_Error());
 	if ( $errors->get_error_code() )
 		return $errors;
 	

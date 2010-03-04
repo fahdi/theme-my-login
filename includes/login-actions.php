@@ -1,7 +1,7 @@
 <?php
 
-$instance = jkf_tml_get_var('request_instance');
-$action = jkf_tml_get_var('request_action');
+$instance = wdbj_tml_get_var('request_instance');
+$action = wdbj_tml_get_var('request_action');
 
 //Set a cookie now to see if they are supported by the browser.
 setcookie(TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN);
@@ -38,14 +38,14 @@ switch ( $action ) {
             if ( !is_wp_error($errors) ) {
                 $redirect_to = site_url('wp-login.php?checkemail=confirm');
                 if ( 'tml-page' != $instance )
-                    $redirect_to = jkf_tml_get_current_url('checkemail=confirm&instance=' . $instance);
+                    $redirect_to = wdbj_tml_get_current_url('checkemail=confirm&instance=' . $instance);
                 wp_redirect($redirect_to);
                 exit();
-            } else jkf_tml_set_error($errors);
+            } else wdbj_tml_set_error($errors);
         }
 
         if ( isset($_REQUEST['error']) && 'invalidkey' == $_REQUEST['error'] )
-			jkf_tml_set_error('invalidkey', __('Sorry, that key does not appear to be valid.'));
+			wdbj_tml_set_error('invalidkey', __('Sorry, that key does not appear to be valid.'));
         break;
     case 'resetpass' :
     case 'rp' :
@@ -55,21 +55,21 @@ switch ( $action ) {
         if ( !is_wp_error($errors) ) {
             $redirect_to = site_url('wp-login.php?checkemail=newpass');
             if ( 'tml-page' != $instance )
-                $redirect_to = jkf_tml_get_current_url('checkemail=newpass&instance=' . $instance);
+                $redirect_to = wdbj_tml_get_current_url('checkemail=newpass&instance=' . $instance);
 			$redirect_to = apply_filters('resetpass_redirect', $redirect_to);
             wp_redirect($redirect_to);
             exit();
-        } else jkf_tml_set_error($errors);
+        } else wdbj_tml_set_error($errors);
 
         $redirect_to = site_url('wp-login.php?action=lostpassword&error=invalidkey');
         if ( 'tml-page' != $instance )
-            $redirect_to = jkf_tml_get_current_url('action=lostpassword&error=invalidkey&instance=' . $instance);
+            $redirect_to = wdbj_tml_get_current_url('action=lostpassword&error=invalidkey&instance=' . $instance);
         wp_redirect($redirect_to);
         exit();
         break;
     case 'register' :
         if ( !get_option('users_can_register') ) {
-            wp_redirect(jkf_tml_get_current_url('registration=disabled'));
+            wp_redirect(wdbj_tml_get_current_url('registration=disabled'));
             exit();
         }
 
@@ -87,11 +87,11 @@ switch ( $action ) {
             if ( !is_wp_error($errors) ) {
 				$redirect_to = site_url('wp-login.php?checkemail=registered');
 				if ( 'tml-page' != $instance )
-					$redirect_to = jkf_tml_get_current_url('checkemail=registered&instance=' . $instance);
+					$redirect_to = wdbj_tml_get_current_url('checkemail=registered&instance=' . $instance);
 				$redirect_to = apply_filters('register_redirect', $redirect_to);
                 wp_redirect($redirect_to);
                 exit();
-            } else jkf_tml_set_error($errors);
+            } else wdbj_tml_set_error($errors);
         }
         break;
     case 'login' :
@@ -125,7 +125,7 @@ switch ( $action ) {
 
         $redirect_to = apply_filters('login_redirect', $redirect_to, isset($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '', $user);
 		
-		jkf_tml_set_var($redirect_to, 'redirect_to');
+		wdbj_tml_set_var($redirect_to, 'redirect_to');
 
         if ( !is_wp_error($user) ) {
             // If the user can't edit posts, send them to their profile.
@@ -135,7 +135,7 @@ switch ( $action ) {
             exit();
         }
 
-        jkf_tml_set_error($user);
+        wdbj_tml_set_error($user);
         break;
 }
 

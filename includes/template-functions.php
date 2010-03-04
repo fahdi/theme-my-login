@@ -1,17 +1,17 @@
 <?php
 
-function jkf_tml_display() {
-	$current_instance = jkf_tml_get_var('current_instance');
-	$request_instance = jkf_tml_get_var('request_instance');
+function wdbj_tml_display() {
+	$current_instance = wdbj_tml_get_var('current_instance');
+	$request_instance = wdbj_tml_get_var('request_instance');
 
     $action = isset($current_instance['default_action']) ? $current_instance['default_action'] : 'login';
     if ( $request_instance == $current_instance['instance_id'] )
-        $action = jkf_tml_get_var('request_action');
+        $action = wdbj_tml_get_var('request_action');
 
     ob_start();
     echo $current_instance['before_widget'];
     if ( $current_instance['show_title'] )
-        echo $current_instance['before_title'] . jkf_tml_get_title($action) . $current_instance['after_title'] . "\n";
+        echo $current_instance['before_title'] . wdbj_tml_get_title($action) . $current_instance['after_title'] . "\n";
     if ( is_user_logged_in() ) {
         $user = wp_get_current_user();
         $user_role = reset($user->roles);
@@ -36,14 +36,14 @@ function jkf_tml_display() {
 			switch ( $action ) {
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					jkf_tml_get_lost_password_form();
+					wdbj_tml_get_lost_password_form();
 					break;
 				case 'register' :
-					jkf_tml_get_register_form();
+					wdbj_tml_get_register_form();
 					break;
 				case 'login' :
 				default :
-					jkf_tml_get_login_form();
+					wdbj_tml_get_login_form();
                 break;
 			}
         }
@@ -55,7 +55,7 @@ function jkf_tml_display() {
     return $contents;
 }
 
-function jkf_tml_get_display_options() {
+function wdbj_tml_get_display_options() {
     $display_options = array(
         'instance_id' => 'tml-page',
         'is_active' => 0,
@@ -77,7 +77,7 @@ function jkf_tml_get_display_options() {
     return apply_filters('tml_display_options', $display_options);
 }
 
-function jkf_tml_get_title($action = '') {
+function wdbj_tml_get_title($action = '') {
     if ( empty($action) )
         $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
 
@@ -103,11 +103,11 @@ function jkf_tml_get_title($action = '') {
     return apply_filters('tml_title', $title, $action);
 }
 
-function jkf_tml_get_header($message = '') {
+function wdbj_tml_get_header($message = '') {
     global $error;
 	
-	$wp_error = jkf_tml_get_var('errors');
-	$current_instance = jkf_tml_get_var('current_instance');
+	$wp_error = wdbj_tml_get_var('errors');
+	$current_instance = wdbj_tml_get_var('current_instance');
 
     if ( empty($wp_error) )
         $wp_error = new WP_Error();
@@ -145,62 +145,62 @@ function jkf_tml_get_header($message = '') {
     }
 }
 
-function jkf_tml_get_footer($login_link = true, $register_link = true, $password_link = true) {
-	$current_instance = jkf_tml_get_var('current_instance');
+function wdbj_tml_get_footer($login_link = true, $register_link = true, $password_link = true) {
+	$current_instance = wdbj_tml_get_var('current_instance');
     
     echo '<ul class="tml-links">' . "\n";
     if ( $login_link && $current_instance['show_log_link'] ) {
-        $url = jkf_tml_get_current_url('instance=' . $current_instance['instance_id']);
-        echo '<li><a href="' . esc_url($url) . '">' . jkf_tml_get_title('login') . '</a></li>' . "\n";
+        $url = wdbj_tml_get_current_url('instance=' . $current_instance['instance_id']);
+        echo '<li><a href="' . esc_url($url) . '">' . wdbj_tml_get_title('login') . '</a></li>' . "\n";
     }
     if ( $register_link && $current_instance['show_reg_link'] && get_option('users_can_register') ) {
-        $url = ( $current_instance['register_widget'] ) ? jkf_tml_get_current_url('action=register&instance=' . $current_instance['instance_id']) : site_url('wp-login.php?action=register', 'login');
-        echo '<li><a href="' . esc_url($url) . '">' . jkf_tml_get_title('register') . '</a></li>' . "\n";
+        $url = ( $current_instance['register_widget'] ) ? wdbj_tml_get_current_url('action=register&instance=' . $current_instance['instance_id']) : site_url('wp-login.php?action=register', 'login');
+        echo '<li><a href="' . esc_url($url) . '">' . wdbj_tml_get_title('register') . '</a></li>' . "\n";
     }
     if ( $password_link && $current_instance['show_pass_link'] ) {
-        $url = ( $current_instance['lost_pass_widget'] ) ? jkf_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id']) : site_url('wp-login.php?action=lostpassword', 'login');
-        echo '<li><a href="' . esc_url($url) . '">' . jkf_tml_get_title('lostpassword') . '</a></li>' . "\n";
+        $url = ( $current_instance['lost_pass_widget'] ) ? wdbj_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id']) : site_url('wp-login.php?action=lostpassword', 'login');
+        echo '<li><a href="' . esc_url($url) . '">' . wdbj_tml_get_title('lostpassword') . '</a></li>' . "\n";
     }
     echo '</ul>' . "\n";
     echo '</div>' . "\n";
 }
 
-function jkf_tml_get_login_form() {
-	$current_instance = jkf_tml_get_var('current_instance');
+function wdbj_tml_get_login_form() {
+	$current_instance = wdbj_tml_get_var('current_instance');
 	
     // Clear errors if loggedout is set.
     if ( !empty($_GET['loggedout']) )
-        jkf_tml_set_error();
+        wdbj_tml_set_error();
 
     // If cookies are disabled we can't log in even with a valid user+pass
     if ( isset($_POST['testcookie']) && empty($_COOKIE[TEST_COOKIE]) )
-        jkf_tml_set_error('test_cookie', __("<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress.", 'theme-my-login'));
+        wdbj_tml_set_error('test_cookie', __("<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress.", 'theme-my-login'));
 
     // Some parts of this script use the main login form to display a message
     if ( $current_instance['is_active'] ) {
         if        ( isset($_GET['loggedout']) && TRUE == $_GET['loggedout'] )
-            jkf_tml_set_error('loggedout', __('You are now logged out.'), 'message');
+            wdbj_tml_set_error('loggedout', __('You are now logged out.'), 'message');
         elseif    ( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )
-            jkf_tml_set_error('registerdisabled', __('User registration is currently not allowed.'));
+            wdbj_tml_set_error('registerdisabled', __('User registration is currently not allowed.'));
         elseif    ( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )
-            jkf_tml_set_error('confirm', __('Check your e-mail for the confirmation link.'), 'message');
+            wdbj_tml_set_error('confirm', __('Check your e-mail for the confirmation link.'), 'message');
         elseif    ( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )
-            jkf_tml_set_error('newpass', __('Check your e-mail for your new password.'), 'message');
+            wdbj_tml_set_error('newpass', __('Check your e-mail for your new password.'), 'message');
         elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )
-            jkf_tml_set_error('registered', __('Registration complete. Please check your e-mail.'), 'message');
+            wdbj_tml_set_error('registered', __('Registration complete. Please check your e-mail.'), 'message');
     }
 
-    jkf_tml_get_header();
+    wdbj_tml_get_header();
 
     if ( isset($_POST['log']) )
-        $user_login = ( jkf_tml_get_error('incorrect_password') || jkf_tml_get_error('empty_password') ) ? attribute_escape(stripslashes($_POST['log'])) : '';
+        $user_login = ( wdbj_tml_get_error('incorrect_password') || wdbj_tml_get_error('empty_password') ) ? attribute_escape(stripslashes($_POST['log'])) : '';
 
     $user_login = ( $current_instance['is_active'] && isset($user_login) ) ? $user_login : '';
 
     if ( ( ! ( isset($_GET['checkemail']) && $current_instance['is_active'] ) ) ||
 		( ! ( in_array($_GET['checkemail'], array('confirm', 'newpass') ) && $current_instance['is_active'] ) ) ) {
         ?>
-        <form name="loginform" id="loginform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(jkf_tml_get_current_url('action=login&instance=' . $current_instance['instance_id'])); ?>" method="post">
+        <form name="loginform" id="loginform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=login&instance=' . $current_instance['instance_id'])); ?>" method="post">
             <p>
                 <label for="log-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username') ?></label>
                 <input type="text" name="log" id="log-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
@@ -213,7 +213,7 @@ function jkf_tml_get_login_form() {
             <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $current_instance['instance_id']; ?>" value="forever" /> <label for="rememberme-<?php echo $current_instance['instance_id']; ?>"><?php _e('Remember Me'); ?></label></p>
             <p class="submit">
                 <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Log In'); ?>" />
-                <input type="hidden" name="redirect_to" value="<?php echo esc_attr(jkf_tml_get_var('redirect_to')); ?>" />
+                <input type="hidden" name="redirect_to" value="<?php echo esc_attr(wdbj_tml_get_var('redirect_to')); ?>" />
                 <input type="hidden" name="testcookie" value="1" />
             </p>
         </form>
@@ -223,20 +223,20 @@ function jkf_tml_get_login_form() {
         $login_link = true;
     else
         $login_link = false;
-    jkf_tml_get_footer($login_link, true, true);
+    wdbj_tml_get_footer($login_link, true, true);
 }
 
-function jkf_tml_get_register_form() {
-    $current_instance = jkf_tml_get_var('current_instance');
+function wdbj_tml_get_register_form() {
+    $current_instance = wdbj_tml_get_var('current_instance');
     
     $user_login = isset($_POST['user_login']) ? $_POST['user_login'] : '';
     $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : '';
 
     $message = apply_filters('register_message', __('A password will be e-mailed to you.'));
 
-    jkf_tml_get_header($message);
+    wdbj_tml_get_header($message);
     ?>
-    <form name="registerform" id="registerform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(jkf_tml_get_current_url('action=register&instance=' . $current_instance['instance_id'])); ?>" method="post">
+    <form name="registerform" id="registerform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=register&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
             <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username') ?></label>
             <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
@@ -251,21 +251,21 @@ function jkf_tml_get_register_form() {
         </p>
     </form>
     <?php
-    jkf_tml_get_footer(true, false, true);
+    wdbj_tml_get_footer(true, false, true);
 }
 
-function jkf_tml_get_lost_password_form() {
-    $current_instance = jkf_tml_get_var('current_instance');
+function wdbj_tml_get_lost_password_form() {
+    $current_instance = wdbj_tml_get_var('current_instance');
     
     do_action('lost_password', $current_instance['instance_id']);
     
     $message = apply_filters('lostpassword_message', __('Please enter your username or e-mail address. You will receive a new password via e-mail.'));
     
-    jkf_tml_get_header($message);
+    wdbj_tml_get_header($message);
     
     $user_login = isset($_POST['user_login']) ? stripslashes($_POST['user_login']) : '';
     ?>
-    <form name="lostpasswordform" id="lostpasswordform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(jkf_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id'])); ?>" method="post">
+    <form name="lostpasswordform" id="lostpasswordform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
             <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username or E-mail:') ?></label>
             <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
@@ -276,7 +276,7 @@ function jkf_tml_get_lost_password_form() {
         </p>
     </form>
     <?php
-    jkf_tml_get_footer(true, true, false);
+    wdbj_tml_get_footer(true, true, false);
 }
 
 ?>

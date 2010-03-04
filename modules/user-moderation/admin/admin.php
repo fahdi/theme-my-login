@@ -1,9 +1,9 @@
 <?php
 
-function jkf_tml_user_mod_load_users_page() {
-    if ( 'admin' == jkf_tml_get_option('moderation', 'type') ) {
-	    add_action('delete_user', 'jkf_tml_user_mod_deny_user');
-        add_filter('user_row_actions', 'jkf_tml_user_mod_user_row_actions', 10, 2);
+function wdbj_tml_user_mod_load_users_page() {
+    if ( 'admin' == wdbj_tml_get_option('moderation', 'type') ) {
+	    add_action('delete_user', 'wdbj_tml_user_mod_deny_user');
+        add_filter('user_row_actions', 'wdbj_tml_user_mod_user_row_actions', 10, 2);
         if ( isset($_GET['action']) && 'approve' == $_GET['action'] ) {
             check_admin_referer('approve-user');
 
@@ -16,8 +16,8 @@ function jkf_tml_user_mod_load_users_page() {
 
             include_once( TML_MODULE_DIR. '/user-moderation/includes/functions.php' );
 
-            $newpass = ( jkf_tml_is_module_active('custom-passwords/custom-passwords.php') ) ? 0 : 1;
-            if ( ! jkf_tml_user_mod_approve_new_user($user, $newpass) )
+            $newpass = ( wdbj_tml_is_module_active('custom-passwords/custom-passwords.php') ) ? 0 : 1;
+            if ( ! wdbj_tml_user_mod_approve_new_user($user, $newpass) )
                 wp_die(__('You can&#8217;t edit that user.', 'theme-my-login'));
 
             add_action('admin_notices', create_function('', "echo '<div id=\"message\" class=\"updated fade\"><p>' . __('User approved.', 'theme-my-login') . '</p></div>';"));
@@ -25,7 +25,7 @@ function jkf_tml_user_mod_load_users_page() {
     }
 }
 
-function jkf_tml_user_mod_user_row_actions($actions, $user_object) {
+function wdbj_tml_user_mod_user_row_actions($actions, $user_object) {
     $current_user = wp_get_current_user();
     $user_role = reset($user_object->roles);
     if ( $current_user->ID != $user_object->ID ) {
@@ -37,7 +37,7 @@ function jkf_tml_user_mod_user_row_actions($actions, $user_object) {
     return $actions;
 }
 
-function jkf_tml_user_mod_deny_user($user_id) {
+function wdbj_tml_user_mod_deny_user($user_id) {
     $user = new WP_User($user_id);
     $user_role = reset($user->roles);
     if ( 'pending' != $user_role )
@@ -59,18 +59,18 @@ function jkf_tml_user_mod_deny_user($user_id) {
           die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
 }
 
-function jkf_tml_user_mod_admin_menu() {
-    jkf_tml_add_menu_page(__('Moderation', 'theme-my-login'), __FILE__, 'jkf_tml_user_mod_admin_page');
-	if ( jkf_tml_is_module_active('custom-email/custom-email.php') ) {
+function wdbj_tml_user_mod_admin_menu() {
+    wdbj_tml_add_menu_page(__('Moderation', 'theme-my-login'), __FILE__, 'wdbj_tml_user_mod_admin_page');
+	if ( wdbj_tml_is_module_active('custom-email/custom-email.php') ) {
 		$parent = plugin_basename(TML_MODULE_DIR . '/custom-email/admin/options.php');
-		jkf_tml_add_submenu_page($parent, __('User Activation', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-activation-email.php');
-		jkf_tml_add_submenu_page($parent, __('User Approval', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-approval-email.php');
-		jkf_tml_add_submenu_page($parent, __('User Denial', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-denial-email.php');
+		wdbj_tml_add_submenu_page($parent, __('User Activation', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-activation-email.php');
+		wdbj_tml_add_submenu_page($parent, __('User Approval', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-approval-email.php');
+		wdbj_tml_add_submenu_page($parent, __('User Denial', 'theme-my-login'), TML_MODULE_DIR . '/user-moderation/admin/options-user-denial-email.php');
 	}	
 }
 
-function jkf_tml_user_mod_admin_page() {
-	$moderation = jkf_tml_get_option('moderation', 'type');
+function wdbj_tml_user_mod_admin_page() {
+	$moderation = wdbj_tml_get_option('moderation', 'type');
     ?>
 <table class="form-table">
 	<tr valign="top">
