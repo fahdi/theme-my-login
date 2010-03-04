@@ -18,9 +18,9 @@ function jkf_tml_get_option() {
 	return call_user_func_array(array($theme_my_login, 'get_option'), $args);
 }
 
-function jkf_tml_save_options($sanitize = true) {
+function jkf_tml_save_options() {
 	global $theme_my_login;
-	return $theme_my_login->save_options($sanitize);
+	return $theme_my_login->save_options();
 }
 
 function jkf_tml_set_error($code = '', $error = '', $data = '') {

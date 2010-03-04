@@ -58,12 +58,7 @@ class Theme_My_Login {
 	}
 
 	function save_options($sanitize = true) {
-		if ( !$sanitize )
-			define('TML_EDITING_MODULES', true);
-		$result = update_option('theme_my_login', $this->options);
-		if ( !$sanitize )
-			define('TML_EDITING_MODULES', false);
-		return $result;
+		return update_option('theme_my_login', $this->options);
 	}
 
 	function set_error($code = '', $error = '', $data = '') {

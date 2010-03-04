@@ -29,7 +29,7 @@ function jkf_tml_custom_redirection_activate() {
 		jkf_tml_update_option($default, 'redirection');
 	
 	unset($current, $default);
-	jkf_tml_save_options(false);
+	jkf_tml_save_options();
 }
 
 function jkf_tml_custom_redirect_default_settings() {

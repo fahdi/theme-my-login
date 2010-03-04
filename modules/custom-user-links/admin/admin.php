@@ -201,7 +201,7 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 		// Update links
 		jkf_tml_update_option($links, 'user_links', $user_role);
 		// Save links
-		jkf_tml_save_options(false);
+		jkf_tml_save_options();
 		
 		$link_row = array_merge( array('id' => count($links)), array_pop($links) );
 
@@ -226,7 +226,7 @@ function jkf_tml_custom_user_links_add_user_link_ajax() {
 			$link_row = array('title' => $clean_title, 'url' => $clean_url);
 			if ( !$u = jkf_tml_update_option( $link_row, 'user_links', $user_role, $id ) )
 				die('0'); // We know link exists; we also know it's unchanged (or DB error, in which case there are bigger problems).
-			jkf_tml_save_options(false);
+			jkf_tml_save_options();
 		}
 		
 		++$id;
@@ -262,7 +262,7 @@ function jkf_tml_custom_user_links_delete_user_link_ajax() {
 			// Update links
 			jkf_tml_update_option($links, 'user_links', $user_role);
 			// Save links
-			jkf_tml_save_options(false);
+			jkf_tml_save_options();
 		}
 		die('1');
 	}

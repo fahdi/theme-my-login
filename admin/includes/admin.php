@@ -46,10 +46,7 @@ function jkf_tml_load_settings_page() {
         wp_enqueue_style('theme-my-login-colors-fresh', plugins_url('/theme-my-login/admin/css/colors-fresh.css'));
 	
 	// Handle activation/deactivation of modules
-	if ( isset($theme_my_login->options['activate_modules']) || isset($theme_my_login->options['deactivate_modules']) ) {		
-		// Set a constant so we know that we're editing the modules in the 'update_option' sanatization function
-		define('TML_EDITING_MODULES', true);
-		
+	if ( isset($theme_my_login->options['activate_modules']) || isset($theme_my_login->options['deactivate_modules']) ) {
 		// If we have modules to activate
 		if ( isset($theme_my_login->options['activate_modules']) ) {
 			// Attempt to activate them
@@ -75,10 +72,8 @@ function jkf_tml_load_settings_page() {
 			unset($theme_my_login->options['deactivate_modules']);
 		}
 		
-		// Unset the constant
-		define('TML_EDITING_MODULES', false);
 		// Update the options in the DB
-		update_option('theme_my_login', $theme_my_login->options);
+		jkf_tml_save_options();
 		
 		// Redirect so that the newly activated modules can be included and newly unactivated modules can not be included
 		$redirect = isset($theme_my_login->options['module_errors']) ? admin_url('options-general.php?page=theme-my-login/admin/options.php') : add_query_arg('updated', 'true');
@@ -105,15 +100,12 @@ function jkf_tml_module_error_notice() {
 		// Unset the error array
 		unset($theme_my_login->options['module_errors']);
 		// Update the options in the DB
-		update_option('theme_my_login', $theme_my_login->options);
+		jkf_tml_save_options();
 	}
 }
 
 function jkf_tml_save_settings($settings) {
 	global $theme_my_login;
-	
-	if ( defined('TML_EDITING_MODULES') )
-		return $settings;
 	
 	// Assign current settings
 	$current = $theme_my_login->options;

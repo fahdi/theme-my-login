@@ -30,8 +30,8 @@ function jkf_tml_custom_email_save_settings($settings) {
 	$settings['email']['mail_from'] = sanitize_email($settings['email']['mail_from']);
 	$settings['email']['mail_content_type'] = preg_replace('/[^a-zA-Z0-9_-]/', '', $settings['email']['mail_content_type']);
 	
-	$settings['email']['new_user']['admin_disable'] = absint($settings['email']['new_user']['admin_disable']);
-	$settings['email']['reset_pass']['admin_disable'] = absint($settings['email']['reset_pass']['admin_disable']);
+	$settings['email']['new_user']['admin_disable'] = isset($settings['email']['new_user']['admin_disable']) ? 1 : 0;
+	$settings['email']['reset_pass']['admin_disable'] = isset($settings['email']['reset_pass']['admin_disable']) ? 1 : 0;
 	return $settings;
 }
 
