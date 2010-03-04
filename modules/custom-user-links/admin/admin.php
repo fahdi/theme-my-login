@@ -70,12 +70,7 @@ function jkf_tml_custom_user_links_admin_scripts() {
 	echo '</script>' . "\n";
 }
 
-function jkf_tml_custom_user_links_user_role_admin_page($args = '') {
-	extract($args);
-	
-	if ( empty($role) )
-		$role = get_option('default_role');
-	
+function jkf_tml_custom_user_links_user_role_admin_page($role) {
 	$links = jkf_tml_get_option('user_links', $role);
 	if ( empty($links) )
 		$links = array();

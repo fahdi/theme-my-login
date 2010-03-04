@@ -12,8 +12,7 @@ function jkf_tml_custom_redirect_admin_menu() {
 	}
 }
 
-function jkf_tml_custom_redirect_user_role_admin_page($args = '') {
-	extract($args);
+function jkf_tml_custom_redirect_user_role_admin_page($role) {
 	$redirection = jkf_tml_get_option('redirection', $role);
 	?>
 <table class="form-table">

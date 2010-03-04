@@ -87,7 +87,7 @@ function jkf_tml_load_settings_page() {
 	}
 	
 	// If we have errors to display, hook into 'admin_notices' to display them
-	if ( $theme_my_login->options['module_errors'] )
+	if ( isset($theme_my_login->options['module_errors']) && $theme_my_login->options['module_errors'] )
 		add_action('admin_notices', 'jkf_tml_module_error_notice');
 }
 

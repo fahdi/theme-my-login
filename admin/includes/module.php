@@ -82,7 +82,7 @@ function jkf_tml_validate_module($module) {
 	return 0;
 }
 
-function jkf_tml_add_menu_page($menu_title, $file, $function = '', $function_args = '', $position = NULL) {
+function jkf_tml_add_menu_page($menu_title, $file, $function = '', $function_args = array(), $position = NULL) {
     global $jkf_tml_admin_menu;
 
     $file = plugin_basename($file);
@@ -102,13 +102,13 @@ function jkf_tml_add_menu_page($menu_title, $file, $function = '', $function_arg
     return $hookname;
 }
 
-function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = '', $function_args = '') {
+function jkf_tml_add_submenu_page($parent, $menu_title, $file, $function = array(), $function_args = '') {
 	global $jkf_tml_admin_submenu;
 	
 	$file = plugin_basename($file);
 	$parent = plugin_basename($parent);
 	
-	$count = is_array($jkf_tml_admin_submenu[$parent]) ? count($jkf_tml_admin_submenu[$parent]) + 1 : 1;
+	$count = ( isset($jkf_tml_admin_submenu[$parent]) && is_array($jkf_tml_admin_submenu[$parent]) ) ? count($jkf_tml_admin_submenu[$parent]) + 1 : 1;
 	
 	$hookname = get_plugin_page_hookname($parent . '-' . $count, '');
 	$hookname = preg_replace('|[^a-zA-Z0-9_:.]|', '-', $hookname);
