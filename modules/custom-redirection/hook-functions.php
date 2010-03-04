@@ -1,7 +1,8 @@
 <?php
 
 function jkf_tml_custom_redirect_login_form($instance_id) {
-	wp_original_referer_field(true, 'previous');
+	$jump_back_to = 'tml-page' == $instance_id ? 'previous' : 'current';
+	wp_original_referer_field(true, $jump_back_to);
 	echo "\n";
 }
 
@@ -19,8 +20,6 @@ function jkf_tml_custom_redirect_login($redirect_to, $request, $user) {
 
 	// Determine the correct referer
 	$http_referer = isset($_REQUEST['_wp_original_http_referer']) ? $_REQUEST['_wp_original_http_referer'] : $_SERVER['HTTP_REFERER'];
-	if ( strpos($http_referer, get_option('home')) === false )
-		$http_referer = get_option('home');
 	
 	// User is logged in
 	if ( is_object($user) && !is_wp_error($user) ) {
@@ -51,8 +50,6 @@ function jkf_tml_custom_redirect_logout($redirect_to, $request, $user) {
 	// Determine the correct referer
 	$http_referer = isset($_REQUEST['_wp_original_http_referer']) ? $_REQUEST['_wp_original_http_referer'] : $_SERVER['HTTP_REFERER'];
 	$http_referer = remove_query_arg(array('instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce'), $http_referer);
-	if ( strpos($http_referer, get_option('home')) === false )
-		$http_referer = get_option('home');	
 
 	if ( is_object($user) && !is_wp_error($user) ) {
 		$user_role = reset($user->roles);
