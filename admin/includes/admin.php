@@ -115,7 +115,7 @@ function jkf_tml_save_settings($settings) {
 	$settings['show_page'] = ( isset($settings['show_page']) && $settings['show_page'] ) ? 1 : 0;
 	$settings['rewrite_links'] = ( isset($settings['rewrite_links']) && $settings['rewrite_links'] ) ? 1 : 0;
 	$settings['enable_css'] = ( isset($settings['enable_css']) && $settings['enable_css'] ) ? 1 : 0;
-	$settings['enable_template_tag'] = ( isset($settings['enable_template_tag']) && $settings['template_tag'] ) ? 1 : 0;
+	$settings['enable_template_tag'] = ( isset($settings['enable_template_tag']) && $settings['enable_template_tag'] ) ? 1 : 0;
 	$settings['enable_widget'] = ( isset($settings['enable_widget']) && $settings['enable_widget'] ) ? 1 : 0;
 	if ( isset($_POST['tml_editing_modules']) ) {
 		$settings['modules'] = isset($settings['modules']) ? (array) $settings['modules'] : array();
