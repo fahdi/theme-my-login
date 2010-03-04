@@ -51,7 +51,7 @@ class Theme_My_Login {
 		$option = $this->options;
 		foreach ( $args as $arg ) {
 			if ( !isset($option[$arg]) )
-				return $option;
+				return false;
 			$option = $option[$arg];
 		}
 		return $option;
