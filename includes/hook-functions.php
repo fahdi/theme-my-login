@@ -1,9 +1,10 @@
 <?php
 
 function wdbj_tml_the_title($title, $post_id = '') {
-    if ( is_admin() )
+	$tml_page = wdbj_tml_get_option('page_id');
+    if ( is_admin() && ! is_page($tml_page) )
         return $title;
-    if ( wdbj_tml_get_option('page_id') == $post_id ) {
+    if ( $tml_page == $post_id ) {
         require_once (WP_PLUGIN_DIR . '/theme-my-login/includes/template-functions.php');
         $action = ( 'tml-page' == wdbj_tml_get_var('request_instance') ) ? wdbj_tml_get_var('request_action') : 'login';
         $title = wdbj_tml_get_title($action);
@@ -48,7 +49,8 @@ function wdbj_tml_page_link($link, $id) {
 }
 
 function wdbj_tml_get_pages($pages, $attributes) {
-	if ( is_admin() )
+	$tml_page = wdbj_tml_get_option('page_id');
+	if ( is_admin() && ! is_page($tml_page) )
 		return $pages;
 	
 	// Change to logout link if user is logged in
@@ -57,7 +59,7 @@ function wdbj_tml_get_pages($pages, $attributes) {
 	// It sucks there's not really a better way to do this
 	if ( wdbj_tml_get_option('show_page') ) {
 		foreach ( $pages as $page ) {
-			if ( $page->ID == wdbj_tml_get_option('page_id') ) {
+			if ( $page->ID == $tml_page ) {
 				if ( is_user_logged_in() )
 					$page->post_title = __('Log out');
 				else
