@@ -57,7 +57,7 @@ class Theme_My_Login {
 		return $option;
 	}
 
-	function save_options($sanitize = true) {
+	function save_options() {
 		return update_option('theme_my_login', $this->options);
 	}
 
