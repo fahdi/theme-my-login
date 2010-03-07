@@ -77,7 +77,7 @@ function wdbj_tml_custom_pass_reset_form($instance_id) {
 }
 
 function wdbj_tml_custom_pass_register_redirect($redirect_to) {
-	$request_instace = wdbj_tml_get_var('request_instance');
+	$request_instance = wdbj_tml_get_var('request_instance');
 	$redirect_to = site_url('wp-login.php?registration=complete');
 	if ( 'tml-page' != $request_instance )
 		$redirect_to = wdbj_tml_get_current_url('registration=complete&instance=' . $request_instance);	
@@ -85,7 +85,7 @@ function wdbj_tml_custom_pass_register_redirect($redirect_to) {
 }
 
 function wdbj_tml_custom_pass_resetpass_redirect($redirect_to) {
-	$request_instace = wdbj_tml_get_var('request_instance');
+	$request_instance = wdbj_tml_get_var('request_instance');
 	$redirect_to = site_url('wp-login.php?resetpass=complete');
 	if ( 'tml-page' != $request_instance )
 		$redirect_to = wdbj_tml_get_current_url('resetpass=complete&instance=' . $request_instance);	
