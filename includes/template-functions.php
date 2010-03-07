@@ -10,12 +10,12 @@ function wdbj_tml_display() {
 
     ob_start();
     echo $current_instance['before_widget'];
-	echo '<div class="login" id="' . $current_instance['instance_id'] . '">' . "\n";
     if ( $current_instance['show_title'] )
         echo $current_instance['before_title'] . wdbj_tml_get_title($action) . $current_instance['after_title'] . "\n";
     if ( is_user_logged_in() ) {
         $user = wp_get_current_user();
         $user_role = reset($user->roles);
+		echo '<div class="login" id="' . $current_instance['instance_id'] . '">' . "\n";
         if ( $current_instance['show_gravatar'] )
             echo '<div class="tml-user-avatar">' . get_avatar( $user->ID, $current_instance['gravatar_size'] ) . '</div>' . "\n";
         echo '<ul class="tml-user-links">' . "\n";
