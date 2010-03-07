@@ -25,7 +25,7 @@ function wdbj_tml_user_mod_init() {
 }
 
 add_action('template_redirect', 'wdbj_tml_user_mod_login_message', 100);
-function wdbj_tml_user_mod_login_message($message) {
+function wdbj_tml_user_mod_login_message() {
 	if ( isset($_GET['pending']) && 'activation' == $_GET['pending'] )
 		wdbj_tml_set_error('pending_activation', __('Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided.', 'theme-my-login'), 'message');
 	elseif ( isset($_GET['pending']) && 'approval' == $_GET['pending'] )
