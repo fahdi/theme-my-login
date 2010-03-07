@@ -10,6 +10,7 @@ function wdbj_tml_display() {
 
     ob_start();
     echo $current_instance['before_widget'];
+	echo '<div class="login" id="' . $current_instance['instance_id'] . '">' . "\n";
     if ( $current_instance['show_title'] )
         echo $current_instance['before_title'] . wdbj_tml_get_title($action) . $current_instance['after_title'] . "\n";
     if ( is_user_logged_in() ) {
@@ -29,6 +30,7 @@ function wdbj_tml_display() {
             }
         }
 		echo '<li><a href="' . wp_logout_url() . '">' . __('Log out') . '</a></li>' . "\n";
+		echo "</ul>\n</div>\n";
     } else {
 		if ( has_filter('login_form_' . $action) ) {
 			do_action('login_form_' . $action, $current_instance['instance_id']);
