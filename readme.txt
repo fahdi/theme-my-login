@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0-alpha
-Stable tag: 4.4
+Stable tag: 5.0
 
 Themes the WordPress login pages according to your theme.
 
@@ -13,8 +13,11 @@ Themes the WordPress login pages according to your theme.
 
 This plugin themes the WordPress login, registration and forgot password pages according to your current theme. It replaces the wp-login.php file by using a page template from your theme. Also includes a widget for sidebar login.
 
+= NOTICE =
+Upgrading to version 5.0 will drop all previous options!
+
 = Features =
-* Your registration, log in and password recovery pages will all match the rest of your website
+* Your registration, log in, and password recovery pages will all match the rest of your website
 * Includes a customizeable widget to login anywhere from your blog
 * Redirect users upon log in and log out based upon their role
 * Show gravatar to users who are logged in
@@ -22,7 +25,8 @@ This plugin themes the WordPress login, registration and forgot password pages a
 * Customize user emails for registration and/or password recovery
 * Send user emails in HTML format
 * Allow users to set their own password upon registration
-* Optionally require users to be approved or confirm e-mail address upon registration
+* Require users to be approved or confirm e-mail address upon registration
+* Theme user profiles
 
 
 == Installation ==
@@ -48,6 +52,7 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 * When using custom passwords, allow users to set their own password upon reset
 * When using custom redirection, specify redirection type per user role/per link type
 * New ajax interface for user links admin
+* Theme My Profile now merged into module
 
 = 4.4 =
 * Added the option to require new registrations to confirm e-mail address
