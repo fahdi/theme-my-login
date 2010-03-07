@@ -4,15 +4,18 @@ Plugin Name: Themed Profiles
 Description: Enabling this module will initialize and enable themed profiles. There are no other settings for this module.
 */
 
+add_action('tml_load', 'wdbj_tml_themed_profiles_load');
+function wdbj_tml_themed_profiles_load() {
+	include_once( TML_MODULE_DIR . '/themed-profiles/includes/hook-functions.php' );
+	add_filter('site_url', 'wdbj_tml_themed_profiles_site_url', 10, 3);
+	add_filter('admin_url', 'wdbj_tml_themed_profiles_site_url', 10, 2);
+}
+
 add_action('tml_init', 'wdbj_tml_themed_profiles_init');
 function wdbj_tml_themed_profiles_init() {
 	global $current_user, $action, $redirect, $profile, $user_id, $wp_http_referer;
 	
-	include_once( TML_MODULE_DIR . '/themed-profiles/includes/hook-functions.php' );
 	include_once( TML_MODULE_DIR . '/themed-profiles/includes/template-functions.php' );
-	
-	add_filter('site_url', 'wdbj_tml_themed_profiles_site_url', 10, 3);
-	add_filter('admin_url', 'wdbj_tml_themed_profiles_site_url', 10, 2);
 	
 	if ( ! ( is_user_logged_in() && is_page(wdbj_tml_get_option('page_id')) ) )
 		return;
@@ -53,18 +56,9 @@ function wdbj_tml_themed_profiles_init() {
 	}
 }
 
-add_action('admin_init', 'wdbj_tml_themed_profiles_admin_init');
-function wdbj_tml_themed_profiles_admin_init() {
-	include_once( TML_MODULE_DIR . '/themed-profiles/includes/hook-functions.php' );
-	include_once( TML_MODULE_DIR . '/themed-profiles/includes/template-functions.php' );
-	
-	add_filter('site_url', 'wdbj_tml_themed_profiles_site_url', 10, 3);
-	add_filter('admin_url', 'wdbj_tml_themed_profiles_site_url', 10, 2);
-}
-
 add_filter('the_content', 'wdbj_tml_themed_profiles_content');
 function wdbj_tml_themed_profiles_content($content) {
-	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() )
+	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() && 'profile' == wdbj_tml_get_var('request_action') )
 		return wdbj_tml_themed_profiles_display();
 	return $content;
 }
