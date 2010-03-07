@@ -95,16 +95,19 @@ function wdbj_tml_custom_pass_resetpass_redirect($redirect_to) {
 function wdbj_tml_custom_pass_login_message($message) {
 	if ( isset($_GET['action']) && 'register' == $_GET['action'] )
 		$message = '';
-	elseif ( isset($_GET['registration']) && 'complete' == $_GET['registration'] )
-		$message = __('Registration complete. You may now log in.', 'theme-my-login');
-	elseif ( isset($_GET['resetpass']) && 'complete' == $_GET['resetpass'] )
-		$message = __('Your password has been saved. You may now log in.', 'theme-my-login');
 	return $message;
 }
 
 function wdbj_tml_custom_pass_lostpassword_message($message) {
 	$message = __('Please enter your username or e-mail address. You will recieve an e-mail with a link to reset your password.', 'theme-my-login');
 	return $message;
+}
+
+function wdbj_tml_custom_pass_messages() {
+	if ( isset($_GET['registration']) && 'complete' == $_GET['registration'] )
+		wdbj_tml_set_error('registration_complete', __('Registration complete. You may now log in.', 'theme-my-login'), 'message');
+	elseif ( isset($_GET['resetpass']) && 'complete' == $_GET['resetpass'] )
+		wdbj_tml_set_error('password_saved', __('Your password has been saved. You may now log in.', 'theme-my-login'), 'message');
 }
 
 ?>

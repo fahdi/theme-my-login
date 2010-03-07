@@ -20,6 +20,7 @@ function wdbj_tml_custom_pass_init() {
 	// Template messages
 	add_filter('login_message', 'wdbj_tml_custom_pass_login_message');
 	add_filter('lostpassword_message', 'wdbj_tml_custom_pass_lostpassword_message');
+	add_action('template_redirect', 'wdbj_tml_custom_pass_messages', 100);
 	// Redirection
 	add_filter('register_redirect', 'wdbj_tml_custom_pass_register_redirect');
 	add_filter('resetpass_redirect', 'wdbj_tml_custom_pass_resetpass_redirect');
