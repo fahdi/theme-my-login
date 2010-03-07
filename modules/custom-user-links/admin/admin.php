@@ -12,6 +12,8 @@ function wdbj_tml_custom_user_links_admin_menu() {
 }
 
 function wdbj_tml_custom_user_links_save_settings($settings) {
+	if ( defined('DOING_AJAX') && DOING_AJAX )
+		return $settings;
 	if ( isset($_POST['user_links']) && is_array($_POST['user_links']) && !empty($_POST['user_links']) ) {
 		foreach ( $_POST['user_links'] as $role => $links ) {
 			foreach ( $links as $key => $link_data ) {
@@ -33,6 +35,10 @@ function wdbj_tml_custom_user_links_save_settings($settings) {
 				$settings['user_links'][$role][] = array('title' => $clean_title, 'url' => $clean_url);
 		}
 		unset($role, $link_data, $clean_title, $clean_url);
+	}
+	// Reset link keys
+	foreach ( $settings['user_links'] as $role => $links ) {
+		$settings['user_links'][$role] = array_values($links);
 	}
 	return $settings;
 }
@@ -196,14 +202,12 @@ function wdbj_tml_custom_user_links_add_user_link_ajax() {
 		$links = wdbj_tml_get_option('user_links', $user_role);
 		// Add new link
 		$links[] = array('title' => $clean_title, 'url' => $clean_url);
-		// Reset keys
-		$links = array_values($links);
 		// Update links
 		wdbj_tml_update_option($links, 'user_links', $user_role);
 		// Save links
 		wdbj_tml_save_options();
 		
-		$link_row = array_merge( array('id' => count($links)), array_pop($links) );
+		$link_row = array_merge( array('id' => max(array_keys($links)) + 1), array_pop($links) );
 
 		$x = new WP_Ajax_Response( array(
 			'what' => 'tml-user-link',
@@ -257,8 +261,6 @@ function wdbj_tml_custom_user_links_delete_user_link_ajax() {
 		if ( isset($links[$id]) ) {
 			// Delete link
 			unset($links[$id]);
-			// Reset keys
-			$links = array_values($links);
 			// Update links
 			wdbj_tml_update_option($links, 'user_links', $user_role);
 			// Save links
