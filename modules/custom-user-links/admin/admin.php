@@ -68,6 +68,9 @@ function wdbj_tml_custom_user_links_admin_scripts() {
 		delBefore: function( s ) {
 			s.data.user_role = '<?php echo $role; ?>';
 			return s;
+		},
+		delAfter: function( r, s ) {
+			$('#' + s.element).remove();
 		}
 	} );
 <?php
