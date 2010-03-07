@@ -20,6 +20,9 @@ if ( !defined('TML_MODULE_DIR') )
 // Require global configuration class file
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class.php' );
 
+// Declare $theme_my_login as global for use within functions
+global $theme_my_login;
+
 // Initialize global configuration class
 $theme_my_login = new Theme_My_Login();
 
