@@ -43,6 +43,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.0.2 =
+* Fix improper function call for PHP4 style constructor in class
+
 = 5.0.1 =
 * Only display function override notices on TML settings page
 * Typecast arrays as arrays (Fixes invalid datatype notices)

@@ -132,7 +132,7 @@ class Theme_My_Login {
 	}
 	
 	function Theme_My_Login() {
-		self::__construct;
+		self::__construct();
 	}
 }
 endif;
