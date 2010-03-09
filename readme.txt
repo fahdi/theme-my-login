@@ -18,7 +18,7 @@ Upgrading to version 5.0 will drop all previous options!
 
 = Features =
 * Your registration, log in, and password recovery pages will all match the rest of your website
-* Includes a customizeable widget to login anywhere from your blog
+* Includes a customizable widget to login anywhere from your blog
 * Redirect users upon log in and log out based upon their role
 * Show gravatar to users who are logged in
 * Assign custom links to users who are logged in based on their role
@@ -44,7 +44,7 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 == Changelog ==
 
 = 5.0.3 -
-* Fix an improper fix for PHP4 style consturctor in class
+* Fix an improper fix for PHP4 style constructor in class
 * Only display function override notices on TML settings page properly
 
 = 5.0.2 =
