@@ -54,8 +54,8 @@ function wdbj_tml_custom_user_links_default_settings() {
 		if ( 'pending' == $role )
 			continue;
 		$options[$role] = array(
-            array('title' => __('Dashboard'), 'url' => admin_url()),
-            array('title' => __('Profile'), 'url' => admin_url('profile.php'))
+            array('title' => __('Dashboard', 'theme-my-login'), 'url' => admin_url()),
+            array('title' => __('Profile', 'theme-my-login'), 'url' => admin_url('profile.php'))
 		);
 	}
     return $options;

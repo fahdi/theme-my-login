@@ -160,7 +160,7 @@ function _wdbj_tml_custom_user_links_link_row( $link, $role, &$count ) {
 
 function wdbj_tml_custom_user_links_link_form($role) {
 ?>
-<p><strong><?php _e( 'Add New link:' ) ?></strong></p>
+<p><strong><?php _e( 'Add New link:' , 'theme-my-login') ?></strong></p>
 <table id="new-<?php echo $role; ?>-link">
 <thead>
 <tr>

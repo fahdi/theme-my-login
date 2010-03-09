@@ -3,7 +3,7 @@
         <th scope="row"><label for="theme_my_login_page_id"><?php _e('Page ID', 'theme-my-login'); ?></label></th>
         <td>
             <input name="theme_my_login[page_id]" type="text" id="theme_my_login_page_id" value="<?php echo (int) $theme_my_login->options['page_id']; ?>" class="small-text" />
-            <p class="description"><?php _e('This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".'); ?></p>
+            <p class="description"><?php _e('This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', 'theme-my-login'); ?></p>
         </td>
     </tr>
     <tr valign="top">

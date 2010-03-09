@@ -65,20 +65,20 @@ function wdbj_tml_activate_modules($modules) {
 	}
 
 	if ( !empty($errors) )
-		return new WP_Error('plugins_invalid', __('One of the plugins is invalid.'), $errors);
+		return new WP_Error('plugins_invalid', __('One of the plugins is invalid.', 'theme-my-login'), $errors);
 
 	return true;
 }
 
 function wdbj_tml_validate_module($module) {
 	if ( validate_file($module) )
-		return new WP_Error('plugin_invalid', __('Invalid plugin path.'));
+		return new WP_Error('plugin_invalid', __('Invalid plugin path.', 'theme-my-login'));
 	if ( ! file_exists(TML_MODULE_DIR . '/' . $module) )
-		return new WP_Error('plugin_not_found', __('Plugin file does not exist.'));
+		return new WP_Error('plugin_not_found', __('Plugin file does not exist.', 'theme-my-login'));
 
 	$installed_modules = get_plugins('/theme-my-login/modules');
 	if ( ! isset($installed_modules[$module]) )
-		return new WP_Error('no_plugin_header', __('The plugin does not have a valid header.'));
+		return new WP_Error('no_plugin_header', __('The plugin does not have a valid header.', 'theme-my-login'));
 	return 0;
 }
 

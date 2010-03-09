@@ -23,7 +23,7 @@ do_action('tml_admin_menu');
     <?php settings_fields('theme_my_login'); ?>
 	
 	<div style="display:none;">
-		<p><input type="submit" name="submit" value="<?php esc_attr_e('Save Changes') ?>" /></p>
+		<p><input type="submit" name="submit" value="<?php esc_attr_e('Save Changes', 'theme-my-login') ?>" /></p>
 	</div>
     
     <div id="tml-container">
@@ -81,7 +81,7 @@ do_action('tml_admin_menu');
         
     </div>
     
-    <p><input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" /></p>
+    <p><input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e('Save Changes', 'theme-my-login') ?>" /></p>
     </form>
     
 </div>

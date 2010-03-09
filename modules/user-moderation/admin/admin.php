@@ -56,7 +56,7 @@ function wdbj_tml_user_mod_deny_user($user_id) {
     $message = apply_filters('user_denial_message', $message, $user_id);
 
     if ( $message && !wp_mail($user->user_email, $title, $message) )
-          die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
+          die('<p>' . __('The e-mail could not be sent.', 'theme-my-login') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...', 'theme-my-login') . '</p>');
 }
 
 function wdbj_tml_user_mod_admin_menu() {

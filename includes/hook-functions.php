@@ -61,9 +61,9 @@ function wdbj_tml_get_pages($pages, $attributes) {
 		foreach ( $pages as $page ) {
 			if ( $page->ID == $tml_page ) {
 				if ( is_user_logged_in() )
-					$page->post_title = __('Log out');
+					$page->post_title = __('Log Out', 'theme-my-login');
 				else
-					$page->post_title = __('Log In');
+					$page->post_title = __('Log In', 'theme-my-login');
 			}
 		}
 	}

@@ -100,7 +100,7 @@ function wdbj_tml_module_error_notice() {
 		// Display them
 		echo '<div class="error">';
 		foreach ( $theme_my_login->options['module_errors'] as $module => $error ) {
-			echo "<p><strong>ERROR: The module \"$module\" could not be activated ($error).</strong></p>";
+			echo '<p><strong>' . sprintf(__('ERROR: The module "$module" could not be activated (%s).', 'theme-my-login'), $error) . '</strong></p>';
 		}
 		echo '</div>';
 		// Unset the error array

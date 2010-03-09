@@ -42,7 +42,7 @@ function wdbj_tml_themed_profiles_init() {
 		check_admin_referer('update-user_' . $current_user->ID);
 
 		if ( !current_user_can('edit_user', $current_user->ID) )
-			wp_die(__('You do not have permission to edit this user.'));
+			wp_die(__('You do not have permission to edit this user.', 'theme-my-login'));
 
 		do_action('personal_options_update', $current_user->ID);
 

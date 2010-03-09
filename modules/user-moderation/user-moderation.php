@@ -38,7 +38,7 @@ function wdbj_tml_user_mod_login_message() {
 	}
 
 	if ( wdbj_tml_get_var('request_instance') == wdbj_tml_get_var('current_instance', 'instance_id') && isset($_GET['activation']) && 'invalidkey' == $_GET['activation'] )
-		wdbj_tml_set_error('invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.'));
+		wdbj_tml_set_error('invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', 'theme-my-login'));
 }
 
 add_action('tml_admin_init', 'wdbj_tml_user_mod_admin_init');

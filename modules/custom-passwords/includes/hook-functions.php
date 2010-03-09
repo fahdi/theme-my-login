@@ -11,11 +11,11 @@ function wdbj_tml_custom_pass_form($instance_id) {
 
 function wdbj_tml_custom_pass_errors($errors = '') {
     if ( empty($_POST['pass1']) || $_POST['pass1'] == '' || empty($_POST['pass2']) || $_POST['pass2'] == '' ) {
-        $errors->add('empty_password', __('<strong>ERROR</strong>: Please enter a password.'));
+        $errors->add('empty_password', __('<strong>ERROR</strong>: Please enter a password.', 'theme-my-login'));
     } elseif ( $_POST['pass1'] !== $_POST['pass2'] ) {
-        $errors->add('password_mismatch', __('<strong>ERROR</strong>: Your passwords do not match.'));
+        $errors->add('password_mismatch', __('<strong>ERROR</strong>: Your passwords do not match.', 'theme-my-login'));
     } elseif ( strlen($_POST['pass1']) < 6 ) {
-        $errors->add('password_length', __('<strong>ERROR</strong>: Your password must be at least 6 characters in length.'));
+        $errors->add('password_length', __('<strong>ERROR</strong>: Your password must be at least 6 characters in length.', 'theme-my-login'));
     } else {
         $_POST['user_pw'] = $_POST['pass1'];
     }	

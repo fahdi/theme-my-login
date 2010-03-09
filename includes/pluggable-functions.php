@@ -14,12 +14,12 @@ function wp_password_change_notification(&$user) {
 	// but check to see if it's the admin whose password we're changing, and skip this
 	if ( $user->user_email != get_option('admin_email') ) {
 		if ( apply_filters('password_change_notification', true) ) {
-			$message = sprintf(__('Password Lost and Changed for user: %s'), $user->user_login) . "\r\n";
+			$message = sprintf(__('Password Lost and Changed for user: %s', 'theme-my-login'), $user->user_login) . "\r\n";
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 		
-			$title = sprintf(__('[%s] Password Lost/Changed'), $blogname);
+			$title = sprintf(__('[%s] Password Lost/Changed', 'theme-my-login'), $blogname);
 		
 			$title = apply_filters('password_change_notification_title', $title, $user->ID);
 			$message = apply_filters('password_change_notification_message', $message, $user->ID);
@@ -52,11 +52,11 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 	$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 	
 	if ( apply_filters('new_user_admin_notification', true) ) {
-		$message  = sprintf(__('New user registration on your blog %s:'), $blogname) . "\r\n\r\n";
-		$message .= sprintf(__('Username: %s'), $user_login) . "\r\n\r\n";
-		$message .= sprintf(__('E-mail: %s'), $user_email) . "\r\n";
+		$message  = sprintf(__('New user registration on your blog %s:', 'theme-my-login'), $blogname) . "\r\n\r\n";
+		$message .= sprintf(__('Username: %s', 'theme-my-login'), $user_login) . "\r\n\r\n";
+		$message .= sprintf(__('E-mail: %s', 'theme-my-login'), $user_email) . "\r\n";
 	
-		$title = sprintf(__('[%s] New User Registration'), $blogname);
+		$title = sprintf(__('[%s] New User Registration', 'theme-my-login'), $blogname);
 	
 		$title = apply_filters('new_user_admin_notification_title', $title, $user_id);
 		$message = apply_filters('new_user_admin_notification_message', $message, $user_id);
@@ -68,11 +68,11 @@ function wp_new_user_notification($user_id, $plaintext_pass = '') {
 		return;
 		
 	if ( apply_filters('new_user_notification', true) ) {
-		$message  = sprintf(__('Username: %s'), $user_login) . "\r\n";
-		$message .= sprintf(__('Password: %s'), $plaintext_pass) . "\r\n";
+		$message  = sprintf(__('Username: %s', 'theme-my-login'), $user_login) . "\r\n";
+		$message .= sprintf(__('Password: %s', 'theme-my-login'), $plaintext_pass) . "\r\n";
 		$message .= wp_login_url() . "\r\n";
 	
-		$title = sprintf(__('[%s] Your username and password'), $blogname);
+		$title = sprintf(__('[%s] Your username and password', 'theme-my-login'), $blogname);
 
 		$title = apply_filters('new_user_notification_title', $title, $user_id);
 		$message = apply_filters('new_user_notification_message', $message, $plaintext_pass, $user_id);

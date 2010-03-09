@@ -20,8 +20,8 @@ function wdbj_tml_display() {
             echo '<div class="tml-user-avatar">' . get_avatar( $user->ID, $current_instance['gravatar_size'] ) . '</div>' . "\n";
         echo '<ul class="tml-user-links">' . "\n";
         $user_links = array(
-            array('title' => __('Dashboard'), 'url' => admin_url()),
-            array('title' => __('Profile'), 'url' => admin_url('profile.php'))
+            array('title' => __('Dashboard', 'theme-my-login'), 'url' => admin_url()),
+            array('title' => __('Profile', 'theme-my-login'), 'url' => admin_url('profile.php'))
             );
         $user_links = apply_filters('tml_user_links', $user_links);
         if ( $user_links ) {
@@ -29,7 +29,7 @@ function wdbj_tml_display() {
                 echo '<li><a href="' . $link['url'] . '">' . $link['title'] . '</a></li>' . "\n";
             }
         }
-		echo '<li><a href="' . wp_logout_url() . '">' . __('Log out') . '</a></li>' . "\n";
+		echo '<li><a href="' . wp_logout_url() . '">' . __('Log out', 'theme-my-login') . '</a></li>' . "\n";
 		echo "</ul>\n</div>\n";
     } else {
 		if ( has_filter('login_form_' . $action) ) {
@@ -89,17 +89,17 @@ function wdbj_tml_get_title($action = '') {
     } else {
         switch ( $action ) {
             case 'register':
-                $title = __('Register');
+                $title = __('Register', 'theme-my-login');
                 break;
             case 'lostpassword':
             case 'retrievepassword':
             case 'resetpass':
             case 'rp':
-                $title = __('Lost Password');
+                $title = __('Lost Password', 'theme-my-login');
                 break;
             case 'login':
             default:
-                $title = __('Log In');
+                $title = __('Log In', 'theme-my-login');
         }
     }
     return apply_filters('tml_title', $title, $action);
@@ -181,15 +181,15 @@ function wdbj_tml_get_login_form() {
     // Some parts of this script use the main login form to display a message
     if ( $current_instance['is_active'] ) {
         if        ( isset($_GET['loggedout']) && TRUE == $_GET['loggedout'] )
-            wdbj_tml_set_error('loggedout', __('You are now logged out.'), 'message');
+            wdbj_tml_set_error('loggedout', __('You are now logged out.', 'theme-my-login'), 'message');
         elseif    ( isset($_GET['registration']) && 'disabled' == $_GET['registration'] )
-            wdbj_tml_set_error('registerdisabled', __('User registration is currently not allowed.'));
+            wdbj_tml_set_error('registerdisabled', __('User registration is currently not allowed.', 'theme-my-login'));
         elseif    ( isset($_GET['checkemail']) && 'confirm' == $_GET['checkemail'] )
-            wdbj_tml_set_error('confirm', __('Check your e-mail for the confirmation link.'), 'message');
+            wdbj_tml_set_error('confirm', __('Check your e-mail for the confirmation link.', 'theme-my-login'), 'message');
         elseif    ( isset($_GET['checkemail']) && 'newpass' == $_GET['checkemail'] )
-            wdbj_tml_set_error('newpass', __('Check your e-mail for your new password.'), 'message');
+            wdbj_tml_set_error('newpass', __('Check your e-mail for your new password.', 'theme-my-login'), 'message');
         elseif    ( isset($_GET['checkemail']) && 'registered' == $_GET['checkemail'] )
-            wdbj_tml_set_error('registered', __('Registration complete. Please check your e-mail.'), 'message');
+            wdbj_tml_set_error('registered', __('Registration complete. Please check your e-mail.', 'theme-my-login'), 'message');
     }
 
     wdbj_tml_get_header();
@@ -204,17 +204,17 @@ function wdbj_tml_get_login_form() {
         ?>
         <form name="loginform" id="loginform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=login&instance=' . $current_instance['instance_id'])); ?>" method="post">
             <p>
-                <label for="log-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username') ?></label>
+                <label for="log-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username', 'theme-my-login') ?></label>
                 <input type="text" name="log" id="log-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo isset($user_login) ? $user_login : ''; ?>" size="20" />
             </p>
             <p>
-                <label for="pwd-<?php echo $current_instance['instance_id']; ?>"><?php _e('Password') ?></label>
+                <label for="pwd-<?php echo $current_instance['instance_id']; ?>"><?php _e('Password', 'theme-my-login') ?></label>
                 <input type="password" name="pwd" id="pwd-<?php echo $current_instance['instance_id']; ?>" class="input" value="" size="20" />
             </p>
         <?php do_action('login_form', $current_instance['instance_id']); ?>
-            <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $current_instance['instance_id']; ?>" value="forever" /> <label for="rememberme-<?php echo $current_instance['instance_id']; ?>"><?php _e('Remember Me'); ?></label></p>
+            <p class="forgetmenot"><input name="rememberme" type="checkbox" id="rememberme-<?php echo $current_instance['instance_id']; ?>" value="forever" /> <label for="rememberme-<?php echo $current_instance['instance_id']; ?>"><?php _e('Remember Me', 'theme-my-login'); ?></label></p>
             <p class="submit">
-                <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Log In'); ?>" />
+                <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Log In', 'theme-my-login'); ?>" />
                 <input type="hidden" name="redirect_to" value="<?php echo esc_attr(wdbj_tml_get_var('redirect_to')); ?>" />
                 <input type="hidden" name="testcookie" value="1" />
             </p>
@@ -234,22 +234,22 @@ function wdbj_tml_get_register_form() {
     $user_login = isset($_POST['user_login']) ? $_POST['user_login'] : '';
     $user_email = isset($_POST['user_email']) ? $_POST['user_email'] : '';
 
-    $message = apply_filters('register_message', __('A password will be e-mailed to you.'));
+    $message = apply_filters('register_message', __('A password will be e-mailed to you.', 'theme-my-login'));
 
     wdbj_tml_get_header($message);
     ?>
     <form name="registerform" id="registerform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=register&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
-            <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username') ?></label>
+            <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username', 'theme-my-login') ?></label>
             <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
         </p>
         <p>
-            <label for="user_email-<?php echo $current_instance['instance_id']; ?>"><?php _e('E-mail') ?></label>
+            <label for="user_email-<?php echo $current_instance['instance_id']; ?>"><?php _e('E-mail', 'theme-my-login') ?></label>
             <input type="text" name="user_email" id="user_email-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
         </p>
         <?php do_action('register_form', $current_instance['instance_id']); ?>
         <p class="submit">
-            <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Register'); ?>" />
+            <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Register', 'theme-my-login'); ?>" />
         </p>
     </form>
     <?php
@@ -261,7 +261,7 @@ function wdbj_tml_get_lost_password_form() {
     
     do_action('lost_password', $current_instance['instance_id']);
     
-    $message = apply_filters('lostpassword_message', __('Please enter your username or e-mail address. You will receive a new password via e-mail.'));
+    $message = apply_filters('lostpassword_message', __('Please enter your username or e-mail address. You will receive a new password via e-mail.', 'theme-my-login'));
     
     wdbj_tml_get_header($message);
     
@@ -269,12 +269,12 @@ function wdbj_tml_get_lost_password_form() {
     ?>
     <form name="lostpasswordform" id="lostpasswordform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
-            <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username or E-mail:') ?></label>
+            <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username or E-mail:', 'theme-my-login') ?></label>
             <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
         </p>
         <?php do_action('lostpassword_form', $current_instance['instance_id']); ?>
         <p class="submit">
-            <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Get New Password'); ?>" />
+            <input type="submit" name="wp-submit" id="wp-submit-<?php echo $current_instance['instance_id']; ?>" value="<?php _e('Get New Password', 'theme-my-login'); ?>" />
         </p>
     </form>
     <?php

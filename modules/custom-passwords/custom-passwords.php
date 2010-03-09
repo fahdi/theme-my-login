@@ -6,8 +6,8 @@ Description: Enabling this module will initialize and enable custom passwords. T
 
 add_action('tml_init', 'wdbj_tml_custom_pass_init');
 function wdbj_tml_custom_pass_init() {
-	include_once( TML_MODULE_DIR . '/custom-passwords/hook-functions.php' );
-	require_once( TML_MODULE_DIR . '/custom-passwords/functions.php' );
+	include_once( TML_MODULE_DIR . '/custom-passwords/includes/hook-functions.php' );
+	require_once( TML_MODULE_DIR . '/custom-passwords/includes/functions.php' );
 	// Password registration
 	add_action('register_form', 'wdbj_tml_custom_pass_form');
 	add_filter('registration_errors', 'wdbj_tml_custom_pass_errors');

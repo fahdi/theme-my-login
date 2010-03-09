@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0-alpha
-Stable tag: 5.0
+Stable tag: trunk
 
 Themes the WordPress login pages according to your theme.
 
@@ -42,6 +42,11 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 5.0.1 =
+* Only display function override notices on TML settings page
+* Typecast arrays as arrays (Fixes invalid datatype notices)
+* Add plugin domain to all gettext calls
 
 = 5.0 =
 * Rewrite code in a modular fashion in order to speed up plugin

@@ -17,7 +17,7 @@ function wdbj_tml_custom_redirect_user_role_admin_page($role) {
 	?>
 <table class="form-table">
     <tr valign="top">
-		<th scope="row"><?php _e('Log in'); ?></th>
+		<th scope="row"><?php _e('Log in', 'theme-my-login'); ?></th>
         <td>
 			<input name="theme_my_login[redirection][<?php echo $role; ?>][login_type]" type="radio" id="theme_my_login_redirection_<?php echo $role; ?>_login_type_default" value="default"<?php checked('default', $redirection['login_type']); ?> /> <label for="theme_my_login_redirection_<?php echo $role; ?>_login_type_default"><?php _e('Default', 'theme-my-login'); ?></label><br />
             <input name="theme_my_login[redirection][<?php echo $role; ?>][login_type]" type="radio" id="theme_my_login_redirection_<?php echo $role; ?>_login_type_referer" value="referer"<?php checked('referer', $redirection['login_type']); ?> /> <label for="theme_my_login_redirection_<?php echo $role; ?>_login_type_referer"><?php _e('Referer', 'theme-my-login'); ?></label><br />
@@ -26,7 +26,7 @@ function wdbj_tml_custom_redirect_user_role_admin_page($role) {
         </td>
     </tr>
     <tr valign="top">
-		<th scope="row"><?php _e('Log out'); ?></th>
+		<th scope="row"><?php _e('Log out', 'theme-my-login'); ?></th>
         <td>
 			<input name="theme_my_login[redirection][<?php echo $role; ?>][logout_type]" type="radio" id="theme_my_login_redirection_<?php echo $role; ?>_logout_type_default" value="default"<?php checked('default', $redirection['logout_type']); ?> /> <label for="theme_my_login_redirection_<?php echo $role; ?>_logout_type_default"><?php _e('Default', 'theme-my-login'); ?></label><br />
             <input name="theme_my_login[redirection][<?php echo $role; ?>][logout_type]" type="radio" id="theme_my_login_redirection_<?php echo $role; ?>_logout_type_referer" value="referer"<?php checked('referer', $redirection['logout_type']); ?> /> <label for="theme_my_login_redirection_<?php echo $role; ?>_logout_type_referer"><?php _e('Referer', 'theme-my-login'); ?></label><br />

@@ -6,7 +6,7 @@ Description: Enabling this module will initialize custom redirection. You will t
 
 add_action('tml_init', 'wdbj_tml_custom_redirect_init');
 function wdbj_tml_custom_redirect_init() {
-	include( TML_MODULE_DIR . '/custom-redirection/hook-functions.php' );
+	include( TML_MODULE_DIR . '/custom-redirection/includes/hook-functions.php' );
 	add_filter('login_redirect', 'wdbj_tml_custom_redirect_login', 10, 3);
 	add_filter('logout_redirect', 'wdbj_tml_custom_redirect_logout', 10, 3);
 	add_action('login_form', 'wdbj_tml_custom_redirect_login_form');
@@ -14,7 +14,7 @@ function wdbj_tml_custom_redirect_init() {
 
 add_action('tml_admin_init', 'wdbj_tml_custom_redirect_admin_init');
 function wdbj_tml_custom_redirect_admin_init() {
-    require_once (TML_MODULE_DIR . '/custom-redirection/admin.php');
+    require_once (TML_MODULE_DIR . '/custom-redirection/admin/admin.php');
 	add_action('tml_admin_menu', 'wdbj_tml_custom_redirect_admin_menu');
 }
 

@@ -45,7 +45,7 @@ switch ( $action ) {
         }
 
         if ( isset($_REQUEST['error']) && 'invalidkey' == $_REQUEST['error'] )
-			wdbj_tml_set_error('invalidkey', __('Sorry, that key does not appear to be valid.'));
+			wdbj_tml_set_error('invalidkey', __('Sorry, that key does not appear to be valid.', 'theme-my-login'));
         break;
     case 'resetpass' :
     case 'rp' :

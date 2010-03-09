@@ -14,14 +14,14 @@ function wdbj_tml_user_mod_activate_new_user($key, $login, $newpass = false) {
     $key = preg_replace('/[^a-z0-9]/i', '', $key);
 
     if ( empty($key) || !is_string($key) )
-        return new WP_Error('invalid_key', __('Invalid key'));
+        return new WP_Error('invalid_key', __('Invalid key', 'theme-my-login'));
 
     if ( empty($login) || !is_string($login) )
-        return new WP_Error('invalid_key', __('Invalid key'));
+        return new WP_Error('invalid_key', __('Invalid key', 'theme-my-login'));
 
     $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login));
     if ( empty( $user ) )
-        return new WP_Error('invalid_key', __('Invalid key'));
+        return new WP_Error('invalid_key', __('Invalid key', 'theme-my-login'));
 		
 	do_action('user_activation_post', $user->user_login, $user->user_email, $errors);
 	
@@ -84,8 +84,8 @@ function wdbj_tml_user_mod_approve_new_user($id, $newpass = false) {
     $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 	
     $message  = sprintf(__('You have been approved access to %s', 'theme-my-login'), $blogname) . "\r\n\r\n";
-    $message .= sprintf(__('Username: %s'), $user->user_login) . "\r\n";
-    $message .= sprintf(__('Password: %s'), $user_pass) . "\r\n\r\n";
+    $message .= sprintf(__('Username: %s', 'theme-my-login'), $user->user_login) . "\r\n";
+    $message .= sprintf(__('Password: %s', 'theme-my-login'), $user_pass) . "\r\n\r\n";
     $message .= site_url('wp-login.php', 'login') . "\r\n";	
 
     $title = sprintf(__('[%s] Registration Approved', 'theme-my-login'), $blogname);
@@ -94,7 +94,7 @@ function wdbj_tml_user_mod_approve_new_user($id, $newpass = false) {
     $message = apply_filters('user_approval_message', $message, $user_pass, $user->ID);
 
     if ( $message && !wp_mail($user->user_email, $title, $message) )
-          die('<p>' . __('The e-mail could not be sent.') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...') . '</p>');
+          die('<p>' . __('The e-mail could not be sent.', 'theme-my-login') . "<br />\n" . __('Possible reason: your host may have disabled the mail() function...', 'theme-my-login') . '</p>');
 
     return true;
 }
