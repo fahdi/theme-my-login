@@ -77,7 +77,7 @@ function wdbj_tml_get_css($file = 'theme-my-login.css') {
 
 function wdbj_tml_is_module_active($module) {
 	$modules = apply_filters('tml_active_modules', wdbj_tml_get_option('active_modules'));
-    return in_array($module, $modules);
+    return in_array($module, (array) $modules);
 }
 
 function wdbj_tml_load_active_modules() {

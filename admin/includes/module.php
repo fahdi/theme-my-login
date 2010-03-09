@@ -6,7 +6,7 @@ function wdbj_tml_activate_module($module) {
 	if ( is_wp_error($valid) )
 		return $valid;
 	
-	$current = wdbj_tml_get_option('active_modules');
+	$current = (array) wdbj_tml_get_option('active_modules');
 	if ( ! wdbj_tml_is_module_active($module) ) {
 		//ob_start();
 		@include (TML_MODULE_DIR . '/' . $module);
@@ -25,7 +25,7 @@ function wdbj_tml_activate_module($module) {
 }
 
 function wdbj_tml_deactivate_modules($modules, $silent= false) {
-	$current = wdbj_tml_get_option('active_modules');
+	$current = (array) wdbj_tml_get_option('active_modules');
 	
 	if ( ! is_array($modules) )
 		$modules = array($modules);
