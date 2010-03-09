@@ -43,6 +43,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.0.3 -
+* Fix an improper fix for PHP4 style consturctor in class
+* Only display function override notices on TML settings page properly
+
 = 5.0.2 =
 * Fix improper function call for PHP4 style constructor in class
 
