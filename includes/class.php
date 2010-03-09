@@ -125,7 +125,7 @@ class Theme_My_Login {
 	}
 	
 	function __construct() {
-		$this->options = get_option('theme_my_login', self::default_options());
+		$this->options = get_option('theme_my_login', $this->default_options());
 		$this->request_action = isset($_REQUEST['action']) ? $_REQUEST['action'] : 'login';
 		$this->request_instance = isset($_REQUEST['instance']) ? $_REQUEST['instance'] : 'tml-page';
 		$this->count = 0;
