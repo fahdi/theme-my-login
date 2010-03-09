@@ -1,5 +1,13 @@
 <?php
 
+function wdbj_tml_add_new_user_notificaiton_override_notice() {\
+	add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
+}
+
+function wdbj_tml_add_password_change_notificaiton_override_notice() {\
+	add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
+}
+
 function wdbj_tml_new_user_notification_override_notice() {
 	$message = __('<strong>WARNING</strong>: The function <em>wp_new_user_notification</em> has already been overridden by another plugin. ', 'theme-my-login');
 	$message .= __('Some features of <em>Theme My Login</em> may not function properly.', 'theme-my-login');
@@ -32,12 +40,6 @@ function wdbj_tml_load_settings_page() {
 	global $theme_my_login, $user_ID;
 	
 	do_action('tml_settings_page');
-	
-	// Display warning notices for function overrides
-	if ( function_exists('wp_new_user_notification') )
-		add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
-	if ( function_exists('wp_password_change_notification') )
-		add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
 	
 	// Enqueue neccessary scripts and styles
     wp_enqueue_script('theme-my-login-admin', plugins_url('/theme-my-login/admin/js/theme-my-login-admin.js'));

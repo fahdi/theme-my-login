@@ -45,6 +45,12 @@ if ( is_admin() ) {
 	
 	add_action('admin_init', 'wdbj_tml_admin_init');
     add_action('admin_menu', 'wdbj_tml_admin_menu');
+	
+	// Display warning notices for function overrides
+	if ( function_exists('wp_new_user_notification') )
+		add_action('tml_settings_page', 'wdbj_tml_add_new_user_notification_override_notice');
+	if ( function_exists('wp_password_change_notification') )
+		add_action('tml_settings_page', 'wdbj_tml_add_password_change_notification_override_notice');
 }
 
 // Load pluggable functions after modules (in case a module needs to override a function)
