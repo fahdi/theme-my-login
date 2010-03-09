@@ -45,11 +45,6 @@ if ( is_admin() ) {
 	
 	add_action('admin_init', 'wdbj_tml_admin_init');
     add_action('admin_menu', 'wdbj_tml_admin_menu');
-	
-	if ( function_exists('wp_new_user_notification') )
-		add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
-	if ( function_exists('wp_password_change_notification') )
-		add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
 }
 
 // Load pluggable functions after modules (in case a module needs to override a function)

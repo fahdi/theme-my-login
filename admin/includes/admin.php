@@ -33,6 +33,12 @@ function wdbj_tml_load_settings_page() {
 	
 	do_action('tml_settings_page');
 	
+	// Display warning notices for function overrides
+	if ( function_exists('wp_new_user_notification') )
+		add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
+	if ( function_exists('wp_password_change_notification') )
+		add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
+	
 	// Enqueue neccessary scripts and styles
     wp_enqueue_script('theme-my-login-admin', plugins_url('/theme-my-login/admin/js/theme-my-login-admin.js'));
     wp_enqueue_script('jquery-ui-tabs');
