@@ -48,7 +48,7 @@ function wdbj_tml_page_link($link, $id) {
 	return $link;
 }
 
-function wdbj_tml_get_pages($pages, $attributes) {
+function wdbj_tml_get_pages($pages, $attributes = '') {
 	$tml_page = wdbj_tml_get_option('page_id');
 	if ( is_admin() && ! is_page($tml_page) )
 		return $pages;
