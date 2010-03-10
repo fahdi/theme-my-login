@@ -1,10 +1,10 @@
 <?php
 
-function wdbj_tml_add_new_user_notificaiton_override_notice() {\
+function wdbj_tml_add_new_user_notification_override_notice() {\
 	add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
 }
 
-function wdbj_tml_add_password_change_notificaiton_override_notice() {\
+function wdbj_tml_add_password_change_notification_override_notice() {\
 	add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
 }
 
