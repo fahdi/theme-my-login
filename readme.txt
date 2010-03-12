@@ -43,7 +43,15 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
-= 5.0.3 -
+= 5.0.4 =
+* Re-introduce 'theme-my-login-page' shortcode for main login page
+* Add French translation
+* Fix typo in function override notice functions
+* Make 2nd argument optional in 'get_pages' filter
+* Remove another 'self' reference in class.php
+* Fix typo in readme.txt
+
+= 5.0.3 =
 * Fix an improper fix for PHP4 style constructor in class
 * Only display function override notices on TML settings page properly
 
