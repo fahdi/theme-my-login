@@ -75,8 +75,8 @@ function wdbj_tml_load() {
 	else
 		add_filter('wp_list_pages_excludes', 'wdbj_tml_list_pages_excludes');
     
-	add_shortcode('theme-my-login', 'wdbj_tml_shortcode');
 	add_shortcode('theme-my-login-page', 'wdbj_tml_page_shortcode');
+	add_shortcode('theme-my-login', 'wdbj_tml_shortcode');
     
     if ( wdbj_tml_get_option('enable_widget') ) {
         require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/widget.php' );
