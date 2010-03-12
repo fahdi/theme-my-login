@@ -43,6 +43,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.0.5 =
+* Add 'theme-my-login-page' shortcode before 'theme-my-login' shortcode
+
 = 5.0.4 =
 * Re-introduce 'theme-my-login-page' shortcode for main login page
 * Add French translation
