@@ -158,22 +158,26 @@ function wdbj_tml_install() {
             remove_role('denied');
     }
 
-    $insert = array(
-        'post_title' => 'Login',
-        'post_status' => 'publish',
-        'post_type' => 'page',
-        'post_author' => 1,
-        'post_content' => '[theme-my-login show_title="0" before_widget="" after_widget="" instance_id="tml-page"]',
-        'comment_status' => 'closed',
-        'ping_status' => 'closed'
-        );
-
 	if ( $page = get_page_by_title('Login') ) {
 		$page_id = $page->ID;
 		if ( 'trash' == $page->post_status )
 			wp_untrash_post($page_id);
-	} else
+		if ( strpos($page->post_content, '[theme-my-login-page]') === false ) {
+			$page->post_content = preg_replace("/(\[theme-my-login .*\])/", '[theme-my-login-page]', $page->post_content);
+			wp_update_post($page);
+		}
+	} else {
+		$insert = array(
+			'post_title' => 'Login',
+			'post_status' => 'publish',
+			'post_type' => 'page',
+			'post_author' => 1,
+			'post_content' => '[theme-my-login show_title="0" before_widget="" after_widget="" instance_id="tml-page"]',
+			'comment_status' => 'closed',
+			'ping_status' => 'closed'
+			);
 		$page_id = wp_insert_post($insert);
+	}
 	
     $options = wp_parse_args($previous_install, Theme_My_Login::default_options());
         

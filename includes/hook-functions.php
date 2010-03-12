@@ -83,4 +83,21 @@ function wdbj_tml_shortcode($atts = '') {
     return wdbj_tml_display();
 }
 
+function wdbj_tml_page_shortcode($atts = '') {
+
+	if ( !is_array($atts) )
+		$atts = array();
+
+	$atts['instance_id'] = 'tml-page';
+	
+	if ( !isset($atts['show_title']) )
+		$atts['show_title'] = 0;
+	if ( !isset($atts['before_widget']) )
+		$atts['before_widget'] = '';
+	if ( !isset($atts['after_widget']) )
+		$atts['after_widget'] = '';
+		
+	return wdbj_tml_shortcode($atts);
+}
+
 ?>
