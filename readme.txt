@@ -43,6 +43,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.0.6 =
+* Pass $theme_my_login by reference in option functions
+* Remove accidental invalid characters
+
 = 5.0.5 =
 * Add 'theme-my-login-page' shortcode before 'theme-my-login' shortcode
 
