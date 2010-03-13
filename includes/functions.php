@@ -3,19 +3,19 @@
 function wdbj_tml_update_option() {
 	global $theme_my_login;
 	$args = func_get_args();
-	return call_user_func_array(array($theme_my_login, 'update_option'), $args);
+	return call_user_func_array(array(&$theme_my_login, 'update_option'), $args);
 }
 
 function wdbj_tml_delete_option() {
 	global $theme_my_login;
 	$args = func_get_args();
-	return call_user_func_array(array($theme_my_login, 'delete_option'), $args);
+	return call_user_func_array(array(&$theme_my_login, 'delete_option'), $args);
 }
 
 function wdbj_tml_get_option() {
 	global $theme_my_login;
 	$args = func_get_args();
-	return call_user_func_array(array($theme_my_login, 'get_option'), $args);
+	return call_user_func_array(array(&$theme_my_login, 'get_option'), $args);
 }
 
 function wdbj_tml_save_options() {
@@ -36,13 +36,13 @@ function wdbj_tml_get_error($code = '') {
 function wdbj_tml_get_var() {
 	global $theme_my_login;
 	$args = func_get_args();
-	return call_user_func_array(array($theme_my_login, 'get_var'), $args);
+	return call_user_func_array(array(&$theme_my_login, 'get_var'), $args);
 }
 
 function wdbj_tml_set_var() {
 	global $theme_my_login;
 	$args = func_get_args();
-	return call_user_func_array(array($theme_my_login, 'set_var'), $args);
+	return call_user_func_array(array(&$theme_my_login, 'set_var'), $args);
 }
 
 function wdbj_tml_get_new_instance() {
