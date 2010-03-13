@@ -1,10 +1,10 @@
 <?php
 
-function wdbj_tml_add_new_user_notification_override_notice() {\
+function wdbj_tml_add_new_user_notification_override_notice() {
 	add_action('admin_notices', 'wdbj_tml_new_user_notification_override_notice');
 }
 
-function wdbj_tml_add_password_change_notification_override_notice() {\
+function wdbj_tml_add_password_change_notification_override_notice() {
 	add_action('admin_notices', 'wdbj_tml_password_change_notification_override_notice');
 }
 
@@ -71,7 +71,7 @@ function wdbj_tml_load_settings_page() {
 			// Unset the 'activate_modules' array
 			unset($theme_my_login->options['activate_modules']);
 		}
-	
+
 		// If we have modules to deactivate
 		if ( isset($theme_my_login->options['deactivate_modules']) ) {
 			// Deactive them
