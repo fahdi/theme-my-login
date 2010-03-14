@@ -78,12 +78,13 @@ function wdbj_tml_user_mod_admin_page() {
 		<td>
 			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_none"><?php _e('None', 'theme-my-login'); ?></label>
-			<br />
+			<p class="description"><?php _e('Check this option to require no moderation.', 'theme-my-login'); ?></p>
 			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_email"><?php _e('E-mail Confirmation', 'theme-my-login'); ?></label>
-			<br />
+			<p class="description"><?php _e('Check this option to require new users to confirm their e-mail address before they may log in.', 'theme-my-login'); ?></p>
 			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $moderation ) { echo 'checked="checked"'; } ?> />
 			<label for="theme_my_login_moderation_type_admin"><?php _e('Admin Approval', 'theme-my-login'); ?></label>
+			<p class="description"><?php _e('Check this option to require new users to be approved by an administrator before they may log in.', 'theme-my-login'); ?></p>
 		</td>
 	</tr>
 </table>
