@@ -554,7 +554,7 @@ msgstr ""
 
 #: modules/custom-passwords/includes/hook-functions.php:102
 msgid ""
-"Please enter your username or e-mail address. You will recieve an e-mail "
+"Please enter your username or e-mail address. You will receive an e-mail "
 "with a link to reset your password."
 msgstr ""
 
