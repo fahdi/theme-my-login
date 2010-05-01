@@ -19,6 +19,12 @@ function wdbj_tml_custom_user_links($links) {
 	$links = wdbj_tml_get_option('user_links', $user_role);
 	if ( !is_array($links) || empty($links) )
 		$links = array();
+
+	// Allow for user_id variable in link
+	foreach ( $links as $key => $link ) {
+		$links[$key]['url'] = str_replace('%user_id%', $current_user->ID, $link['url']);
+	}
+	
 	return $links;
 }
 
