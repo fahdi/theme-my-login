@@ -31,6 +31,10 @@ function wdbj_tml_custom_user_links($links) {
 add_action('tml_admin_init', 'wdbj_tml_custom_user_links_admin_init');
 function wdbj_tml_custom_user_links_admin_init() {
 	global $wp_roles;
+	
+	if ( empty($wp_roles) )
+		$wp_roles = new WP_Roles();
+	
     require_once (TML_MODULE_DIR . '/custom-user-links/admin/admin.php');
 	add_action('tml_admin_menu', 'wdbj_tml_custom_user_links_admin_menu');
 	add_filter('tml_save_settings', 'wdbj_tml_custom_user_links_save_settings');
