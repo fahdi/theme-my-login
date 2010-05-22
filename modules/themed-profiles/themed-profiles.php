@@ -63,4 +63,15 @@ function wdbj_tml_themed_profiles_content($content) {
 	return $content;
 }
 
+add_action('init', 'wdbj_tml_themed_profiles_template_redirect');
+function wdbj_tml_themed_profiles_template_redirect() {
+	global $pagenow;
+	if ( 'profile.php' == $pagenow ) {
+		$redirect_to = add_query_arg( 'action', 'profile', get_page_link(wdbj_tml_get_option('page_id')) );
+		$redirect_to = add_query_arg( $_GET, $redirect_to );
+		wp_redirect($redirect_to);
+		exit;
+	}
+}
+
 ?>
