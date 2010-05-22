@@ -171,7 +171,6 @@ function wdbj_tml_install() {
 			'post_title' => 'Login',
 			'post_status' => 'publish',
 			'post_type' => 'page',
-			'post_author' => 1,
 			'post_content' => '[theme-my-login-page]',
 			'comment_status' => 'closed',
 			'ping_status' => 'closed'
