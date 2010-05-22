@@ -43,6 +43,17 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.1 =
+* Display "Log Out" when page is shown in pagelist and logged in
+* Forward profile.php to themed profile when module is active
+* Allow for %user_id% in custom user links
+* Add inline descriptions to all settings
+* Various tweaks and preps for WP 3.0
+* Add Italian translation
+* Add Danish translation
+* Add Polish translation
+* Add Spanish translation
+
 = 5.0.6 =
 * Pass $theme_my_login by reference in option functions
 * Remove accidental invalid characters
