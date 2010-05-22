@@ -22,7 +22,7 @@ function wdbj_tml_password_change_notification_override_notice() {
 
 function wdbj_tml_admin_menu() {
 	// Create our settings link in the default WP "Settings" menu
-    add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 8, 'theme-my-login/admin/options.php');
+    add_options_page(__('Theme My Login', 'theme-my-login'), __('Theme My Login', 'theme-my-login'), 'manage_options', 'theme-my-login/admin/options.php');
 }
 
 function wdbj_tml_admin_init() {
