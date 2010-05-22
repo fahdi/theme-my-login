@@ -9,10 +9,6 @@ Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
 
-// Bailout if we're at the default login
-if ( 'wp-login.php' == $pagenow )
-	return;
-
 // Set the default module directory
 if ( !defined('TML_MODULE_DIR') )
     define('TML_MODULE_DIR', WP_PLUGIN_DIR . '/theme-my-login/modules');
@@ -58,6 +54,12 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/pluggable-functions.php'
 
 add_action('plugins_loaded', 'wdbj_tml_load');
 function wdbj_tml_load() {
+	global $pagenow;
+	
+	// Bailout if we're at the default login
+	if ( 'wp-login.php' == $pagenow )
+		return;
+	
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/hook-functions.php' );
 	
     do_action('tml_load');
