@@ -47,7 +47,11 @@ function wdbj_tml_load_settings_page() {
     wp_enqueue_style('theme-my-login-admin', plugins_url('/theme-my-login/admin/css/theme-my-login-admin.css'));
 
 	// Set the correct admin style according to user setting (Only supports default admin schemes)
-    $admin_color = get_usermeta($user_ID, 'admin_color');
+	if ( function_exists('get_user_meta') )
+		$admin_color = get_user_meta($user_ID, 'admin_color');
+	else
+		$admin_color = get_usermeta($user_ID, 'admin_color');
+		
     if ( 'classic' == $admin_color )
 		wp_enqueue_style('theme-my-login-colors-classic', plugins_url('/theme-my-login/admin/css/colors-classic.css'));
     else
