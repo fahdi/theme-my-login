@@ -58,12 +58,12 @@ function wdbj_tml_get_pages($pages, $attributes = '') {
 	
 	// It sucks there's not really a better way to do this
 	if ( wdbj_tml_get_option('show_page') ) {
-		foreach ( $pages as $page ) {
+		foreach ( $pages as $key => $page ) {
 			if ( $page->ID == $tml_page ) {
 				if ( is_user_logged_in() )
-					$page->post_title = __('Log Out', 'theme-my-login');
+					$pages[$key]->post_title = __('Log Out', 'theme-my-login');
 				else
-					$page->post_title = __('Log In', 'theme-my-login');
+					$pages[$key]->post_title = __('Log In', 'theme-my-login');
 			}
 		}
 	}
