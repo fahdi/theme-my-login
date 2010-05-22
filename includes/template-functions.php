@@ -195,7 +195,7 @@ function wdbj_tml_get_login_form() {
     wdbj_tml_get_header();
 
     if ( isset($_POST['log']) )
-        $user_login = ( wdbj_tml_get_error('incorrect_password') || wdbj_tml_get_error('empty_password') ) ? attribute_escape(stripslashes($_POST['log'])) : '';
+        $user_login = ( wdbj_tml_get_error('incorrect_password') || wdbj_tml_get_error('empty_password') ) ? esc_attr(stripslashes($_POST['log'])) : '';
 
     $user_login = ( $current_instance['is_active'] && isset($user_login) ) ? $user_login : '';
 
@@ -241,11 +241,11 @@ function wdbj_tml_get_register_form() {
     <form name="registerform" id="registerform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=register&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
             <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username', 'theme-my-login') ?></label>
-            <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_login)); ?>" size="20" />
+            <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo esc_attr(stripslashes($user_login)); ?>" size="20" />
         </p>
         <p>
             <label for="user_email-<?php echo $current_instance['instance_id']; ?>"><?php _e('E-mail', 'theme-my-login') ?></label>
-            <input type="text" name="user_email" id="user_email-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape(stripslashes($user_email)); ?>" size="20" />
+            <input type="text" name="user_email" id="user_email-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo esc_attr(stripslashes($user_email)); ?>" size="20" />
         </p>
         <?php do_action('register_form', $current_instance['instance_id']); ?>
         <p class="submit">
@@ -270,7 +270,7 @@ function wdbj_tml_get_lost_password_form() {
     <form name="lostpasswordform" id="lostpasswordform-<?php echo $current_instance['instance_id']; ?>" action="<?php echo esc_url(wdbj_tml_get_current_url('action=lostpassword&instance=' . $current_instance['instance_id'])); ?>" method="post">
         <p>
             <label for="user_login-<?php echo $current_instance['instance_id']; ?>"><?php _e('Username or E-mail:', 'theme-my-login') ?></label>
-            <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo attribute_escape($user_login); ?>" size="20" />
+            <input type="text" name="user_login" id="user_login-<?php echo $current_instance['instance_id']; ?>" class="input" value="<?php echo esc_attr($user_login); ?>" size="20" />
         </p>
         <?php do_action('lostpassword_form', $current_instance['instance_id']); ?>
         <p class="submit">
