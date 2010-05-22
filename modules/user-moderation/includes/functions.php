@@ -23,7 +23,7 @@ function wdbj_tml_user_mod_activate_new_user($key, $login, $newpass = false) {
     if ( empty( $user ) )
         return new WP_Error('invalid_key', __('Invalid key', 'theme-my-login'));
 		
-	do_action('user_activation_post', $user->user_login, $user->user_email, $errors);
+	do_action('user_activation_post', $user->user_login, $user->user_email);
 	
 	// Allow plugins to short-circuit process and send errors
 	$errors = new WP_Error();

@@ -28,8 +28,7 @@ function wdbj_tml_user_mod_user_activation_title($title) {
 function wdbj_tml_user_mod_user_activation_message($message, $user_id, $activation_url) {
 	$_message = wdbj_tml_get_option('email', 'user_activation', 'message');
 	$replacements = array(
-		'%activateurl%' => $activation_url,
-		'%user_pass%' => $new_pass
+		'%activateurl%' => $activation_url
 		);	
 	return empty($_message) ? $message : wdbj_tml_custom_email_replace_vars($_message, $user_id, $replacements);
 }
