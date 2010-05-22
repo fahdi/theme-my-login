@@ -24,7 +24,7 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class.php' );
 global $theme_my_login;
 
 // Initialize global configuration class
-$theme_my_login = new Theme_My_Login();
+$theme_my_login =& new Theme_My_Login();
 
 // Require general plugin functions file
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/functions.php' );
