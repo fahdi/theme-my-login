@@ -50,7 +50,7 @@ function wdbj_tml_page_link($link, $id) {
 
 function wdbj_tml_get_pages($pages, $attributes = '') {
 	$tml_page = wdbj_tml_get_option('page_id');
-	if ( is_admin() && ! is_page($tml_page) )
+	if ( is_admin() && !is_page($tml_page) && !defined('IS_PROFILE_PAGE') )
 		return $pages;
 	
 	// Change to logout link if user is logged in
