@@ -28,6 +28,7 @@ function wdbj_tml_themed_profiles_init() {
 	require_once( ABSPATH . WPINC . '/registration.php' );
 	
 	define('WP_ADMIN', true);
+	define('IS_PROFILE_PAGE', true);
 	
 	wp_enqueue_style('themed-profiles', plugins_url('theme-my-login/modules/themed-profiles/themed-profiles.css'));
 	
@@ -58,7 +59,7 @@ function wdbj_tml_themed_profiles_init() {
 
 add_filter('the_content', 'wdbj_tml_themed_profiles_content');
 function wdbj_tml_themed_profiles_content($content) {
-	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() && 'profile' == wdbj_tml_get_var('request_action') )
+	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() )
 		return wdbj_tml_themed_profiles_display();
 	return $content;
 }
