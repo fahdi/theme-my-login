@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0-beta2
-Stable tag: trunk
+Stable tag: 5.1
 
 Themes the WordPress login pages according to your theme.
 
@@ -42,6 +42,11 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 6.0 =
+* Complete code rewrite
+* Remove option to disable template tag and widget in favor of always being enabled
+* Remove option to rewrite login links in favor of always being rewritten
 
 = 5.1 =
 * Display "Log Out" when page is shown in pagelist and logged in
