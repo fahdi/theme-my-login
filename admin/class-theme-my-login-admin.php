@@ -107,9 +107,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	 */
 	function display_settings_page() {
 		// Default menu
-		$this->add_menu_page( __('General', 'theme-my-login' ), 'theme-my-login-admin-options' );
-		$this->add_submenu_page( 'theme-my-login-admin-options', __( 'Basic', 'theme-my-login' ), 'theme-my-login-admin-options-basic', array( &$this, 'display_basic_settings' ) );
-		$this->add_submenu_page( 'theme-my-login-admin-options', __( 'Modules', 'theme-my-login' ), 'theme-my-login-admin-options-modules', array( &$this, 'display_module_settings' ) );
+		$this->add_menu_page( __('General', 'theme-my-login' ), 'tml-options' );
+		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-basic', array( &$this, 'display_basic_settings' ) );
+		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-modules', array( &$this, 'display_module_settings' ) );
 
 		// Allow plugins to add to menu
 		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
@@ -129,21 +129,21 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 
         <ul>
             <?php foreach ( $this->menu as $menu ) {
-                echo '<li><a href="#' . $menu[2] . '">' . $menu[0] . '</a></li>' . "\n";
+                echo '<li><a href="#' . $menu[1] . '">' . $menu[0] . '</a></li>' . "\n";
             } ?>
         </ul>
 
         <?php foreach ( $this->menu as $menu ) {
-            echo '<div id="' . $menu[2] . '">' . "\n";
+            echo '<div id="' . $menu[1] . '">' . "\n";
             if ( isset( $this->submenu[$menu[1]] ) ) {
                 echo '<ul>' . "\n";
                 foreach ( $this->submenu[$menu[1]] as $submenu ) {
-                    echo '<li><a href="#' . $submenu[2] . '">' . $submenu[0] . '</a></li>' . "\n";
+                    echo '<li><a href="#' . $submenu[1] . '">' . $submenu[0] . '</a></li>' . "\n";
                 }
                 echo '</ul>' . "\n";
                 
                 foreach ( $this->submenu[$menu[1]] as $submenu ) {
-                    echo '<div id="' . $submenu[2] . '">' . "\n";
+                    echo '<div id="' . $submenu[1] . '">' . "\n";
 					if ( has_action( $submenu[2] ) ) {
 						do_action( 'load-' . $submenu[2] );
 						call_user_func_array( 'do_action', array_merge( (array) $submenu[2], (array) $submenu[3] ) );
