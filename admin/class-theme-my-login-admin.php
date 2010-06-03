@@ -502,7 +502,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		}
 		
 		// Maybe create login page?
-		if ( $page = get_page( $page_id ) || $page = get_page_by_title( 'Login' ) ) {
+		if ( ( $page_id && $page = get_page( $page_id ) ) || $page = get_page_by_title( 'Login' ) ) {
 			$page_id = $page->ID;
 			// Make sure the page is not in the trash
 			if ( 'trash' == $page->post_status )
