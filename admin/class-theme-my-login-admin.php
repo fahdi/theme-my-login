@@ -94,7 +94,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
 
 		// Set the correct admin style according to user setting (Only supports default admin schemes)
-		$admin_color = get_usermeta( $user_ID, 'admin_color' );
+		$admin_color = function_exists( 'get_user_meta' ) ? get_user_meta( $user_ID, 'admin_color' ) : get_usermeta( $user_ID, 'admin_color' );
 		$stylesheet = ( 'classic' == $admin_color ) ? 'colors-classic.css' : 'colors-fresh.css';
 		wp_enqueue_style( 'theme-my-login-colors-fresh', plugins_url( '/theme-my-login/admin/css/' . $stylesheet ) );
 	}
