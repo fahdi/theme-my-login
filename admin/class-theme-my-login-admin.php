@@ -130,7 +130,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		}
 		
 		// Enqueue neccessary scripts and styles
-		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs' ) );
+		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs', 'jquery-shake' ) );
 		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
 
 		// Set the correct admin style according to user setting (Only supports default admin schemes)
