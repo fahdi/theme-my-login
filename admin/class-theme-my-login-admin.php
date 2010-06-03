@@ -88,7 +88,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	 */
 	function initial_nag() {
 		if ( $this->options['initial_nag'] && current_user_can( 'manage_options' ) ) {
-			echo '<div class="updated">';
+			echo '<div id="tml-initial-nag" class="updated">';
 			echo '<p>';
 			echo '<strong>' . __( 'NOTICE:', 'theme-my-login' ) . '</strong> ';
 			printf( __( 'Now that you have activated Theme My Login, please <a href="%s">visit the settings page</a> and familiarize yourself with all of the available options.', 'theme-my-login' ), admin_url( 'options-general.php?page=theme-my-login' ) );
@@ -96,6 +96,20 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 			printf( '<a href="%s">' . __( 'Take me to the settings page', 'theme-my-login' ) . '</a>', admin_url( 'options-general.php?page=theme-my-login' ) );
 			echo '</p></div>';
 		}
+	}
+	
+	function did_you_know() {
+		$tips = array(
+			__( 'Theme My Login now utilizes a module system? Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a class="tml-options" href="#tml-modules">Click here</a> to get started with modules now.', 'theme-my-login' ),
+			__( 'Theme My Login now allows custom forms? You can create your own form template(s) by copying the default version(s) from "theme-my-login/templates". Try it out!', 'theme-my-login' ),
+			__( 'You can maintain your stylesheet changes between upgrades? Just simply copy the file "theme-my-login/theme-my-login.css" to your current theme directory and edit it as you please!', 'theme-my-login' ),
+			sprintf( __( 'Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href="%s">donations</a>!', 'theme-my-login' ), 'http://www.jfarthing.com/donate' )
+			);
+		$key = array_rand( $tips );
+		echo '<div id="tml-tips" class="updated">';
+		echo '<p><strong>' . __( 'Did You Know?', 'theme-my-login' ) . '</strong></p>';
+		echo '<p>' . $tips[$key] . '</p>';
+		echo '</div>';
 	}
 	
 	/**
@@ -111,6 +125,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 			// Remove initial nag now that the settings page has been visited
 			if ( $this->options['initial_nag'] )
 				$this->set_option( 'initial_nag', 0, true );
+			// Show "Did You Know" box
+			add_action( 'admin_notices', array( &$this, 'did_you_know' ) );
 		}
 		
 		// Enqueue neccessary scripts and styles
