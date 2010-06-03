@@ -174,7 +174,6 @@ class Theme_My_Login_Base {
 	 * Dummy method called by __construct to be overridden by sub-class
 	 *
 	 * This method should just be used to attach callbacks to hooks.
-	 * Keep in mind that the options are not populated until 'init'.
 	 *
 	 * @since 6.0
 	 * @access public
@@ -203,7 +202,6 @@ class Theme_My_Login_Base {
 	 * @access private
 	 */
 	function _init() {
-		$this->load_options();
 		$this->errors = new WP_Error();
 		$this->page_link = get_page_link( $this->options['page_id'] );
 		$this->init();
@@ -230,6 +228,7 @@ class Theme_My_Login_Base {
 		
 		add_action( 'init', array( &$this, '_init' ) );
 
+		$this->load_options();
 		$this->load();
 	}
 }
