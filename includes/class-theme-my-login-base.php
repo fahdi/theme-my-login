@@ -207,6 +207,10 @@ class Theme_My_Login_Base {
 		$this->init();
 	}
 	
+	function default_scripts( $wp_scripts ) {
+		$wp_scripts->add( 'jquery-shake', plugins_url( 'theme-my-login/js/jquery.shake.js' ), array( 'jquery' ) );
+	}
+	
 	/**
 	 * PHP4 style constructor
 	 *
@@ -227,6 +231,7 @@ class Theme_My_Login_Base {
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
 		
 		add_action( 'init', array( &$this, '_init' ) );
+		add_action( 'wp_default_scripts', array( &$this, 'default_scripts' ) );
 
 		$this->load_options();
 		$this->load();
