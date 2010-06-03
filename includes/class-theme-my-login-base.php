@@ -99,7 +99,8 @@ class Theme_My_Login_Base {
 			'page_id' => 0,
 			'show_page' => 1,
 			'enable_css' => 1,
-			'active_modules' => array()
+			'active_modules' => array(),
+			'initial_nag' => 1
 		) );
 	}
 	
