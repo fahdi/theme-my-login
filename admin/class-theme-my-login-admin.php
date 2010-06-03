@@ -59,12 +59,12 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	}
 	
 	/**
-	 * Outputs HTML for error messages
+	 * Outputs HTML for module errors
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function admin_notices() {
+	function module_errors() {
 		// If we have errors to display
 		if ( isset( $this->options['module_errors'] ) ) {
 			// Display them
@@ -573,7 +573,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	function load() {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
+		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 		register_activation_hook( TML_DIR . '/theme-my-login.php', array( &$this, 'install' ) );
 		//register_uninstall_hook( TML_DIR . '/theme-my-login.php', array( &$this, 'uninstall' ) );
