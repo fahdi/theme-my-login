@@ -350,6 +350,16 @@ class Theme_My_Login_Template {
 	}
 	
 	/**
+	 * Outputs redirect URL
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function the_redirect_url() {
+		echo esc_url( $this->options['redirect_to'] );
+	}
+	
+	/**
 	 * Returns current template instance ID
 	 *
 	 * @since 6.0
@@ -427,7 +437,8 @@ class Theme_My_Login_Template {
 			'before_widget' => '<li>',
 			'after_widget' => '</li>',
 			'before_title' => '<h2>',
-			'after_title' => '</h2>'
+			'after_title' => '</h2>',
+			'redirect_to' => ''
 		);
 		$this->options = array_merge( $defaults, $options );
 	}
