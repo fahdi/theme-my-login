@@ -16,8 +16,11 @@ jQuery(document).ready(function($){
 	
 	$("#tml-tips").shake( 500 );
 	$("#tml-tips a").click(function() {
-		var menu = $(this).attr( 'class' );
+		var menu = $(this).attr( 'rel' );
 		var submenu = $(this).attr( 'href' );
+		var target = $(this).attr( 'target' );
+		if ( '_blank' == target )
+			return true;
 		if ( '' != menu )
 			$("#tml-container").tabs( 'select', '#' . menu );
 		if ( '' != submenu )
