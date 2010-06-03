@@ -17,7 +17,7 @@
 		</p>
 		<p class="submit">
 			<input type="submit" name="wp-submit" id="wp-submit-<?php $template->the_current_instance(); ?>" value="<?php _e( 'Log In', 'theme-my-login' ); ?>" />
-			<input type="hidden" name="redirect_to" value="<?php echo esc_attr( $template->options['redirect_to'] ); ?>" />
+			<input type="hidden" name="redirect_to" value="<?php $template->the_redirect_url(); ?>" />
 			<input type="hidden" name="testcookie" value="1" />
 		</p>
 	</form>
