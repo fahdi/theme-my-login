@@ -33,7 +33,7 @@ define( 'TML_MODULE_DIR', TML_DIR . '/modules' );
  *
  * @since 6.0
  */
-define( 'TML_DEBUG', true );
+define( 'TML_DEBUG', false );
 
 // Load plugin textdomain
 load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
