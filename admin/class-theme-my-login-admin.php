@@ -114,10 +114,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		// Allow plugins to add to menu
 		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
 		?>
-<div class="updated" style="background:#f0f8ff; border:1px solid #addae6">
-    <p><?php _e( 'If you like this plugin, please help keep it up to date by <a href="http://www.jfarthing.com/donate">donating through PayPal</a>!', 'theme-my-login' ); ?></p>
-</div>
-
 <div class="wrap">
     <?php screen_icon( 'options-general' ); ?>
     <h2><?php esc_html_e( 'Theme My Login Settings', 'theme-my-login' ); ?></h2>
