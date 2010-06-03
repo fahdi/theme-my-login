@@ -81,6 +81,24 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	}
 	
 	/**
+	 * Outputs message to admin to visit settings page after initial plugin activation
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function initial_nag() {
+		if ( $this->options['initial_nag'] && current_user_can( 'manage_options' ) ) {
+			echo '<div class="updated">';
+			echo '<p>';
+			echo '<strong>' . __( 'NOTICE:', 'theme-my-login' ) . '</strong> ';
+			printf( __( 'Now that you have activated Theme My Login, please <a href="%s">visit the settings page</a> and familiarize yourself with all of the available options.', 'theme-my-login' ), admin_url( 'options-general.php?page=theme-my-login' ) );
+			echo '</p><p>';
+			printf( '<a href="%s">' . __( 'Take me to the settings page', 'theme-my-login' ) . '</a>', admin_url( 'options-general.php?page=theme-my-login' ) );
+			echo '</p></div>';
+		}
+	}
+	
+	/**
 	 * Loads admin styles and scripts
 	 *
 	 * @since 6.0
@@ -88,6 +106,12 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	 */
 	function load_settings_page() {
 		global $user_ID;
+		
+		if ( current_user_can( 'manage_options' ) ) {
+			// Remove initial nag now that the settings page has been visited
+			if ( $this->options['initial_nag'] )
+				$this->set_option( 'initial_nag', 0, true );
+		}
 		
 		// Enqueue neccessary scripts and styles
 		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs' ) );
@@ -570,6 +594,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
+		add_action( 'admin_notices', array( &$this, 'initial_nag' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 		register_activation_hook( TML_DIR . '/theme-my-login.php', array( &$this, 'install' ) );
 		//register_uninstall_hook( TML_DIR . '/theme-my-login.php', array( &$this, 'uninstall' ) );
