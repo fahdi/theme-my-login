@@ -239,7 +239,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
     <tr valign="top">
         <th scope="row"><?php _e( 'Modules', 'theme-my-login' ); ?></th>
         <td>
-            <?php $modules = get_plugins( '/theme-my-login-6/modules' ); if ( !empty( $modules ) ) : foreach ( $modules as $module_file => $module_data ) : ?>
+            <?php $modules = get_plugins( '/theme-my-login/modules' ); if ( !empty( $modules ) ) : foreach ( $modules as $module_file => $module_data ) : ?>
             <input name="theme_my_login_modules[]" type="checkbox" id="theme_my_login_modules_<?php echo $module_file; ?>" value="<?php echo $module_file; ?>"<?php checked( 1, in_array( $module_file, (array) $this->options['active_modules'] ) ); ?> />
             <label for="theme_my_login_modules_<?php echo $module_file; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $module_data['Name'] ); ?></label><br />
             <?php if ( $module_data['Description'] ) echo '<p class="description">' . $module_data['Description'] . '</p>'; ?>
@@ -410,7 +410,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		if ( !file_exists( TML_MODULE_DIR . '/' . $module ) )
 			return new WP_Error( 'module_not_found', __( 'Module file does not exist.', 'theme-my-login' ) );
 
-		$installed_modules = get_plugins( '/theme-my-login-6/modules' );
+		$installed_modules = get_plugins( '/theme-my-login/modules' );
 		if ( !isset( $installed_modules[$module] ) )
 			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
 		return 0;
