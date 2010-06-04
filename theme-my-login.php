@@ -10,7 +10,7 @@ Text Domain: theme-my-login
 */
 
 // Bailout if we're at the default login
-if ( 'wp-login.php' == $pagenow )
+if ( strpos( $_SERVER['REQUEST_URI'], 'wp-login.php' ) !== false )
 	return;
 
 /**
