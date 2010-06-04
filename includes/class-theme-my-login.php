@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Holds the Theme My Login class
+ *
+ * @package Theme My Login
+ */
+ 
 if ( !class_exists( 'Theme_My_Login' ) ) :
 /*
  * Theme My Login class

@@ -1,14 +1,48 @@
 <?php
-
+/**
+ * Holds the Theme My Login widget class
+ *
+ * @package Theme My Login
+ * @subpackage Widget
+ */
+ 
 if ( !class_exists( 'Theme_My_Login_Widget' ) ) :
-
+/*
+ * Theme My Login widget class
+ *
+ * @since 6.0
+ */
 class Theme_My_Login_Widget extends WP_Widget {
-
+	/**
+	 * PHP4 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
     function Theme_My_Login_Widget(){
+		$this->__construct();
+    }
+	
+	/**
+	 * PHP5 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function __construct() {
         $widget_ops = array( 'classname' => 'widget_theme_my_login', 'description' => __( 'A login form for your blog.', 'theme-my-login' ) );
         parent::WP_Widget( 'theme-my-login', __( 'Theme My Login', 'theme-my-login' ), $widget_ops );
-    }
-
+	}
+	
+	/**
+	 * Displays the widget
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
+	 * @param array $instance The settings for the particular instance of the widget
+	 */
     function widget( $args, $instance ){
 		global $Theme_My_Login;
         if ( is_user_logged_in() && !$instance['logged_in_widget'] )
@@ -16,7 +50,13 @@ class Theme_My_Login_Widget extends WP_Widget {
         $args = array_merge( $args, $instance );
         echo $Theme_My_Login->shortcode( $args );
     }
-
+	
+	/**
+	 * Updates the widget
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
     function update( $new_instance, $old_instance ){
         $instance = $old_instance;
         $instance['default_action']     = in_array( $new_instance['default_action'], array( 'login', 'register', 'lostpassword' ) ) ? $new_instance['default_action'] : 'login';
@@ -31,7 +71,13 @@ class Theme_My_Login_Widget extends WP_Widget {
         $instance['lost_pass_widget']   = empty( $new_instance['lost_pass_widget'] ) ? false : true;
         return $instance;
     }
-
+	
+	/**
+	 * Displays the widget admin form
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
     function form( $instance ){
         $defaults = array(
             'default_action' => 'login',

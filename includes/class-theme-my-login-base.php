@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Holds the Theme My Login base class
+ *
+ * @package Theme My Login
+ */
+ 
 if ( !class_exists( 'Theme_My_Login_Base' ) ) :
 /*
  * Theme My Login base class
@@ -208,6 +213,12 @@ class Theme_My_Login_Base {
 		$this->init();
 	}
 	
+	/**
+	 * Adds scripts to $wp_scripts object
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function default_scripts( $wp_scripts ) {
 		$wp_scripts->add( 'jquery-shake', plugins_url( 'theme-my-login/js/jquery.shake.js' ), array( 'jquery' ) );
 	}

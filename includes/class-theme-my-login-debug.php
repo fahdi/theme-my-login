@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Holds the Theme My Login debug class
+ *
+ * @package Theme My Login
+ * @subpackage Debug
+ */
+ 
 if ( !class_exists( 'Theme_My_Login_Debug' ) ) :
 /**
  * Theme My Login Debug class
@@ -46,6 +52,12 @@ class Theme_My_Login_Debug {
 			$this->core_hook_usage[$current_filter] = memory_get_usage();
 	}
 	
+	/**
+	 * Outputs memory usage
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function dump_memory_usage() {
 		echo '<h2>Memory Usage Summary</h2>' . "\n";
 		echo '<ul>' . "\n";
@@ -61,7 +73,16 @@ class Theme_My_Login_Debug {
 		}
 		echo '</ul>' . "\n";
 	}
-
+	
+	/**
+	 * Converts a shorthand string representation (ie. 3.2M) to a numerical byte value
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $value Shorthand notation
+	 * @return int Value in bytes
+	 */
 	function string_to_num_bytes( $value ) {
 		if ( is_numeric( $value ) ) {
 			return $value;
@@ -85,6 +106,16 @@ class Theme_My_Login_Debug {
 		}
 	}
 	
+	/**
+	 * Converts a numerical byte value to a shorthand string representation (ie. 3.2M)
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param int $value Number of bytes
+	 * @param string $unit Can either be K for kilobytes, M for megabytes or G for gigabytes
+	 * @return string Shorthand notation from the given value and unit
+	 */
 	function num_bytes_to_string( $value, $unit = 'm' ) {
 		if ( !is_numeric( $value ) )
 			$value = $this->string_to_num_bytes( $value );
@@ -104,10 +135,22 @@ class Theme_My_Login_Debug {
 		return $value . $unit;
 	}
 	
+	/**
+	 * PHP4 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function Theme_My_Login_Debug() {
 		$this->__construct();
 	}
 	
+	/**
+	 * PHP5 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function __construct() {
 		$this->initial_memory = memory_get_usage();
 		$this->core_hooks = array(
@@ -149,6 +192,7 @@ class Theme_My_Login_Debug {
 }
 endif;
 
-$Theme_My_Login_Debug =& new Theme_My_Login_Debug();
+if ( function_exists( 'memory_get_usage' ) )
+	$Theme_My_Login_Debug =& new Theme_My_Login_Debug();
 
 ?>
