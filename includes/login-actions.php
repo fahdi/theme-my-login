@@ -121,21 +121,23 @@ switch ( $action ) {
         if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() && ( 0 !== strpos($redirect_to, 'https') ) && ( 0 === strpos($redirect_to, 'http') ) )
             $secure_cookie = false;
 
-        $user = wp_signon('', $secure_cookie);
+		if ( $http_post ) {
+			$user = wp_signon('', $secure_cookie);
 
-        $redirect_to = apply_filters('login_redirect', $redirect_to, isset($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '', $user);
-		
-		wdbj_tml_set_var($redirect_to, 'redirect_to');
+			$redirect_to = apply_filters('login_redirect', $redirect_to, isset($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : '', $user);
+			
+			wdbj_tml_set_var($redirect_to, 'redirect_to');
 
-        if ( !is_wp_error($user) ) {
-            // If the user can't edit posts, send them to their profile.
-            if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' || $redirect_to == admin_url() ) )
-                $redirect_to = admin_url('profile.php');
-            wp_safe_redirect($redirect_to);
-            exit();
-        }
-
-        wdbj_tml_set_error($user);
+			if ( !is_wp_error($user) ) {
+				// If the user can't edit posts, send them to their profile.
+				if ( !$user->has_cap('edit_posts') && ( empty( $redirect_to ) || $redirect_to == 'wp-admin/' || $redirect_to == admin_url() ) )
+					$redirect_to = admin_url('profile.php');
+				wp_safe_redirect($redirect_to);
+				exit();
+			}
+			
+			wdbj_tml_set_error($user);
+		}
         break;
 }
 
