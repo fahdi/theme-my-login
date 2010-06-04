@@ -71,11 +71,10 @@ function wdbj_tml_load() {
 	
 	if ( wdbj_tml_get_option('rewrite_links') )
 		add_filter('site_url', 'wdbj_tml_site_url', 10, 3);
-	
-	if ( wdbj_tml_get_option('show_page') )
-		add_filter('get_pages', 'wdbj_tml_get_pages', 10, 2);
-	else
-		add_filter('wp_list_pages_excludes', 'wdbj_tml_list_pages_excludes');
+		
+	add_filter('wp_list_pages_excludes', 'wdbj_tml_list_pages_excludes');
+	add_filter('wp_list_pages', 'wdbj_tml_list_pages');
+	add_filter('page_link', 'wdbj_tml_page_link', 10, 2);
     
 	add_shortcode('theme-my-login-page', 'wdbj_tml_page_shortcode');
 	add_shortcode('theme-my-login', 'wdbj_tml_shortcode');
