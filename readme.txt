@@ -3,8 +3,8 @@ Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
-Tested up to: 3.0-beta2
-Stable tag: 5.1
+Tested up to: 3.0-RC1
+Stable tag: 5.1.1
 
 Themes the WordPress login pages according to your theme.
 
@@ -47,6 +47,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 * Complete code rewrite
 * Remove option to disable template tag and widget in favor of always being enabled
 * Remove option to rewrite login links in favor of always being rewritten
+
+= 5.1.1 =
+* Fix bug that blocked users from entire site once logged in
+* PROPERLY display "Log Out" when page is shown in pagelist and logged in
 
 = 5.1 =
 * Display "Log Out" when page is shown in pagelist and logged in
