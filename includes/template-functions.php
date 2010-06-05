@@ -54,7 +54,7 @@ function wdbj_tml_display() {
 	unset($current_instance, $request_instance, $action, $user_links, $link);
     $contents = ob_get_contents();
     ob_end_clean();
-    return $contents;
+    return apply_filters('tml_display', $contents);
 }
 
 function wdbj_tml_get_display_options() {
