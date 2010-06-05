@@ -2,8 +2,16 @@
 
 function wdbj_tml_the_title($title, $post_id = '') {
 	global $wdbj_tml_doing_pagelist;
+	
     if ( is_admin() && !defined('IS_PROFILE_PAGE') )
         return $title;
+		
+	// No post ID until WP 3.0!
+	if ( empty( $post_id ) ) {
+		global $wpdb;
+		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s", $title ) );
+	}
+		
     if ( wdbj_tml_get_option('page_id')	== $post_id ) {
 		if ( $wdbj_tml_doing_pagelist ) {
 			$title = is_user_logged_in() ? __('Log Out', 'theme-my-login') : __('Log In', 'theme-my-login');
