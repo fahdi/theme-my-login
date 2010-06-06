@@ -91,7 +91,7 @@ function wdbj_tml_themed_profiles_site_url($url, $path, $orig_scheme = '') {
 
 add_filter('tml_title', 'wdbj_tml_themed_profiles_title', 10, 2);
 function wdbj_tml_themed_profiles_title($title, $action) {
-	if ( is_user_logged_in() && ( isset($_GET['action']) && 'profile' == $_GET['action'] ) )
+	if ( 'profile' == $action && is_user_logged_in() && '' == wdbj_tml_get_var('current_instance', 'instance_id') )
 		$title = __('Your Profile', 'theme-my-login');
 	return $title;
 }
