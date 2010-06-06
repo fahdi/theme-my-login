@@ -54,7 +54,7 @@ function wdbj_tml_themed_profiles_init() {
 
 add_filter('tml_display', 'wdbj_tml_themed_profiles_content');
 function wdbj_tml_themed_profiles_content($content) {
-	if ( is_user_logged_in() && 'profile' == wdbj_tml_get_var('request_action') )
+	if ( is_user_logged_in() && ( isset($_GET['action']) && 'profile' == $_GET['action'] ) )
 		return wdbj_tml_themed_profiles_display();
 	return $content;
 }
@@ -91,7 +91,7 @@ function wdbj_tml_themed_profiles_site_url($url, $path, $orig_scheme = '') {
 
 add_filter('tml_title', 'wdbj_tml_themed_profiles_title', 10, 2);
 function wdbj_tml_themed_profiles_title($title, $action) {
-	if ( is_user_logged_in() && ( isset($_REQUEST['action']) && 'profile' == $_REQUEST['action'] ) )
+	if ( is_user_logged_in() && ( isset($_GET['action']) && 'profile' == $_GET['action'] ) )
 		$title = __('Your Profile', 'theme-my-login');
 	return $title;
 }
