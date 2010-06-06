@@ -54,7 +54,8 @@ function wdbj_tml_themed_profiles_init() {
 
 add_filter('the_content', 'wdbj_tml_themed_profiles_content');
 function wdbj_tml_themed_profiles_content($content) {
-	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() && 'profile' == wdbj_tml_get_var('request_action') )
+	$action = wdbj_tml_get_var('request_action');
+	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() && ( 'profile' == $action || 'update' == $action ) )
 		return wdbj_tml_themed_profiles_display();
 	return $content;
 }
@@ -91,7 +92,7 @@ function wdbj_tml_themed_profiles_site_url($url, $path, $orig_scheme = '') {
 
 add_filter('tml_title', 'wdbj_tml_themed_profiles_title', 10, 2);
 function wdbj_tml_themed_profiles_title($title, $action) {
-	if ( 'profile' == $action && is_user_logged_in() && '' == wdbj_tml_get_var('current_instance', 'instance_id') )
+	if ( ( 'profile' == $action || 'update' == $action ) && is_user_logged_in() && '' == wdbj_tml_get_var('current_instance', 'instance_id') )
 		$title = __('Your Profile', 'theme-my-login');
 	return $title;
 }
