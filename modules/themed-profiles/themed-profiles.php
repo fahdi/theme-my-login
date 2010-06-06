@@ -6,13 +6,16 @@ Description: Enabling this module will initialize and enable themed profiles. Th
 
 add_action('tml_init', 'wdbj_tml_themed_profiles_init');
 function wdbj_tml_themed_profiles_init() {
-	global $current_user, $action, $redirect, $profile, $user_id, $wp_http_referer;
-	
 	if ( is_user_logged_in() && is_page(wdbj_tml_get_option('page_id')) && !( isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('update', 'profile', 'logout')) ) ) {
 		$redirect_to = admin_url('profile.php');
 		wp_redirect($redirect_to);
 		exit;
 	}
+}
+
+add_action('login_action_profile', 'wdbj_tml_themed_profiles_action');
+function wdbj_tml_themed_profiles_action() {
+	global $current_user, $action, $redirect, $profile, $user_id, $wp_http_referer;
 	
 	require_once( TML_MODULE_DIR . '/themed-profiles/includes/template-functions.php' );
 	
@@ -34,7 +37,7 @@ function wdbj_tml_themed_profiles_init() {
 
 	$wp_http_referer = remove_query_arg(array('update', 'delete_count'), stripslashes($wp_http_referer));
 	
-	if ( 'update' == $action ) {
+	if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 		check_admin_referer('update-user_' . $current_user->ID);
 
 		if ( !current_user_can('edit_user', $current_user->ID) )
