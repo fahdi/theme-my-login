@@ -4,23 +4,9 @@ Plugin Name: Themed Profiles
 Description: Enabling this module will initialize and enable themed profiles. There are no other settings for this module.
 */
 
-add_action('tml_load', 'wdbj_tml_themed_profiles_load');
-function wdbj_tml_themed_profiles_load() {
-	include_once( TML_MODULE_DIR . '/themed-profiles/includes/hook-functions.php' );
-	add_filter('site_url', 'wdbj_tml_themed_profiles_site_url', 10, 3);
-	add_filter('admin_url', 'wdbj_tml_themed_profiles_site_url', 10, 2);
-	add_filter('tml_title', 'wdbj_tml_themed_profiles_title', 10, 2);
-}
-
 add_action('tml_init', 'wdbj_tml_themed_profiles_init');
 function wdbj_tml_themed_profiles_init() {
 	global $current_user, $action, $redirect, $profile, $user_id, $wp_http_referer;
-	
-	if ( is_user_logged_in() && is_page(wdbj_tml_get_option('page_id')) && !( isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('profile', 'logout')) ) ) {
-		$redirect_to = admin_url('profile.php');
-		wp_redirect($redirect_to);
-		exit;
-	}
 	
 	require_once( TML_MODULE_DIR . '/themed-profiles/includes/template-functions.php' );
 	
@@ -76,6 +62,32 @@ function wdbj_tml_themed_profiles_template_redirect() {
 		wp_redirect($redirect_to);
 		exit;
 	}
+}
+
+add_filter('site_url', 'wdbj_tml_themed_profiles_site_url', 10, 3);
+add_filter('admin_url', 'wdbj_tml_themed_profiles_site_url', 10, 2);
+function wdbj_tml_themed_profiles_site_url($url, $path, $orig_scheme = '') {
+	global $wp_rewrite, $current_user;
+	
+	if ( is_user_logged_in() ) {
+		if ( strpos($url, 'profile.php') !== false ) {
+			$orig_url = $url;
+			$url = add_query_arg('action', 'profile', get_permalink(wdbj_tml_get_option('page_id')));
+			if ( strpos($orig_url, '?') ) {
+				$query = substr($orig_url, strpos($orig_url, '?') + 1);
+				parse_str($query, $r);
+				$url = add_query_arg($r, $url);
+			}
+		}
+	}
+	return $url;
+}
+
+add_filter('tml_title', 'wdbj_tml_themed_profiles_title', 10, 2);
+function wdbj_tml_themed_profiles_title($title, $action) {
+	if ( 'profile' == $action && is_user_logged_in() && '' == wdbj_tml_get_var('current_instance', 'instance_id') )
+		$title = __('Your Profile', 'theme-my-login');
+	return $title;
 }
 
 ?>
