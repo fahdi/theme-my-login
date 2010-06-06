@@ -27,7 +27,9 @@ function wdbj_tml_themed_profiles_init() {
 	require_once( ABSPATH . 'wp-admin/includes/user.php' );
 	require_once( ABSPATH . WPINC . '/registration.php' );
 	
+	// Needed to make admin scripts available
 	define('WP_ADMIN', true);
+	define('IS_PROFILE_PAGE', true);
 	
 	wp_enqueue_style('themed-profiles', plugins_url('theme-my-login/modules/themed-profiles/themed-profiles.css'));
 	
