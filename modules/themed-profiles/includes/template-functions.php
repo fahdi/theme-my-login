@@ -5,7 +5,32 @@ function wdbj_tml_themed_profiles_display() {
 		
 	$profileuser = get_user_to_edit($current_user->ID);
 	
-	wdbj_tml_get_header();
+	$wp_error = wdbj_tml_get_var('errors');
+	if ( empty($wp_error) )
+		$wp_error = new WP_Error();
+		
+	if ( isset($_GET['updated']) && $_GET['updated'] )
+		$wp_error->add('profile_updated', __('Profile updated.', 'theme-my-login'), 'message');
+	?>
+<div class="login" id="profile">
+<?php
+	if ( is_wp_error($wp_error) && $wp_error->get_error_code() ) {
+		$errors = '';
+		$messages = '';
+		foreach ( $wp_error->get_error_codes() as $code ) {
+			$severity = $wp_error->get_error_data($code);
+			foreach ( $wp_error->get_error_messages($code) as $error ) {
+				if ( 'message' == $severity )
+					$messages .= '    ' . $error . "<br />\n";
+				else
+					$errors .= '    ' . $error . "<br />\n";
+			}
+		}
+		if ( !empty($errors) )
+			echo '<p class="error">' . apply_filters('login_errors', $errors) . "</p>\n";
+		if ( !empty($messages) )
+			echo '<p class="message">' . apply_filters('login_messages', $messages) . "</p>\n";
+	}
 	?>
 <form id="your-profile" action="" method="post">
 <?php wp_nonce_field('update-user_' . $current_user->ID) ?>
