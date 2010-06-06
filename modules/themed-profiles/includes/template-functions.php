@@ -11,6 +11,8 @@ function wdbj_tml_themed_profiles_display() {
 		
 	if ( isset($_GET['updated']) && $_GET['updated'] )
 		$wp_error->add('profile_updated', __('Profile updated.', 'theme-my-login'), 'message');
+		
+	ob_start();
 	?>
 <div class="login" id="profile">
 <?php
@@ -187,6 +189,9 @@ if ( $show_password_fields ) :
 </form>
 </div>
 <?php
+	$contents = ob_get_contents();
+	ob_end_clean();
+	return $contents;
 }
 
 ?>
