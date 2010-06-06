@@ -52,9 +52,9 @@ function wdbj_tml_themed_profiles_init() {
 	}
 }
 
-add_filter('tml_display', 'wdbj_tml_themed_profiles_content');
+add_filter('the_content', 'wdbj_tml_themed_profiles_content');
 function wdbj_tml_themed_profiles_content($content) {
-	if ( is_user_logged_in() && ( isset($_GET['action']) && 'profile' == $_GET['action'] ) )
+	if ( is_page( wdbj_tml_get_option('page_id') ) && is_user_logged_in() && 'profile' == wdbj_tml_get_var('request_action') )
 		return wdbj_tml_themed_profiles_display();
 	return $content;
 }
