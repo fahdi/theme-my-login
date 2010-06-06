@@ -8,6 +8,12 @@ add_action('tml_init', 'wdbj_tml_themed_profiles_init');
 function wdbj_tml_themed_profiles_init() {
 	global $current_user, $action, $redirect, $profile, $user_id, $wp_http_referer;
 	
+	if ( is_user_logged_in() && is_page(wdbj_tml_get_option('page_id')) && !( isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('update', 'profile', 'logout')) ) ) {
+		$redirect_to = admin_url('profile.php');
+		wp_redirect($redirect_to);
+		exit;
+	}
+	
 	require_once( TML_MODULE_DIR . '/themed-profiles/includes/template-functions.php' );
 	
 	require_once( ABSPATH . 'wp-admin/includes/misc.php' );
