@@ -363,7 +363,11 @@ class Theme_My_Login_Custom_Passwords {
 }
 endif;
 
-/* Instaniate the class */
-$Theme_My_login_Custom_Passwords = new Theme_My_Login_Custom_Passwords();
+/**
+ * Holds the reference to Theme_My_Login_Custom_Passwords object
+ * @global object $theme_my_login_custom_passwords
+ * @since 6.0
+ */
+$theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords();
 
 ?>
