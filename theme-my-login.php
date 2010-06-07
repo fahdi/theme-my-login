@@ -59,10 +59,8 @@ $theme_my_login_object =& new Theme_My_Login();
 $theme_my_login =& $theme_my_login_object;
 
 // Load active modules
-foreach ( $theme_my_login->get_active_modules() as $module ) {
-	include_once( TML_MODULE_DIR . '/' . $module );
-	do_action_ref_array( 'tml_load_' . $module, array( &$theme_my_login ) );
-}
+foreach ( $theme_my_login->get_active_modules() as $module )
+	include_once( $module );
 unset( $module );
 
 do_action( 'tml_modules_loaded' );
