@@ -374,7 +374,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 			sort( $current );
 			do_action( 'tml_activate_module', trim( $module ) );
 			$this->set_option( 'active_modules', $current );
-			do_action( 'activate_' . trim( $module ) );
+			do_action_ref_array( 'tml_activate_' . trim( $module ), array( &$this ) );
 			do_action( 'tml_activated_module', trim( $module ) );
 			//ob_end_clean();
 		}
@@ -436,7 +436,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 				array_splice( $current, $key, 1 );
 
 			if ( !$silent ) {
-				do_action( 'deactivate_' . trim( $module ) );
+				do_action_ref_array( 'tml_deactivate_' . trim( $module ), array( &$this ) );
 				do_action( 'tml_deactivated_module', trim( $module ) );
 			}
 		}
