@@ -104,7 +104,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 					if ( $http_post ) {
 						$errors = $this->retrieve_password();
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->get_current_url( 'checkemail=confirm&instance=' . $instance );
+							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->get_current_url( 'checkemail=confirm' );
+							if ( !empty( $instance ) )
+								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							wp_safe_redirect( $redirect_to );
 							exit();
 						}
@@ -118,12 +120,16 @@ class Theme_My_Login extends Theme_My_Login_Base {
 					$errors = $this->reset_password( $_GET['key'], $_GET['login'] );
 
 					if ( !is_wp_error( $errors ) ) {
-						$redirect_to = apply_filters( 'resetpass_redirect', $this->get_current_url( 'checkemail=newpass&instance=' . $instance ) );
+						$redirect_to = apply_filters( 'resetpass_redirect', $this->get_current_url( 'checkemail=newpass' ) );
+						if ( !empty( $instance ) )
+							$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 						wp_safe_redirect( $redirect_to );
 						exit();
 					}
 
-					$redirect_to = $this->get_current_url( 'action=lostpassword&error=invalidkey&instance=' . $instance );
+					$redirect_to = $this->get_current_url( 'action=lostpassword&error=invalidkey' );
+					if ( !empty( $instance ) )
+						$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 					wp_redirect( $redirect_to );
 					exit();
 					break;
@@ -149,7 +155,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 						
 						$errors = $this->register_new_user( $user_login, $user_email );
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url('checkemail=registered&instance=' . $instance );
+							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url('checkemail=registered' );
+							if ( !empty( $instance ) )
+								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
 							wp_redirect( $redirect_to );
 							exit();
@@ -262,7 +270,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 			if ( $this->doing_pagelist ) {
 				$title = is_user_logged_in() ? __( 'Log Out', 'theme-my-login' ) : __( 'Log In', 'theme-my-login' );
 			} else {
-				$action = ( 'page' == $this->request_instance ) ? $this->request_action : 'login';
+				$action = empty( $this->request_instance ) ? $this->request_action : 'login';
 				$title = Theme_My_Login_Template::get_title( $action );
 			}
 		}
@@ -283,7 +291,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	 */
 	function single_post_title( $title ) {
 		if ( is_page( $this->options['page_id'] ) ) {
-			$action = ( 'page' == $this->request_instance ) ? $this->request_action : 'login';
+			$action = empty( $this->request_instance ) ? $this->request_action : 'login';
 			$title = Theme_My_Login_Template::get_title( $action );
 		}
 		return $title;
@@ -363,11 +371,15 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	 */
 	function shortcode( $atts = '' ) {
 	
-		if ( isset( $atts['instance_id'] ) )
+		if ( isset( $atts['instance_id'] ) ) {
 			$atts['instance'] = $atts['instance_id'];
+			unset( $atts['instance_id'] );
+		}
 		
 		if ( !isset( $atts['instance'] ) )
 			$atts['instance'] = $this->get_new_instance();
+		elseif ( 'page' == $atts['instance'] || 'tml-page' == $atts['instance'] )
+			$atts['instance'] = '';
 			
 		if ( $this->request_instance == $atts['instance'] )
 			$atts['is_active'] = 1;
@@ -395,7 +407,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	function page_shortcode( $atts = '' ) {
 		if ( !is_array( $atts ) )
 			$atts = array();
-
+			
 		$atts['instance'] = 'page';
 		
 		if ( !isset( $atts['show_title'] ) )
@@ -468,7 +480,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	 */
 	function load() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
-		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : 'page';
+		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
 		
 		add_action( 'parse_request', array( &$this, 'the_request' ) );
 		

@@ -43,7 +43,7 @@ class Theme_My_Login_Template {
 	 */
 	function display() {
 		$action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : 'login';
-		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : 'page';
+		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
 		if ( $instance == $this->options['instance'] && isset( $_REQUEST['action'] ) )
 			$action = $_REQUEST['action'];
 			
@@ -54,7 +54,7 @@ class Theme_My_Login_Template {
 		if ( is_user_logged_in() ) {
 			$user = wp_get_current_user();
 			$user_role = $user->roles[0];
-			echo '<div class="login" id="' . $this->options['instance'] . '">' . "\n";
+			echo '<div class="login" id="theme-my-login' . $this->options['instance'] . '">' . "\n";
 			if ( $this->options['show_gravatar'] )
 				$output .= '<div class="tml-user-avatar">' . get_avatar( $user->ID, $this->options['gravatar_size'] ) . '</div>' . "\n";
 			$this->the_user_links();
@@ -334,10 +334,14 @@ class Theme_My_Login_Template {
 		if ( empty( $instance ) )
 			$instance = $this->options['instance'];
 			
-		if ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] )
+		if ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) {
 			$url = site_url( 'wp-login.php?action=' . $action, 'login' );
-		else
-			$url = Theme_My_Login::get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
+		} else {
+			if ( empty( $instance ) )
+				$url = Theme_My_Login::get_current_url( array( 'action' => $action ), false );
+			else
+				$url = Theme_My_Login::get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
+		}
 			
 		return apply_filters( 'tml_action_url', $url );
 	}
