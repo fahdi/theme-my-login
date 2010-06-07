@@ -26,10 +26,10 @@ class Theme_My_Login_Custom_Passwords {
 	 */
 	function password_fields( &$template ) {
 	?>
-	<p><label for="pass1-<?php $template->the_current_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
-	<input autocomplete="off" name="pass1" id="pass1-<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" /></p>
-	<p><label for="pass2-<?php $template->the_current_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
-	<input autocomplete="off" name="pass2" id="pass2-<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" /></p>
+	<p><label for="pass1<?php $template->the_current_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
+	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" /></p>
+	<p><label for="pass2<?php $template->the_current_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
+	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" /></p>
 <?php
 	}
 	
@@ -94,7 +94,9 @@ class Theme_My_Login_Custom_Passwords {
 		
 		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 		if ( is_wp_error( $user ) ) {
-			$redirect_to = Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey&instance=' . $theme_my_login->request_instance );
+			$redirect_to = Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey' );
+			if ( !empty( $theme_my_login->request_instance ) )
+				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 			wp_redirect( $redirect_to );
 			exit();
 		}
@@ -102,7 +104,9 @@ class Theme_My_Login_Custom_Passwords {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			$errors = $this->reset_password();
 			if ( !is_wp_error( $errors ) ) {
-				$redirect_to = Theme_My_Login::get_current_url( 'resetpass=complete&instance=' . $theme_my_login->request_instance );
+				$redirect_to = Theme_My_Login::get_current_url( 'resetpass=complete' );
+				if ( !empty( $theme_my_login->request_instance ) )
+					$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 				wp_redirect( $redirect_to );
 				exit();
 			}
@@ -127,20 +131,20 @@ class Theme_My_Login_Custom_Passwords {
 <div class="login" id="theme-my-login-<?php $template->the_current_instance(); ?>">
 	<?php $template->the_action_message( 'resetpass' ); ?>
 	<?php $template->the_errors(); ?>
-	<form name="resetpasswordform" id="resetpasswordform-<?php $template->the_current_instance(); ?>" action="<?php $template->the_action_url( 'resetpass' ); ?>" method="post">
+	<form name="resetpasswordform" id="resetpasswordform<?php $template->the_current_instance(); ?>" action="<?php $template->the_action_url( 'resetpass' ); ?>" method="post">
 		<p>
-			<label for="pass1-<?php $template->the_current_instance(); ?>"><?php _e( 'New Password:', 'theme-my-login' );?></label>
-			<input autocomplete="off" name="pass1" id="pass1-<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" />
+			<label for="pass1<?php $template->the_current_instance(); ?>"><?php _e( 'New Password:', 'theme-my-login' );?></label>
+			<input autocomplete="off" name="pass1" id="pass1<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" />
 		</p>
 		<p>
-			<label for="pass2-<?php $template->the_current_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
-			<input autocomplete="off" name="pass2" id="pass2-<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" />
+			<label for="pass2<?php $template->the_current_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
+			<input autocomplete="off" name="pass2" id="pass2<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" />
 		</p>
 <?php do_action( 'resetpassword_form', $template->get_current_instance() ); ?>
 		<p class="submit">
 			<input type="hidden" name="key" value="<?php $template->the_posted_value( 'key' ); ?>" />
 			<input type="hidden" name="login" value="<?php $template->the_posted_value( 'login' ); ?>" />
-			<input type="submit" name="wp-submit" id="wp-submit-<?php $template->the_current_instance(); ?>" value="<?php _e( 'Change Password', 'theme-my-login' ); ?>" />
+			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_current_instance(); ?>" value="<?php _e( 'Change Password', 'theme-my-login' ); ?>" />
 		</p>
 	</form>
 	<?php $template->the_action_links( array( 'lost_password' => false ) ); ?>
@@ -203,11 +207,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @since 6.0
 	 * @access public
 	 */
-	function action_messages( &$errors ) {
+	function action_messages( &$theme_my_login ) {
 		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
-			$errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
+			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
 		elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
-			$errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
+			$theme_my_login->errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
 	}
 	
 	/**
@@ -222,10 +226,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string $redirect_to URL to redirect to
 	 */
 	function register_redirect( $redirect_to ) {
-		$request_instance = wdbj_tml_get_var( 'request_instance' );
+		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
+		
 		$redirect_to = site_url( 'wp-login.php?registration=complete' );
-		if ( 'tml-page' != $request_instance )
-			$redirect_to = wdbj_tml_get_current_url( 'registration=complete&instance=' . $request_instance );	
+		if ( !empty( $instance ) )
+			$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 		return $redirect_to;
 	}
 	
@@ -239,10 +244,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @access public
 	 */
 	function resetpass_redirect( $redirect_to ) {
-		$request_instance = wdbj_tml_get_var( 'request_instance' );
+		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
+		
 		$redirect_to = site_url( 'wp-login.php?resetpass=complete' );
-		if ( 'tml-page' != $request_instance )
-			$redirect_to = wdbj_tml_get_current_url( 'resetpass=complete&instance=' . $request_instance );	
+		if ( !empty( $instance ) )
+			$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );	
 		return $redirect_to;
 	}
 	
@@ -349,7 +355,7 @@ class Theme_My_Login_Custom_Passwords {
 		add_filter( 'register_message', array( &$this, 'register_message' ) );
 		add_filter( 'lostpassword_message', array( &$this, 'lostpassword_message' ) );
 		add_filter( 'resetpass_message', array( &$this, 'resetpass_message' ) );
-		add_action( 'tml_init', array( &$this, 'action_messages' ) );
+		add_action( 'tml_request', array( &$this, 'action_messages' ) );
 		// Redirection
 		add_filter( 'register_redirect', array( &$this, 'register_redirect' ) );
 		add_filter( 'resetpass_redirect', array( &$this, 'resetpass_redirect' ) );
