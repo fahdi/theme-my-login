@@ -652,7 +652,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 		if ( $errors->get_error_code() )
 			return $errors;
 
-		$user_pass = apply_filters( 'user_pass', wp_generate_password() );
+		$user_pass = apply_filters( 'user_registration_pass', wp_generate_password() );
 		$user_id = wp_create_user( $sanitized_user_login, $user_pass, $user_email );
 		if ( !$user_id ) {
 			$errors->add( 'registerfail', sprintf( __( '<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href="mailto:%s">webmaster</a> !', 'theme-my-login' ), get_option( 'admin_email' ) ) );
