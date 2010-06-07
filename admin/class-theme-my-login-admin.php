@@ -507,7 +507,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	 * @param callback $function The function to be called to output the content for this page.
 	 * @param array $function_args Arguments to pass in to callback function
 	 */
-	function add_submenu_page( $parent_slug, $menu_title, $menu_slug, $function = array(), $function_args = '' ) {
+	function add_submenu_page( $parent_slug, $menu_title, $menu_slug, $function = '', $function_args = array() ) {
 		$menu_slug = plugin_basename( $menu_slug );
 		$parent = plugin_basename( $parent_slug );
 		
@@ -516,7 +516,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 		$hookname = get_plugin_page_hookname( $parent_slug . '-' . $count, '' );
 		$hookname = preg_replace( '|[^a-zA-Z0-9_:.]|', '-', $hookname );
 		if ( !empty( $function ) && !empty( $hookname ) )
-			add_action( $hookname, $function );
+			add_action( $hookname, $function, 10, count( $function_args ) );
 		
 		$this->submenu[$parent_slug][] = array( $menu_title, $menu_slug, $hookname, $function_args );
 		
