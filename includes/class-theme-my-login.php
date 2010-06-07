@@ -485,7 +485,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 		add_action( 'parse_request', array( &$this, 'the_request' ) );
 		
 		// Re-load options after modules loaded so that modules can hook into 'tml_init_options'
-		add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 1 );
+		add_action( 'tml_modules_loaded', array( &$this, 'load_options' ) );
 		
 		add_filter( 'the_title', array( &$this, 'the_title' ), 10, 2 );
 		add_filter( 'single_post_title', array( &$this, 'single_post_title' ) );
