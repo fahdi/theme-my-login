@@ -62,6 +62,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Proccesses the request
 	 *
+	 * Callback for 'parse_request' hook in WP::parse_request()
+	 *
+	 * @see WP::parse_request()
 	 * @since 6.0
 	 * @access public
 	 */
@@ -235,6 +238,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Changes the_title() to reflect the current action
 	 *
+	 * Callback for 'the_title' hook in the_title()
+	 *
+	 * @see the_title()
 	 * @since 6.0
 	 * @acess public
 	 *
@@ -266,6 +272,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Changes single_post_title() to reflect the current action
 	 *
+	 * Callback for 'single_post_title' hook in single_post_title()
+	 *
+	 * @see single_post_title()
 	 * @since 6.0
 	 * @access public
 	 *
@@ -283,6 +292,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Excludes TML page if set in the admin
 	 *
+	 * Callback for 'wp_list_pages_excludes' hook in wp_list_pages()
+	 *
+	 * @see wp_list_pages()
 	 * @since 6.0
 	 * @access public
 	 *
@@ -302,6 +314,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Filters the output of wp_list_pages()
 	 *
+	 * Callback for 'wp_list_pages' hook in wp_list_pages()
+	 *
+	 * @see wp_list_pages()
 	 * @since 6.0
 	 * @access public
 	 *
@@ -317,6 +332,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	/**
 	 * Changes permalink to logout link if user is logged in
 	 *
+	 * Callback for 'page_link' hook in get_page_link()
+	 *
+	 * @see get_page_link()
 	 * @since 6.0
 	 * @access public
 	 *
@@ -584,8 +602,8 @@ class Theme_My_Login extends Theme_My_Login_Base {
 
 		wp_set_password( $new_pass, $user->ID );
 		update_user_option( $user->ID, 'default_password_nag', true, true ); //Set up the Password change nag.
-		$message  = sprintf( __('Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
-		$message .= sprintf( __('Password: %s', 'theme-my-login' ), $new_pass ) . "\r\n";
+		$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
+		$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $new_pass ) . "\r\n";
 		$message .= $site_url( 'wp-login.php', 'login' ) . "\r\n";
 
 		if ( function_exists( 'is_multisite') && is_multisite() ) {
