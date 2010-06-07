@@ -128,7 +128,7 @@ class Theme_My_Login_Custom_Passwords {
 	function get_resetpass_form( &$template ) {
 		if ( !$template->get_template( 'resetpass-form.php' ) ) {
 		?>
-<div class="login" id="theme-my-login-<?php $template->the_current_instance(); ?>">
+<div class="login" id="theme-my-login<?php $template->the_current_instance(); ?>">
 	<?php $template->the_action_message( 'resetpass' ); ?>
 	<?php $template->the_errors(); ?>
 	<form name="resetpasswordform" id="resetpasswordform<?php $template->the_current_instance(); ?>" action="<?php $template->the_action_url( 'resetpass' ); ?>" method="post">
@@ -342,11 +342,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @access public
 	 */
 	function __construct() {
-		// Password registration
+		// Register password
 		add_action( 'register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'user_registration_pass', array( &$this, 'set_password' ) );
-		// Password reset
+		// Reset password
 		add_action( 'login_form_resetpass', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'login_form_rp', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'login_action_resetpass', array( &$this, 'resetpass_action' ) );
