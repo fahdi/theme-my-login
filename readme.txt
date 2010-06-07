@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0-RC1
-Stable tag: 5.1.3
+Stable tag: 5.1.4
 
 Themes the WordPress login pages according to your theme.
 
@@ -42,6 +42,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 
 == Changelog ==
+
+= 5.1.4 =
+* Fix the_title() bug fro WP versions before 3.0 (again)
+* Fix undefined is_user_logged_in() bug
 
 = 5.1.3 =
 * Make Themed Profiles work properly
