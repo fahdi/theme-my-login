@@ -74,7 +74,7 @@ class Theme_My_Login_Base {
 				|| '.php' == substr( $module, -4 ) // $module must end with '.php'
 				|| file_exists( TML_MODULE_DIR . '/' . $module )	// $module must exist
 				)
-			$modules[] = $module;
+			$modules[] = TML_MODULE_DIR . '/' . $module;
 		}
 		return $modules;
 	}
