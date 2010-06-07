@@ -9,7 +9,7 @@ function wdbj_tml_the_title($title, $post_id = '') {
 	// No post ID until WP 3.0!
 	if ( empty( $post_id ) ) {
 		global $wpdb;
-		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s", $title ) );
+		$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_status = 'publish'", $title ) );
 	}
 		
     if ( wdbj_tml_get_option('page_id')	== $post_id ) {
