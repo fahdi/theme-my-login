@@ -200,7 +200,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 					if ( $http_post ) {
 						$user = wp_signon( '', $secure_cookie );
 
-						$this->redirect_to = apply_filters( 'login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
+						$redirect_to = apply_filters( 'login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
 
 						if ( $http_post && !is_wp_error( $user ) && !$reauth ) {
 							// If the user can't edit posts, send them to their profile.
@@ -212,6 +212,8 @@ class Theme_My_Login extends Theme_My_Login_Base {
 						
 						$errors = $user;
 					}
+					
+					$this->redirect_to = $redirect_to;
 					
 					// Clear errors if loggedout is set.
 					if ( !empty( $_GET['loggedout'] ) || $reauth )
