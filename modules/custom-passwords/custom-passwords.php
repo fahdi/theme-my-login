@@ -13,9 +13,17 @@ if ( !class_exists( 'Theme_My_Login_Custom_Passwords' ) ) :
  * @since 6.0
  */
 class Theme_My_Login_Custom_Passwords {
-
-	var $theme_my_login;
-
+	/**
+	 * Outputs password fields to registration form
+	 *
+	 * Callback for 'register_form' hook in "register-form.php", included by Theme_My_Login_Template::display()
+	 *
+	 * @see Theme_My_Login::display()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $template Reference to Theme_My_Login_Template object
+	 */
 	function password_fields( &$template ) {
 	?>
 	<p><label for="pass1-<?php $template->the_current_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
@@ -24,7 +32,19 @@ class Theme_My_Login_Custom_Passwords {
 	<input autocomplete="off" name="pass2" id="pass2-<?php $template->the_current_instance(); ?>" class="input" size="20" value="" type="password" /></p>
 <?php
 	}
-
+	
+	/**
+	 * Handles password errors for registration form
+	 *
+	 * Callback for 'registration_errors' hook in Theme_My_Login::register_new_user()
+	 *
+	 * @see Theme_My_Login::register_new_user()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param WP_Error $errors WP_Error object
+	 * @return WP_Error WP_Error object
+	 */
 	function password_errors( $errors = '' ) {
 		if ( empty( $errors ) )
 			$errors = new WP_Error();
@@ -39,13 +59,36 @@ class Theme_My_Login_Custom_Passwords {
 		}	
 		return $errors;
 	}
-
+	
+	/**
+	 * Sets the user password
+	 *
+	 * Callback for 'user_registration_pass' hook in Theme_My_Login::register_new_user()
+	 *
+	 * @see Theme_My_Login::register_new_user()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $user_pass Auto-generated password passed in from filter
+	 * @return string Password POSTed by user
+	 */
 	function set_password( $user_pass ) {
 		if ( isset( $_POST['user_pw'] ) && !empty( $_POST['user_pw'] ) )
 			$user_pass = $_POST['user_pw'];
 		return $user_pass;
 	}
-
+	
+	/**
+	 * Resets the user's password
+	 *
+	 * Callback for 'login_action_resetpass' and 'login_action_rp' hooks in Theme_My_Login::the_request()
+	 *
+	 * @see Theme_My_Login::the_request()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $theme_my_login
+	 */
 	function resetpass_action( &$theme_my_login ) {
 		$errors =& $theme_my_login->errors;
 		
@@ -65,7 +108,19 @@ class Theme_My_Login_Custom_Passwords {
 			}
 		}
 	}
-
+	
+	/**
+	 * Outputs reset password form HTML
+	 *
+	 * This function will first look in the current theme's directory for "resetpass-form.php" and include it if found.
+	 * Otherwise, the HTML below will be included instead.
+	 *
+	 * @see Theme_My_Login_Template::display()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $template Reference to Theme_My_Login_Template object
+	 */
 	function get_resetpass_form( &$template ) {
 		if ( !$template->get_template( 'resetpass-form.php' ) ) {
 		?>
@@ -94,10 +149,78 @@ class Theme_My_Login_Custom_Passwords {
 		}
 	}
 	
+	/**
+	 * Changes the reset password template message
+	 *
+	 * Callback for 'resetpass_message' hook in Theme_My_Login_Template::get_action_message()
+	 *
+	 * @see Theme_My_Login_Template::get_action_message()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @return string The new reset password message
+	 */
 	function resetpass_message() {
 		return __( 'Please enter a new password.', 'theme-my-login' );
 	}
-
+	
+	/**
+	 * Changes the register template message
+	 *
+	 * Callback for 'register_message' hook in Theme_My_Login_Template::get_action_message()
+	 *
+	 * @see Theme_My_Login_Template::get_action_message()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @return string The new register message
+	 */
+	function register_message( $message ) {
+		if ( isset( $_GET['action'] ) && 'register' == $_GET['action'] )
+			$message = '';
+		return $message;
+	}
+	
+	/**
+	 * Changes the lost password template message
+	 *
+	 * Callback for 'lostpassword_message' hook in Theme_My_Login_Template::get_action_message()
+	 *
+	 * @see Theme_My_Login_Template::get_action_message()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @return string The new lost password message
+	 */
+	function lostpassword_message( $message ) {
+		$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', 'theme-my-login' );
+		return $message;
+	}
+	
+	/**
+	 * {@internal Missing short description}
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function action_messages( &$errors ) {
+		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
+			$errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
+		elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
+			$errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
+	}
+	
+	/**
+	 * Changes where the user is redirected upon successful registration
+	 *
+	 * Callback for 'register_redirect' hook in Theme_My_Login::the_request()
+	 *
+	 * @see Theme_My_Login::the_request()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @return string $redirect_to URL to redirect to
+	 */
 	function register_redirect( $redirect_to ) {
 		$request_instance = wdbj_tml_get_var( 'request_instance' );
 		$redirect_to = site_url( 'wp-login.php?registration=complete' );
@@ -105,7 +228,16 @@ class Theme_My_Login_Custom_Passwords {
 			$redirect_to = wdbj_tml_get_current_url( 'registration=complete&instance=' . $request_instance );	
 		return $redirect_to;
 	}
-
+	
+	/**
+	 * Changes where the user is redirected upon successful password reset
+	 *
+	 * Callback for 'resetpass_redirect' hook in Theme_My_Login::the_request()
+	 *
+	 * @see Theme_My_Login::the_request()
+	 * @since 6.0
+	 * @access public
+	 */
 	function resetpass_redirect( $redirect_to ) {
 		$request_instance = wdbj_tml_get_var( 'request_instance' );
 		$redirect_to = site_url( 'wp-login.php?resetpass=complete' );
@@ -113,25 +245,17 @@ class Theme_My_Login_Custom_Passwords {
 			$redirect_to = wdbj_tml_get_current_url( 'resetpass=complete&instance=' . $request_instance );	
 		return $redirect_to;
 	}
-
-	function register_message( $message ) {
-		if ( isset( $_GET['action'] ) && 'register' == $_GET['action'] )
-			$message = '';
-		return $message;
-	}
-
-	function lostpassword_message( $message ) {
-		$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', 'theme-my-login' );
-		return $message;
-	}
-
-	function action_messages( &$theme_my_login ) {
-		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
-			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
-		elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
-			$theme_my_login->errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
-	}
-
+	
+	/**
+	 * Validates the reset key
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $key The validation key
+	 * @param string $login The user login
+	 * @return object|WP_Error Row from $wpdb->users table on success, WP_Error on failure
+	 */
 	function validate_reset_key( $key, $login ) {
 		global $wpdb;
 
@@ -149,7 +273,15 @@ class Theme_My_Login_Custom_Passwords {
 			
 		return $user;
 	}
-
+	
+	/**
+	 * Resets the user password
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * return bool|WP_Error True on success, WP_Error on failure
+	 */
 	function reset_password() {
 		
 		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
@@ -186,10 +318,24 @@ class Theme_My_Login_Custom_Passwords {
 
 		return true;
 	}
-
-	function Theme_My_Login_Custom_Passwords( &$theme_my_login ) {
-		$this->theme_my_login =& $theme_my_login;
-		
+	
+	/**
+	 * PHP4 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function Theme_My_Login_Custom_Passwords() {
+		$this->__construct();
+	}
+	
+	/**
+	 * PHP5 style constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function __construct() {
 		// Password registration
 		add_action( 'register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
@@ -212,6 +358,6 @@ class Theme_My_Login_Custom_Passwords {
 endif;
 
 /* Instaniate the class */
-$Theme_My_login_Custom_Passwords = new Theme_My_Login_Custom_Passwords( $theme_my_login );
+$Theme_My_login_Custom_Passwords = new Theme_My_Login_Custom_Passwords();
 
 ?>
