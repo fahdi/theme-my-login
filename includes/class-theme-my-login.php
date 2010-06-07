@@ -92,7 +92,9 @@ class Theme_My_Login extends Theme_My_Login_Base {
 				case 'logout' :
 					check_admin_referer( 'log-out' );
 					
-					$redirect_to = apply_filters( 'logout_redirect', site_url( 'wp-login.php?loggedout=true' ), isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '' );
+					$user = wp_get_current_user();
+					
+					$redirect_to = apply_filters( 'logout_redirect', site_url( 'wp-login.php?loggedout=true' ), isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
 
 					wp_logout();
 
