@@ -63,7 +63,7 @@ foreach ( $theme_my_login->get_active_modules() as $module )
 	include_once( $module );
 unset( $module );
 
-do_action( 'tml_modules_loaded' );
+do_action_ref_array( 'tml_modules_loaded', array( &$theme_my_login ) );
 
 if ( is_admin() ) {
 	require_once( TML_DIR . '/admin/class-theme-my-login-admin.php' );
