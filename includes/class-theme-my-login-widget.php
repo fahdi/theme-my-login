@@ -20,20 +20,10 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @access public
 	 */
     function Theme_My_Login_Widget() {
-        $this->__construct();
+        $widget_options = array( 'classname' => 'widget_theme_my_login', 'description' => __( 'A login form for your blog.', 'theme-my-login' ) );
+        $this->WP_Widget( 'theme-my-login', __( 'Theme My Login', 'theme-my-login' ), $widget_options );
     }
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
-        $widget_ops = array( 'classname' => 'widget_theme_my_login', 'description' => __( 'A login form for your blog.', 'theme-my-login' ) );
-        parent::WP_Widget( 'theme-my-login', __( 'Theme My Login', 'theme-my-login' ), $widget_ops );
-	}
-	
+
 	/**
 	 * Displays the widget
 	 *
