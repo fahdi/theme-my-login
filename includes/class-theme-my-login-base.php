@@ -46,7 +46,7 @@ class Theme_My_Login_Base {
 	function site_url( $url, $path, $orig_scheme ) {
 		if ( strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
 			$orig_url = $url;
-			$url = trailingslashit( $this->page_link );
+			$url = $this->page_link;
 			if ( strpos( $orig_url, '?' ) ) {
 				$query = substr( $orig_url, strpos( $orig_url, '?' ) + 1 );
 				parse_str( $query, $r );
