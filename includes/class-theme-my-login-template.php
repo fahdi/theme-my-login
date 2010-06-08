@@ -56,7 +56,7 @@ class Theme_My_Login_Template {
 			$user_role = $user->roles[0];
 			echo '<div class="login" id="theme-my-login' . $this->options['instance'] . '">' . "\n";
 			if ( $this->options['show_gravatar'] )
-				$output .= '<div class="tml-user-avatar">' . get_avatar( $user->ID, $this->options['gravatar_size'] ) . '</div>' . "\n";
+				echo '<div class="tml-user-avatar">' . get_avatar( $user->ID, $this->options['gravatar_size'] ) . '</div>' . "\n";
 			$this->the_user_links();
 			echo '</div>' . "\n";
 		} else {
