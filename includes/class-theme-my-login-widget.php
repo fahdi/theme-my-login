@@ -19,8 +19,8 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @since 6.0
 	 * @access public
 	 */
-    function Theme_My_Login_Widget(){
-		$this->__construct();
+    function Theme_My_Login_Widget() {
+        $this->__construct();
     }
 	
 	/**
@@ -43,7 +43,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
-    function widget( $args, $instance ){
+    function widget( $args, $instance ) {
 		global $Theme_My_Login;
         if ( is_user_logged_in() && !$instance['logged_in_widget'] )
             return;
@@ -57,7 +57,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @since 6.0
 	 * @access public
 	 */
-    function update( $new_instance, $old_instance ){
+    function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
         $instance['default_action']     = in_array( $new_instance['default_action'], array( 'login', 'register', 'lostpassword' ) ) ? $new_instance['default_action'] : 'login';
         $instance['logged_in_widget']   = empty( $new_instance['logged_in_widget'] ) ? false : true;
@@ -68,7 +68,7 @@ class Theme_My_Login_Widget extends WP_Widget {
         $instance['show_gravatar']      = empty( $new_instance['show_gravatar'] ) ? false : true;
         $instance['gravatar_size']      = absint( $new_instance['gravatar_size'] );
         $instance['register_widget']    = empty( $new_instance['register_widget'] ) ? false : true;
-        $instance['lost_pass_widget']   = empty( $new_instance['lost_pass_widget'] ) ? false : true;
+        $instance['lostpass_widget']   = empty( $new_instance['lostpass_widget'] ) ? false : true;
         return $instance;
     }
 	
@@ -78,7 +78,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @since 6.0
 	 * @access public
 	 */
-    function form( $instance ){
+    function form( $instance ) {
         $defaults = array(
             'default_action' => 'login',
             'logged_in_widget' => 1,
@@ -89,7 +89,7 @@ class Theme_My_Login_Widget extends WP_Widget {
             'show_gravatar' => 1,
             'gravatar_size' => 50,
             'register_widget' => 1,
-            'lost_pass_widget' => 1
+            'lostpass_widget' => 1
             );
 
         $instance = wp_parse_args( $instance, $defaults );
@@ -115,11 +115,12 @@ class Theme_My_Login_Widget extends WP_Widget {
         echo '<p>' . __( 'Gravatar Size', 'theme-my-login' ) . ': <input name="' . $this->get_field_name( 'gravatar_size' ) . '" type="text" id="' . $this->get_field_id( 'gravatar_size' ) . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id( 'gravatar_size' ) . '"></label></p>' . "\n";
         $is_checked = ( empty( $instance['register_widget'] ) ) ? '' : 'checked="checked" ';
         echo '<p><input name="' . $this->get_field_name( 'register_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'register_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'register_widget' ) . '">' . __( 'Allow Registration', 'theme-my-login' ) . '</label></p>' . "\n";
-        $is_checked = ( empty( $instance['lost_pass_widget'] ) ) ? '' : 'checked="checked" ';
-        echo '<p><input name="' . $this->get_field_name( 'lost_pass_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lost_pass_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lost_pass_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
+        $is_checked = ( empty( $instance['lostpass_widget'] ) ) ? '' : 'checked="checked" ';
+        echo '<p><input name="' . $this->get_field_name( 'lostpass_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpass_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpass_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
     }
 
 }
+
 endif;
 
 ?>
