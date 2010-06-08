@@ -258,7 +258,6 @@ class Theme_My_Login_Custom_Redirection {
 		add_action( 'login_form', array( &$this, 'login_form' ) );
 	}
 }
-endif;
 
 /**
  * Holds the reference to Theme_My_Login_Custom_Redirection object
@@ -266,5 +265,7 @@ endif;
  * @since 6.0
  */
 $theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection();
+
+endif;
 
 ?>
