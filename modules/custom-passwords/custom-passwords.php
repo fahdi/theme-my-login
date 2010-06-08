@@ -402,7 +402,6 @@ class Theme_My_Login_Custom_Passwords {
 		add_filter( 'resetpass_redirect', array( &$this, 'resetpass_redirect' ) );
 	}
 }
-endif;
 
 /**
  * Holds the reference to Theme_My_Login_Custom_Passwords object
@@ -410,5 +409,7 @@ endif;
  * @since 6.0
  */
 $theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords();
+
+endif;
 
 ?>
