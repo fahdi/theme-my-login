@@ -16,7 +16,7 @@ class Theme_My_Login_Custom_Passwords {
 	/**
 	 * Outputs password fields to registration form
 	 *
-	 * Callback for 'register_form' hook in "register-form.php", included by Theme_My_Login_Template::display()
+	 * Callback for 'register_form' hook in file "register-form.php", included by Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login::display()
 	 * @since 6.0
@@ -46,17 +46,22 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return WP_Error WP_Error object
 	 */
 	function password_errors( $errors = '' ) {
+		// Make sure $errors is a WP_Error object
 		if ( empty( $errors ) )
 			$errors = new WP_Error();
+		// Make sure passwords aren't empty
 		if ( empty( $_POST['pass1'] ) || $_POST['pass1'] == '' || empty( $_POST['pass2'] ) || $_POST['pass2'] == '' ) {
 			$errors->add( 'empty_password', __( '<strong>ERROR</strong>: Please enter a password.', 'theme-my-login' ) );
+		// Make sure passwords match
 		} elseif ( $_POST['pass1'] !== $_POST['pass2'] ) {
 			$errors->add( 'password_mismatch', __( '<strong>ERROR</strong>: Your passwords do not match.', 'theme-my-login' ) );
+		// Make sure password is long enough
 		} elseif ( strlen( $_POST['pass1'] ) < 6 ) {
 			$errors->add( 'password_length', __( '<strong>ERROR</strong>: Your password must be at least 6 characters in length.', 'theme-my-login' ) );
+		// All is good, assign password to a friendlier key
 		} else {
-			$_POST['user_pw'] = $_POST['pass1'];
-		}	
+			$_POST['user_pass'] = $_POST['pass1'];
+		}
 		return $errors;
 	}
 	
@@ -73,8 +78,9 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string Password POSTed by user
 	 */
 	function set_password( $user_pass ) {
-		if ( isset( $_POST['user_pw'] ) && !empty( $_POST['user_pw'] ) )
-			$user_pass = $_POST['user_pw'];
+		// Make sure password isn't empty
+		if ( isset( $_POST['user_pass'] ) && !empty( $_POST['user_pass'] ) )
+			$user_pass = $_POST['user_pass'];
 		return $user_pass;
 	}
 	
@@ -90,23 +96,35 @@ class Theme_My_Login_Custom_Passwords {
 	 * @param object $theme_my_login
 	 */
 	function resetpass_action( &$theme_my_login ) {
+		// Set local reference to $theme_my_login->errors
 		$errors =& $theme_my_login->errors;
 		
+		// Validate the reset key
 		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
+		// Handle errors
 		if ( is_wp_error( $user ) ) {
+			// Redirect to current page with 'action=lostpassword&error=invalidkey' added to the query
 			$redirect_to = Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey' );
+			// Add instance to query if specified
 			if ( !empty( $theme_my_login->request_instance ) )
 				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
+			// Redirect
 			wp_redirect( $redirect_to );
 			exit();
 		}
 		
+		// Check if form has been posted
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
+			// Reset the password
 			$errors = $this->reset_password();
+			// Make sure there aren't any errors
 			if ( !is_wp_error( $errors ) ) {
+				// Redirect to current page with 'resetpass=complete' added to the query
 				$redirect_to = Theme_My_Login::get_current_url( 'resetpass=complete' );
+				// Add instance to query if specified
 				if ( !empty( $theme_my_login->request_instance ) )
 					$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
+				// Redirect
 				wp_redirect( $redirect_to );
 				exit();
 			}
@@ -126,6 +144,7 @@ class Theme_My_Login_Custom_Passwords {
 	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
 	function get_resetpass_form( &$template ) {
+		// If custom template doesn't exist in theme directory
 		if ( !$template->get_template( 'resetpass-form.php' ) ) {
 		?>
 <div class="login" id="theme-my-login<?php $template->the_current_instance(); ?>">
@@ -165,6 +184,7 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string The new reset password message
 	 */
 	function resetpass_message() {
+		// Add a message to the reset password template created by this module
 		return __( 'Please enter a new password.', 'theme-my-login' );
 	}
 	
@@ -180,6 +200,7 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string The new register message
 	 */
 	function register_message( $message ) {
+		// Clear out the "A password will be e-mailed to you." message
 		if ( isset( $_GET['action'] ) && 'register' == $_GET['action'] )
 			$message = '';
 		return $message;
@@ -197,19 +218,22 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string The new lost password message
 	 */
 	function lostpassword_message( $message ) {
+		// Change the lost password message to reflect that they will be able to reset their password after clicking a link in their e-mail
 		$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', 'theme-my-login' );
 		return $message;
 	}
 	
 	/**
-	 * {@internal Missing short description}
+	 * Handles display of various action/status messages
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
 	function action_messages( &$theme_my_login ) {
+		// Change "Registration complete. Please check your e-mail." to reflect the fact that they already set a password
 		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
 			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
+		// Display the following message instead of "Check your e-mail for your new password."
 		elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
 			$theme_my_login->errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
 	}
@@ -226,11 +250,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @return string $redirect_to URL to redirect to
 	 */
 	function register_redirect( $redirect_to ) {
-		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
-		
+		// Redirect to login page with 'registration=complete' added to the query
 		$redirect_to = site_url( 'wp-login.php?registration=complete' );
-		if ( !empty( $instance ) )
-			$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
+		// Add instance to the query if specified
+		if ( isset( $_REQUEST['instance'] ) & !empty( $_REQUEST['instance'] ) )
+			$redirect_to = add_query_arg( 'instance', $_REQUEST['instance'], $redirect_to );
 		return $redirect_to;
 	}
 	
@@ -244,11 +268,11 @@ class Theme_My_Login_Custom_Passwords {
 	 * @access public
 	 */
 	function resetpass_redirect( $redirect_to ) {
-		$instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
-		
+		// Redirect to the login page with 'resetpass=complete' added to the query
 		$redirect_to = site_url( 'wp-login.php?resetpass=complete' );
-		if ( !empty( $instance ) )
-			$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );	
+		// Add instance to the query if specified
+		if ( isset( $_REQUEST['instance'] ) & !empty( $_REQUEST['instance'] ) )
+			$redirect_to = add_query_arg( 'instance', $_REQUEST['instance'], $redirect_to );	
 		return $redirect_to;
 	}
 	
@@ -264,15 +288,19 @@ class Theme_My_Login_Custom_Passwords {
 	 */
 	function validate_reset_key( $key, $login ) {
 		global $wpdb;
-
+		
+		// Strip non-alphanumeric characters
 		$key = preg_replace( '/[^a-z0-9]/i', '', $key );
-
+		
+		// Make sure $key isn't empty
 		if ( empty( $key ) || !is_string( $key ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
-
+			
+		// Make sure $login isn't empty
 		if ( empty( $login ) || !is_string( $login ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
-
+			
+		// Make sure the $key and $login pair match
 		$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login ) );
 		if ( empty( $user ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
@@ -289,21 +317,29 @@ class Theme_My_Login_Custom_Passwords {
 	 * return bool|WP_Error True on success, WP_Error on failure
 	 */
 	function reset_password() {
-		
+		// Validate the reset key
 		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 		if ( is_wp_error( $user ) )
 			return $user;
-		
+			
+		// Validate the password
 		$errors = $this->password_errors( new WP_Error() );
 		if ( $errors->get_error_code() )
 			return $errors;
 		
-		$new_pass = $_POST['pass1'];
-
+		// Assign the password to a local variable
+		$new_pass = $_POST['user_pass'];
+		
+		// Call 'password_reset' hook
 		do_action( 'password_reset', $user->user_login, $new_pass );
-
+		
+		// Set the password
 		wp_set_password( $new_pass, $user->ID );
+		
+		// Remove the password nag
 		update_usermeta( $user->ID, 'default_password_nag', false );
+		
+		// Notification e-mail message
 		$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
 		$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $new_pass ) . "\r\n";
 		$message .= site_url( 'wp-login.php', 'login' ) . "\r\n";
@@ -311,15 +347,20 @@ class Theme_My_Login_Custom_Passwords {
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 		// we want to reverse this for the plain text arena of emails.
 		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-
+		
+		// Notification e-mail subject
 		$title = sprintf( __( '[%s] Your new password', 'theme-my-login' ), $blogname );
-
+		
+		// Apply filters to notification e-mail subject
 		$title = apply_filters( 'password_reset_title', $title, $user->ID );
+		// Apply filters to notification e-mail message
 		$message = apply_filters( 'password_reset_message', $message, $new_pass, $user->ID );
-
+		
+		// Make sure the message sends
 		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
 			die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
-
+			
+		// Notify the admin of the change
 		wp_password_change_notification( $user );
 
 		return true;
