@@ -202,7 +202,7 @@ class Theme_My_Login_Custom_Redirection {
 	 * @since 6.0
 	 * @access public
 	 */
-	function init_options( $options = '' ) {
+	function init_options( $options = array() ) {
 		global $wp_roles;
 		if ( empty( $wp_roles ) )
 			$wp_roles =& new WP_Roles();
