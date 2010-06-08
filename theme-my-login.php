@@ -42,6 +42,7 @@ load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
 require_once( TML_DIR . '/includes/class-theme-my-login-base.php' );
 require_once( TML_DIR . '/includes/class-theme-my-login.php' );
 require_once( TML_DIR . '/includes/class-theme-my-login-template.php' );
+require_once( TML_DIR . '/includes/class-theme-my-login-widget.php' );
 
 /**
  * Theme My Login object
