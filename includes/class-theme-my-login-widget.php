@@ -121,6 +121,11 @@ class Theme_My_Login_Widget extends WP_Widget {
 
 }
 
+function theme_my_login_widget_init() {
+	register_widget( 'Theme_My_Login_Widget' );
+}
+add_action( 'widgets_init', 'theme_my_login_widget_init' );
+
 endif;
 
 ?>
