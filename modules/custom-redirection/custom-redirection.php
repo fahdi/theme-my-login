@@ -211,6 +211,8 @@ class Theme_My_Login_Custom_Redirection {
 		
 		$options['redirection'] = array();
 		foreach ( $wp_roles->get_names() as $role => $label ) {
+			if ( 'pending' == $role )
+				continue;
 			$options['redirection'][$role] = array( 'login_type' => 'default', 'login_url' => '', 'logout_type' => 'default', 'logout_url' => '' );
 		}
 		return $options;
