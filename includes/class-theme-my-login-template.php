@@ -342,7 +342,7 @@ class Theme_My_Login_Template {
 			else
 				$url = Theme_My_Login::get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
 		}
-			
+		
 		return apply_filters( 'tml_action_url', $url );
 	}
 	
@@ -440,7 +440,7 @@ class Theme_My_Login_Template {
 			'show_reg_link' => 1,
 			'show_pass_link' => 1,
 			'register_widget' => 0,
-			'lost_pass_widget' => 0,
+			'lostpass_widget' => 0,
 			'logged_in_widget' => 1,
 			'show_gravatar' => 1,
 			'gravatar_size' => 50,
