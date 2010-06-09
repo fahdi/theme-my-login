@@ -145,6 +145,8 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login_Admin::add_submenu_page()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param string $role Name of user role
 	 */
 	function display_redirection_settings( $role ) {
 		$redirection =& $this->theme_my_login->options['redirection'][$role];
