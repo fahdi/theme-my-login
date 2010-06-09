@@ -13,7 +13,6 @@ if ( !class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
  * @since 6.0
  */
 class Theme_My_Login_Custom_Redirection {
-
 	/**
 	 * Holds reference to $theme_my_login object
 	 *
@@ -148,7 +147,7 @@ class Theme_My_Login_Custom_Redirection {
 	 * @access public
 	 */
 	function display_redirection_settings( $role ) {
-		$redirection = $this->theme_my_login->options['redirection'][$role];
+		$redirection =& $this->theme_my_login->options['redirection'][$role];
 		?>
 <table class="form-table">
 	<tr valign="top">
