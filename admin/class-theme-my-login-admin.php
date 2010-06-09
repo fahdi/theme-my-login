@@ -161,8 +161,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
 	function display_settings_page() {
 		// Default menu
 		$this->add_menu_page( __('General', 'theme-my-login' ), 'tml-options' );
-		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-basic', array( &$this, 'display_basic_settings' ) );
-		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-modules', array( &$this, 'display_module_settings' ) );
+		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-options-basic', array( &$this, 'display_basic_settings' ) );
+		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-options-modules', array( &$this, 'display_module_settings' ) );
 
 		// Allow plugins to add to menu
 		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
