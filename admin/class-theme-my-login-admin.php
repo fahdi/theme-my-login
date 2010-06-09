@@ -187,7 +187,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
         </ul>
 
         <?php foreach ( $this->menu as $menu ) {
-            echo '<div id="' . $menu[1] . '">' . "\n";
+            echo '<div id="' . $menu[1] . '" class="' . $menu[1] . '">' . "\n";
             if ( isset( $this->submenu[$menu[1]] ) ) {
                 echo '<ul>' . "\n";
                 foreach ( $this->submenu[$menu[1]] as $submenu ) {
@@ -196,7 +196,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Base {
                 echo '</ul>' . "\n";
                 
                 foreach ( $this->submenu[$menu[1]] as $submenu ) {
-                    echo '<div id="' . $submenu[1] . '">' . "\n";
+                    echo '<div id="' . $submenu[1] . '" class="' . $menu[1] . '">' . "\n";
 					if ( has_action( $submenu[2] ) ) {
 						do_action( 'load-' . $submenu[2] );
 						call_user_func_array( 'do_action', array_merge( (array) $submenu[2], (array) $submenu[3] ) );
