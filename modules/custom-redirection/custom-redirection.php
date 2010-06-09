@@ -126,14 +126,14 @@ class Theme_My_Login_Custom_Redirection {
 	function admin_menu( &$admin ) {
 		global $wp_roles;
 		// Add menu tab
-		$admin->add_menu_page( __( 'Redirection', 'theme-my-login' ), 'tml-custom-redirection-options' );
+		$admin->add_menu_page( __( 'Redirection', 'theme-my-login' ), 'tml-options-redirection' );
 		// Iterate through each user role
 		foreach ( $wp_roles->get_names() as $role => $label ) {
 			// We don't want the 'pending' role created by the "User Moderation" module
 			if ( 'pending' == $role )
 				continue;
 			// Add submenu tab for the role
-			$admin->add_submenu_page( 'tml-custom-redirection-options', translate_user_role( $label ), 'tml-custom-redirection-options-' . $role, array( &$this, 'display_redirection_settings' ), array( $role ) );
+			$admin->add_submenu_page( 'tml-options-redirection', translate_user_role( $label ), 'tml-options-redirection-' . $role, array( &$this, 'display_redirection_settings' ), array( $role ) );
 		}
 	}
 	
