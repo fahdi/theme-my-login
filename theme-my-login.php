@@ -74,6 +74,8 @@ if ( is_admin() ) {
 	 * @since 6.0
 	 */
 	$theme_my_login_admin =& new Theme_My_Login_Admin();
+	
+	do_action_ref_array( 'tml_admin_load', array( &$theme_my_login_admin ) );
 }
 
 if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
