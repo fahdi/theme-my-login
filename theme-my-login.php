@@ -75,6 +75,8 @@ function wdbj_tml_load() {
 	add_filter('wp_list_pages_excludes', 'wdbj_tml_list_pages_excludes');
 	add_filter('wp_list_pages', 'wdbj_tml_list_pages');
 	add_filter('page_link', 'wdbj_tml_page_link', 10, 2);
+	
+	add_filter('wp_setup_nav_menu_item', 'wdbj_tml_setup_nav_menu_item');
     
 	add_shortcode('theme-my-login-page', 'wdbj_tml_page_shortcode');
 	add_shortcode('theme-my-login', 'wdbj_tml_shortcode');

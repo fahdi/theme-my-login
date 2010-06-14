@@ -71,6 +71,21 @@ function wdbj_tml_page_link($link, $id) {
 	return $link;
 }
 
+function wdbj_tml_setup_nav_menu_item($menu_item) {
+	if ( 'page' == $menu_item->object ) {
+		$page_id = wdbj_tml_get_option('page_id');
+		if ( $page_id == $menu_item->object_id ) {
+			if ( is_user_logged_in() ) {
+				$menu_item->title = __('Log Out', 'theme-my-login');
+				$menu_item->url = wp_nonce_url(add_query_arg('action', 'logout', get_page_link($page_id)), 'log-out');
+			} else {
+				$menu_item->title = __('Log In', 'theme-my-login');
+			}
+		}
+	}
+	return $menu_item;
+}
+
 function wdbj_tml_shortcode($atts = '') {
     require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/template-functions.php' );
     
