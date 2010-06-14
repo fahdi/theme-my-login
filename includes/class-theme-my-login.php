@@ -313,7 +313,7 @@ class Theme_My_Login extends Theme_My_Login_Base {
 	 * @param array $exclude_array Array of excluded pages
 	 * @return array Modified array of excluded pages
 	 */
-	function list_pages_excludes( $exclude_array ) {
+	function wp_list_pages_excludes( $exclude_array ) {
 		// This makes the_title() filter work properly
 		$this->doing_pagelist = true;
 		
@@ -362,6 +362,28 @@ class Theme_My_Login extends Theme_My_Login_Base {
 				$link = wp_nonce_url( add_query_arg( 'action', 'logout', $link ), 'log-out' );
 		}
 		return $link;
+	}
+
+	/**
+	 * Alters menu item title & link according to whether user is logged in or not
+	 *
+	 * Callback for 'wp_setup_nav_menu_item' hook in wp_setup_nav_menu_item()
+	 *
+	 * @see wp_setup_nav_menu_item()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $menu_item The menu item
+	 * @return object The (possibly) modified menu item
+	 */
+	function wp_setup_nav_menu_item( $menu_item ) {
+		if ( 'page' == $menu_item->object && $this->options['page_id'] == $menu_item->object_id ) {
+			$this->doing_pagelist = true;
+			$menu_item->title = $this->the_title( $menu_item->title, $menu_item->object_id );
+			$menu_item->url = $this->page_link( $menu_item->url, $menu_item->object_id );
+			$this->doing_pagelist = false;
+		}
+		return $menu_item;
 	}
 
 	/**
@@ -496,8 +518,10 @@ class Theme_My_Login extends Theme_My_Login_Base {
 		
 		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
 		
-		add_filter( 'wp_list_pages_excludes', array( &$this, 'list_pages_excludes' ) );
+		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
+		
+		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
 		
 		add_shortcode( 'theme-my-login-page', array( &$this, 'page_shortcode' ) );
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
