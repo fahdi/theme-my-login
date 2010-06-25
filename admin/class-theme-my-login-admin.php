@@ -546,13 +546,13 @@ class Theme_My_Login_Admin {
 	 */
 	function install() {
 		// Shorthand reference
-		$theme =& $this->theme_my_login;
+		$theme_my_login =& $this->theme_my_login;
 		
 		// Declare page_id to avoid notices
 		$page_id = 0;
 		
 		// Current version
-		$version = $options->get_option( 'version' );
+		$version = $theme_my_login->get_option( 'version' );
 		
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
@@ -564,7 +564,7 @@ class Theme_My_Login_Admin {
 		}
 		
 		// Get existing page ID
-		$page_id = $options->get_option( 'page_id' );
+		$page_id = $theme_my_login->get_option( 'page_id' );
 		
 		// Maybe create login page?
 		if ( ( $page_id && $page = get_page( $page_id ) ) || $page = get_page_by_title( 'Login' ) ) {
