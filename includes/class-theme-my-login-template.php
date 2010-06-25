@@ -89,17 +89,30 @@ class Theme_My_Login_Template {
 		if ( has_action( 'login_form_' . $action ) ) {
 			do_action_ref_array( 'login_form_' . $action, array( &$this ) );
 		} else {
+			$template = array();
 			switch ( $action ) {
 				case 'lostpassword':
 				case 'retrievepassword':
-					$template = 'lostpassword-form.php';
+					if ( !empty( $this->options['lostpassword_template'] ) )
+						$template[] = $this->options['lostpassword_template'];
+					$template[] = 'lostpassword-form.php';
 					break;
 				case 'register':
-					$template = 'register-form.php';
+					if ( !empty( $this->options['register_template'] ) )
+						$template[] = $this->options['register_template'];
+					$template[] = 'register-form.php';
 					break;
 				case 'login':
 				default :
-					$template = is_user_logged_in() ? 'logged-in.php' : 'login-form.php';
+					if ( is_user_logged_in() ) {
+						if ( !empty( $this->options['user_template'] ) )
+							$template[] = $this->options['user_template'];
+						$template[] = 'user-panel.php';
+					} else {
+						if ( !empty( $this->options['login_template'] ) )
+							$template[] = $this->options['login_template'];
+						$template[] = 'login-form.php';
+					}
 			}
 			$this->get_template( $template );
 		}
@@ -497,6 +510,10 @@ class Theme_My_Login_Template {
 		$this->options = shortcode_atts( array(
 			'instance' => '',
 			'default_action' => 'login',
+			'login_template' => '',
+			'register_template' => '',
+			'lostpassword_template' => '',
+			'user_template' => '',
 			'show_title' => true,
 			'show_log_link' => true,
 			'show_reg_link' => true,
@@ -504,13 +521,12 @@ class Theme_My_Login_Template {
 			'register_widget' => false,
 			'lostpass_widget' => false,
 			'logged_in_widget' => true,
-			'show_gravatar' => false,
+			'show_gravatar' => true,
 			'gravatar_size' => 50,
 			'before_widget' => '<li>',
 			'after_widget' => '</li>',
 			'before_title' => '<h2>',
-			'after_title' => '</h2>',
-			'redirect_to' => ''
+			'after_title' => '</h2>'
 		), (array) $options );
 	}
 	
