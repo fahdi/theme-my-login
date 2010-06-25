@@ -20,4 +20,18 @@ jQuery(document).ready( function($) {
 			$('#' + s.element).remove();
 		}
 	} );
+	
+	var fixHelper = function(e, ui) {
+		ui.children().each(function() {
+			$(this).width($(this).width());
+		});
+		return ui;
+	};
+	
+	$('#tml-options-user-links tbody').sortable({
+		axis: 'y',
+		helper: fixHelper,
+		items: 'tr'
+	});
+	$('#tml-options-user-links tbody').disableSelection();
 } );

@@ -59,9 +59,9 @@ class Theme_My_Login_Custom_User_Links {
 	 * @since 6.0
 	 * @access public
 	 */
-	function activate( &$admin ) {
-		if ( !( isset( $admin->options['user_links'] ) && is_array( $admin->options['user_links'] ) ) )
-			$admin->options = array_merge( $admin->options, $this->init_options() );
+	function activate( &$theme_my_login ) {
+		if ( !( isset( $theme_my_login->options['user_links'] ) && is_array( $theme_my_login->options['user_links'] ) ) )
+			$theme_my_login->options = array_merge( $theme_my_login->options, $this->init_options() );
 	}
 	
 	/**
@@ -85,8 +85,8 @@ class Theme_My_Login_Custom_User_Links {
 			if ( 'pending' == $role )
 				continue;
 			$options['user_links'][$role] = array(
-				array( 'title' => __( 'Dashboard', 'theme-my-login' ), 'url' => admin_url() ),
-				array( 'title' => __( 'Profile', 'theme-my-login' ), 'url' => admin_url( 'profile.php' ) )
+				array( 'title' => __( 'Dashboard', $this->theme_my_login->textdomain ), 'url' => admin_url() ),
+				array( 'title' => __( 'Profile', $this->theme_my_login->textdomain ), 'url' => admin_url( 'profile.php' ) )
 			);
 		}
 		return $options;
@@ -126,9 +126,6 @@ class Theme_My_Login_Custom_User_Links {
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_filter( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_user_links', array( &$this, 'get_user_links' ) );
-		
-		if ( is_admin() )
-			include_once( TML_MODULE_DIR . '/custom-user-links/admin/custom-user-links-admin.php' );
 	}
 }
 
@@ -138,6 +135,9 @@ class Theme_My_Login_Custom_User_Links {
  * @since 6.0
  */
 $theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links();
+
+if ( is_admin() )
+	include_once( TML_ABSPATH. '/modules/custom-user-links/admin/custom-user-links-admin.php' );
 
 endif;
 

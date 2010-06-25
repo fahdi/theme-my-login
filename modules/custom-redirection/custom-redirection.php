@@ -32,7 +32,7 @@ class Theme_My_Login_Custom_Redirection {
 	 * @access public
 	 */
 	function login_form( &$template ) {
-		$jump_back_to = empty( $template->options['instance'] ) ? 'previous' : 'current';
+		$jump_back_to = empty( $template->instance ) ? 'previous' : 'current';
 		wp_original_referer_field( true, $jump_back_to );
 		echo "\n";
 	}
@@ -108,7 +108,7 @@ class Theme_My_Login_Custom_Redirection {
 		
 		// Make sure $redirect_to isn't empty or pointing to an admin URL (causing an endless loop)
 		if ( empty( $redirect_to ) || strpos( $redirect_to, 'wp-admin' ) !== false )
-			$redirect_to = add_query_arg( 'loggedout', 'true', $this->theme_my_login->page_link );
+			$redirect_to = $this->theme_my_login->get_login_page_link( 'loggedout=true' );
 
 		return $redirect_to;
 	}
@@ -189,9 +189,9 @@ class Theme_My_Login_Custom_Redirection {
 	 * @since 6.0
 	 * @access public
 	 */
-	function activate( &$admin ) {
-		if ( !( isset( $admin->options['redirection'] ) && is_array( $admin->options['redirection'] ) ) )
-			$admin->options = array_merge( $admin->options, $this->init_options() );
+	function activate( &$theme_my_login ) {
+		if ( !( isset( $theme_my_login->options['redirection'] ) && is_array( $theme_my_login->options['redirection'] ) ) )
+			$theme_my_login->options = array_merge( $theme_my_login->options, $this->init_options() );
 	}
 	
 	/**
@@ -249,14 +249,18 @@ class Theme_My_Login_Custom_Redirection {
 	 * @access public
 	 */
 	function __construct() {
+		// Activate
 		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
-		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
+		// Load
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_filter( 'tml_modules_loaded', array( &$this, 'load' ) );
-		
+		// Admin
+		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
+		// Login redirect
 		add_filter( 'login_redirect', array( &$this, 'login_redirect' ), 10, 3 );
-		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 		add_action( 'login_form', array( &$this, 'login_form' ) );
+		// Logout redirect
+		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 	}
 }
 
