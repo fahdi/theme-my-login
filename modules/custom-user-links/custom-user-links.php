@@ -58,6 +58,8 @@ class Theme_My_Login_Custom_User_Links {
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function activate( &$theme_my_login ) {
 		if ( !( isset( $theme_my_login->options['user_links'] ) && is_array( $theme_my_login->options['user_links'] ) ) )
