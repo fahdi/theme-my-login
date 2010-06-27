@@ -735,14 +735,14 @@ if(typeof wpOnload=='function')wpOnload()
 				// Numeric keyed values are added (unless already there)
 				if ( is_numeric ( $key ) && ( !in_array( $value, $return ) ) ) {
 					if ( is_array( $value ) ) {
-						$return[] = $this->array_merge_replace_recursive( $return[$$key], $value );
+						$return[] = $this->array_merge_recursive( $return[$$key], $value );
 					} else {
 						$return[] = $value;
 					}
 				// String keyed values are replaced
 				} else {
 					if ( isset( $return[$key] ) && is_array( $value ) && is_array( $return[$key] ) ) {
-						$return[$key] = $this->array_merge_replace_recursive( $return[$$key], $value );
+						$return[$key] = $this->array_merge_recursive( $return[$$key], $value );
 					} else {
 						$return[$key] = $value;
 					}
