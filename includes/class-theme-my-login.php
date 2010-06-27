@@ -117,6 +117,9 @@ class Theme_My_Login {
 		
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		
+		add_action( 'user_registered', 'wp_new_user_notification', 10, 2 );
+		add_action( 'user_password_changed', 'wp_password_change_notification' );
+		
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
 	}
 	
@@ -714,6 +717,42 @@ if(typeof wpOnload=='function')wpOnload()
 	}
 	
 	/**
+	 * Merges arrays recursively, replacing duplicate string keys
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function array_merge_recursive() {
+		// Holds all the arrays passed
+		$params =& func_get_args();
+	   
+		// First array is used as the base, everything else overwrites on it
+		$return = array_shift( $params );
+	   
+		// Merge all arrays on the first array
+		foreach ( $params as $array ) {
+			foreach ( $array as $key => $value ) {
+				// Numeric keyed values are added (unless already there)
+				if ( is_numeric ( $key ) && ( !in_array( $value, $return ) ) ) {
+					if ( is_array( $value ) ) {
+						$return[] = $this->array_merge_replace_recursive( $return[$$key], $value );
+					} else {
+						$return[] = $value;
+					}
+				// String keyed values are replaced
+				} else {
+					if ( isset( $return[$key] ) && is_array( $value ) && is_array( $return[$key] ) ) {
+						$return[$key] = $this->array_merge_replace_recursive( $return[$$key], $value );
+					} else {
+						$return[$key] = $value;
+					}
+				}
+			}
+		}
+		return $return;
+	}
+	
+	/**
 	 * Returns active and valid TML modules
 	 *
 	 * Returns all valid modules specified via $this->options['active_modules']
@@ -888,7 +927,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
 			wp_die( __( 'The e-mail could not be sent.', $this->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $this->textdomain ) );
 
-		wp_password_change_notification( $user );
+		do_action( 'user_password_changed', $user );
 
 		return true;
 	}
@@ -944,65 +983,10 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
-
-		$this->new_user_notification( $user_id, $user_pass );
+		
+		do_action( 'user_registered', $user_id, $user_pass );
 
 		return $user_id;
-	}
-
-	/**
-	 * Notify the blog admin of a new user, normally via email.
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param int $user_id User ID
-	 * @param string $plaintext_pass Optional. The user's plaintext password
-	 */
-	function new_user_notification( $user_id, $plaintext_pass = '' ) {
-		$user = new WP_User( $user_id );
-		
-		do_action( 'new_user_notification', $user_id, $plaintext_pass );
-
-		$user_login = stripslashes( $user->user_login );
-		$user_email = stripslashes( $user->user_email );
-
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-			$blogname = $GLOBALS['current_site']->site_name;
-		} else {
-			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
-			// we want to reverse this for the plain text arena of emails.
-			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-		}
-
-		if ( apply_filters( 'send_admin_new_user_notification', true ) ) {
-			$message  = sprintf( __( 'New user registration on your site %s:', $this->textdomain ), $blogname ) . "\r\n\r\n";
-			$message .= sprintf( __( 'Username: %s', $this->textdomain ), $user_login ) . "\r\n\r\n";
-			$message .= sprintf( __( 'E-mail: %s', $this->textdomain ), $user_email ) . "\r\n";
-		
-			$title = sprintf( __( '[%s] New User Registration', $this->textdomain ), $blogname );
-		
-			$title = apply_filters( 'admin_new_user_notification_title', $title, $user_id );
-			$message = apply_filters( 'admin_new_user_notification_message', $message, $user_id );
-
-			@wp_mail( get_option( 'admin_email' ), $title, $message );		
-		}
-
-		if ( empty( $plaintext_pass ) )
-			return;
-			
-		if ( apply_filters( 'send_new_user_notification', true ) ) {
-			$message  = sprintf( __( 'Username: %s', $this->textdomain ), $user_login ) . "\r\n";
-			$message .= sprintf( __( 'Password: %s', $this->textdomain ), $plaintext_pass ) . "\r\n";
-			$message .= wp_login_url() . "\r\n";
-		
-			$title = sprintf( __( '[%s] Your username and password', $this->textdomain ), $blogname);
-
-			$title = apply_filters( 'new_user_notification_title', $title, $user_id );
-			$message = apply_filters( 'new_user_notification_message', $message, $plaintext_pass, $user_id );
-		
-			wp_mail( $user_email, $title, $message );
-		}
 	}
 }
 endif;
