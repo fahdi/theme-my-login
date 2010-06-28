@@ -724,7 +724,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function array_merge_recursive() {
 		// Holds all the arrays passed
-		$params =& func_get_args();
+		$params = func_get_args();
 	   
 		// First array is used as the base, everything else overwrites on it
 		$return = array_shift( $params );
@@ -864,8 +864,8 @@ if(typeof wpOnload=='function')wpOnload()
 		
 		$title = sprintf( __( '[%s] Password Reset', $this->textdomain ), $blogname );
 
-		$title = apply_filters( 'retrieve_password_title', $title );
-		$message = apply_filters( 'retrieve_password_message', $message, $key );
+		$title = apply_filters( 'retrieve_password_title', $title, $user_data->ID );
+		$message = apply_filters( 'retrieve_password_message', $message, $key, $user_data->ID );
 
 		if ( $message && !wp_mail( $user_email, $title, $message ) )
 			wp_die( __( 'The e-mail could not be sent.', $this->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $this->textdomain ) );
@@ -921,8 +921,8 @@ if(typeof wpOnload=='function')wpOnload()
 		
 		$title = sprintf( __( '[%s] Your new password', $this->textdomain ), $blogname );
 
-		$title = apply_filters( 'password_reset_title', $title );
-		$message = apply_filters( 'password_reset_message', $message, $new_pass );
+		$title = apply_filters( 'password_reset_title', $title, $user->ID );
+		$message = apply_filters( 'password_reset_message', $message, $new_pass, $user->ID );
 
 		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
 			wp_die( __( 'The e-mail could not be sent.', $this->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $this->textdomain ) );
