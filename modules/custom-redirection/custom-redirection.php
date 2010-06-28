@@ -277,8 +277,8 @@ class Theme_My_Login_Custom_Redirection {
 		// Activate
 		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
 		// Load
+		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		add_filter( 'tml_modules_loaded', array( &$this, 'load' ) );
 		// Admin
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		// Login redirect

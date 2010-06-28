@@ -684,8 +684,8 @@ class Theme_My_Login_Custom_Email {
 		// Activate
 		add_action( 'tml_activate_custom-email/custom-email.php', array( &$this, 'activate' ) );
 		// Load
+		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		add_filter( 'tml_modules_loaded', array( &$this, 'load' ) );
 		// E-mail filters
 		add_filter( 'wp_mail_from', array( &$this, 'mail_from_filter' ) );
 		add_filter( 'wp_mail_from_name', array( &$this, 'mail_from_name_filter') );

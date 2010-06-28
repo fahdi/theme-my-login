@@ -138,8 +138,8 @@ class Theme_My_Login_Custom_User_Links {
 	 */
 	function __construct() {
 		add_action( 'tml_activate_custom-user-links/custom-user-links.php', array( &$this, 'activate' ) );
+		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		add_filter( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_user_links', array( &$this, 'get_user_links' ) );
 	}
 }
