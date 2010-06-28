@@ -150,7 +150,7 @@ class Theme_My_Login_Custom_Passwords {
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param object $template Reference to Theme_My_Login_Template object
+	 * @param object $template Reference to $theme_my_login_template object
 	 */
 	function get_resetpass_form( &$template ) {
 		// Shorthand reference
@@ -211,7 +211,7 @@ class Theme_My_Login_Custom_Passwords {
 	 *
 	 * @return string The new register message
 	 */
-	function registration_pass_message( $message ) {
+	function registration_pass_message() {
 		// Clear out the "A password will be e-mailed to you." message
 		return;
 	}
@@ -227,7 +227,7 @@ class Theme_My_Login_Custom_Passwords {
 	 *
 	 * @return string The new lost password message
 	 */
-	function lostpassword_message( $message ) {
+	function lostpassword_message() {
 		// Change the lost password message to reflect that they will be able to reset their password after clicking a link in their e-mail
 		$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', $this->theme_my_login->textdomain );
 		return $message;
@@ -238,6 +238,8 @@ class Theme_My_Login_Custom_Passwords {
 	 *
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function action_messages( &$theme_my_login ) {
 		// Change "Registration complete. Please check your e-mail." to reflect the fact that they already set a password
@@ -257,7 +259,8 @@ class Theme_My_Login_Custom_Passwords {
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @return string $redirect_to URL to redirect to
+	 * @return string $redirect_to Default redirect
+	 * @return string URL to redirect to
 	 */
 	function register_redirect( $redirect_to ) {
 		// Redirect to login page with 'registration=complete' added to the query
@@ -276,6 +279,9 @@ class Theme_My_Login_Custom_Passwords {
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param string $redirect_to Default redirect
+	 * @return string URL to redirect to
 	 */
 	function resetpass_redirect( $redirect_to ) {
 		// Redirect to the login page with 'resetpass=complete' added to the query

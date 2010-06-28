@@ -30,6 +30,8 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $template Reference to $theme_my_login_template object
 	 */
 	function login_form( &$template ) {
 		$jump_back_to = empty( $template->instance ) ? 'previous' : 'current';
@@ -45,6 +47,11 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param string $redirect_to Default redirect
+	 * @param string $request Requested redirect
+	 * @param WP_User|WP_Error WP_User if user logged in, WP_Error otherwise
+	 * @return string New redirect
 	 */
 	function login_redirect( $redirect_to, $request, $user ) {
 		// Determine the correct referer
@@ -84,6 +91,11 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param string $redirect_to Default redirect
+	 * @param string $request Requested redirect
+	 * @param WP_User|WP_Error WP_User if user logged in, WP_Error otherwise
+	 * @return string New redirect
 	 */
 	function logout_redirect( $redirect_to, $request, $user ) {
 		// Determine the correct referer
@@ -122,6 +134,8 @@ class Theme_My_Login_Custom_Redirection {
 	 * @uses Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object Reference to global $theme_my_login_admin object
 	 */
 	function admin_menu( &$admin ) {
 		global $wp_roles;
@@ -188,10 +202,16 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function activate( &$theme_my_login ) {
-		if ( !( isset( $theme_my_login->options['redirection'] ) && is_array( $theme_my_login->options['redirection'] ) ) )
-			$theme_my_login->options = array_merge( $theme_my_login->options, $this->init_options() );
+		$options = $this->init_options();
+		if ( !isset( $theme_my_login->options['redirection'] ) ) {
+			$theme_my_login->options['redirection'] = $options['redirection'];
+		} else {
+			$theme_my_login->options['redirection'] = $theme_my_login->array_merge_recursive( $options['redirection'], $theme_my_login->options['redirection'] );
+		}
 	}
 	
 	/**
@@ -202,6 +222,9 @@ class Theme_My_Login_Custom_Redirection {
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param array $options Options passed in from filter
+	 * @return array Original $options array with module options appended
 	 */
 	function init_options( $options = array() ) {
 		global $wp_roles;
@@ -226,6 +249,8 @@ class Theme_My_Login_Custom_Redirection {
 	 *
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function load( &$theme_my_login ) {
 		// Create a reference to global $theme_my_login object

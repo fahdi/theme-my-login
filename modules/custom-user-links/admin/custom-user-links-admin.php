@@ -139,6 +139,8 @@ class Theme_My_Login_Custom_User_Links_Admin {
 	 * @uses Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
 	function admin_menu( &$admin ) {
 		global $wp_roles;
@@ -285,6 +287,7 @@ class Theme_My_Login_Custom_User_Links_Admin {
 	 * @param array $link Link data
 	 * @param string $role Name of user role
 	 * @param int $count Reference to counter variable
+	 * @return sring Link row
 	 */
 	function get_link_row( $link, $role, &$count ) {
 		$r = '';
@@ -318,6 +321,8 @@ class Theme_My_Login_Custom_User_Links_Admin {
 	 *
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function load( &$theme_my_login ) {
 		// Create a reference to global $theme_my_login object

@@ -30,6 +30,9 @@ class Theme_My_Login_Custom_User_Links {
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param array $links Default user links
+	 * @return array New user links
 	 */
 	function get_user_links( $links = array() ) {
 	
@@ -62,8 +65,12 @@ class Theme_My_Login_Custom_User_Links {
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function activate( &$theme_my_login ) {
-		if ( !( isset( $theme_my_login->options['user_links'] ) && is_array( $theme_my_login->options['user_links'] ) ) )
-			$theme_my_login->options = array_merge( $theme_my_login->options, $this->init_options() );
+		$options = $this->init_options();
+		if ( !isset( $theme_my_login->options['user_links'] ) ) {
+			$theme_my_login->options['user_links'] = $options['user_links'];
+		} else {
+			$theme_my_login->options['user_links'] = $theme_my_login->array_merge_recursive( $options['user_links'], $theme_my_login->options['user_links'] );
+		}
 	}
 	
 	/**
@@ -74,9 +81,13 @@ class Theme_My_Login_Custom_User_Links {
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param array $options Options passd in from filter
+	 * @return array Original $options array with module options appended
 	 */
 	function init_options( $options = array() ) {
 		global $wp_roles;
+		
 		if ( empty( $wp_roles ) )
 			$wp_roles =& new WP_Roles();
 		
@@ -101,6 +112,8 @@ class Theme_My_Login_Custom_User_Links {
 	 *
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function load( &$theme_my_login ) {
 		// Create a reference to global $theme_my_login object
