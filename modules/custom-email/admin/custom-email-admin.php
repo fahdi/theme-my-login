@@ -58,10 +58,10 @@ class Theme_My_Login_Custom_Email_Admin {
 			</p>
 			
 			<p><label for="theme_my_login_new_user_mail_from_name"><?php _e( 'From Name', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][new_user][mail_from_name]" type="text" id="theme_my_login_new_user_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['new_user']['mail_from_name']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][new_user][mail_from_name]" type="text" id="theme_my_login_new_user_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['new_user']['mail_from_name']; ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_new_user_mail_from"><?php _e( 'From E-mail', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][new_user][mail_from]" type="text" id="theme_my_login_new_user_mail_from" value="<?php echo $this->theme_my_login->options['email']['new_user']['mail_from']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][new_user][mail_from]" type="text" id="theme_my_login_new_user_mail_from" value="<?php echo $this->theme_my_login->options['email']['new_user']['mail_from']; ?>" class="extended-text" /></p>
 			
             <p><label for="theme_my_login_new_user_mail_content_type"><?php _e( 'E-mail Format', $this->theme_my_login->textdomain ); ?></label><br />
             <select name="theme_my_login[email][new_user][mail_content_type]" id="theme_my_login_new_user_mail_content_type">
@@ -88,13 +88,13 @@ class Theme_My_Login_Custom_Email_Admin {
 			</p>
 			
 			<p><label for="theme_my_login_new_user_admin_mail_to"><?php _e( 'To', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_to]" type="text" id="theme_my_login_new_user_admin_mail_to" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_to']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_to]" type="text" id="theme_my_login_new_user_admin_mail_to" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_to']; ?>" class="extended-text" /></p>
 			
 			<p><label for="theme_my_login_new_user_admin_mail_from_name"><?php _e( 'From Name', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_from_name]" type="text" id="theme_my_login_new_user_admin_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_from_name']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_from_name]" type="text" id="theme_my_login_new_user_admin_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_from_name']; ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_new_user_admin_mail_from"><?php _e( 'From E-mail', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_from]" type="text" id="theme_my_login_new_user_admin_mail_from" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_from']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_from]" type="text" id="theme_my_login_new_user_admin_mail_from" value="<?php echo $this->theme_my_login->options['email']['new_user']['admin_mail_from']; ?>" class="extended-text" /></p>
 			
             <p><label for="theme_my_login_new_user_admin_mail_content_type"><?php _e( 'E-mail Format', $this->theme_my_login->textdomain ); ?></label><br />
             <select name="theme_my_login[email][new_user][admin_mail_content_type]" id="theme_my_login_new_user_admin_mail_content_type">
@@ -138,10 +138,10 @@ class Theme_My_Login_Custom_Email_Admin {
 			</p>
 			
 			<p><label for="theme_my_login_retrieve_pass_mail_from_name"><?php _e( 'From Name', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][retrieve_pass][mail_from_name]" type="text" id="theme_my_login_retrieve_pass_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['retrieve_pass']['mail_from_name']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][retrieve_pass][mail_from_name]" type="text" id="theme_my_login_retrieve_pass_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['retrieve_pass']['mail_from_name']; ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_retrieve_pass_mail_from"><?php _e( 'From E-mail', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][retrieve_pass][mail_from]" type="text" id="theme_my_login_retrieve_pass_mail_from" value="<?php echo $this->theme_my_login->options['email']['retrieve_pass']['mail_from']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][retrieve_pass][mail_from]" type="text" id="theme_my_login_retrieve_pass_mail_from" value="<?php echo $this->theme_my_login->options['email']['retrieve_pass']['mail_from']; ?>" class="extended-text" /></p>
 			
             <p><label for="theme_my_login_retrieve_pass_mail_content_type"><?php _e( 'E-mail Format', $this->theme_my_login->textdomain ); ?></label><br />
             <select name="theme_my_login[email][retrieve_pass][mail_content_type]" id="theme_my_login_retrieve_pass_mail_content_type">
@@ -185,10 +185,10 @@ class Theme_My_Login_Custom_Email_Admin {
 			</p>
 			
 			<p><label for="theme_my_login_reset_pass_mail_from_name"><?php _e( 'From Name', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][mail_from_name]" type="text" id="theme_my_login_reset_pass_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['mail_from_name']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][reset_pass][mail_from_name]" type="text" id="theme_my_login_reset_pass_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['mail_from_name']; ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_retrieve_pass_mail_from"><?php _e( 'From E-mail', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][mail_from]" type="text" id="theme_my_login_reset_pass_mail_from" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['mail_from']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][reset_pass][mail_from]" type="text" id="theme_my_login_reset_pass_mail_from" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['mail_from']; ?>" class="extended-text" /></p>
 			
             <p><label for="theme_my_login_retrieve_pass_mail_content_type"><?php _e( 'E-mail Format', $this->theme_my_login->textdomain ); ?></label><br />
             <select name="theme_my_login[email][reset_pass][mail_content_type]" id="theme_my_login_reset_pass_mail_content_type">
@@ -215,13 +215,13 @@ class Theme_My_Login_Custom_Email_Admin {
 			</p>
 			
 			<p><label for="theme_my_login_reset_pass_admin_mail_to"><?php _e( 'To', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_to]" type="text" id="theme_my_login_reset_pass_admin_mail_to" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_to']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_to]" type="text" id="theme_my_login_reset_pass_admin_mail_to" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_to']; ?>" class="extended-text" /></p>
 			
 			<p><label for="theme_my_login_reset_pass_admin_mail_from_name"><?php _e( 'From Name', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_from_name]" type="text" id="theme_my_login_reset_pass_admin_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_from_name']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_from_name]" type="text" id="theme_my_login_reset_pass_admin_mail_from_name" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_from_name']; ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_reset_pass_admin_mail_from"><?php _e( 'From E-mail', $this->theme_my_login->textdomain ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_from]" type="text" id="theme_my_login_reset_pass_admin_mail_from" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_from']; ?>" class="regular-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_from]" type="text" id="theme_my_login_reset_pass_admin_mail_from" value="<?php echo $this->theme_my_login->options['email']['reset_pass']['admin_mail_from']; ?>" class="extended-text" /></p>
 			
             <p><label for="theme_my_login_reset_pass_admin_mail_content_type"><?php _e( 'E-mail Format', $this->theme_my_login->textdomain ); ?></label><br />
             <select name="theme_my_login[email][reset_pass][admin_mail_content_type]" id="theme_my_login_reset_pass_admin_mail_content_type">
