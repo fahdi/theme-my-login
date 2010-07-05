@@ -436,17 +436,19 @@ class Theme_My_Login_Template {
 		if ( empty( $action ) )
 			$action = $this->action;
 			
+		$redirect_to = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
+			
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
-				$url = apply_filters( 'lostpassword_redirect', !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->theme_my_login->get_current_url( 'checkemail=confirm' ) );
+				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : $this->theme_my_login->get_current_url( 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'registration_redirect', !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->theme_my_login->get_current_url( 'checkemail=registered' ) );
+				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : $this->theme_my_login->get_current_url( 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :
-				$url = apply_filters( 'login_redirect', admin_url(), !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', null );
+				$url = apply_filters( 'login_redirect', !empty( $redirect_to ) ? $redirect_to : admin_url(), $redirect_to, null );
 		}
 		return apply_filters( 'tml_redirect_url', $url, $action );
 	}
