@@ -521,7 +521,7 @@ class Theme_My_Login_Template {
 			'show_reg_link' => true,
 			'show_pass_link' => true,
 			'register_widget' => false,
-			'lostpass_widget' => false,
+			'lostpassword_widget' => false,
 			'logged_in_widget' => true,
 			'show_gravatar' => true,
 			'gravatar_size' => 50,

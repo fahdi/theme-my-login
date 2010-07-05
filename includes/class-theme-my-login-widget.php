@@ -58,7 +58,7 @@ class Theme_My_Login_Widget extends WP_Widget {
         $instance['show_gravatar']      = empty( $new_instance['show_gravatar'] ) ? false : true;
         $instance['gravatar_size']      = absint( $new_instance['gravatar_size'] );
         $instance['register_widget']    = empty( $new_instance['register_widget'] ) ? false : true;
-        $instance['lostpass_widget']   = empty( $new_instance['lostpass_widget'] ) ? false : true;
+        $instance['lostpassword_widget']   = empty( $new_instance['lostpassword_widget'] ) ? false : true;
         return $instance;
     }
 	
@@ -79,7 +79,7 @@ class Theme_My_Login_Widget extends WP_Widget {
             'show_gravatar' => 1,
             'gravatar_size' => 50,
             'register_widget' => 1,
-            'lostpass_widget' => 1
+            'lostpassword_widget' => 1
             );
 
         $instance = wp_parse_args( $instance, $defaults );
