@@ -105,8 +105,8 @@ class Theme_My_Login_Widget extends WP_Widget {
         echo '<p>' . __( 'Gravatar Size', 'theme-my-login' ) . ': <input name="' . $this->get_field_name( 'gravatar_size' ) . '" type="text" id="' . $this->get_field_id( 'gravatar_size' ) . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id( 'gravatar_size' ) . '"></label></p>' . "\n";
         $is_checked = ( empty( $instance['register_widget'] ) ) ? '' : 'checked="checked" ';
         echo '<p><input name="' . $this->get_field_name( 'register_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'register_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'register_widget' ) . '">' . __( 'Allow Registration', 'theme-my-login' ) . '</label></p>' . "\n";
-        $is_checked = ( empty( $instance['lostpass_widget'] ) ) ? '' : 'checked="checked" ';
-        echo '<p><input name="' . $this->get_field_name( 'lostpass_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpass_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpass_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
+        $is_checked = ( empty( $instance['lostpassword_widget'] ) ) ? '' : 'checked="checked" ';
+        echo '<p><input name="' . $this->get_field_name( 'lostpassword_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpassword_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpassword_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
     }
 
 }
