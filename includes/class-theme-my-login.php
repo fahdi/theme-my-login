@@ -678,12 +678,24 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param string $option Name of option to retrieve
+	 * @param string|array $option Name of option to retrieve or an array of hierarchy for multidimensional options
 	 * @param mixed $default optional. Default value to return if $option is not set
 	 * @return mixed Value of requested option or $default if option is not set
 	 */
 	function get_option( $option, $default = false ) {
-		$value = isset( $this->options[$option] ) ? $this->options[$option] : $default;
+		$options = $this->options;
+		$value = false;
+		if ( is_array( $option ) ) {
+			foreach ( $option as $key ) {
+				if ( !isset( $options[$key] ) ) {
+					$value = $default;
+					break;
+				}
+				$options = $value = $options[$key];
+			}
+		} else {
+			$value = isset( $options[$option] ) ? $options[$option] : $default;
+		}
 		return apply_filters( 'tml_get_option', $value, $option, $default );
 	}
 	
