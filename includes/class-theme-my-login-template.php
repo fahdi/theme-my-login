@@ -243,11 +243,6 @@ class Theme_My_Login_Template {
 				$url = $this->theme_my_login->get_current_url( array( 'action' => $action ), false );
 			else
 				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
-				
-			if ( strpos( $url, '#' ) !== false )
-				$url = substr( $url, 0, strpos( $url, '#' ) );
-				
-			$url .= '#theme-my-login' . $this->instance;
 		}
 		
 		return apply_filters( 'tml_action_url', $url );
