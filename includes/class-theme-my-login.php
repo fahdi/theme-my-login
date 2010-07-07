@@ -117,6 +117,8 @@ class Theme_My_Login {
 		
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		
+		add_action( 'wp_authenticate', array( &$this, 'wp_authenticate' ) );
+		
 		add_action( 'user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'user_password_changed', 'wp_password_change_notification' );
 		
@@ -799,6 +801,24 @@ if(typeof wpOnload=='function')wpOnload()
 	function is_module_active( $module ) {
 		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
+	}
+	
+	/**
+	 * Handles e-mail address login
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $username Username or email
+	 * @param string $password User's password
+	 */
+	function wp_authenticate( &$user_login ) {
+		global $wpdb;
+		if ( is_email( $user_login ) ) {
+			if ( $found = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email = %s", $user_login ) ) )
+				$user_login = $found;
+		}
+		return;
 	}
 	
 	/**
