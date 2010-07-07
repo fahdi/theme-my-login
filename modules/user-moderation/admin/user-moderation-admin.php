@@ -15,7 +15,15 @@ class Theme_My_Login_User_Moderation_Admin {
 	 * @var object
 	 */
 	var $theme_my_login;
-
+	
+	/**
+	 * Attaches actions/filters explicitly to users.php
+	 *
+	 * Callback for 'load-users.php' hook
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function load_users_page() {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
@@ -45,11 +53,31 @@ class Theme_My_Login_User_Moderation_Admin {
 		}
 	}
 	
+	/**
+	 * Adds update messages to the admin screen
+	 *
+	 * Callback for 'admin_notices' hook in file admin-header.php
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function admin_notices() {
 		if ( isset( $_GET['update'] ) && 'approve' == $_GET['update'] )
 			echo '<div id="message" class="updated fade"><p>' . __( 'User approved.', $this->theme_my_login->textdomain ) . '</p></div>';
 	}
-
+	
+	/**
+	 * Adds "Approve" link for each pending user on users.php
+	 *
+	 * Callback for 'user_row_actions' hook in {@internal unknown}
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param array $actions The user actions
+	 * @param WP_User $user_object The current user object
+	 * @return array The filtered user actions
+	 */
 	function user_row_actions( $actions, $user_object ) {
 		$current_user = wp_get_current_user();
 		if ( $current_user->ID != $user_object->ID ) {
@@ -203,6 +231,15 @@ class Theme_My_Login_User_Moderation_Admin {
 <?php
 	}
 	
+	/**
+	 * Outputs user activation e-mail settings
+	 *
+	 * Callback for '$hookname' hook in method Theme_My_Login_Admin::add_submenu_page()
+	 *
+	 * @see Theme_My_Login_Admin::add_submenu_page()
+	 * @since 6.0
+	 * @access public
+	 */
 	function display_user_activation_email_settings() {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
@@ -243,6 +280,15 @@ class Theme_My_Login_User_Moderation_Admin {
 <?php
 	}
 	
+	/**
+	 * Outputs user approval e-mail settings
+	 *
+	 * Callback for '$hookname' hook in method Theme_My_Login_Admin::add_submenu_page()
+	 *
+	 * @see Theme_My_Login_Admin::add_submenu_page()
+	 * @since 6.0
+	 * @access public
+	 */
 	function display_user_approval_email_settings() {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
@@ -320,6 +366,15 @@ class Theme_My_Login_User_Moderation_Admin {
 <?php
 	}
 	
+	/**
+	 * Outputs user denial e-mail settings
+	 *
+	 * Callback for '$hookname' hook in method Theme_My_Login_Admin::add_submenu_page()
+	 *
+	 * @see Theme_My_Login_Admin::add_submenu_page()
+	 * @since 6.0
+	 * @access public
+	 */
 	function display_user_denial_email_settings() {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
