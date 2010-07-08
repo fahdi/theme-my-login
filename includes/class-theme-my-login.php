@@ -108,6 +108,8 @@ class Theme_My_Login {
 		add_action( 'wp_default_scripts', array( &$this, 'default_scripts' ) );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
 		
+		add_action( 'wp_head', array( &$this, 'login_head' ) );
+		
 		add_filter( 'the_title', array( &$this, 'the_title' ), 10, 2 );
 		add_filter( 'single_post_title', array( &$this, 'single_post_title' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
@@ -616,6 +618,19 @@ if(typeof wpOnload=='function')wpOnload()
 <?php
 				break;
 		}
+	}
+	
+	/**
+	 * Calls 'login_head' hook on login page
+	 *
+	 * Callback for 'wp_head' hook
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function login_head() {
+		if ( $this->is_login_page() )
+			do_action( 'login_head' );
 	}
 	
 	/**
