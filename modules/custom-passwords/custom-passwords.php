@@ -153,35 +153,14 @@ class Theme_My_Login_Custom_Passwords {
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
 	function get_resetpass_form( &$template ) {
-		// Shorthand reference
-		$theme_my_login =& $this->theme_my_login;
-		// If custom template doesn't exist in theme directory
-		if ( !$template->get_template( 'resetpass-form.php' ) ) {
-		?>
-<div class="login" id="theme-my-login<?php $template->the_instance(); ?>">
-	<?php $template->the_action_message( 'resetpass' ); ?>
-	<?php $template->the_errors(); ?>
-	<form name="resetpasswordform" id="resetpasswordform<?php $template->the_instance(); ?>" action="<?php $template->the_action_url( 'resetpass' ); ?>" method="post">
-		<p>
-			<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'New Password:', $theme_my_login->textdomain );?></label>
-			<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" />
-		</p>
-		<p>
-			<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', $theme_my_login->textdomain );?></label>
-			<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" />
-		</p>
-<?php do_action( 'resetpassword_form', $template->instance ); ?>
-		<p class="submit">
-			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php _e( 'Change Password', $theme_my_login->textdomain ); ?>" />
-			<input type="hidden" name="key" value="<?php $template->the_posted_value( 'key' ); ?>" />
-			<input type="hidden" name="login" value="<?php $template->the_posted_value( 'login' ); ?>" />
-			<input type="hidden" name="instance" value="<?php $template->the_instance(); ?>" />
-		</p>
-	</form>
-	<?php $template->the_action_links( array( 'lost_password' => false ) ); ?>
-</div>
-<?php
-		}
+		$templates = array();
+		// Allow template override via shortcode or template tag args
+		if ( !empty( $template->options['resetpass_template'] ) )
+			$templates[] = $template->options['resetpass_template'];
+		// Default template
+		$templates[] = 'resetpass-form.php';
+		// Load the template
+		$template->get_template( $templates );
 	}
 	
 	/**
