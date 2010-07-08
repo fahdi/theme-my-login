@@ -1,0 +1,162 @@
+<?php
+/*
+If you would like to edit this file, copy it to your current theme's directory and edit it there.
+Theme My Login will always look in your theme's directory first, before using this default template.
+*/
+
+$current_user = wp_get_current_user();
+$profile_user = get_user_to_edit( $current_user->ID );
+?>
+
+<div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
+	<?php $template->the_action_message( 'profile' ); ?>
+	<?php $template->the_errors(); ?>
+	<form id="your-profile" action="" method="post">
+		<?php wp_nonce_field( 'update-user_' . $current_user->ID ) ?>
+		<p>
+			<input type="hidden" name="from" value="profile" />
+			<input type="hidden" name="checkuser_id" value="<?php echo $current_user->ID; ?>" />
+		</p>
+
+		<?php if ( has_filter( 'personal_options' ) || has_filter( 'profile_personal_options' ) ) : ?>
+		<h3><?php _e( 'Personal Options', $theme_my_login->textdomain ); ?></h3>
+
+		<table class="form-table">
+		<?php do_action( 'personal_options', $profile_user ); ?>
+		</table>
+		<?php do_action( 'profile_personal_options', $profile_user ); ?>
+		<?php endif; ?>
+
+		<h3><?php _e( 'Name', $theme_my_login->textdomain ) ?></h3>
+
+		<table class="form-table">
+		<tr>
+			<th><label for="user_login"><?php _e( 'Username', $theme_my_login->textdomain ); ?></label></th>
+			<td><input type="text" name="user_login" id="user_login" value="<?php echo esc_attr( $profile_user->user_login ); ?>" disabled="disabled" class="regular-text" /> <span class="description"><?php _e( 'Your username cannot be changed.', $theme_my_login->textdomain ); ?></span></td>
+		</tr>
+
+		<tr>
+			<th><label for="first_name"><?php _e( 'First name', $theme_my_login->textdomain ) ?></label></th>
+			<td><input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( $profile_user->first_name ) ?>" class="regular-text" /></td>
+		</tr>
+
+		<tr>
+			<th><label for="last_name"><?php _e( 'Last name', $theme_my_login->textdomain ) ?></label></th>
+			<td><input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( $profile_user->last_name ) ?>" class="regular-text" /></td>
+		</tr>
+
+		<tr>
+			<th><label for="nickname"><?php _e( 'Nickname', $theme_my_login->textdomain ); ?> <span class="description"><?php _e( '(required)', $theme_my_login->textdomain ); ?></span></label></th>
+			<td><input type="text" name="nickname" id="nickname" value="<?php echo esc_attr( $profile_user->nickname ) ?>" class="regular-text" /></td>
+		</tr>
+
+		<tr>
+			<th><label for="display_name"><?php _e( 'Display name publicly as', $theme_my_login->textdomain ) ?></label></th>
+			<td>
+				<select name="display_name" id="display_name">
+				<?php
+					$public_display = array();
+					$public_display['display_nickname']  = $profile_user->nickname;
+					$public_display['display_username']  = $profile_user->user_login;
+					if ( !empty( $profile_user->first_name ) )
+						$public_display['display_firstname'] = $profile_user->first_name;
+					if ( !empty( $profile_user->last_name ) )
+						$public_display['display_lastname'] = $profile_user->last_name;
+					if ( !empty( $profile_user->first_name ) && !empty( $profile_user->last_name ) ) {
+						$public_display['display_firstlast'] = $profile_user->first_name . ' ' . $profile_user->last_name;
+						$public_display['display_lastfirst'] = $profile_user->last_name . ' ' . $profile_user->first_name;
+					}
+					if ( !in_array( $profile_user->display_name, $public_display ) )// Only add this if it isn't duplicated elsewhere
+						$public_display = array( 'display_displayname' => $profile_user->display_name ) + $public_display;
+					$public_display = array_map( 'trim', $public_display );
+					foreach ( $public_display as $id => $item ) {
+						$selected = ( $profile_user->display_name == $item ) ? ' selected="selected"' : '';
+				?>
+						<option id="<?php echo $id; ?>" value="<?php echo esc_attr( $item ); ?>"<?php echo $selected; ?>><?php echo $item; ?></option>
+				<?php } ?>
+				</select>
+			</td>
+		</tr>
+		</table>
+
+		<h3><?php _e( 'Contact Info', $theme_my_login->textdomain ) ?></h3>
+
+		<table class="form-table">
+		<tr>
+			<th><label for="email"><?php _e( 'E-mail', $theme_my_login->textdomain ); ?> <span class="description"><?php _e( '(required)', $theme_my_login->textdomain ); ?></span></label></th>
+			<td><input type="text" name="email" id="email" value="<?php echo esc_attr( $profile_user->user_email ) ?>" class="regular-text" /></td>
+		</tr>
+
+		<tr>
+			<th><label for="url"><?php _e( 'Website', $theme_my_login->textdomain ) ?></label></th>
+			<td><input type="text" name="url" id="url" value="<?php echo esc_attr( $profile_user->user_url ) ?>" class="regular-text code" /></td>
+		</tr>
+
+		<?php if ( function_exists( '_wp_get_user_contactmethods' ) ) :
+			foreach ( _wp_get_user_contactmethods() as $name => $desc ) {
+		?>
+		<tr>
+			<th><label for="<?php echo $name; ?>"><?php echo apply_filters( 'user_'.$name.'_label', $desc ); ?></label></th>
+			<td><input type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $profile_user->$name ) ?>" class="regular-text" /></td>
+		</tr>
+		<?php
+			}
+			endif;
+		?>
+		</table>
+
+		<h3><?php _e( 'About Yourself', $theme_my_login->textdomain ); ?></h3>
+
+		<table class="form-table">
+		<tr>
+			<th><label for="description"><?php _e( 'Biographical Info', $theme_my_login->textdomain ); ?></label></th>
+			<td><textarea name="description" id="description" rows="5" cols="30"><?php echo esc_html( $profile_user->description ); ?></textarea><br />
+			<span class="description"><?php _e( 'Share a little biographical information to fill out your profile. This may be shown publicly.', $theme_my_login->textdomain ); ?></span></td>
+		</tr>
+
+		<?php
+		$show_password_fields = apply_filters( 'show_password_fields', true, $profile_user );
+		if ( $show_password_fields ) :
+		?>
+		<tr id="password">
+			<th><label for="pass1"><?php _e( 'New Password', $theme_my_login->textdomain ); ?></label></th>
+			<td><input type="password" name="pass1" id="pass1" size="16" value="" autocomplete="off" /> <span class="description"><?php _e( 'If you would like to change the password type a new one. Otherwise leave this blank.', $theme_my_login->textdomain ); ?></span><br />
+				<input type="password" name="pass2" id="pass2" size="16" value="" autocomplete="off" /> <span class="description"><?php _e( 'Type your new password again.', $theme_my_login->textdomain ); ?></span><br />
+				<div id="pass-strength-result"><?php _e( 'Strength indicator', $theme_my_login->textdomain ); ?></div>
+				<p class="description indicator-hint"><?php _e( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols like ! " ? $ % ^ &amp; ).', $theme_my_login->textdomain ); ?></p>
+			</td>
+		</tr>
+		<?php endif; ?>
+		</table>
+
+		<?php
+			do_action( 'show_user_profile', $profile_user );
+		?>
+
+		<?php if ( count( $profile_user->caps ) > count( $profile_user->roles ) && apply_filters( 'additional_capabilities_display', true, $profile_user ) ) { ?>
+		<br class="clear" />
+			<table width="99%" style="border: none;" cellspacing="2" cellpadding="3" class="editform">
+				<tr>
+					<th scope="row"><?php _e( 'Additional Capabilities', $theme_my_login->textdomain ) ?></th>
+					<td><?php
+					$output = '';
+					global $wp_roles;
+					foreach ( $profile_user->caps as $cap => $value ) {
+						if ( !$wp_roles->is_role( $cap ) ) {
+							if ( $output != '' )
+								$output .= ', ';
+							$output .= $value ? $cap : "Denied: {$cap}";
+						}
+					}
+					echo $output;
+					?></td>
+				</tr>
+			</table>
+		<?php } ?>
+
+		<p class="submit">
+			<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $current_user->ID ); ?>" />
+			<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Update Profile', $theme_my_login->textdomain ); ?>" name="submit" />
+		</p>
+	</form>
+</div>
