@@ -113,9 +113,9 @@ class Theme_My_Login {
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
 		
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
-		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
 		
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
+		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
 		
 		add_action( 'wp_authenticate', array( &$this, 'wp_authenticate' ) );
 		
@@ -346,6 +346,7 @@ class Theme_My_Login {
 	 * @access public
 	 *
 	 * @param string|array $query Optional. Query arguments to add to link
+	 * @param bool $remove_filter True to remove 'page_link' filter
 	 * @return string Login page link with optional $query arguments appended
 	 */
 	function get_login_page_link( $query = '' ) {
@@ -431,26 +432,19 @@ class Theme_My_Login {
 	}
 	
 	/**
-	 * Changes permalink to logout link if user is logged in
+	 * Changes login link to logout if user is logged in
 	 *
-	 * Callback for 'page_link' hook in get_page_link()
+	 * Callback for 'wp_list_pages' hook in wp_list_pages()
 	 *
-	 * @see get_page_link()
+	 * @see wp_list_pages()
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param string $link The link
-	 * @param int $id The current post ID
-	 * @return string The modified link
+	 * @param string $output The output
+	 * @return string The filtered output
 	 */
-	function page_link( $link, $id ) {
-		if ( is_admin() || in_the_loop() )
-			return $link;
-		if ( $id == $this->get_option( 'page_id' ) ) {
-			if ( is_user_logged_in() && ( !isset( $_REQUEST['action'] ) || 'logout' != $_REQUEST['action'] ) )
-				$link = wp_nonce_url( add_query_arg( 'action', 'logout', $link ), 'log-out' );
-		}
-		return $link;
+	function wp_list_pages( $output ) {
+		return str_replace( '"' . $this->get_login_page_link() . '"', '"' . wp_logout_url() . '"', $output );
 	}
 
 	/**
