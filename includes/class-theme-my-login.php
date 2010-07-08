@@ -446,7 +446,9 @@ class Theme_My_Login {
 	 * @return string The filtered output
 	 */
 	function wp_list_pages( $output ) {
-		return str_replace( '"' . $this->get_login_page_link() . '"', '"' . wp_logout_url() . '"', $output );
+		if ( is_user_logged_in() )
+			$output = str_replace( '"' . $this->get_login_page_link() . '"', '"' . wp_logout_url() . '"', $output );
+		return $output;
 	}
 
 	/**
