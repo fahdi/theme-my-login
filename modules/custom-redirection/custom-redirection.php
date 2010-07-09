@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_Redirection {
-	/**
-	 * Holds reference to $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	/**
 	 * Adds "_wp_original_referer" field to login form
 	 *
@@ -245,41 +236,15 @@ class Theme_My_Login_Custom_Redirection {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
-	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function load( &$theme_my_login ) {
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
-	}
-	
-	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_Custom_Redirection() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	function load() {
 		// Activate
 		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
-		// Load
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
+		// Initialize
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		// Admin
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );

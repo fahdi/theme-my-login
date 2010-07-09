@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_Email' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_Email {
-	/**
-	 * Holds reference to $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Holds reference to module specific options in $theme_my_login object options
 	 *
@@ -648,43 +639,17 @@ class Theme_My_Login_Custom_Email {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
-	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function load( &$theme_my_login ) {
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
-		// Create a reference to custom e-mail options in global $theme_my_login object options
-		$this->options =& $theme_my_login->options['email'];
-	}
-	
-	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_Custom_Email() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	function load() {
+		// Create a reference to custom e-mail options
+		$this->options =& $this->theme_my_login->options['email'];
 		// Activate
 		add_action( 'tml_activate_custom-email/custom-email.php', array( &$this, 'activate' ) );
-		// Load
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
+		// Initialize
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		// E-mail filters
 		add_filter( 'wp_mail_from', array( &$this, 'mail_from_filter' ) );

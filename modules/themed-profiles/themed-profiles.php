@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Themed_Profiles {
-	/**
-	 * Holds reference to $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	/**
 	 * Redirects profile.php to themed profile page
 	 *
@@ -186,42 +177,27 @@ class Theme_My_Login_Themed_Profiles {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
+	 * Adds filters to site_url() and admin_url()
 	 *
 	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
 	 *
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function load( &$theme_my_login ) {
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
-		
+	function modules_loaded() {
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
 		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
 	}
 	
 	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_Themed_Profiles() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	function load() {
 		// Load
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
+		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
 		
 		add_action( 'init', array( &$this, 'init' ) );

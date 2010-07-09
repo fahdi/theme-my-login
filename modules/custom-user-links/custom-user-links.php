@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_User_Links' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_User_Links {
-	/**
-	 * Holds reference to $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	/**
 	 * Gets the user links for the current user's role
 	 *
@@ -106,39 +97,13 @@ class Theme_My_Login_Custom_User_Links {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
-	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function load( &$theme_my_login ) {
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
-	}
-	
-	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_Custom_User_Links() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	function load() {
 		add_action( 'tml_activate_custom-user-links/custom-user-links.php', array( &$this, 'activate' ) );
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_filter( 'tml_user_links', array( &$this, 'get_user_links' ) );
 	}

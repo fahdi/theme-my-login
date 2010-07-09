@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_User_Moderation' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_User_Moderation {
-	/**
-	 * Holds reference to $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	/**
 	 * Holds reference to $theme_my_login_custom_email object
 	 *
@@ -653,7 +644,7 @@ class Theme_My_Login_User_Moderation {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
+	 * {@internal Missing short description}
 	 *
 	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
 	 *
@@ -662,7 +653,7 @@ class Theme_My_Login_User_Moderation {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function load( &$theme_my_login ) {
+	function modules_loaded( &$theme_my_login ) {
 		global $theme_my_login_custom_email;
 		
 		// Create a reference to global $theme_my_login object
@@ -708,26 +699,16 @@ class Theme_My_Login_User_Moderation {
 	}
 	
 	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_User_Moderation() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	function load() {
 		add_action( 'tml_activate_user-moderation/user-moderation.php', array( &$this, 'activate' ) );
 		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
+		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 		add_action( 'tml_request', array( &$this, 'action_messages' ) );
 	}
 

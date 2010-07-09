@@ -12,16 +12,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_Passwords' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_Passwords {
-	/**
-	 * Holds reference to global $theme_my_login
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	/**
 	 * Outputs password fields to registration form
 	 *
@@ -366,34 +357,8 @@ class Theme_My_Login_Custom_Passwords {
 	 *
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function load( &$theme_my_login ) {
-		// Assign reference to global $theme_my_login
-		$this->theme_my_login =& $theme_my_login;
-	}
-	
-	/**
-	 * PHP4 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function Theme_My_Login_Custom_Passwords() {
-		// Call constructor
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
-		// Load
-		add_action( 'tml_modules_loaded', array( &$this, 'load' ) );
+	function load() {
 		// Register password
 		add_action( 'register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
