@@ -37,7 +37,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 					wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
 					
 				$redirect_to = isset( $_REQUEST['wp_http_referer'] ) ? remove_query_arg( array( 'wp_http_referer', 'updated', 'delete_count' ), stripslashes( $_REQUEST['wp_http_referer'] ) ) : 'users.php';
-				$redirect_to = add_query_arg( 'update', 'approve', 'users.php' );
+				$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
 				wp_redirect( $redirect_to );
 				exit;
 			}
