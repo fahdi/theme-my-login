@@ -584,7 +584,7 @@ class Theme_My_Login_Admin {
 			$page_id = wp_insert_post( $insert );
 		}
 			
-		$plugin_data = get_plugin_data( __FILE__ );
+		$plugin_data = get_plugin_data( TML_ABSPATH . '/theme-my-login.php' );
 		$theme_my_login->set_option( 'version', $plugin_data['Version'] );
 		$theme_my_login->set_option( 'page_id', (int) $page_id );
 		return $theme_my_login->save_options();
