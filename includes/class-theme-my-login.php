@@ -474,6 +474,28 @@ class Theme_My_Login {
 	/**
 	 * Handler for 'theme-my-login' shortcode
 	 *
+	 * Optional $atts contents:
+	 *
+	 * - instance - A unqiue instance ID for this instance.
+	 * - default_action - The action to display. Defaults to "login".
+	 * - login_template - The template used for the login form. Defaults to "login-form.php".
+	 * - register_template - The template used for the register form. Defaults to "register-form.php".
+	 * - lostpassword_template - The template used for the lost password form. Defaults to "lostpassword-form.php".
+	 * - user_template - The templated used for when a user is logged in. Defalts to "user-panel.php".
+	 * - show_title - True to display the current title, false to hide. Defaults to true.
+	 * - show_log_link - True to display the login link, false to hide. Defaults to true.
+	 * - show_reg_link - True to display the register link, false to hide. Defaults to true.
+	 * - show_pass_link - True to display the lost password link, false to hide. Defaults to true.
+	 * - register_widget - True to allow registration in widget, false to send to register page. Defaults to false.
+	 * - lostpassword_widget - True to allow password recovery in widget, false to send to lost password page. Defaults to false.
+	 * - logged_in_widget - True to display the widget when logged in, false to hide. Defaults to true.
+	 * - show_gravatar - True to display the user's gravatar, false to hide. Defaults to true.
+	 * - gravatar_size - The size of the user's gravatar. Defaults to "50".
+	 * - before_widget - Content to display before widget. Defaults to "<li>".
+	 * - after_widget - Content to display after widget. Defaults to "</li>".
+	 * - before_title - Content to display before the title (if displayed). Defaults to "<h2>".
+	 * - after_title - Content to display after the title (if displayed). Defaults to "</h2>".
+	 *
 	 * @since 6.0
 	 * @access public
 	 *
