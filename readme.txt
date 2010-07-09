@@ -13,8 +13,6 @@ Themes the WordPress login pages according to your theme.
 
 This plugin themes the WordPress login, registration and forgot password pages according to your current theme. It replaces the wp-login.php file by using a page template from your theme. Also includes a widget for sidebar login.
 
-= NOTICE =
-Upgrading to version 5.0 will drop all previous options!
 
 = Features =
 * Your registration, log in, and password recovery pages will all match the rest of your website
@@ -33,7 +31,6 @@ Upgrading to version 5.0 will drop all previous options!
 
 1. Upload the plugin to your 'wp-content/plugins' directory
 1. Activate the plugin
-1. Visit the [Theme My Login Official Usage Thread](http://www.jfarthing.com/forum/theme-my-login/theme-my-login-official-usage-thread/) for further instruction.
 
 
 == Frequently Asked Questions ==
@@ -45,8 +42,27 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 = 6.0 =
 * Complete code rewrite
+* Users can now log in with e-mail address as well as username
 * Remove option to disable template tag and widget in favor of always being enabled
 * Remove option to rewrite login links in favor of always being rewritten
+* Custom templates can now be defined per action (login, register, etc.)
+* Add various new hooks to help with custom integration with other plugins
+* Make links sortable in "Custom User Links" module
+* Customize every aspect of every e-mail in "Custom E-mail" module
+* Add a cool new random tip widget in the TML admin
+* Use WP 3.0 functions (such as 'network_site_url') if available
+* phpDoc everywhere!
+
+= 5.1.4 =
+* Fix the_title() bug fro WP versions before 3.0 (again)
+* Fix undefined is_user_logged_in() bug
+
+= 5.1.3 =
+* Make Themed Profiles work properly
+
+= 5.1.2 =
+* Fix the_title() bug for WP versions before 3.0
+* Fix redirection bug caused by 5.1.1 update
 
 = 5.1.1 =
 * Fix bug that blocked users from entire site once logged in
