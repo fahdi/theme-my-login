@@ -6,16 +6,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_User_Links_Admin' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_User_Links_Admin {
-	/**
-	 * Holds reference to global $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-	
+class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	/**
 	 * AJAX handler for adding/updating a link
 	 *
@@ -315,38 +306,12 @@ class Theme_My_Login_Custom_User_Links_Admin {
 	}
 	
 	/**
-	 * Loads global $theme_my_login object into class property
-	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function load( &$theme_my_login ) {
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
-	}
-	
-	/**
-	 * PHP4 style constructor
+	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login_Custom_User_Links_Admin() {
-		$this->__construct();
-	}
-	
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
-		add_action( 'tml_admin_load', array( &$this, 'load' ) );
+	function load() {
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
 		
