@@ -42,8 +42,8 @@ class Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function Theme_My_Login_Module( &$theme_my_login ) {
-		$this->__construct( $theme_my_login );
+	function Theme_My_Login_Module() {
+		$this->__construct();
 	}
 	
 	/**
@@ -54,8 +54,8 @@ class Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function __construct( &$theme_my_login ) {
-		$this->theme_my_login =& $theme_my_login;
+	function __construct() {
+		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		$this->load();
 	}
 }
