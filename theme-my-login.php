@@ -57,7 +57,7 @@ foreach ( $theme_my_login->get_active_and_valid_modules() as $module )
 	include_once( $module );
 unset( $module );
 
-do_action_ref_array( 'tml_modules_loaded', array( &$theme_my_login ) );
+do_action( 'tml_modules_loaded' );
 
 if ( is_admin() ) {
 	require_once( TML_ABSPATH . '/admin/class-theme-my-login-admin.php' );
@@ -67,11 +67,21 @@ if ( is_admin() ) {
 	 * @since 6.0
 	 */
 	$theme_my_login_admin =& new Theme_My_Login_Admin( $theme_my_login );
-	
-	do_action_ref_array( 'tml_admin_load', array( &$theme_my_login ) );
 }
 
 if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
 	include_once( TML_ABSPATH . '/includes/class-theme-my-login-debug.php' );
+	
+/**
+ * Displays a TML instance
+ *
+ * @see Theme_My_Login::shortcode() for $args parameters
+ * @since 6.0
+ *
+ * @param string|array $args Template tag arguments
+ */
+function theme_my_login( $args = '' ) {
+	echo $GLOBALS['theme_my_login']->shortcode( $args );
+}
 
 ?>
