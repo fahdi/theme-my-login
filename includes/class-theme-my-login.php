@@ -42,6 +42,15 @@ class Theme_My_Login {
 	var $options = array();
 	
 	/**
+	 * Holds TML module objects
+	 *
+	 * @since 6.0
+	 * @access public
+	 * @var array
+	 */
+	var $modules = array();
+	
+	/**
 	 * Hold WP_Error object
 	 *
 	 * @since 6.0
@@ -812,6 +821,18 @@ if(typeof wpOnload=='function')wpOnload()
 	function is_module_active( $module ) {
 		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
+	}
+	
+	/**
+	 * Registers a module
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $module_class The name of the module class to instantiate
+	 */
+	function register_module( $module_class ) {
+		$this->modules[$module_class] =& new $module_class( &$this );
 	}
 	
 	/**
