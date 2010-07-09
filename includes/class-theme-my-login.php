@@ -832,7 +832,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $module_class The name of the module class to instantiate
 	 */
 	function register_module( $module_class ) {
-		$this->modules[$module_class] =& new $module_class( &$this );
+		$this->modules[$module_class] =& new $module_class( $this );
 	}
 	
 	/**
