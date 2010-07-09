@@ -34,6 +34,7 @@ define( 'TML_DEBUG', false );
 // Require a few needed files
 require_once( TML_ABSPATH . '/includes/class-theme-my-login.php' );
 require_once( TML_ABSPATH . '/includes/class-theme-my-login-template.php' );
+require_once( TML_ABSPATH . '/includes/class-theme-my-login-module.php' );
 require_once( TML_ABSPATH . '/includes/class-theme-my-login-widget.php' );
 
 /**
