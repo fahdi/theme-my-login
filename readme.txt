@@ -53,6 +53,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 * Use WP 3.0 functions (such as 'network_site_url') if available
 * phpDoc everywhere!
 
+= 5.1.5 =
+* Fix blank page redirect bug
+
 = 5.1.4 =
 * Fix the_title() bug fro WP versions before 3.0 (again)
 * Fix undefined is_user_logged_in() bug
