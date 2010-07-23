@@ -121,7 +121,7 @@ class Theme_My_Login {
 		
 		add_action( 'wp_authenticate', array( &$this, 'wp_authenticate' ) );
 		
-		add_action( 'user_registered', 'wp_new_user_notification', 10, 2 );
+		add_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'user_password_changed', 'wp_password_change_notification' );
 		
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
@@ -1049,7 +1049,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
 		
-		do_action( 'user_registered', $user_id, $user_pass );
+		do_action( 'new_user_registered', $user_id, $user_pass );
 
 		return $user_id;
 	}

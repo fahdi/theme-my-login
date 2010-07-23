@@ -340,7 +340,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_activation_notification_filters() {
-		if ( $options = $this->theme_my_login->get_option( array( 'email', 'user_activation' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_activation' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_activation_notification_title', array( &$this, 'user_activation_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_activation_notification_message', array( &$this, 'user_activation_notification_message_filter' ), 10, 3 );
@@ -357,7 +357,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_approval_notification_filters() {
-		if ( $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_approval_notification_title', array( &$this, 'user_approval_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_approval_notification_message', array( &$this, 'user_approval_notification_message_filter' ), 10, 3 );
@@ -371,7 +371,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_approval_admin_notification_filters() {
-		if ( $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 			add_filter( 'user_approval_admin_notifcation_mail_to', array( &$this, 'user_approval_admin_notifcation_mail_to_filter' ) );
 			add_filter( 'user_approval_admin_notification_title', array( &$this, 'user_approval_admin_notification_title_filter' ), 10, 2 );
@@ -389,7 +389,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_denial_notification_filters() {
-		if ( $options = $this->theme_my_login->get_option( array( 'email', 'user_denial' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_denial' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_denial_notification_title', array( &$this, 'user_denial_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_denial_notification_message', array( &$this, 'user_denial_notification_message_filter' ), 10, 2 );
@@ -653,11 +653,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function modules_loaded( &$theme_my_login ) {
+	function modules_loaded() {
 		global $theme_my_login_custom_email;
 		
-		// Create a reference to global $theme_my_login object
-		$this->theme_my_login =& $theme_my_login;
+		// Shorthand reference
+		$theme_my_login =& $this->theme_my_login;
 		
 		// Create a reference to global $theme_my_login_custom_email object
 		if ( is_a( $theme_my_login_custom_email, 'Theme_My_Login_Custom_Email' ) )
@@ -666,7 +666,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		// Moderation is enabled
 		if ( in_array( $theme_my_login->options['moderation']['type'], array( 'admin', 'email' ) ) ) {
 			// Moderate user upon registration
-			add_action( 'user_registered', array( &$this, 'moderate_user' ), 100, 2 );
+			add_action( 'new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
 			// Redirect with proper message after registration
 			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
 			
@@ -677,12 +677,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			
 			if ( $theme_my_login->is_module_active( 'custom-email/custom-email.php' ) ) {
 				// Remove custom e-mail module new user notification
-				remove_action( 'user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ) );
+				remove_action( 'new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ) );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', array( &$this->theme_my_login_custom_email, 'new_user_notification'), 10, 2 );
 			} else {
 				// Remove default new user notification
-				remove_action( 'user_registered', 'wp_new_user_notification' );
+				remove_action( 'new_user_registered', 'wp_new_user_notification' );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', 'wp_new_user_notification', 10, 2 );
 			}
