@@ -223,7 +223,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 		?>
 	<div id="ajax-response-<?php echo $role; ?>" class="ajax-response"></div>
 
-	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?>>
+	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?> class="sortable">
 		<thead>
 		<tr>
 			<th class="left"><?php _e( 'Title', $this->theme_my_login->textdomain ); ?></th>

@@ -28,7 +28,7 @@ jQuery(document).ready( function($) {
 		return ui;
 	};
 	
-	$('#tml-options-user-links tbody').sortable({
+	$('#tml-options-user-links table.sortable tbody').sortable({
 		axis: 'y',
 		helper: fixHelper,
 		items: 'tr'
