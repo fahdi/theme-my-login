@@ -23,7 +23,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 */
 	function init() {
 		global $pagenow;
-		if ( 'profile.php' == $pagenow ) {
+		if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
 			$redirect_to = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link() );
 			$redirect_to = add_query_arg( $_GET, $redirect_to );
 			wp_redirect( $redirect_to );
