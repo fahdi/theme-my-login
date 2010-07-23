@@ -2,7 +2,7 @@ jQuery(document).ready( function($) {
 	$('#tml-options-user-links tbody').wpList( {
 		addBefore: function( s ) {
 			var parts = s.element.split('-');
-			var role = parts[0];
+			var role = parts[1];
 			s.what = role + '-link';
 			return s;
 		},
@@ -12,7 +12,7 @@ jQuery(document).ready( function($) {
 			$('table#' + role + '-link-table').show();
 		},
 		delBefore: function( s ) {
-			var role = s.element.split('-', 1);
+			var role = s.element.split('-', 1).toString();
 			s.data.user_role = role;
 			return s;
 		},
@@ -33,5 +33,4 @@ jQuery(document).ready( function($) {
 		helper: fixHelper,
 		items: 'tr'
 	});
-	$('#tml-options-user-links tbody').disableSelection();
 } );
