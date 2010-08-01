@@ -652,10 +652,22 @@ class Theme_My_Login_Admin {
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
 		add_action( 'admin_notices', array( &$this, 'initial_nag' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
-		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( &$this, 'install' ) );
-		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( &$this, 'uninstall' ) );
 	}
 }
 endif;
+
+function theme_my_login_install() {
+	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
+	if ( is_object( $theme_my_login_admin ) )
+		$theme_my_login_admin->install();
+}
+register_activation_hook( __FILE__, 'theme_my_login_install' );
+
+function theme_my_login_uninstall() {
+	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
+	if ( is_object( $theme_my_login_admin ) )
+		$theme_my_login_admin->uninstall();
+}
+register_uninstall_hook( __FILE__, 'theme_my_login_uninstall' );
 
 ?>
