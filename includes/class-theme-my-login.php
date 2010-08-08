@@ -564,6 +564,8 @@ class Theme_My_Login {
 		if ( strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
 			$orig_url = $url;
 			$url = $this->get_login_page_link();
+			if ( 'https' == strtolower( $orig_scheme ) )
+				$url = preg_replace( '|^http://|', 'https://', $url );
 			if ( strpos( $orig_url, '?' ) ) {
 				$query = substr( $orig_url, strpos( $orig_url, '?' ) + 1 );
 				parse_str( $query, $r );
