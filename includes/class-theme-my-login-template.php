@@ -245,6 +245,10 @@ class Theme_My_Login_Template {
 				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
 		}
 		
+		// Respect FORCE_SSL_LOGIN
+		if ( 'login' == $action && force_ssl_login() )
+			$url = preg_replace( '|^http://|', 'https://', $url );
+			
 		return apply_filters( 'tml_action_url', $url );
 	}
 	
