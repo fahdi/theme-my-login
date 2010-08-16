@@ -513,7 +513,7 @@ class Theme_My_Login {
 			$atts['instance'] = $this->get_new_instance();
 		}
 		
-		$template =& new Theme_My_Login_Template( $this, $atts );
+		$template =& new Theme_My_Login_Template( $atts );
 		
 		return $template->display();
 	}
