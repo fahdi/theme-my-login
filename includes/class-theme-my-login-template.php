@@ -557,9 +557,9 @@ class Theme_My_Login_Template {
 		
 		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : 'login';
 		$this->instance = $this->options['instance'];
-		if ( $theme_my_login->request_instance == $this->instance ) {
+		if ( $this->theme_my_login->request_instance == $this->instance ) {
 			$this->is_active = true;
-			$this->action = $theme_my_login->request_action;
+			$this->action = $this->theme_my_login->request_action;
 		}
 	}
 }
