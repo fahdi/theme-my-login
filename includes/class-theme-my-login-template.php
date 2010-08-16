@@ -537,11 +537,10 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 * @param array $options Instance options
 	 */
 	function Theme_My_Login_Template( &$theme_my_login, $options = '' ) {
-		$this->__construct( $theme_my_login, $options );
+		$this->__construct( $options );
 	}
 	
 	/**
@@ -550,11 +549,10 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 * @param array $options Instance options
 	 */
-	function __construct( &$theme_my_login, $options = '' ) {
-		$this->theme_my_login =& $theme_my_login;
+	function __construct( $options = '' ) {
+		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		$this->load_options( $options );
 		
 		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : 'login';
