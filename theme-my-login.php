@@ -71,7 +71,8 @@ if ( is_admin() ) {
 
 if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
 	include_once( TML_ABSPATH . '/includes/class-theme-my-login-debug.php' );
-	
+
+if ( !function_exists( 'theme_my_login' ) ) :
 /**
  * Displays a TML instance
  *
@@ -83,5 +84,6 @@ if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
 function theme_my_login( $args = '' ) {
 	echo $GLOBALS['theme_my_login']->shortcode( $args );
 }
+endif;
 
 ?>
