@@ -539,7 +539,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @param array $options Instance options
 	 */
-	function Theme_My_Login_Template( &$theme_my_login, $options = '' ) {
+	function Theme_My_Login_Template( $options = '' ) {
 		$this->__construct( $options );
 	}
 	
