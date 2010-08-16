@@ -657,13 +657,13 @@ function theme_my_login_install() {
 	if ( is_object( $theme_my_login_admin ) )
 		$theme_my_login_admin->install();
 }
-register_activation_hook( __FILE__, 'theme_my_login_install' );
+register_activation_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_install' );
 
 function theme_my_login_uninstall() {
 	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
 	if ( is_object( $theme_my_login_admin ) )
 		$theme_my_login_admin->uninstall();
 }
-register_uninstall_hook( __FILE__, 'theme_my_login_uninstall' );
+register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_uninstall' );
 
 ?>
