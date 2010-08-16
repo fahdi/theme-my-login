@@ -541,7 +541,7 @@ class Theme_My_Login {
 	 * @return string URL with optional path appended
 	 */
 	function get_current_url( $path = '' ) {
-		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce' ) );
+		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth' ) );
 		if ( !empty( $path ) ) {
 			$path = wp_parse_args( $path );
 			$url = add_query_arg( $path, $url );
