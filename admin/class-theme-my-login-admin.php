@@ -629,11 +629,9 @@ class Theme_My_Login_Admin {
 	 *
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object Reference to global $theme_my_login object
 	 */
-	function Theme_My_Login_Admin( &$theme_my_login ) {
-		$this->__construct( $theme_my_login );
+	function Theme_My_Login_Admin() {
+		$this->__construct();
 	}
 	
 	/**
@@ -641,11 +639,9 @@ class Theme_My_Login_Admin {
 	 *
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object Reference to global $theme_my_login object
 	 */
-	function __construct( &$theme_my_login ) {
-		$this->theme_my_login =& $theme_my_login;
+	function __construct() {
+		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
