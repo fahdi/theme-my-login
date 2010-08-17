@@ -14,14 +14,16 @@ Text Domain: theme-my-login
  *
  * @since 6.0
  */
-define( 'TML_ABSPATH', dirname( __FILE__ ) );
+if ( !defined( 'TML_ABSPATH' ) )
+	define( 'TML_ABSPATH', dirname( __FILE__ ) );
 
 /**
  * Holds the name of the Theme My Login directory
  *
  * @since 6.0
  */
-define( 'TML_DIRNAME', basename( TML_ABSPATH ) );
+if ( !defined( 'TML_DIRNAME' ) )
+	define( 'TML_DIRNAME', basename( TML_ABSPATH ) );
 
 /**
  * For developers, setting this to true will output useful debug information
@@ -29,7 +31,8 @@ define( 'TML_DIRNAME', basename( TML_ABSPATH ) );
  *
  * @since 6.0
  */
-define( 'TML_DEBUG', false );
+if ( !defined( 'TML_DEBUG' ) )
+	define( 'TML_DEBUG', false );
 
 // Require a few needed files
 require_once( TML_ABSPATH . '/includes/class-theme-my-login.php' );
