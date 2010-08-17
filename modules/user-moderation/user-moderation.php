@@ -677,12 +677,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			
 			if ( $theme_my_login->is_module_active( 'custom-email/custom-email.php' ) ) {
 				// Remove custom e-mail module new user notification
-				remove_action( 'new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ) );
+				remove_action( 'new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', array( &$this->theme_my_login_custom_email, 'new_user_notification'), 10, 2 );
 			} else {
 				// Remove default new user notification
-				remove_action( 'new_user_registered', 'wp_new_user_notification' );
+				remove_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', 'wp_new_user_notification', 10, 2 );
 			}

@@ -312,7 +312,9 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function send_password_change_notification_filter( $enable ) {
 		$options =& $this->options['reset_pass'];
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
-		return !$this->options['reset_pass']['admin_disable'];
+		if ( $this->options['reset_pass']['admin_disable'] )
+			return false;
+		return $enable;
 	}
 
 	/**
@@ -437,7 +439,9 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function send_new_user_admin_notification_filter( $enable ) {
 		$options =& $this->options['new_user'];
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
-		return !$options['admin_disable'];
+		if ( $options['admin_disable'] )
+			return false;
+		return $enable;
 	}
 	
 	/**
@@ -464,7 +468,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
-
+		
 		if ( apply_filters( 'send_new_user_admin_notification', true ) ) {
 			$message  = sprintf( __( 'New user registration on your site %s:', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
 			$message .= sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n\r\n";
@@ -482,7 +486,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 
 		if ( empty( $plaintext_pass ) )
 			return;
-			
+		
 		if ( apply_filters( 'send_new_user_notification', true ) ) {
 			$message  = sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n";
 			$message .= sprintf( __( 'Password: %s', $this->theme_my_login->textdomain ), $plaintext_pass ) . "\r\n";
@@ -660,7 +664,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		add_action( 'password_reset', array( &$this, 'apply_reset_pass_filters' ) );
 		add_action( 'register_post', array( &$this, 'apply_new_user_filters' ) );
 		
-		remove_action( 'new_user_registered', 'wp_new_user_notification' );
+		remove_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'new_user_registered', array( &$this, 'new_user_notification' ), 10, 2 );
 		
 		remove_action( 'user_password_changed', 'wp_password_change_notification' );
