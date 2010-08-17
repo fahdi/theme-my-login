@@ -9,6 +9,10 @@ Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
 
+// Allow custom functions file
+if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
+	include_once( WP_PLUGIN_DIR . '/theme-my-login-custom.php' );
+
 /**
  * Holds the absolute location of Theme My Login
  *
