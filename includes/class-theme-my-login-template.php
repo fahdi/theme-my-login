@@ -23,7 +23,7 @@ class Theme_My_Login_Template {
 	 * @var object
 	 */
 	var $theme_my_login;
-	
+
 	/**
 	 * Holds this instance
 	 *
@@ -32,7 +32,7 @@ class Theme_My_Login_Template {
 	 * @var int
 	 */
 	var $instance;
-	
+
 	/**
 	 * Holds this instance action
 	 *
@@ -41,7 +41,7 @@ class Theme_My_Login_Template {
 	 * @var string
 	 */
 	var $action;
-	
+
 	/**
 	 * Set if current instance is active
 	 *
@@ -50,7 +50,7 @@ class Theme_My_Login_Template {
 	 * @var bool
 	 */
 	var $is_active = false;
-	
+
 	/**
 	 * Holds instance specific template options
 	 *
@@ -68,7 +68,7 @@ class Theme_My_Login_Template {
 	 * @var object
 	 */
 	var $errors;
-	
+
 	/**
 	 * Displays output according to current action
 	 *
@@ -80,7 +80,7 @@ class Theme_My_Login_Template {
 	function display( $action = '' ) {
 		if ( empty( $action ) )
 			$action = $this->action;
-			
+
 		ob_start();
 		echo $this->options['before_widget'];
 		if ( $this->options['show_title'] )
@@ -121,7 +121,7 @@ class Theme_My_Login_Template {
 		ob_end_clean();
 		return apply_filters( 'tml_display', $output, $this->options );
 	}
-	
+
 	/**
 	 * Returns action title
 	 *
@@ -170,16 +170,16 @@ class Theme_My_Login_Template {
 	}
 
 	/**
-	 * {@internal Missing short description}
+	 * Returns plugin errors
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
 	function get_errors() {
 		global $error;
-		
+
 		$wp_error =& $this->theme_my_login->errors;
-		
+
 		if ( empty( $wp_error ) )
 			$wp_error = new WP_Error();
 
@@ -211,9 +211,9 @@ class Theme_My_Login_Template {
 		}
 		return $output;
 	}
-	
+
 	/**
-	 * {@internal Missing short description}
+	 * Prints plugin errors
 	 *
 	 * @since 6.0
 	 * @access public
@@ -221,7 +221,7 @@ class Theme_My_Login_Template {
 	function the_errors() {
 		echo $this->get_errors();
 	}
-	
+
 	/**
 	 * Returns requested action URL
 	 *
@@ -235,7 +235,7 @@ class Theme_My_Login_Template {
 	function get_action_url( $action = 'login', $instance = '' ) {
 		if ( empty( $instance ) )
 			$instance = $this->instance;
-			
+
 		if ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) {
 			$url = $this->theme_my_login->get_login_page_link( 'action=' . $action );
 		} else {
@@ -244,14 +244,14 @@ class Theme_My_Login_Template {
 			else
 				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
 		}
-		
+
 		// Respect FORCE_SSL_LOGIN
 		if ( 'login' == $action && force_ssl_login() )
 			$url = preg_replace( '|^http://|', 'https://', $url );
-			
+
 		return apply_filters( 'tml_action_url', $url );
 	}
-	
+
 	/**
 	 * Outputs requested action URL
 	 *
@@ -264,7 +264,7 @@ class Theme_My_Login_Template {
 	function the_action_url( $action = 'login', $instance = '' ) {
 		echo esc_url( $this->get_action_url( $action, $instance ) );
 	}
-	
+
 	/**
 	 * Returns the action links
 	 *
@@ -284,7 +284,7 @@ class Theme_My_Login_Template {
 			$action_links[] = array( 'title' => $this->get_title( 'lostpassword' ), 'url' => $this->get_action_url( 'lostpassword' ) );
 		return apply_filters( 'tml_action_links', $action_links );
 	}
-	
+
 	/**
 	 * Outputs the action links
 	 *
@@ -302,7 +302,7 @@ class Theme_My_Login_Template {
 			echo '</ul>' . "\n";
 		}
 	}
-	
+
 	/**
 	 * Returns logged-in user links
 	 *
@@ -318,7 +318,7 @@ class Theme_My_Login_Template {
 			);
 		return apply_filters( 'tml_user_links', $user_links );
 	}
-	
+
 	/**
 	 * Outputs logged-in user links
 	 *
@@ -335,7 +335,7 @@ class Theme_My_Login_Template {
 			echo '</ul>';
 		}
 	}
-	
+
 	/**
 	 * Displays user avatar
 	 *
@@ -348,7 +348,7 @@ class Theme_My_Login_Template {
 			$size = $this->options['gravatar_size'];
 		echo get_avatar( $current_user->ID, $size );
 	}
-	
+
 	/**
 	 * Returns requested action message
 	 *
@@ -367,7 +367,7 @@ class Theme_My_Login_Template {
 			$message = '';
 		return apply_filters( $action . '_message', $message );
 	}
-	
+
 	/**
 	 * Outputs requested action message
 	 *
@@ -382,7 +382,7 @@ class Theme_My_Login_Template {
 		if ( $message = $this->get_action_message( $action ) )
 			echo $before_message . $message . $after_message;
 	}
-	
+
 	/**
 	 * Locates specified template
 	 *
@@ -400,7 +400,7 @@ class Theme_My_Login_Template {
 		$theme_my_login =& $this->theme_my_login;
 		// Easy access to current user
 		$current_user = wp_get_current_user();
-		
+
 		if ( !is_array( $template_names ) )
 			$template_names = array( $template_names );
 
@@ -412,16 +412,16 @@ class Theme_My_Login_Template {
 				}
 			}
 		}
-		
+
 		$template_path = apply_filters( 'tml_get_template', $template_path );
-		
+
 		if ( $load && $template_path ) {
 			include( $template_path );
 		}
-			
+
 		return $template_path;
 	}
-	
+
 	/**
 	 * Returns the proper redirect URL according to action
 	 *
@@ -434,9 +434,9 @@ class Theme_My_Login_Template {
 	function get_redirect_url( $action = '' ) {
 		if ( empty( $action ) )
 			$action = $this->action;
-			
+
 		$redirect_to = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
-			
+
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
@@ -451,7 +451,7 @@ class Theme_My_Login_Template {
 		}
 		return apply_filters( 'tml_redirect_url', $url, $action );
 	}
-	
+
 	/**
 	 * Outputs redirect URL
 	 *
@@ -461,7 +461,7 @@ class Theme_My_Login_Template {
 	function the_redirect_url() {
 		echo esc_url( $this->get_redirect_url() );
 	}
-	
+
 	/**
 	 * Outputs current template instance ID
 	 *
@@ -471,7 +471,7 @@ class Theme_My_Login_Template {
 	function the_instance() {
 		echo esc_attr( $this->instance );
 	}
-	
+
 	/**
 	 * Returns requested $value
 	 *
@@ -486,7 +486,7 @@ class Theme_My_Login_Template {
 			return stripslashes( $_REQUEST[$value] );
 		return false;
 	}
-	
+
 	/**
 	 * Outputs requested value
 	 *
@@ -498,7 +498,7 @@ class Theme_My_Login_Template {
 	function the_posted_value( $value ) {
 		echo esc_attr( $this->get_posted_value( $value ) );
 	}
-	
+
 	/**
 	 * Merges default template options with instance template options
 	 *
@@ -530,7 +530,7 @@ class Theme_My_Login_Template {
 			'after_title' => '</h2>'
 		), (array) $options );
 	}
-	
+
 	/**
 	 * PHP4 style constructor
 	 *
@@ -542,7 +542,7 @@ class Theme_My_Login_Template {
 	function Theme_My_Login_Template( $options = '' ) {
 		$this->__construct( $options );
 	}
-	
+
 	/**
 	 * PHP5 style constructor
 	 *
@@ -563,4 +563,7 @@ class Theme_My_Login_Template {
 		}
 	}
 }
-endif;
+
+endif; // Class exists
+
+?>

@@ -23,7 +23,7 @@ class Theme_My_Login_Module {
 	 * @var object
 	 */
 	var $theme_my_login;
-	
+
 	/**
 	 * Called when object is constructed
 	 *
@@ -33,7 +33,7 @@ class Theme_My_Login_Module {
 	function load() {
 		// This function should be overridden by the module extend class
 	}
-	
+
 	/**
 	 * PHP4 style constructor
 	 *
@@ -45,7 +45,7 @@ class Theme_My_Login_Module {
 	function Theme_My_Login_Module() {
 		$this->__construct();
 	}
-	
+
 	/**
 	 * PHP5 style constructor
 	 *
@@ -60,4 +60,6 @@ class Theme_My_Login_Module {
 	}
 }
 
-endif;
+endif; // Class exists
+
+?>

@@ -21,11 +21,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @var object
 	 */
 	var $theme_my_login_custom_email;
-	
+
 	/**
 	 * Applies moderation to a newly registered user
 	 *
-	 * Callback for 'register_post' hook in method Theme_My_Login::register_new_user()
+	 * Callback for "register_post" hook in method Theme_My_Login::register_new_user()
 	 *
 	 * @see Theme_My_Login::register_new_user()
 	 * @since 6.0
@@ -36,14 +36,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function moderate_user( $user_id, $user_pass ) {
 		global $wpdb;
-		
-		// Set user role to 'pending'
+
+		// Set user role to "pending"
 		$user = new WP_User( $user_id );
 		$user->set_role( 'pending' );
-		
+
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
-		
+
 		// Send appropriate e-mail depending on moderation type
 		if ( 'email' == $theme_my_login->options['moderation']['type'] ) { // User activation
 			// Generate an activation key
@@ -61,11 +61,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$this->new_user_approval_admin_notification( $user_id );
 		}
 	}
-	
+
 	/**
-	 * Handles 'activate' action for login page
+	 * Handles "activate" action for login page
 	 *
-	 * Callback for 'login_action_activate' hook in method Theme_My_Login::the_request();
+	 * Callback for "login_action_activate" hook in method Theme_My_Login::the_request();
 	 *
 	 * @see Theme_My_Login::the_request();
 	 * @since 6.0
@@ -93,11 +93,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		wp_redirect( $redirect_to );
 		exit();
 	}
-	
+
 	/**
-	 * Blocks 'pending' users from loggin in
+	 * Blocks "pending" users from loggin in
 	 *
-	 * Callback for 'authenticate' hook in function wp_authenticate()
+	 * Callback for "authenticate" hook in function wp_authenticate()
 	 *
 	 * @see wp_authenticate()
 	 * @since 6.0
@@ -121,11 +121,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		}
 		return $user;
 	}
-	
+
 	/**
-	 * Blocks 'pending' users from resetting their password
+	 * Blocks "pending" users from resetting their password
 	 *
-	 * Callback for 'allow_password_reset' in method Theme_My_Login::retrieve_password()
+	 * Callback for "allow_password_reset" in method Theme_My_Login::retrieve_password()
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
@@ -141,11 +141,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$allow = false;
 		return $allow;
 	}
-	
+
 	/**
 	 * Changes the registration redirection based upon moderaton type
 	 *
-	 * Callback for 'register_redirect' hook in method Theme_My_Login::the_request()
+	 * Callback for "register_redirect" hook in method Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
@@ -157,10 +157,10 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	function register_redirect( $redirect_to ) {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
-		
+
 		// TML page link
 		$redirect_to = $theme_my_login->get_login_page_link();
-		
+
 		if ( !empty( $theme_my_login->request_instance ) )
 			$redirect_to = $theme_my_login->get_current_url( 'instance=' . $theme_my_login->request_instance );
 
@@ -168,7 +168,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
 		elseif ( 'admin' == $theme_my_login->options['moderation']['type'] )
 			$redirect_to = add_query_arg( 'pending', 'approval', $redirect_to );
-			
+
 		return $redirect_to;
 	}
 
@@ -193,22 +193,22 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		if ( empty( $login ) || !is_string( $login ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
-			
+
 		// Validate activation key
 		$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login ) );
 		if ( empty( $user ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
-			
+
 		do_action( 'user_activation_post', $user->user_login, $user->user_email );
-		
+
 		// Allow plugins to short-circuit process and send errors
 		$errors = new WP_Error();
 		$errors = apply_filters( 'user_activation_errors', $errors, $user->user_login, $user->user_email );
-		
+
 		// Return errors if there are any
 		if ( $errors->get_error_code() )
 			return $errors;
-			
+
 		// Clear the activation key
 		$wpdb->update( $wpdb->users, array( 'user_activation_key' => '' ), array( 'user_login' => $login ) );
 
@@ -221,12 +221,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$pass = wp_generate_password();
 			wp_set_password( $pass, $user->ID );
 		}
-		
+
 		do_action( 'user_activated', $user->ID, $pass );
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Notifies a pending user to activate their account
 	 *
@@ -238,12 +238,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function new_user_activation_notification( $user_id, $key = '' ) {
 		global $wpdb;
-		
+
 		$user = new WP_User( $user_id );
 
 		$user_login = stripslashes( $user->user_login );
 		$user_email = stripslashes( $user->user_email );
-	
+
 		if ( empty( $key ) ) {
 			$key = $wpdb->get_var( $wpdb->prepare( "SELECT user_activation_key FROM $wpdb->users WHERE user_login = %s", $user_login ) );
 			if ( empty( $key ) ) {
@@ -251,7 +251,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 				$wpdb->update( $wpdb->users, array( 'user_activation_key' => $key ), array( 'user_login' => $user_login ) );
 			}
 		}
-		
+
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
@@ -259,19 +259,19 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}			
-		
+
 		$activation_url = add_query_arg( array( 'action' => 'activate', 'key' => $key, 'login' => rawurlencode( $user_login ) ), wp_login_url() );
-		
+
 		$title = sprintf( __( '[%s] Activate Your Account', $this->theme_my_login->textdomain ), $blogname );
 		$message  = sprintf( __( 'Thanks for registering at %s! To complete the activation of your account please click the following link: ', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
 		$message .=  $activation_url . "\r\n";
-		
+
 		$title = apply_filters( 'user_activation_notification_title', $title, $user_id );
 		$message = apply_filters( 'user_activation_notification_message', $message, $activation_url, $user_id );
 
 		wp_mail( $user_email, $title, $message );
 	}
-	
+
 	/**
 	 * Notifies the administrator of a pending user needing approval
 	 *
@@ -286,7 +286,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		$user_login = stripslashes( $user->user_login );
 		$user_email = stripslashes( $user->user_email );
-		
+
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
@@ -294,23 +294,23 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
-		
+
 		$title = sprintf( __( '[%s] New User Awaiting Approval', $this->theme_my_login->textdomain ), $blogname );
-		
+
 		$message  = sprintf( __( 'New user requires approval on your blog %s:', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n";
 		$message .= sprintf( __( 'E-mail: %s', $this->theme_my_login->textdomain ), $user_email ) . "\r\n\r\n";
 		$message .= __( 'To approve or deny this user:', $this->theme_my_login->textdomain ) . "\r\n";
 		$message .= admin_url( 'users.php?role=pending' );
-		
+
 		$title = apply_filters( 'user_approval_admin_notification_title', $title, $user_id );
 		$message = apply_filters( 'user_approval_admin_notification_message', $message, $user_id );
-		
+
 		$to = apply_filters( 'user_approval_admin_notifcation_mail_to', get_option( 'admin_email' ) );
-		
+
 		@wp_mail( $to, $title, $message );
 	}
-	
+
 	/**
 	 * Handles display of various action/status messages
 	 *
@@ -332,7 +332,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		} elseif ( isset( $_GET['activation'] ) && 'invalidkey' == $_GET['activation'] )
 			$theme_my_login->errors->add( 'invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', $theme_my_login->textdomain ) );
 	}
-	
+
 	/**
 	 * Applies all user activation mail filters
 	 *
@@ -346,11 +346,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_filter( 'user_activation_notification_message', array( &$this, 'user_activation_notification_message_filter' ), 10, 3 );
 		}
 	}
-	
+
 	/**
 	 * Applies all user approval mail filters
 	 *
-	 * Callback for 'approve_user' hook in method Theme_My_Login_User_Moderation_Admin::approve_user()
+	 * Callback for "approve_user" hook in method Theme_My_Login_User_Moderation_Admin::approve_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::approve_user()
 	 * @since 6.0
@@ -363,7 +363,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_filter( 'user_approval_notification_message', array( &$this, 'user_approval_notification_message_filter' ), 10, 3 );
 		}
 	}
-	
+
 	/**
 	 * Applies all user approval admin mail filters
 	 *
@@ -378,11 +378,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_filter( 'user_approval_admin_notification_message', array( &$this, 'user_approval_admin_notification_message_filter' ), 10, 2 );
 		}
 	}
-	
+
 	/**
 	 * Applies all user denial mail filters
 	 *
-	 * Callback for 'deny_user' hook in method Theme_My_Login_User_Moderation_Admin::deny_user()
+	 * Callback for "deny_user" hook in method Theme_My_Login_User_Moderation_Admin::deny_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::deny_user()
 	 * @since 6.0
@@ -395,11 +395,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_filter( 'user_denial_notification_message', array( &$this, 'user_denial_notification_message_filter' ), 10, 2 );
 		}
 	}
-	
+
 	/**
 	 * Changes the user activation e-mail subject
 	 *
-	 * Callback for 'user_activation_notification_title' hook in Theme_My_Login_User_Moderation::new_user_activation_notification()
+	 * Callback for "user_activation_notification_title" hook in Theme_My_Login_User_Moderation::new_user_activation_notification()
 	 *
 	 * @see Theme_My_Login_User_Moderation::new_user_activation_notification()
 	 * @since 6.0
@@ -413,11 +413,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_title = $this->theme_my_login->get_option( array( 'email', 'user_activation', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
-	
+
 	/**
 	 * Changes the user activation e-mail message
 	 *
-	 * Callback for 'user_activation_notification_message' hook in Theme_My_Login_User_Moderation::new_user_activation_notification()
+	 * Callback for "user_activation_notification_message" hook in Theme_My_Login_User_Moderation::new_user_activation_notification()
 	 *
 	 * @see Theme_My_Login_User_Moderation::new_user_activation_notification()
 	 * @since 6.0
@@ -432,11 +432,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_message = $this->theme_my_login->get_option( array( 'email', 'user_activation', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%activateurl%' => $activation_url ) );
 	}
-	
+
 	/**
 	 * Changes the user approval e-mail subject
 	 *
-	 * Callback for 'user_approval_notification_title' hook in Theme_My_Login_User_Moderation_Admin::approve_user()
+	 * Callback for "user_approval_notification_title" hook in Theme_My_Login_User_Moderation_Admin::approve_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::approve_user()
 	 * @since 6.0
@@ -450,11 +450,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_title = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
-	
+
 	/**
 	 * Changes the user approval e-mail message
 	 *
-	 * Callback for 'user_approval_notification_message' hook in Theme_My_Login_User_Moderation_Admin::approve_user()
+	 * Callback for "user_approval_notification_message" hook in Theme_My_Login_User_Moderation_Admin::approve_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::approve_user()
 	 * @since 6.0
@@ -469,11 +469,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_message = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%loginurl%' => $this->theme_my_login->get_login_page_link(), '%user_pass%' => $new_pass ) );
 	}
-	
+
 	/**
 	 * Changes the user approval admin e-mail recipient
 	 *
-	 * Callback for 'user_approval_admin_notification_mail_to' hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
+	 * Callback for "user_approval_admin_notification_mail_to" hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 *
 	 * @see Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 * @since 6.0
@@ -486,11 +486,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_to = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
-	
+
 	/**
 	 * Changes the user approval admin e-mail subject
 	 *
-	 * Callback for 'user_approval_admin_notification_title' hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
+	 * Callback for "user_approval_admin_notification_title" hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 *
 	 * @see Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 * @since 6.0
@@ -504,11 +504,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_title = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
-	
+
 	/**
 	 * Changes the user approval admin e-mail message
 	 *
-	 * Callback for 'user_approval_admin_notification_message' hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
+	 * Callback for "user_approval_admin_notification_message" hook in Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 *
 	 * @see Theme_My_Login_User_Moderation::new_user_approval_admin_notification()
 	 * @since 6.0
@@ -522,11 +522,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_message = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%pendingurl%' => admin_url( 'users.php?role=pending' ) ) );
 	}
-	
+
 	/**
 	 * Changes the user denial e-mail subject
 	 *
-	 * Callback for 'user_denial_notification_title' hook in Theme_My_Login_User_Moderation_Admin::deny_user()
+	 * Callback for "user_denial_notification_title" hook in Theme_My_Login_User_Moderation_Admin::deny_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::deny_user()
 	 * @since 6.0
@@ -540,11 +540,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_title = $this->theme_my_login->get_option( array( 'email', 'user_denial', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
-	
+
 	/**
 	 * Changes the user denial e-mail message
 	 *
-	 * Callback for 'user_denial_notification_message' hook in Theme_My_Login_User_Moderation_Admin::deny_user()
+	 * Callback for "user_denial_notification_message" hook in Theme_My_Login_User_Moderation_Admin::deny_user()
 	 *
 	 * @see Theme_My_Login_User_Moderation_Admin::deny_user()
 	 * @since 6.0
@@ -558,11 +558,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$_message = $this->theme_my_login->get_option( array( 'email', 'user_denial', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id );
 	}
-	
+
 	/**
 	 * Activates this module
 	 *
-	 * Callback for 'tml_activate_user-moderation/user-moderation.php' hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
@@ -576,11 +576,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$theme_my_login->options['email'] = isset( $theme_my_login->options['email'] ) ? $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] ) : $options['email'];
 		add_role( 'pending', 'Pending', array() );
 	}
-	
+
 	/**
 	 * Deactivates this module
 	 *
-	 * Callback for 'tml_deactivate_user-moderation/user-moderation.php' hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_deactivate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
@@ -591,11 +591,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	function deactivate( &$theme_my_login ) {
 		remove_role( 'pending' );
 	}
-	
+
 	/**
 	 * Initializes options for this module
 	 *
-	 * Callback for 'tml_init_options' hook in method Theme_My_Login_Base::init_options()
+	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
 	 *
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
@@ -606,7 +606,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function init_options( $options = array() ) {
 		$options = (array) $options;
-		
+
 		$options['moderation'] = array(
 			'type' => 'none'
 			);
@@ -642,11 +642,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			);
 		return $options;
 	}
-	
+
 	/**
-	 * {@internal Missing short description}
+	 * Applies module actions and filters
 	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
+	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
 	 *
 	 * @since 6.0
 	 * @access public
@@ -655,26 +655,26 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function modules_loaded() {
 		global $theme_my_login_custom_email;
-		
+
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
-		
+
 		// Create a reference to global $theme_my_login_custom_email object
 		if ( is_a( $theme_my_login_custom_email, 'Theme_My_Login_Custom_Email' ) )
 			$this->theme_my_login_custom_email =& $theme_my_login_custom_email;
-		
+
 		// Moderation is enabled
 		if ( in_array( $theme_my_login->options['moderation']['type'], array( 'admin', 'email' ) ) ) {
 			// Moderate user upon registration
 			add_action( 'new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
 			// Redirect with proper message after registration
 			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
-			
+
 			// Block pending users from logging in
 			add_action( 'authenticate', array( &$this, 'authenticate' ), 100, 3 );
 			// Block pending users from password reset
 			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
-			
+
 			if ( $theme_my_login->is_module_active( 'custom-email/custom-email.php' ) ) {
 				// Remove custom e-mail module new user notification
 				remove_action( 'new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
@@ -686,18 +686,18 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', 'wp_new_user_notification', 10, 2 );
 			}
-			
+
 			// Apply user approval e-mail filters
 			add_action( 'approve_user', array( &$this, 'apply_user_approval_notification_filters' ) );
 			// Apply user denial e-mail filters
 			add_action( 'deny_user', array( &$this, 'apply_user_denial_notification_filters' ) );
-			
+
 			// Add activation action
 			if ( 'email' == $theme_my_login->options['moderation']['type'] )
 				add_action( 'login_action_activate', array( &$this, 'user_activation' ) );
 		}
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -724,6 +724,6 @@ $theme_my_login_user_moderation = new Theme_My_Login_User_Moderation();
 if ( is_admin() )
 	include_once( TML_ABSPATH. '/modules/user-moderation/admin/user-moderation-admin.php' );
 
-endif;
+endif; // Class exists
 
 ?>

@@ -5,7 +5,7 @@
  * @package Theme My Login
  * @subpackage Widget
  */
- 
+
 if ( !class_exists( 'Theme_My_Login_Widget' ) ) :
 /*
  * Theme My Login widget class
@@ -40,7 +40,7 @@ class Theme_My_Login_Widget extends WP_Widget {
         $args = array_merge( $args, $instance );
         echo $theme_my_login->shortcode( $args );
     }
-	
+
 	/**
 	 * Updates the widget
 	 *
@@ -61,7 +61,7 @@ class Theme_My_Login_Widget extends WP_Widget {
         $instance['lostpassword_widget']   = empty( $new_instance['lostpassword_widget'] ) ? false : true;
         return $instance;
     }
-	
+
 	/**
 	 * Displays the widget admin form
 	 *
@@ -108,14 +108,18 @@ class Theme_My_Login_Widget extends WP_Widget {
         $is_checked = ( empty( $instance['lostpassword_widget'] ) ) ? '' : 'checked="checked" ';
         echo '<p><input name="' . $this->get_field_name( 'lostpassword_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpassword_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpassword_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
     }
-
 }
 
+/**
+ * Registers the TML widget
+ *
+ * @since 6.0
+ */
 function theme_my_login_widget_init() {
 	register_widget( 'Theme_My_Login_Widget' );
 }
 add_action( 'widgets_init', 'theme_my_login_widget_init' );
 
-endif;
+endif; // Class exists
 
 ?>

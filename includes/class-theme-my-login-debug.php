@@ -5,7 +5,7 @@
  * @package Theme My Login
  * @subpackage Debug
  */
- 
+
 if ( !class_exists( 'Theme_My_Login_Debug' ) ) :
 /**
  * Theme My Login Debug class
@@ -21,7 +21,7 @@ class Theme_My_Login_Debug {
 	 * @var int
 	 */
 	var $initial_memory = 0;
-	
+
 	/**
 	 * Holds memory usage at each major hook
 	 *
@@ -39,7 +39,7 @@ class Theme_My_Login_Debug {
 	 * @var array
 	 */
 	var $core_hooks = array();
-	
+
 	/**
 	 * Records current memory usage at specific hooks
 	 *
@@ -51,7 +51,7 @@ class Theme_My_Login_Debug {
 		if ( in_array( $current_filter, $this->core_hooks ) || substr( $current_filter, 0, 4 ) == 'tml_' )
 			$this->core_hook_usage[$current_filter] = memory_get_usage();
 	}
-	
+
 	/**
 	 * Outputs memory usage
 	 *
@@ -65,7 +65,7 @@ class Theme_My_Login_Debug {
 		echo '<li><strong>Peak Usage</strong>: ' . $this->num_bytes_to_string( memory_get_peak_usage() ) . '</li>' . "\n";
 		echo '<li><strong>End Usage</strong>: ' . $this->num_bytes_to_string( memory_get_usage() ) . '</li>' . "\n";
 		echo '</ul>';
-		
+
 		echo '<h2>Memory Usage by Hook</h2>' . "\n";
 		echo '<ul>' . "\n";
 		foreach ( $this->core_hook_usage as $hook => $memory ) {
@@ -73,7 +73,7 @@ class Theme_My_Login_Debug {
 		}
 		echo '</ul>' . "\n";
 	}
-	
+
 	/**
 	 * Converts a shorthand string representation (ie. 3.2M) to a numerical byte value
 	 *
@@ -105,7 +105,7 @@ class Theme_My_Login_Debug {
 			return $qty;
 		}
 	}
-	
+
 	/**
 	 * Converts a numerical byte value to a shorthand string representation (ie. 3.2M)
 	 *
@@ -134,7 +134,7 @@ class Theme_My_Login_Debug {
 		$unit = strtoupper( $unit );
 		return $value . $unit;
 	}
-	
+
 	/**
 	 * PHP4 style constructor
 	 *
@@ -144,7 +144,7 @@ class Theme_My_Login_Debug {
 	function Theme_My_Login_Debug() {
 		$this->__construct();
 	}
-	
+
 	/**
 	 * PHP5 style constructor
 	 *
@@ -190,9 +190,10 @@ class Theme_My_Login_Debug {
 		add_action( 'wp_footer', array( &$this, 'dump_memory_usage' ) );
 	}
 }
-endif;
 
 if ( function_exists( 'memory_get_usage' ) )
 	$Theme_My_Login_Debug =& new Theme_My_Login_Debug();
+	
+endif; // Class exists
 
 ?>

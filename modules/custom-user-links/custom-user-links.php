@@ -16,7 +16,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	/**
 	 * Gets the user links for the current user's role
 	 *
-	 * Callback for 'tml_user_links' hook in method Theme_My_Login_Template::display()
+	 * Callback for "tml_user_links" hook in method Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -26,12 +26,12 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 * @return array New user links
 	 */
 	function get_user_links( $links = array() ) {
-	
+
 		if ( !is_user_logged_in() )
 			return $links;
-			
+
 		$current_user = wp_get_current_user();
-		
+
 		$links = $this->theme_my_login->options['user_links'][$current_user->roles[0]];
 		if ( !is_array( $links ) || empty( $links ) )
 			$links = array();
@@ -40,14 +40,14 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 		foreach ( $links as $key => $link ) {
 			$links[$key]['url'] = str_replace( '%user_id%', $current_user->ID, $link['url'] );
 		}
-		
+
 		return $links;
 	}
-	
+
 	/**
 	 * Activates this module
 	 *
-	 * Callback for 'tml_activate_custom-user-links/custom-user-links.php' hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_activate_custom-user-links/custom-user-links.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
@@ -63,11 +63,11 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 			$theme_my_login->options['user_links'] = $theme_my_login->array_merge_recursive( $options['user_links'], $theme_my_login->options['user_links'] );
 		}
 	}
-	
+
 	/**
 	 * Initializes options for this module
 	 *
-	 * Callback for 'tml_init_options' hook in method Theme_My_Login_Base::init_options()
+	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
 	 *
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
@@ -78,12 +78,12 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 */
 	function init_options( $options = array() ) {
 		global $wp_roles;
-		
+
 		if ( empty( $wp_roles ) )
 			$wp_roles =& new WP_Roles();
-		
+
 		$options = (array) $options;
-		
+
 		$options['user_links'] = array();
 		foreach ( $wp_roles->get_names() as $role => $label ) {
 			if ( 'pending' == $role )
@@ -95,7 +95,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 		}
 		return $options;
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -119,6 +119,6 @@ $theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links();
 if ( is_admin() )
 	include_once( TML_ABSPATH. '/modules/custom-user-links/admin/custom-user-links-admin.php' );
 
-endif;
+endif; // Class exists
 
 ?>

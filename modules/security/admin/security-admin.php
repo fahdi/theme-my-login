@@ -8,58 +8,58 @@ if ( !class_exists( 'Theme_My_Login_Security_Admin' ) ) :
  */
 class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	/**
-	 * Attaches actions/filters explicitly to users.php
+	 * Attaches actions/filters explicitly to "users.php"
 	 *
-	 * Callback for 'load-users.php' hook
+	 * Callback for "load-users.php" hook
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
 	function load_users_page() {
 		global $theme_my_login_security;
-		
+
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
-		
+
 		wp_enqueue_script( 'tml-security-admin', plugins_url( TML_DIRNAME . '/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
-	
+
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
-		
+
 		if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'lock', 'unlock' ) ) ) {
-		
+
 			$redirect_to = isset( $_REQUEST['wp_http_referer'] ) ? remove_query_arg( array( 'wp_http_referer', 'updated', 'delete_count' ), stripslashes( $_REQUEST['wp_http_referer'] ) ) : 'users.php';
 			$user = isset( $_GET['user'] ) ? $_GET['user'] : '';
-			
+
 			if ( !$user || !current_user_can( 'edit_user', $user ) )
 				wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
-				
+
 			if ( !$user = get_userdata( $user ) )
 				wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
-			
+
 			if ( 'lock' == $_GET['action'] ) {
 				check_admin_referer( 'lock-user_' . $user->ID );
-				
+
 				$theme_my_login_security->lock_user( $user );
-				
+
 				$redirect_to = add_query_arg( 'update', 'lock', $redirect_to );
 			} elseif ( 'unlock' == $_GET['action'] ) {
 				check_admin_referer( 'unlock-user_' . $user->ID );
-				
+
 				$theme_my_login_security->unlock_user( $user );
-				
+
 				$redirect_to = add_query_arg( 'update', 'unlock', $redirect_to );
 			}
-			
+
 			wp_redirect( $redirect_to );
 			exit;
 		}
 	}
-	
+
 	/**
 	 * Adds update messages to the admin screen
 	 *
-	 * Callback for 'admin_notices' hook in file admin-header.php
+	 * Callback for "admin_notices" hook in file admin-header.php
 	 *
 	 * @since 6.0
 	 * @access public
@@ -72,11 +72,11 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 				echo '<div id="message" class="updated fade"><p>' . __( 'User unlocked.', $this->theme_my_login->textdomain ) . '</p></div>';
 		}
 	}
-	
+
 	/**
 	 * Adds "Lock" and "Unlock" links for each pending user on users.php
 	 *
-	 * Callback for 'user_row_actions' hook in {@internal unknown}
+	 * Callback for "user_row_actions" hook in {@internal unknown}
 	 *
 	 * @since 6.0
 	 * @access public
@@ -87,9 +87,9 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 */
 	function user_row_actions( $actions, $user_object ) {
 		$current_user = wp_get_current_user();
-		
+
 		$security_meta = isset( $user_object->theme_my_login_security ) ? (array) $user_object->theme_my_login_security : array();
-			
+
 		if ( $current_user->ID != $user_object->ID ) {
 			if ( isset( $security_meta['is_locked'] ) && $security_meta['is_locked'] )
 				$new_actions['unlock-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=unlock&amp;user=$user_object->ID", "unlock-user_$user_object->ID" ) ) . '">' . __( 'Unlock', $this->theme_my_login->textdomain ) . '</a>';
@@ -99,11 +99,11 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 		}
 		return $actions;
 	}
-	
+
 	/**
 	 * Adds "Security" tab to Theme My Login menu
 	 *
-	 * Callback for 'tml_admin_menu' hook in method Theme_My_Login_Admin::display_settings_page()
+	 * Callback for "tml_admin_menu" hook in method Theme_My_Login_Admin::display_settings_page()
 	 *
 	 * @see Theme_My_Login_Admin::display_settings_page(), Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
 	 * @uses Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
@@ -115,11 +115,11 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	function admin_menu( &$admin ) {
 		$admin->add_menu_page( __( 'Security', $this->theme_my_login->textdomain ), 'tml-options-security', array( &$this, 'display_settings' ) );
 	}
-	
+
 	/**
 	 * Outputs user moderation settings
 	 *
-	 * Callback for '$hookname' hook in method Theme_My_Login_Admin::add_submenu_page()
+	 * Callback for "$hookname" hook in method Theme_My_Login_Admin::add_submenu_page()
 	 *
 	 * @see Theme_My_Login_Admin::add_submenu_page()
 	 * @since 6.0
@@ -169,11 +169,11 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 </table>
 <?php
 	}
-	
+
 	/**
 	 * Sanitizes settings
 	 *
-	 * Callback for 'tml_save_settings' hook in method Theme_My_Login_Admin::save_settings()
+	 * Callback for "tml_save_settings" hook in method Theme_My_Login_Admin::save_settings()
 	 *
 	 * @see Theme_My_Login_Admin::save_settings()
 	 * @since 6.0
@@ -188,7 +188,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 		$settings['security']['failed_login']['lockout_duration'] = absint( $settings['security']['failed_login']['lockout_duration'] );
 		return $settings;
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -200,7 +200,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
 		add_action( 'load-users.php', array( &$this, 'load_users_page' ) );
 	}
-	
 }
 
 /**
@@ -210,6 +209,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
  */
 $theme_my_login_security_admin = new Theme_My_Login_Security_Admin();
 
-endif;
+endif; // Class exists
 
 ?>

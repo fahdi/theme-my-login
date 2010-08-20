@@ -4,7 +4,7 @@
  *
  * @package Theme My Login
  */
- 
+
 if ( !class_exists( 'Theme_My_Login' ) ) :
 /*
  * Theme My Login class
@@ -22,7 +22,7 @@ class Theme_My_Login {
 	 * @var string
 	 */
 	var $textdomain = 'theme-my-login';
-	
+
 	/**
 	 * Holds TML options key
 	 *
@@ -31,7 +31,7 @@ class Theme_My_Login {
 	 * @var string
 	 */
 	var $options_key = 'theme_my_login';
-	
+
 	/**
 	 * Holds TML options
 	 *
@@ -40,7 +40,7 @@ class Theme_My_Login {
 	 * @var array
 	 */
 	var $options = array();
-	
+
 	/**
 	 * Hold WP_Error object
 	 *
@@ -49,7 +49,7 @@ class Theme_My_Login {
 	 * @var object
 	 */
 	var $errors;
-	
+
 	/**
 	 * Total instances of TML
 	 *
@@ -58,7 +58,7 @@ class Theme_My_Login {
 	 * @var int
 	 */
 	var $count = 0;
-	
+
 	/**
 	 * Current instance being requested via HTTP GET or POST
 	 *
@@ -67,7 +67,7 @@ class Theme_My_Login {
 	 * @var int
 	 */
 	var $request_instance;
-	
+
 	/**
 	 * Current action being requested via HTTP GET or POST
 	 *
@@ -76,7 +76,7 @@ class Theme_My_Login {
 	 * @var string
 	 */
 	var $request_action;
-	
+
 	/**
 	 * PHP4 style constructor
 	 *
@@ -86,7 +86,7 @@ class Theme_My_Login {
 	function Theme_My_Login() {
 		$this->__construct();
 	}
-	
+
 	/**
 	 * PHP5 constructor
 	 *
@@ -96,46 +96,46 @@ class Theme_My_Login {
 	function __construct() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
-		
+
 		$this->load_options();
-		
-		// Re-load options after modules loaded so that modules can hook into 'tml_init_options'
+
+		// Re-load options after modules loaded so that modules can hook into "tml_init_options"
 		//add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 1 );
-		
+
 		add_action( 'parse_request', array( &$this, 'the_request' ) );
-		
+
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'wp_default_scripts', array( &$this, 'default_scripts' ) );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
-		
+
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
-		
+
 		add_filter( 'the_title', array( &$this, 'the_title' ), 10, 2 );
 		add_filter( 'single_post_title', array( &$this, 'single_post_title' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
-		
+
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
-		
+
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
-		
+
 		add_action( 'wp_authenticate', array( &$this, 'wp_authenticate' ) );
-		
+
 		add_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'user_password_changed', 'wp_password_change_notification' );
-		
+
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
 	}
-	
+
 	function init() {
 		load_plugin_textdomain( $this->textdomain, '', TML_DIRNAME . '/language' );
-		
+
 		$this->errors = new WP_Error();
-		
+
 		if ( $this->get_option( 'enable_css' ) )
 			wp_enqueue_style( 'theme-my-login', $this->get_stylesheet(), false, $this->get_option( 'version' ) );
 	}
-	
+
 	/**
 	 * Determine if specified page is the logn page
 	 *
@@ -150,16 +150,16 @@ class Theme_My_Login {
 			if ( $wp_query->is_page )
 				$page_id = $wp_query->get_queried_object_id();
 		}
-		
+
 		$is_login_page = ( $page_id == $this->get_option( 'page_id' ) );
-		
+
 		return apply_filters( 'tml_is_login_page', $is_login_page );
 	}
-	
+
 	/**
 	 * Proccesses the request
 	 *
-	 * Callback for 'parse_request' hook in WP::parse_request()
+	 * Callback for "parse_request" hook in WP::parse_request()
 	 *
 	 * @see WP::parse_request()
 	 * @since 6.0
@@ -169,14 +169,14 @@ class Theme_My_Login {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
 		$instance =& $this->request_instance;
-		
+
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
 		// Set a cookie now to see if they are supported by the browser.
 		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 		if ( SITECOOKIEPATH != COOKIEPATH )
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-			
+
 		// allow plugins to override the default actions, and to add extra actions if they want
 		if ( has_filter( 'login_action_' . $action ) ) {
 			do_action_ref_array( 'login_action_' . $action, array( &$this ) );
@@ -185,9 +185,9 @@ class Theme_My_Login {
 			switch ( $action ) {
 				case 'logout' :
 					check_admin_referer( 'log-out' );
-					
+
 					$user = wp_get_current_user();
-					
+
 					$redirect_to = apply_filters( 'logout_redirect', site_url( 'wp-login.php?loggedout=true' ), isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
 
 					wp_logout();
@@ -235,7 +235,7 @@ class Theme_My_Login {
 						wp_redirect( apply_filters( 'wp_signup_location', get_bloginfo('wpurl') . '/wp-signup.php' ) );
 						exit;
 					}
-					
+
 					if ( !get_option( 'users_can_register' ) ) {
 						wp_redirect( $this->get_current_url( 'registration=disabled' ) );
 						exit();
@@ -248,7 +248,7 @@ class Theme_My_Login {
 
 						$user_login = $_POST['user_login'];
 						$user_email = $_POST['user_email'];
-						
+
 						$errors = $this->register_new_user( $user_login, $user_email );
 						if ( !is_wp_error( $errors ) ) {
 							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url('checkemail=registered' );
@@ -284,7 +284,7 @@ class Theme_My_Login {
 					} else {
 						$redirect_to = admin_url();
 					}
-					
+
 					$reauth = empty( $_REQUEST['reauth'] ) ? false : true;
 
 					// If the user was redirected to a secure login form from a non-secure admin page, and secure login is required but secure admin is not, then don't use a secure
@@ -292,7 +292,7 @@ class Theme_My_Login {
 					// the admin via http or https.
 					if ( !$secure_cookie && is_ssl() && force_ssl_login() && !force_ssl_admin() && ( 0 !== strpos( $redirect_to, 'https' ) ) && ( 0 === strpos( $redirect_to, 'http' ) ) )
 						$secure_cookie = false;
-						
+
 					if ( $http_post ) {
 						$user = wp_signon( '', $secure_cookie );
 
@@ -305,12 +305,12 @@ class Theme_My_Login {
 							wp_safe_redirect( $redirect_to );
 							exit();
 						}
-						
+
 						$errors = $user;
 					}
-					
+
 					$this->redirect_to = $redirect_to;
-					
+
 					// Clear errors if loggedout is set.
 					if ( !empty( $_GET['loggedout'] ) || $reauth )
 						$errors = new WP_Error();
@@ -332,7 +332,7 @@ class Theme_My_Login {
 						$errors->add( 'registered', __( 'Registration complete. Please check your e-mail.', $this->textdomain ), 'message' );
 					elseif	( $interim_login )
 						$errors->add( 'expired', __( 'Your session has expired. Please log-in again.', $this->textdomain ), 'message' );
-						
+
 					// Clear any stale cookies.
 					if ( $reauth )
 						wp_clear_auth_cookie();
@@ -340,7 +340,7 @@ class Theme_My_Login {
 			} // end switch
 		} // endif has_filter()
 	}
-	
+
 	/**
 	 * Returns link for login page
 	 *
@@ -348,7 +348,7 @@ class Theme_My_Login {
 	 * @access public
 	 *
 	 * @param string|array $query Optional. Query arguments to add to link
-	 * @param bool $remove_filter True to remove 'page_link' filter
+	 * @param bool $remove_filter True to remove "page_link" filter
 	 * @return string Login page link with optional $query arguments appended
 	 */
 	function get_login_page_link( $query = '' ) {
@@ -363,7 +363,7 @@ class Theme_My_Login {
 	/**
 	 * Changes the_title() to reflect the current action
 	 *
-	 * Callback for 'the_title' hook in the_title()
+	 * Callback for "the_title" hook in the_title()
 	 *
 	 * @see the_title()
 	 * @since 6.0
@@ -376,13 +376,13 @@ class Theme_My_Login {
 	function the_title( $title, $post_id = '' ) {
 		if ( is_admin() && !defined( 'IS_PROFILE_PAGE' ) )
 			return $title;
-			
+
 		// No post ID until WP 3.0!
 		if ( empty( $post_id ) ) {
 			global $wpdb;
 			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s", $title ) );
 		}
-		
+
 		if ( $this->get_option( 'page_id' ) == $post_id ) {
 			if ( !in_the_loop() ) {
 				$title = is_user_logged_in() ? __( 'Log Out', $this->textdomain ) : __( 'Log In', $this->textdomain );
@@ -393,11 +393,11 @@ class Theme_My_Login {
 		}
 		return $title;
 	}
-	
+
 	/**
 	 * Changes single_post_title() to reflect the current action
 	 *
-	 * Callback for 'single_post_title' hook in single_post_title()
+	 * Callback for "single_post_title" hook in single_post_title()
 	 *
 	 * @see single_post_title()
 	 * @since 6.0
@@ -413,11 +413,11 @@ class Theme_My_Login {
 		}
 		return $title;
 	}
-	
+
 	/**
 	 * Excludes TML page if set in the admin
 	 *
-	 * Callback for 'wp_list_pages_excludes' hook in wp_list_pages()
+	 * Callback for "wp_list_pages_excludes" hook in wp_list_pages()
 	 *
 	 * @see wp_list_pages()
 	 * @since 6.0
@@ -432,11 +432,11 @@ class Theme_My_Login {
 			$exclude_array[] = $this->get_option( 'page_id' );
 		return $exclude_array;
 	}
-	
+
 	/**
 	 * Changes login link to logout if user is logged in
 	 *
-	 * Callback for 'wp_list_pages' hook in wp_list_pages()
+	 * Callback for "wp_list_pages" hook in wp_list_pages()
 	 *
 	 * @see wp_list_pages()
 	 * @since 6.0
@@ -454,7 +454,7 @@ class Theme_My_Login {
 	/**
 	 * Alters menu item title & link according to whether user is logged in or not
 	 *
-	 * Callback for 'wp_setup_nav_menu_item' hook in wp_setup_nav_menu_item()
+	 * Callback for "wp_setup_nav_menu_item" hook in wp_setup_nav_menu_item()
 	 *
 	 * @see wp_setup_nav_menu_item()
 	 * @since 6.0
@@ -472,7 +472,7 @@ class Theme_My_Login {
 	}
 
 	/**
-	 * Handler for 'theme-my-login' shortcode
+	 * Handler for "theme-my-login" shortcode
 	 *
 	 * Optional $atts contents:
 	 *
@@ -503,7 +503,7 @@ class Theme_My_Login {
 	 * @return string HTML output from Theme_My_Login_Template->display()
 	 */
 	function shortcode( $atts = '' ) {
-		
+
 		if ( $this->is_login_page() && in_the_loop() ) {
 			$atts['instance'] = '';
 			$atts['show_title'] = false;
@@ -512,9 +512,9 @@ class Theme_My_Login {
 		} else {
 			$atts['instance'] = $this->get_new_instance();
 		}
-		
+
 		$template =& new Theme_My_Login_Template( $atts );
-		
+
 		return $template->display();
 	}
 
@@ -530,7 +530,7 @@ class Theme_My_Login {
 		$this->count++;
 		return $this->count;
 	}
-	
+
 	/**
 	 * Returns current URL
 	 *
@@ -548,7 +548,7 @@ class Theme_My_Login {
 		}
 		return $url;
 	}
-	
+
 	/**
 	 * Rewrites URL's containing wp-login.php created by site_url()
 	 *
@@ -574,7 +574,7 @@ class Theme_My_Login {
 		}
 		return $url;
 	}
-	
+
 	/**
 	 * Enqueues the specified sylesheet
 	 *
@@ -595,7 +595,7 @@ class Theme_My_Login {
 			$stylesheet = plugins_url( '/theme-my-login/' . $file );
 		return $stylesheet;
 	}
-	
+
 	/**
 	 * Adds scripts to $wp_scripts object
 	 *
@@ -605,7 +605,13 @@ class Theme_My_Login {
 	function default_scripts( $wp_scripts ) {
 		$wp_scripts->add( 'jquery-shake', plugins_url( 'theme-my-login/js/jquery.shake.js' ), array( 'jquery' ) );
 	}
-	
+
+	/**
+	 * Prints javascript in the footer
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function print_footer_scripts() {
 		$action = empty( $this->request_action ) ? 'login' : $this->request_action;
 		switch ( $action ) {
@@ -645,11 +651,11 @@ if(typeof wpOnload=='function')wpOnload()
 				break;
 		}
 	}
-	
+
 	/**
-	 * Calls 'login_head' hook on login page
+	 * Calls "login_head" hook on login page
 	 *
-	 * Callback for 'wp_head' hook
+	 * Callback for "wp_head" hook
 	 *
 	 * @since 6.0
 	 * @access public
@@ -658,7 +664,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $this->is_login_page() )
 			do_action( 'login_head' );
 	}
-	
+
 	/**
 	 * Initializes TML options
 	 *
@@ -674,7 +680,7 @@ if(typeof wpOnload=='function')wpOnload()
 			'initial_nag' => 1
 		) );
 	}
-	
+
 	/**
 	 * Loads TML options
 	 *
@@ -682,21 +688,21 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @access public
 	 */
 	function load_options( $return = false ) {
-	
+
 		$this->init_options();
-		
+
 		$options = get_option( $this->options_key );
-		
+
 		if ( is_array( $options ) ) {
 			$this->options = array_merge( $this->options, $options );
 		} else {
 			update_option( $this->options_key, $this->options );
 		}
-		
+
 		if ( $return )
 			return $this->options;
 	}
-	
+
 	/**
 	 * Saves TML options
 	 *
@@ -708,7 +714,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $options != $this->options )
 			update_option( $this->options_key, $this->options );
 	}
-	
+
 	/**
 	 * Retrieve a TML option
 	 *
@@ -735,7 +741,7 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 		return apply_filters( 'tml_get_option', $value, $option, $default );
 	}
-	
+
 	/**
 	 * Set a TML option
 	 *
@@ -751,7 +757,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $save )
 			$this->save_options();
 	}
-	
+
 	/**
 	 * Deletes (unsets) a TML option
 	 *
@@ -764,7 +770,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( isset( $this->options[$option] ) )
 			unset( $this->options[$option] );
 	}
-	
+
 	/**
 	 * Merges arrays recursively, replacing duplicate string keys
 	 *
@@ -774,10 +780,10 @@ if(typeof wpOnload=='function')wpOnload()
 	function array_merge_recursive() {
 		// Holds all the arrays passed
 		$params = func_get_args();
-	   
+
 		// First array is used as the base, everything else overwrites on it
 		$return = array_shift( $params );
-	   
+
 		// Merge all arrays on the first array
 		foreach ( $params as $array ) {
 			foreach ( $array as $key => $value ) {
@@ -800,7 +806,7 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * Returns active and valid TML modules
 	 *
@@ -823,7 +829,7 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 		return $modules;
 	}
-	
+
 	/**
 	 * Determine if $module is an active TML module
 	 *
@@ -837,7 +843,7 @@ if(typeof wpOnload=='function')wpOnload()
 		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
 	}
-	
+
 	/**
 	 * Handles e-mail address login
 	 *
@@ -855,7 +861,7 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 		return;
 	}
-	
+
 	/**
 	 * Handles sending password retrieval email to user.
 	 *
@@ -928,7 +934,7 @@ if(typeof wpOnload=='function')wpOnload()
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
-		
+
 		$title = sprintf( __( '[%s] Password Reset', $this->textdomain ), $blogname );
 
 		$title = apply_filters( 'retrieve_password_title', $title, $user_data->ID );
@@ -969,7 +975,7 @@ if(typeof wpOnload=='function')wpOnload()
 		$new_pass = wp_generate_password();
 
 		do_action( 'password_reset', $user, $new_pass );
-		
+
 		$site_url = ( function_exists( 'network_site_url' ) ) ? 'network_site_url' : 'site_url'; // Pre 3.0 compatibility
 
 		wp_set_password( $new_pass, $user->ID );
@@ -985,7 +991,7 @@ if(typeof wpOnload=='function')wpOnload()
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
-		
+
 		$title = sprintf( __( '[%s] Your new password', $this->textdomain ), $blogname );
 
 		$title = apply_filters( 'password_reset_title', $title, $user->ID );
@@ -1050,12 +1056,13 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
-		
+
 		do_action( 'new_user_registered', $user_id, $user_pass );
 
 		return $user_id;
 	}
 }
-endif;
+
+endif; // Class exists
 
 ?>

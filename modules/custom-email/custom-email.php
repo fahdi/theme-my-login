@@ -21,7 +21,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @var array
 	 */
 	var $options;
-	
+
 	/**
 	 * Mail from
 	 *
@@ -30,7 +30,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @var string
 	 */
 	var $mail_from;
-	
+
 	/**
 	 * Mail from name
 	 *
@@ -39,7 +39,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @var string
 	 */
 	var $mail_from_name;
-	
+
 	/**
 	 * Mail content type
 	 *
@@ -48,7 +48,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @var string
 	 */
 	var $mail_content_type;
-	
+
 	/**
 	 * Sets variables to be used with mail header filters
 	 *
@@ -64,11 +64,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		$this->mail_from_name = $mail_from_name;
 		$this->mail_content_type = $mail_content_type;
 	}
-	
+
 	/**
 	 * Applies all password retrieval mail filters
 	 *
-	 * Callback for 'retrieve_password' hook in method Theme_My_Login::retrieve_password()
+	 * Callback for "retrieve_password" hook in method Theme_My_Login::retrieve_password()
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
@@ -80,11 +80,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		add_filter( 'retrieve_password_title', array( &$this, 'retrieve_pass_title_filter' ), 10, 2 );
 		add_filter( 'retrieve_password_message', array( &$this, 'retrieve_pass_message_filter' ), 10, 3 );
 	}
-	
+
 	/**
 	 * Applies all password reset mail filters
 	 *
-	 * Callback for 'password_reset' hook in method Theme_My_Login::reset_password()
+	 * Callback for "password_reset" hook in method Theme_My_Login::reset_password()
 	 *
 	 * @see Theme_My_Login::reset_password()
 	 * @since 6.0
@@ -104,7 +104,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Applies all new user mail filters
 	 *
-	 * Callback for 'register_post' hook in method Theme_My_Login::register_new_user()
+	 * Callback for "register_post" hook in method Theme_My_Login::register_new_user()
 	 *
 	 * @see Theme_My_Login::register_new_user()
 	 * @since 6.0
@@ -123,7 +123,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the mail from address
 	 *
-	 * Callback for 'wp_mail_from' hook in wp_mail()
+	 * Callback for "wp_mail_from" hook in wp_mail()
 	 *
 	 * @see wp_mail()
 	 * @since 6.0
@@ -139,7 +139,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the mail from name
 	 *
-	 * Callback for 'wp_mail_from_name' hook in wp_mail()
+	 * Callback for "wp_mail_from_name" hook in wp_mail()
 	 *
 	 * @see wp_mail()
 	 * @since 6.0
@@ -155,7 +155,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the mail content type
 	 *
-	 * Callback for 'wp_mail_content_type' hook in wp_mail()
+	 * Callback for "wp_mail_content_type" hook in wp_mail()
 	 *
 	 * @see wp_mail()
 	 * @since 6.0
@@ -167,11 +167,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function mail_content_type_filter( $content_type ) {
 		return empty( $this->mail_content_type ) ? $content_type : 'text/' . $this->mail_content_type;
 	}
-	
+
 	/**
 	 * Changes the retrieve password e-mail subject
 	 *
-	 * Callback for 'retrieve_pass_title' hook in Theme_My_Login::retrieve_password()
+	 * Callback for "retrieve_pass_title" hook in Theme_My_Login::retrieve_password()
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
@@ -184,11 +184,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function retrieve_pass_title_filter( $title, $user_id ) {
 		return empty( $this->options['retrieve_pass']['title'] ) ? $title : $this->replace_vars( $this->options['retrieve_pass']['title'], $user_id );
 	}
-	
+
 	/**
 	 * Changes the retrieve password e-mail message
 	 *
-	 * Callback for 'retrieve_password_message' hook in Theme_My_Login::retrieve_password()
+	 * Callback for "retrieve_password_message" hook in Theme_My_Login::retrieve_password()
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
@@ -211,7 +211,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the password reset e-mail subject
 	 *
-	 * Callback for 'password_reset_title' hook in Theme_My_Login::reset_password()
+	 * Callback for "password_reset_title" hook in Theme_My_Login::reset_password()
 	 *
 	 * @see Theme_My_Login::reset_password()
 	 * @since 6.0
@@ -224,11 +224,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function reset_pass_title_filter( $title, $user_id ) {
 		return empty( $this->options['reset_pass']['title'] ) ? $title : $this->replace_vars( $this->options['reset_pass']['title'], $user_id );
 	}
-	
+
 	/**
 	 * Changes the password reset e-mail message
 	 *
-	 * Callback for 'password_reset_message' hook in Theme_My_Login::reset_password()
+	 * Callback for "password_reset_message" hook in Theme_My_Login::reset_password()
 	 *
 	 * @see Theme_My_Login::reset_password()
 	 * @since 6.0
@@ -246,11 +246,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			);	
 		return empty( $this->options['reset_pass']['message'] ) ? $message : $this->replace_vars( $this->options['reset_pass']['message'], $user_id, $replacements );
 	}
-	
+
 	/**
 	 * Changes who the password change notification e-mail is sent to
 	 *
-	 * Callback for 'password_change_notification_mail_to' hook in Theme_My_Login_Custom_Email::password_change_notification()
+	 * Callback for "password_change_notification_mail_to" hook in Theme_My_Login_Custom_Email::password_change_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::password_change_notification()
 	 * @since 6.0
@@ -262,11 +262,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function  password_change_notification_mail_to_filter( $to ) {
 		return empty( $this->options['reset_pass']['admin_mail_to'] ) ? $to : $this->options['reset_pass']['admin_mail_to'];
 	}
-	
+
 	/**
 	 * Changes the password change notification e-mail subject
 	 *
-	 * Callback for 'password_change_notification_title' hook in Theme_My_Login_Custom_Email::password_change_notification()
+	 * Callback for "password_change_notification_title" hook in Theme_My_Login_Custom_Email::password_change_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::password_change_notification()
 	 * @since 6.0
@@ -279,11 +279,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function password_change_notification_title_filter( $title, $user_id ) {
 		return empty( $this->options['reset_pass']['admin_title'] ) ? $title : $this->replace_vars( $this->options['reset_pass']['admin_title'], $user_id );
 	}
-	
+
 	/**
 	 * Changes the password change notification e-mail message
 	 *
-	 * Callback for 'password_change_notification_message' hook in Theme_My_Login_Custom_Email::password_change_notification()
+	 * Callback for "password_change_notification_message" hook in Theme_My_Login_Custom_Email::password_change_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::password_change_notification()
 	 * @since 6.0
@@ -300,7 +300,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Determines whether or not to send the password change notification e-mail
 	 *
-	 * Callback for 'send_password_change_notification' hook in Theme_My_Login_Custom_Email::password_change_notification()
+	 * Callback for "send_password_change_notification" hook in Theme_My_Login_Custom_Email::password_change_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::password_change_notification()
 	 * @since 6.0
@@ -320,7 +320,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the new user e-mail subject
 	 *
-	 * Callback for 'new_user_notification_title' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "new_user_notification_title" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -337,7 +337,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Changes the new user e-mail message
 	 *
-	 * Callback for 'new_user_notification_message' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "new_user_notification_message" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -355,11 +355,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			);	
 		return empty( $this->options['new_user']['message'] ) ? $message : $this->replace_vars( $this->options['new_user']['message'], $user_id, $replacements );
 	}
-	
+
 	/**
 	 * Determines whether or not to send the new user e-mail
 	 *
-	 * Callback for 'send_new_user_notification' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "send_new_user_notification" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -373,11 +373,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		return $enable;
 	}
-	
+
 	/**
 	 * Changes who the new user admin notification e-mail is sent to
 	 *
-	 * Callback for 'new_user_admin_notification_mail_to' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "new_user_admin_notification_mail_to" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -389,11 +389,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function new_user_admin_notification_mail_to_filter( $to ) {
 		return empty( $this->options['new_user']['admin_mail_to'] ) ? $to : $this->options['new_user']['admin_mail_to'];
 	}
-	
+
 	/**
 	 * Changes the new user admin notification e-mail subject
 	 *
-	 * Callback for 'new_user_admin_notification_title' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "new_user_admin_notification_title" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -406,11 +406,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function new_user_admin_notification_title_filter( $title, $user_id ) {
 		return empty( $this->options['new_user']['admin_title'] ) ? $title : $this->replace_vars( $this->options['new_user']['admin_title'], $user_id );
 	}
-	
+
 	/**
 	 * Changes the new user admin notification e-mail message
 	 *
-	 * Callback for 'new_user_admin_notification_message' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "new_user_admin_notification_message" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -427,7 +427,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
 	 * Determines whether or not to send the new user admin notification e-mail
 	 *
-	 * Callback for 'send_new_user_admin_notification' hook in Theme_My_Login_Custom_Email::new_user_notification()
+	 * Callback for "send_new_user_admin_notification" hook in Theme_My_Login_Custom_Email::new_user_notification()
 	 *
 	 * @see Theme_My_Login_Custom_Email::new_user_notification()
 	 * @since 6.0
@@ -443,7 +443,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			return false;
 		return $enable;
 	}
-	
+
 	/**
 	 * Notify the blog admin of a new user
 	 *
@@ -455,7 +455,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function new_user_notification( $user_id, $plaintext_pass = '' ) {
 		$user = new WP_User( $user_id );
-		
+
 		do_action( 'new_user_notification', $user_id, $plaintext_pass );
 
 		$user_login = stripslashes( $user->user_login );
@@ -468,17 +468,17 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
-		
+
 		if ( apply_filters( 'send_new_user_admin_notification', true ) ) {
 			$message  = sprintf( __( 'New user registration on your site %s:', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
 			$message .= sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n\r\n";
 			$message .= sprintf( __( 'E-mail: %s', $this->theme_my_login->textdomain ), $user_email ) . "\r\n";
-		
+
 			$title = sprintf( __( '[%s] New User Registration', $this->theme_my_login->textdomain ), $blogname );
-		
+
 			$title = apply_filters( 'new_user_admin_notification_title', $title, $user_id );
 			$message = apply_filters( 'new_user_admin_notification_message', $message, $user_id );
-			
+
 			$to = apply_filters( 'new_user_admin_notification_mail_to', get_option( 'admin_email' ) );
 
 			@wp_mail( $to, $title, $message );		
@@ -486,21 +486,21 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 
 		if ( empty( $plaintext_pass ) )
 			return;
-		
+
 		if ( apply_filters( 'send_new_user_notification', true ) ) {
 			$message  = sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n";
 			$message .= sprintf( __( 'Password: %s', $this->theme_my_login->textdomain ), $plaintext_pass ) . "\r\n";
 			$message .= wp_login_url() . "\r\n";
-		
+
 			$title = sprintf( __( '[%s] Your username and password', $this->theme_my_login->textdomain ), $blogname);
 
 			$title = apply_filters( 'new_user_notification_title', $title, $user_id );
 			$message = apply_filters( 'new_user_notification_message', $message, $plaintext_pass, $user_id );
-		
+
 			wp_mail( $user_email, $title, $message );
 		}
 	}
-	
+
 	/**
 	 * Notify the blog admin of a user changing password
 	 *
@@ -521,17 +521,17 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 				// we want to reverse this for the plain text arena of emails.
 				$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 			}
-			
+
 			$title = sprintf( __( '[%s] Password Lost/Changed' ), $blogname );
 			$message = sprintf( __( 'Password Lost and Changed for user: %s' ), $user->user_login ) . "\r\n";
-			
+
 			$title = apply_filters( 'password_change_notification_title', $title, $user->ID );
 			$message = apply_filters( 'password_change_notification_message', $message, $user->ID );
-			
+
 			wp_mail( $to, $title, $message );
 		}
 	}
-	
+
 	/**
 	 * Replaces certain user and blog variables in $input string
 	 *
@@ -547,13 +547,13 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		// Get user data
 		if ( $user_id )
 			$user = get_userdata( $user_id );
-			
+
 		// Get all matches ($matches[0] will be '%value%'; $matches[1] will be 'value')
 		preg_match_all( '/%([^%]*)%/', $input, $matches );
-		
+
 		// Allow %user_ip% variable
 		$replacements['%user_ip%'] = $_SERVER['REMOTE_ADDR'];
-			
+
 		// Iterate through matches
 		foreach ( $matches[0] as $key => $match ) {
 			if ( !isset( $replacements[$match] ) ) {	
@@ -565,11 +565,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		}
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $input );
 	}
-	
+
 	/**
 	 * Activates this module
 	 *
-	 * Callback for 'tml_activate_custom-email/custom-email.php' hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_activate_custom-email/custom-email.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
@@ -585,11 +585,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			$theme_my_login->options['email'] = $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] );
 		}
 	}
-	
+
 	/**
 	 * Initializes options for this module
 	 *
-	 * Callback for 'tml_init_options' hook in method Theme_My_Login_Base::init_options()
+	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
 	 *
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
@@ -641,7 +641,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			);
 		return $options;
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -659,14 +659,14 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		add_filter( 'wp_mail_from', array( &$this, 'mail_from_filter' ) );
 		add_filter( 'wp_mail_from_name', array( &$this, 'mail_from_name_filter') );
 		add_filter( 'wp_mail_content_type', array( &$this, 'mail_content_type_filter') );
-		
+
 		add_action( 'retrieve_password', array( &$this, 'apply_retrieve_pass_filters' ) );
 		add_action( 'password_reset', array( &$this, 'apply_reset_pass_filters' ) );
 		add_action( 'register_post', array( &$this, 'apply_new_user_filters' ) );
-		
+
 		remove_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'new_user_registered', array( &$this, 'new_user_notification' ), 10, 2 );
-		
+
 		remove_action( 'user_password_changed', 'wp_password_change_notification' );
 		add_action( 'user_password_changed', array( &$this, 'password_change_notification' ) );
 	}
@@ -682,6 +682,6 @@ $theme_my_login_custom_email = new Theme_My_Login_Custom_Email();
 if ( is_admin() )
 	include_once( TML_ABSPATH . '/modules/custom-email/admin/custom-email-admin.php' );
 
-endif;
+endif; // Class exists
 
 ?>

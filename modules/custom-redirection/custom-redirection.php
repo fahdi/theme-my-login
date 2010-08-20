@@ -16,7 +16,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	/**
 	 * Adds "_wp_original_referer" field to login form
 	 *
-	 * Callback for 'login_form' hook in file "login-form.php", included by method Theme_My_Login_Template::display()
+	 * Callback for "login_form" hook in file "login-form.php", included by method Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -29,11 +29,11 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		wp_original_referer_field( true, $jump_back_to );
 		echo "\n";
 	}
-	
+
 	/**
 	 * Handles login redirection
 	 *
-	 * Callback for 'login_redirect' hook in method Theme_My_Login::the_request()
+	 * Callback for "login_redirect" hook in method Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
@@ -48,7 +48,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		// Determine the correct referer
 		if ( !$http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
-		
+
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = $this->theme_my_login->options['redirection'][$user->roles[0]];
@@ -67,18 +67,18 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		// If a redirect is requested, it takes precedence
 		if ( !empty( $request ) && admin_url() != $request && admin_url( 'profile.php' ) != $request )
 			$redirect_to = $request;
-			
+
 		// Make sure $redirect_to isn't empty
 		if ( empty( $redirect_to ) )
 			$redirect_to = get_option( 'home' );
-		
+
 		return $redirect_to;
 	}
-	
+
 	/**
 	 * Handles logout redirection
 	 *
-	 * Callback for 'logout_redirect' hook in method Theme_My_Login::the_request()
+	 * Callback for "logout_redirect" hook in method Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
@@ -95,7 +95,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 			$http_referer = wp_get_referer();
 		// Remove some arguments that may be present and shouldn't be
 		$http_referer = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce' ), $http_referer );
-		
+
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = $this->theme_my_login->options['redirection'][$user->roles[0]];
@@ -110,18 +110,18 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 				$redirect_to = str_replace( array_keys( $replace ), array_values( $replace ), $redirect_to );
 			}
 		}
-		
+
 		// Make sure $redirect_to isn't empty or pointing to an admin URL (causing an endless loop)
 		if ( empty( $redirect_to ) || strpos( $redirect_to, 'wp-admin' ) !== false )
 			$redirect_to = $this->theme_my_login->get_login_page_link( 'loggedout=true' );
 
 		return $redirect_to;
 	}
-	
+
 	/**
 	 * Adds "Redirection" tab to Theme My Login menu
 	 *
-	 * Callback for 'tml_admin_menu' hook in method Theme_My_Login_Admin::display_settings_page()
+	 * Callback for "tml_admin_menu" hook in method Theme_My_Login_Admin::display_settings_page()
 	 *
 	 * @see Theme_My_Login_Admin::display_settings_page(), Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
 	 * @uses Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
@@ -136,18 +136,18 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		$admin->add_menu_page( __( 'Redirection', 'theme-my-login' ), 'tml-options-redirection' );
 		// Iterate through each user role
 		foreach ( $wp_roles->get_names() as $role => $label ) {
-			// We don't want the 'pending' role created by the "User Moderation" module
+			// We don't want the "pending" role created by the "User Moderation" module
 			if ( 'pending' == $role )
 				continue;
 			// Add submenu tab for the role
 			$admin->add_submenu_page( 'tml-options-redirection', translate_user_role( $label ), 'tml-options-redirection-' . $role, array( &$this, 'display_redirection_settings' ), array( $role ) );
 		}
 	}
-	
+
 	/**
 	 * Outputs redirection admin menu for specified role
 	 *
-	 * Callback for '$hookname' hook in method Theme_My_Login_Admin::add_submenu_page()
+	 * Callback for "$hookname" hook in method Theme_My_Login_Admin::add_submenu_page()
 	 *
 	 * @see Theme_My_Login_Admin::add_submenu_page()
 	 * @since 6.0
@@ -186,11 +186,11 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 </table>
 <?php
 	}
-	
+
 	/**
 	 * Activates this module
 	 *
-	 * Callback for 'tml_activate_custom-redirection/custom-redirection.php' hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_activate_custom-redirection/custom-redirection.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
@@ -206,11 +206,11 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 			$theme_my_login->options['redirection'] = $theme_my_login->array_merge_recursive( $options['redirection'], $theme_my_login->options['redirection'] );
 		}
 	}
-	
+
 	/**
 	 * Initializes options for this module
 	 *
-	 * Callback for 'tml_init_options' hook in method Theme_My_Login_Base::init_options()
+	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
 	 *
 	 * @see Theme_My_Login_Base::init_options()
 	 * @since 6.0
@@ -223,9 +223,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		global $wp_roles;
 		if ( empty( $wp_roles ) )
 			$wp_roles =& new WP_Roles();
-		
+
 		$options = (array) $options;
-		
+
 		$options['redirection'] = array();
 		foreach ( $wp_roles->get_names() as $role => $label ) {
 			if ( 'pending' == $role )
@@ -234,7 +234,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		}
 		return $options;
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -263,6 +263,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
  */
 $theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection();
 
-endif;
+endif; // Class exists
 
 ?>

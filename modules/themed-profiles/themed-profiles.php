@@ -14,9 +14,9 @@ if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
  */
 class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	/**
-	 * Redirects profile.php to themed profile page
+	 * Redirects "profile.php" to themed profile page
 	 *
-	 * Callback for 'init' hook
+	 * Callback for "init" hook
 	 *
 	 * @since 6.0
 	 * @access public
@@ -30,11 +30,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			exit();
 		}
 	}
-	
+
 	/**
 	 * Redirects login page to profile if user is logged in
 	 *
-	 * Callback for 'template_redirect' hook
+	 * Callback for "template_redirect" hook
 	 *
 	 * @since 6.0
 	 * @access public
@@ -50,27 +50,27 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			exit();
 		}
 	}
-	
+
 	/**
 	 * Handles profile action
 	 *
-	 * Callback for 'login_action_profile' in method Theme_My_Login::the_request()
+	 * Callback for "login_action_profile" in method Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
 	 * @access public
 	 */
 	function profile_action() {
-	
+
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		require_once( ABSPATH . WPINC . '/registration.php' );
-		
+
 		define( 'IS_PROFILE_PAGE', true );
-		
+
 		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/password-strength.css' ) );
-		
+
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		
+
 		wp_enqueue_script( 'user-profile', admin_url( "js/user-profile$suffix.js" ), array( 'jquery' ), '', true );
 		wp_enqueue_script( 'password-strength-meter', admin_url( "js/password-strength-meter$suffix.js" ), array( 'jquery' ), '', true );
 		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
@@ -82,9 +82,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			'strong' => __( 'Strong', $this->theme_my_login->textdomain ),
 			'l10n_print_after' => 'try{convertEntities(pwsL10n);}catch(e){};'
 		) );
-		
+
 		$current_user = wp_get_current_user();
-		
+
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			check_admin_referer( 'update-user_' . $current_user->ID );
 
@@ -100,18 +100,18 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				wp_redirect( $redirect );
 				exit();
 			}
-			
+
 			$this->theme_my_login->errors = $errors;
 		}
-		
+
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
 			$this->theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', $this->theme_my_login->textdomain ), 'message' );
 	}
-	
+
 	/**
 	 * Outputs profile form HTML
 	 *
-	 * Callback for 'login_form_profile' hook in method Theme_My_login_Template::display()
+	 * Callback for "login_form_profile" hook in method Theme_My_login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -129,11 +129,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		// Load template
 		$template->get_template( $_template );
 	}
-	
+
 	/**
-	 * Changes links from profile.php to themed profile page
+	 * Changes links from "profile.php" to themed profile page
 	 *
-	 * Callback for 'site_url' hook
+	 * Callback for "site_url" hook
 	 *
 	 * @see site_url()
 	 * @since 6.0
@@ -156,11 +156,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		}
 		return $url;
 	}
-	
+
 	/**
 	 * Changes the page title for themed profile page
 	 *
-	 * Callback for 'tml_title' hook in method Theme_My_Login_Template::get_page_title()
+	 * Callback for "tml_title" hook in method Theme_My_Login_Template::get_page_title()
 	 *
 	 * @see Theme_My_Login_Template::get_page_title()
 	 * @since 6.0
@@ -175,11 +175,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			$title = __( 'Your Profile', $this->theme_my_login->textdomain );
 		return $title;
 	}
-	
+
 	/**
 	 * Adds filters to site_url() and admin_url()
 	 *
-	 * Callback for 'tml_modules_loaded' in file "theme-my-login.php"
+	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
 	 *
 	 * @since 6.0
 	 * @access public
@@ -188,7 +188,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
 		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
 	}
-	
+
 	/**
 	 * Loads the module
 	 *
@@ -199,10 +199,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		// Load
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
-		
+
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
-		
+
 		add_action( 'login_action_profile', array( &$this, 'profile_action' ) );
 		add_action( 'login_form_profile', array( &$this, 'get_profile_form' ) );
 	}
@@ -215,6 +215,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
  */
 $theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles();
 
-endif;
+endif; // Class exists
 
 ?>
