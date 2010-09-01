@@ -562,13 +562,16 @@ class Theme_My_Login {
 	 */
 	function site_url( $url, $path, $orig_scheme ) {
 		if ( strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
-			$orig_url = $url;
+			$parsed_url = parse_url( $url );
 			$url = $this->get_login_page_link();
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
-			if ( strpos( $orig_url, '?' ) ) {
-				$query = substr( $orig_url, strpos( $orig_url, '?' ) + 1 );
-				parse_str( $query, $r );
+			if ( isset( $parsed_url['query'] ) ) {
+				wp_parse_str( $parsed_url['query'], $r );
+				foreach ( $r as $k => $v ) {
+					if ( strpos($v, ' ') !== false )
+						$r[$k] = rawurlencode( $v );
+				}
 				$url = add_query_arg( $r, $url );
 			}
 		}
