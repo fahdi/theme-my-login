@@ -537,14 +537,18 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param string $path Optionally append path to the current URL
+	 * @param string $query Optionally append query to the current URL
 	 * @return string URL with optional path appended
 	 */
-	function get_current_url( $path = '' ) {
+	function get_current_url( $query = '' ) {
 		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth' ) );
-		if ( !empty( $path ) ) {
-			$path = wp_parse_args( $path );
-			$url = add_query_arg( $path, $url );
+		if ( !empty( $query ) ) {
+			wp_parse_str($query, $r);
+			foreach ( $r as $k => $v ) {
+				if ( strpos($v, ' ') !== false )
+					$r[$k] = rawurlencode($v);
+			}
+			$url = add_query_arg($r, $url);
 		}
 		return $url;
 	}
