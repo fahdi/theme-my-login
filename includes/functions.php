@@ -54,7 +54,7 @@ function wdbj_tml_get_current_url($query = '') {
     $schema = ( isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ) ? 'https://' : 'http://';
     $self =  $schema . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-    $keys = array('instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce');
+    $keys = array('instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth');
     $url = remove_query_arg($keys, $self);
 
     if ( !empty($query) ) {
