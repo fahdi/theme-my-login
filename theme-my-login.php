@@ -9,6 +9,15 @@ Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
 
+/*
+ * = Future Ideas =
+ * ----------------------------------------------------------------------
+ * Allow separate permalinks for login, register and lostpassword
+ * Allow users to delete themselves
+ * Allow resending of activation e-mail in "Moderation" module
+ * Add option to forward all "wp-login.php" requests to TML login page
+ */
+
 // Allow custom functions file
 if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login-custom.php' );
