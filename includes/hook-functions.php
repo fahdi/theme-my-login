@@ -35,13 +35,10 @@ function wdbj_tml_single_post_title($title) {
 
 function wdbj_tml_site_url($url, $path, $orig_scheme) {
     if ( strpos($url, 'wp-login.php') !== false && !isset($_REQUEST['interim-login']) ) {
-        $orig_url = $url;
+		$parsed_url = parse_url($url);
         $url = get_permalink(wdbj_tml_get_option('page_id'));
-        if ( strpos($orig_url, '?') ) {
-            $query = substr($orig_url, strpos($orig_url, '?') + 1);
-            parse_str($query, $r);
-            $url = add_query_arg($r, $url);
-        }
+		if ( isset($parsed_url['query']) )
+			$url.= ( strpos($url, '?') !== false ) ? '&' . $parsed_url['query'] : '?' . $parsed_url['query'];
     }
     return $url;
 }
