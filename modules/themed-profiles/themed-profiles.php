@@ -146,11 +146,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 */
 	function site_url( $url, $path, $orig_scheme = '' ) {
 		if ( strpos( $url, 'profile.php' ) !== false ) {
-			$orig_url = $url;
+			$parsed_url = parse_url( $url );
 			$url = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link( '', true ) );
-			if ( strpos( $orig_url, '?' ) ) {
-				$query = substr( $orig_url, strpos( $orig_url, '?' ) + 1 );
-				parse_str( $query, $r );
+			if ( isset( $parsed_url['query'] ) ) {
+				wp_parse_str( $parsed_url['query'], $r );
+				foreach ( $r as $k => $v ) {
+					if ( strpos( $v, ' ' ) !== false )
+						$r[$k] = rawurlencode( $v );
+				}
 				$url = add_query_arg( $r, $url );
 			}
 		}
