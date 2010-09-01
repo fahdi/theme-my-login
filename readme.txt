@@ -43,6 +43,9 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 
 == Changelog ==
 
+= 5.1.6 =
+* Fix issue with spaces in usernames
+
 = 5.1.5 =
 * Fix blank page redirect bug
 
