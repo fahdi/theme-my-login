@@ -81,15 +81,16 @@ function wdbj_tml_themed_profiles_template_redirect() {
 }
 
 function wdbj_tml_themed_profiles_site_url($url, $path, $orig_scheme = '') {
-	global $wp_rewrite, $current_user;
-	
 	if ( is_user_logged_in() ) {
 		if ( strpos($url, 'profile.php') !== false ) {
-			$orig_url = $url;
+			$parsed_url = parse_url($url);
 			$url = add_query_arg('action', 'profile', get_permalink(wdbj_tml_get_option('page_id')));
-			if ( strpos($orig_url, '?') ) {
-				$query = substr($orig_url, strpos($orig_url, '?') + 1);
-				parse_str($query, $r);
+			if ( isset($parsed_url['query']) ) {
+				wp_parse_str($parsed_url['query'], $r);
+				foreach ( $r as $k => $v ) {
+					if ( strpos($v, ' ') !== false )
+						$r[$k] = rawurlencode($v);
+				}
 				$url = add_query_arg($r, $url);
 			}
 		}
