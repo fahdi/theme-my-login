@@ -58,8 +58,12 @@ function wdbj_tml_get_current_url($query = '') {
     $url = remove_query_arg($keys, $self);
 
     if ( !empty($query) ) {
-        $query = wp_parse_args($query);
-        $url = add_query_arg($query, $url);
+        wp_parse_str($query, $r);
+		foreach ( $r as $k => $v ) {
+			if ( strpos($v, ' ') !== false )
+				$r[$k] = rawurlencode($v);
+		}
+        $url = add_query_arg($r, $url);
     }
     return $url;
 }
