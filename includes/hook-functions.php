@@ -37,8 +37,14 @@ function wdbj_tml_site_url($url, $path, $orig_scheme) {
     if ( strpos($url, 'wp-login.php') !== false && !isset($_REQUEST['interim-login']) ) {
 		$parsed_url = parse_url($url);
         $url = get_permalink(wdbj_tml_get_option('page_id'));
-		if ( isset($parsed_url['query']) )
-			$url.= ( strpos($url, '?') !== false ) ? '&' . $parsed_url['query'] : '?' . $parsed_url['query'];
+		if ( isset($parsed_url['query']) ) {
+			wp_parse_str($parsed_url['query'], $r);
+			foreach ( $r as $k => $v ) {
+				if ( strpos($v, ' ') !== false )
+					$r[$k] = rawurlencode($v);
+			}
+			$url = add_query_arg($r, $url);
+		}
     }
     return $url;
 }
