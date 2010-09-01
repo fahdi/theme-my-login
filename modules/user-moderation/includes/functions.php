@@ -121,7 +121,7 @@ function wdbj_tml_user_mod_new_user_activation_notification($user_id, $key = '')
 		// we want to reverse this for the plain text arena of emails.
 		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);			
 		
-		$activation_url = add_query_arg(array('action' => 'activate', 'key' => $key, 'login' => $user_login), wp_login_url());
+		$activation_url = add_query_arg(array('action' => 'activate', 'key' => $key, 'login' => rawurlencode($user_login)), wp_login_url());
 		
 		$title = sprintf(__('[%s] Activate Your Account', 'theme-my-login'), $blogname);
 		$message  = sprintf(__('Thanks for registering at %s! To complete the activation of your account please click the following link: ', 'theme-my-login'), $blogname) . "\r\n\r\n";
