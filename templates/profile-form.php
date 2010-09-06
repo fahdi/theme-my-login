@@ -4,8 +4,8 @@ If you would like to edit this file, copy it to your current theme's directory a
 Theme My Login will always look in your theme's directory first, before using this default template.
 */
 
-$current_user = wp_get_current_user();
-$profile_user = get_user_to_edit( $current_user->ID );
+$GLOBALS['current_user'] = $current_user = wp_get_current_user();
+$GLOBALS['profileuser'] = $profileuser = get_user_to_edit( $current_user->ID );
 ?>
 
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
@@ -22,9 +22,9 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		<h3><?php _e( 'Personal Options', $theme_my_login->textdomain ); ?></h3>
 
 		<table class="form-table">
-		<?php do_action( 'personal_options', $profile_user ); ?>
+		<?php do_action( 'personal_options', $profileuser ); ?>
 		</table>
-		<?php do_action( 'profile_personal_options', $profile_user ); ?>
+		<?php do_action( 'profile_personal_options', $profileuser ); ?>
 		<?php endif; ?>
 
 		<h3><?php _e( 'Name', $theme_my_login->textdomain ) ?></h3>
@@ -32,22 +32,22 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		<table class="form-table">
 		<tr>
 			<th><label for="user_login"><?php _e( 'Username', $theme_my_login->textdomain ); ?></label></th>
-			<td><input type="text" name="user_login" id="user_login" value="<?php echo esc_attr( $profile_user->user_login ); ?>" disabled="disabled" class="regular-text" /> <span class="description"><?php _e( 'Your username cannot be changed.', $theme_my_login->textdomain ); ?></span></td>
+			<td><input type="text" name="user_login" id="user_login" value="<?php echo esc_attr( $profileuser->user_login ); ?>" disabled="disabled" class="regular-text" /> <span class="description"><?php _e( 'Your username cannot be changed.', $theme_my_login->textdomain ); ?></span></td>
 		</tr>
 
 		<tr>
 			<th><label for="first_name"><?php _e( 'First name', $theme_my_login->textdomain ) ?></label></th>
-			<td><input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( $profile_user->first_name ) ?>" class="regular-text" /></td>
+			<td><input type="text" name="first_name" id="first_name" value="<?php echo esc_attr( $profileuser->first_name ) ?>" class="regular-text" /></td>
 		</tr>
 
 		<tr>
 			<th><label for="last_name"><?php _e( 'Last name', $theme_my_login->textdomain ) ?></label></th>
-			<td><input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( $profile_user->last_name ) ?>" class="regular-text" /></td>
+			<td><input type="text" name="last_name" id="last_name" value="<?php echo esc_attr( $profileuser->last_name ) ?>" class="regular-text" /></td>
 		</tr>
 
 		<tr>
 			<th><label for="nickname"><?php _e( 'Nickname', $theme_my_login->textdomain ); ?> <span class="description"><?php _e( '(required)', $theme_my_login->textdomain ); ?></span></label></th>
-			<td><input type="text" name="nickname" id="nickname" value="<?php echo esc_attr( $profile_user->nickname ) ?>" class="regular-text" /></td>
+			<td><input type="text" name="nickname" id="nickname" value="<?php echo esc_attr( $profileuser->nickname ) ?>" class="regular-text" /></td>
 		</tr>
 
 		<tr>
@@ -56,21 +56,21 @@ $profile_user = get_user_to_edit( $current_user->ID );
 				<select name="display_name" id="display_name">
 				<?php
 					$public_display = array();
-					$public_display['display_nickname']  = $profile_user->nickname;
-					$public_display['display_username']  = $profile_user->user_login;
-					if ( !empty( $profile_user->first_name ) )
-						$public_display['display_firstname'] = $profile_user->first_name;
-					if ( !empty( $profile_user->last_name ) )
-						$public_display['display_lastname'] = $profile_user->last_name;
-					if ( !empty( $profile_user->first_name ) && !empty( $profile_user->last_name ) ) {
-						$public_display['display_firstlast'] = $profile_user->first_name . ' ' . $profile_user->last_name;
-						$public_display['display_lastfirst'] = $profile_user->last_name . ' ' . $profile_user->first_name;
+					$public_display['display_nickname']  = $profileuser->nickname;
+					$public_display['display_username']  = $profileuser->user_login;
+					if ( !empty( $profileuser->first_name ) )
+						$public_display['display_firstname'] = $profileuser->first_name;
+					if ( !empty( $profileuser->last_name ) )
+						$public_display['display_lastname'] = $profileuser->last_name;
+					if ( !empty( $profileuser->first_name ) && !empty( $profileuser->last_name ) ) {
+						$public_display['display_firstlast'] = $profileuser->first_name . ' ' . $profileuser->last_name;
+						$public_display['display_lastfirst'] = $profileuser->last_name . ' ' . $profileuser->first_name;
 					}
-					if ( !in_array( $profile_user->display_name, $public_display ) )// Only add this if it isn't duplicated elsewhere
-						$public_display = array( 'display_displayname' => $profile_user->display_name ) + $public_display;
+					if ( !in_array( $profileuser->display_name, $public_display ) )// Only add this if it isn't duplicated elsewhere
+						$public_display = array( 'display_displayname' => $profileuser->display_name ) + $public_display;
 					$public_display = array_map( 'trim', $public_display );
 					foreach ( $public_display as $id => $item ) {
-						$selected = ( $profile_user->display_name == $item ) ? ' selected="selected"' : '';
+						$selected = ( $profileuser->display_name == $item ) ? ' selected="selected"' : '';
 				?>
 						<option id="<?php echo $id; ?>" value="<?php echo esc_attr( $item ); ?>"<?php echo $selected; ?>><?php echo $item; ?></option>
 				<?php } ?>
@@ -84,12 +84,12 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		<table class="form-table">
 		<tr>
 			<th><label for="email"><?php _e( 'E-mail', $theme_my_login->textdomain ); ?> <span class="description"><?php _e( '(required)', $theme_my_login->textdomain ); ?></span></label></th>
-			<td><input type="text" name="email" id="email" value="<?php echo esc_attr( $profile_user->user_email ) ?>" class="regular-text" /></td>
+			<td><input type="text" name="email" id="email" value="<?php echo esc_attr( $profileuser->user_email ) ?>" class="regular-text" /></td>
 		</tr>
 
 		<tr>
 			<th><label for="url"><?php _e( 'Website', $theme_my_login->textdomain ) ?></label></th>
-			<td><input type="text" name="url" id="url" value="<?php echo esc_attr( $profile_user->user_url ) ?>" class="regular-text code" /></td>
+			<td><input type="text" name="url" id="url" value="<?php echo esc_attr( $profileuser->user_url ) ?>" class="regular-text code" /></td>
 		</tr>
 
 		<?php if ( function_exists( '_wp_get_user_contactmethods' ) ) :
@@ -97,7 +97,7 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		?>
 		<tr>
 			<th><label for="<?php echo $name; ?>"><?php echo apply_filters( 'user_'.$name.'_label', $desc ); ?></label></th>
-			<td><input type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $profile_user->$name ) ?>" class="regular-text" /></td>
+			<td><input type="text" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo esc_attr( $profileuser->$name ) ?>" class="regular-text" /></td>
 		</tr>
 		<?php
 			}
@@ -110,12 +110,12 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		<table class="form-table">
 		<tr>
 			<th><label for="description"><?php _e( 'Biographical Info', $theme_my_login->textdomain ); ?></label></th>
-			<td><textarea name="description" id="description" rows="5" cols="30"><?php echo esc_html( $profile_user->description ); ?></textarea><br />
+			<td><textarea name="description" id="description" rows="5" cols="30"><?php echo esc_html( $profileuser->description ); ?></textarea><br />
 			<span class="description"><?php _e( 'Share a little biographical information to fill out your profile. This may be shown publicly.', $theme_my_login->textdomain ); ?></span></td>
 		</tr>
 
 		<?php
-		$show_password_fields = apply_filters( 'show_password_fields', true, $profile_user );
+		$show_password_fields = apply_filters( 'show_password_fields', true, $profileuser );
 		if ( $show_password_fields ) :
 		?>
 		<tr id="password">
@@ -130,10 +130,10 @@ $profile_user = get_user_to_edit( $current_user->ID );
 		</table>
 
 		<?php
-			do_action( 'show_user_profile', $profile_user );
+			do_action( 'show_user_profile', $profileuser );
 		?>
 
-		<?php if ( count( $profile_user->caps ) > count( $profile_user->roles ) && apply_filters( 'additional_capabilities_display', true, $profile_user ) ) { ?>
+		<?php if ( count( $profileuser->caps ) > count( $profileuser->roles ) && apply_filters( 'additional_capabilities_display', true, $profileuser ) ) { ?>
 		<br class="clear" />
 			<table width="99%" style="border: none;" cellspacing="2" cellpadding="3" class="editform">
 				<tr>
@@ -141,7 +141,7 @@ $profile_user = get_user_to_edit( $current_user->ID );
 					<td><?php
 					$output = '';
 					global $wp_roles;
-					foreach ( $profile_user->caps as $cap => $value ) {
+					foreach ( $profileuser->caps as $cap => $value ) {
 						if ( !$wp_roles->is_role( $cap ) ) {
 							if ( $output != '' )
 								$output .= ', ';
