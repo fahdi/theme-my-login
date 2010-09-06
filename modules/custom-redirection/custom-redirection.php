@@ -16,7 +16,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	/**
 	 * Adds "_wp_original_referer" field to login form
 	 *
-	 * Callback for "login_form" hook in file "login-form.php", included by method Theme_My_Login_Template::display()
+	 * Callback for "tml_login_form" hook in file "login-form.php", included by method Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -248,9 +248,10 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		// Admin
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
+		// Login form
+		add_action( 'tml_login_form', array( &$this, 'login_form' ) );
 		// Login redirect
 		add_filter( 'login_redirect', array( &$this, 'login_redirect' ), 10, 3 );
-		add_action( 'login_form', array( &$this, 'login_form' ) );
 		// Logout redirect
 		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 	}

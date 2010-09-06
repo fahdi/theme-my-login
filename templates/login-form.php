@@ -16,7 +16,10 @@ Theme My Login will always look in your theme's directory first, before using th
 			<label for="pwd<?php $template->the_instance(); ?>"><?php _e( 'Password', 'theme-my-login' ) ?></label>
 			<input type="password" name="pwd" id="user_pass<?php $template->the_instance(); ?>" class="input" value="" size="20" />
 		</p>
-<?php do_action_ref_array( 'login_form', array( &$template ) ); ?>
+<?php
+do_action( 'login_form' ); // Wordpress hook
+do_action_ref_array( 'tml_login_form', array( &$template ) ); // TML hook
+?>
 		<p class="forgetmenot">
 			<input name="rememberme" type="checkbox" id="rememberme<?php $template->the_instance(); ?>" value="forever" />
 			<label for="rememberme<?php $template->the_instance(); ?>"><?php _e( 'Remember Me', 'theme-my-login' ); ?></label>

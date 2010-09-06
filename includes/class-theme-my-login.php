@@ -121,8 +121,8 @@ class Theme_My_Login {
 
 		add_action( 'wp_authenticate', array( &$this, 'wp_authenticate' ) );
 
-		add_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
-		add_action( 'user_password_changed', 'wp_password_change_notification' );
+		add_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
+		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
 
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
 	}
@@ -178,8 +178,10 @@ class Theme_My_Login {
 			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
 
 		// allow plugins to override the default actions, and to add extra actions if they want
-		if ( has_filter( 'login_action_' . $action ) ) {
-			do_action_ref_array( 'login_action_' . $action, array( &$this ) );
+		do_action( 'login_form_' . $action );
+
+		if ( has_action( 'tml_request_' . $action ) ) {
+			do_action_ref_array( 'tml_request_' . $action, array( &$this ) );
 		} else {
 			$http_post = ( 'POST' == $_SERVER['REQUEST_METHOD'] );
 			switch ( $action ) {
@@ -251,7 +253,7 @@ class Theme_My_Login {
 
 						$errors = $this->register_new_user( $user_login, $user_email );
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url('checkemail=registered' );
+							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url( 'checkemail=registered' );
 							if ( !empty( $instance ) )
 								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
@@ -541,9 +543,9 @@ class Theme_My_Login {
 	 * @return string URL with optional path appended
 	 */
 	function get_current_url( $query = '' ) {
-		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth' ) );
+		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
 		if ( !empty( $query ) ) {
-			wp_parse_str( $query, $r );
+			$r = wp_parse_args( $query );
 			foreach ( $r as $k => $v ) {
 				if ( strpos( $v, ' ' ) !== false )
 					$r[$k] = rawurlencode( $v );
@@ -1007,7 +1009,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
 			wp_die( __( 'The e-mail could not be sent.', $this->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $this->textdomain ) );
 
-		do_action( 'user_password_changed', $user );
+		do_action( 'tml_user_password_changed', $user );
 
 		return true;
 	}
@@ -1064,7 +1066,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 		update_user_option( $user_id, 'default_password_nag', true, true ); //Set up the Password change nag.
 
-		do_action( 'new_user_registered', $user_id, $user_pass );
+		do_action( 'tml_new_user_registered', $user_id, $user_pass );
 
 		return $user_id;
 	}

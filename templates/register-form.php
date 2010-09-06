@@ -16,7 +16,10 @@ Theme My Login will always look in your theme's directory first, before using th
             <label for="user_email<?php $template->the_instance(); ?>"><?php _e( 'E-mail', 'theme-my-login' ) ?></label>
             <input type="text" name="user_email" id="user_email<?php $template->the_instance(); ?>" class="input" value="<?php $template->the_posted_value( 'user_email' ); ?>" size="20" />
         </p>
-<?php do_action_ref_array( 'register_form', array( &$template ) ); ?>
+<?php
+do_action( 'register_form' ); // Wordpress hook
+do_action_ref_array( 'tml_register_form', array( &$template ) ); //TML hook
+?>
 		<p id="reg_passmail<?php $template->the_instance(); ?>"><?php echo apply_filters( 'registration_pass_message', __( 'A password will be e-mailed to you.', $theme_my_login->textdomain ) ); ?></p>
         <p class="submit">
             <input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php _e( 'Register', 'theme-my-login' ); ?>" />

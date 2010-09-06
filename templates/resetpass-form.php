@@ -16,7 +16,10 @@ Theme My Login will always look in your theme's directory first, before using th
 			<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', $theme_my_login->textdomain );?></label>
 			<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" />
 		</p>
-<?php do_action( 'resetpassword_form', $template->instance ); ?>
+<?php
+do_action( 'resetpassword_form' ); // Wordpress hook
+do_action_ref_array( 'tml_resetpassword_form', array( $template ) ); // TML hook
+?>
 		<p class="submit">
 			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php _e( 'Change Password', $theme_my_login->textdomain ); ?>" />
 			<input type="hidden" name="key" value="<?php $template->the_posted_value( 'key' ); ?>" />

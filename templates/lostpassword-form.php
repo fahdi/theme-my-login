@@ -12,7 +12,10 @@ Theme My Login will always look in your theme's directory first, before using th
 			<label for="user_login<?php $template->the_instance(); ?>"><?php _e( 'Username or E-mail:', 'theme-my-login' ) ?></label>
 			<input type="text" name="user_login" id="user_login<?php $template->the_instance(); ?>" class="input" value="<?php $template->the_posted_value( 'user_login' ); ?>" size="20" />
 		</p>
-<?php do_action_ref_array( 'lostpassword_form', array( &$template ) ); ?>
+<?php
+do_action( 'lostpassword_form' ); // Wordpress hook
+do_action_ref_array( 'tml_lostpassword_form', array( &$template ) ); // TML hook
+?>
 		<p class="submit">
 			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php _e( 'Get New Password', 'theme-my-login' ); ?>" />
 			<input type="hidden" name="redirect_to" value="<?php $template->the_redirect_url( 'lostpassword' ); ?>" />

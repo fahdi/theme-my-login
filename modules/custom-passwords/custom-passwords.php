@@ -16,7 +16,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	/**
 	 * Outputs password fields to registration form
 	 *
-	 * Callback for "register_form" hook in file "register-form.php", included by Theme_My_Login_Template::display()
+	 * Callback for "tml_register_form" hook in file "register-form.php", included by Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login::display()
 	 * @since 6.0
@@ -87,7 +87,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	/**
 	 * Resets the user's password
 	 *
-	 * Callback for "login_action_resetpass" and "login_action_rp" hooks in Theme_My_Login::the_request()
+	 * Callback for "tml_request_resetpass" and "tml_request_rp" hooks in Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
@@ -360,14 +360,14 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 */
 	function load() {
 		// Register password
-		add_action( 'register_form', array( &$this, 'password_fields' ) );
+		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'user_registration_pass', array( &$this, 'set_password' ) );
 		// Reset password
-		add_action( 'login_form_resetpass', array( &$this, 'get_resetpass_form' ) );
-		add_action( 'login_form_rp', array( &$this, 'get_resetpass_form' ) );
-		add_action( 'login_action_resetpass', array( &$this, 'resetpass_action' ) );
-		add_action( 'login_action_rp', array( &$this, 'resetpass_action' ) );
+		add_action( 'tml_template_resetpass', array( &$this, 'get_resetpass_form' ) );
+		add_action( 'tml_template_rp', array( &$this, 'get_resetpass_form' ) );
+		add_action( 'tml_request_resetpass', array( &$this, 'resetpass_action' ) );
+		add_action( 'tml_request_rp', array( &$this, 'resetpass_action' ) );
 		// Template messages
 		add_filter( 'registration_pass_message', array( &$this, 'registration_pass_message' ) );
 		add_filter( 'lostpassword_message', array( &$this, 'lostpassword_message' ) );

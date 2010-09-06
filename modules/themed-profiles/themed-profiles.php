@@ -54,7 +54,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	/**
 	 * Handles profile action
 	 *
-	 * Callback for "login_action_profile" in method Theme_My_Login::the_request()
+	 * Callback for "tml_request_profile" in method Theme_My_Login::the_request()
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
@@ -111,7 +111,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	/**
 	 * Outputs profile form HTML
 	 *
-	 * Callback for "login_form_profile" hook in method Theme_My_login_Template::display()
+	 * Callback for "tml_template_profile" hook in method Theme_My_login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -206,8 +206,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 
-		add_action( 'login_action_profile', array( &$this, 'profile_action' ) );
-		add_action( 'login_form_profile', array( &$this, 'get_profile_form' ) );
+		add_action( 'tml_request_profile', array( &$this, 'profile_action' ) );
+		add_action( 'tml_template_profile', array( &$this, 'get_profile_form' ) );
 	}
 }
 

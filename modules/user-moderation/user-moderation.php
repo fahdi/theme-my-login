@@ -65,7 +65,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	/**
 	 * Handles "activate" action for login page
 	 *
-	 * Callback for "login_action_activate" hook in method Theme_My_Login::the_request();
+	 * Callback for "tml_request_activate" hook in method Theme_My_Login::the_request();
 	 *
 	 * @see Theme_My_Login::the_request();
 	 * @since 6.0
@@ -666,7 +666,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		// Moderation is enabled
 		if ( in_array( $theme_my_login->options['moderation']['type'], array( 'admin', 'email' ) ) ) {
 			// Moderate user upon registration
-			add_action( 'new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
+			add_action( 'tml_new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
 			// Redirect with proper message after registration
 			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
 
@@ -677,12 +677,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 			if ( $theme_my_login->is_module_active( 'custom-email/custom-email.php' ) ) {
 				// Remove custom e-mail module new user notification
-				remove_action( 'new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
+				remove_action( 'tml_new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', array( &$this->theme_my_login_custom_email, 'new_user_notification'), 10, 2 );
 			} else {
 				// Remove default new user notification
-				remove_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
+				remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
 				// Attach it to the 'user_activated' action
 				add_action( 'user_activated', 'wp_new_user_notification', 10, 2 );
 			}
@@ -694,7 +694,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 			// Add activation action
 			if ( 'email' == $theme_my_login->options['moderation']['type'] )
-				add_action( 'login_action_activate', array( &$this, 'user_activation' ) );
+				add_action( 'tml_request_activate', array( &$this, 'user_activation' ) );
 		}
 	}
 

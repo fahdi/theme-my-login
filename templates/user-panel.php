@@ -10,4 +10,6 @@ Theme My Login will always look in your theme's directory first, before using th
 	<?php endif; ?>
 
 	<?php $this->the_user_links(); ?>
+	
+<?php do_action_ref_array( 'tml_user_panel', array( $template ) ); ?>
 </div>

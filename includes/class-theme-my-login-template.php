@@ -86,8 +86,8 @@ class Theme_My_Login_Template {
 		if ( $this->options['show_title'] )
 			echo $this->options['before_title'] . $this->get_title( $action ) . $this->options['after_title'] . "\n";
 		// Is there a specified template?
-		if ( has_action( 'login_form_' . $action ) ) {
-			do_action_ref_array( 'login_form_' . $action, array( &$this ) );
+		if ( has_action( 'tml_template_' . $action ) ) {
+			do_action_ref_array( 'tml_template_' . $action, array( &$this ) );
 		} else {
 			$template = array();
 			switch ( $action ) {
@@ -119,7 +119,7 @@ class Theme_My_Login_Template {
 		echo $this->options['after_widget'] . "\n";
 		$output = ob_get_contents();
 		ob_end_clean();
-		return apply_filters( 'tml_display', $output, $this->options );
+		return apply_filters( 'tml_template', $output, $this->options );
 	}
 
 	/**
@@ -240,9 +240,9 @@ class Theme_My_Login_Template {
 			$url = $this->theme_my_login->get_login_page_link( 'action=' . $action );
 		} else {
 			if ( empty( $instance ) )
-				$url = $this->theme_my_login->get_current_url( array( 'action' => $action ), false );
+				$url = $this->theme_my_login->get_current_url( array( 'action' => $action ) );
 			else
-				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ), false );
+				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ) );
 		}
 
 		// Respect FORCE_SSL_LOGIN

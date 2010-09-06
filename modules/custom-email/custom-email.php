@@ -664,11 +664,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		add_action( 'password_reset', array( &$this, 'apply_reset_pass_filters' ) );
 		add_action( 'register_post', array( &$this, 'apply_new_user_filters' ) );
 
-		remove_action( 'new_user_registered', 'wp_new_user_notification', 10, 2 );
-		add_action( 'new_user_registered', array( &$this, 'new_user_notification' ), 10, 2 );
+		remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
+		add_action( 'tml_new_user_registered', array( &$this, 'new_user_notification' ), 10, 2 );
 
-		remove_action( 'user_password_changed', 'wp_password_change_notification' );
-		add_action( 'user_password_changed', array( &$this, 'password_change_notification' ) );
+		remove_action( 'tml_user_password_changed', 'wp_password_change_notification' );
+		add_action( 'tml_user_password_changed', array( &$this, 'password_change_notification' ) );
 	}
 }
 
