@@ -787,33 +787,28 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @access public
 	 */
 	function array_merge_recursive() {
-		// Holds all the arrays passed
-		$params = func_get_args();
+		$args = func_get_args();
 
-		// First array is used as the base, everything else overwrites on it
-		$return = array_shift( $params );
+		$result = array_shift( $args );
 
-		// Merge all arrays on the first array
-		foreach ( $params as $array ) {
-			foreach ( $array as $key => $value ) {
-				// Numeric keyed values are added (unless already there)
-				if ( is_numeric ( $key ) && ( !in_array( $value, $return ) ) ) {
-					if ( is_array( $value ) ) {
-						$return[] = $this->array_merge_recursive( $return[$$key], $value );
-					} else {
-						$return[] = $value;
-					}
-				// String keyed values are replaced
-				} else {
-					if ( isset( $return[$key] ) && is_array( $value ) && is_array( $return[$key] ) ) {
-						$return[$key] = $this->array_merge_recursive( $return[$$key], $value );
-					} else {
-						$return[$key] = $value;
-					}
+		foreach ( $args as $arg ) {
+			foreach ( $arg as $key => $value ) {
+				// Renumber numeric keys as array_merge() does.
+				if ( is_numeric( $key ) ) {
+					if ( !in_array( $value, $result ) )
+						$result[] = $value;
+				}
+				// Recurse only when both values are arrays.
+				elseif ( array_key_exists( $key, $result ) && is_array( $result[$key] ) && is_array( $value ) ) {
+					$result[$key] = $this->array_merge_recursive( $result[$key], $value );
+				}
+				// Otherwise, use the latter value.
+				else {
+					$result[$key] = $value;
 				}
 			}
 		}
-		return $return;
+		return $result;
 	}
 
 	/**
