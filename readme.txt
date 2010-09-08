@@ -46,9 +46,10 @@ None yet. Please visit http://www.jfarthing.com/forum for any support!
 * Remove option to disable template tag and widget in favor of always being enabled
 * Remove option to rewrite login links in favor of always being rewritten
 * Custom templates can now be defined per action (login, register, etc.)
+* User moderation activation e-mails can be resent on demand
 * Add various new hooks to help with custom integration with other plugins
-* Make links sortable in "Custom User Links" module
-* Customize every aspect of every e-mail in "Custom E-mail" module
+* Make custom user links sortable
+* Customize every aspect of every e-mail
 * Add a cool new random tip widget in the TML admin
 * Use WP 3.0 functions (such as 'network_site_url') if available
 * phpDoc everywhere!
