@@ -1,4 +1,4 @@
-# Translation of the WordPress plugin Theme My Login 6.0-beta2 by Jeff Farthing.
+# Translation of the WordPress plugin Theme My Login 6.0 by Jeff Farthing.
 # Copyright (C) 2010 Jeff Farthing
 # This file is distributed under the same license as the Theme My Login package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Theme My Login 6.0-beta2\n"
+"Project-Id-Version: Theme My Login 6.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
-"POT-Creation-Date: 2010-08-17 01:53+0000\n"
+"POT-Creation-Date: 2010-09-08 23:46+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. #-#-#-#-#  plugin.pot (Theme My Login 6.0-beta2)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Theme My Login 6.0)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: admin/class-theme-my-login-admin.php:51
 #: admin/class-theme-my-login-admin.php:52
@@ -185,7 +185,7 @@ msgid "Welcome, %s"
 msgstr ""
 
 #: includes/class-theme-my-login-template.php:144
-#: includes/class-theme-my-login-widget.php:86 templates/register-form.php:22
+#: includes/class-theme-my-login-widget.php:86 templates/register-form.php:25
 msgid "Register"
 msgstr ""
 
@@ -195,7 +195,7 @@ msgid "Lost Password"
 msgstr ""
 
 #: includes/class-theme-my-login-template.php:154
-#: includes/class-theme-my-login.php:388 templates/login-form.php:25
+#: includes/class-theme-my-login.php:390 templates/login-form.php:28
 msgid "Log In"
 msgstr ""
 
@@ -272,158 +272,162 @@ msgstr ""
 msgid "Allow Password Recovery"
 msgstr ""
 
-#: includes/class-theme-my-login.php:212
+#: includes/class-theme-my-login.php:214
 msgid "Sorry, that key does not appear to be valid."
 msgstr ""
 
-#: includes/class-theme-my-login.php:320
+#: includes/class-theme-my-login.php:322
 msgid ""
 "<strong>ERROR</strong>: Cookies are blocked or not supported by your "
 "browser. You must <a href=\"http://www.google.com/cookies.html\">enable "
 "cookies</a> to use WordPress."
 msgstr ""
 
-#: includes/class-theme-my-login.php:324
+#: includes/class-theme-my-login.php:326
 msgid "You are now logged out."
 msgstr ""
 
-#: includes/class-theme-my-login.php:326
+#: includes/class-theme-my-login.php:328
 msgid "User registration is currently not allowed."
 msgstr ""
 
-#: includes/class-theme-my-login.php:328
+#: includes/class-theme-my-login.php:330
 msgid "Check your e-mail for the confirmation link."
 msgstr ""
 
-#: includes/class-theme-my-login.php:330
+#: includes/class-theme-my-login.php:332
 msgid "Check your e-mail for your new password."
 msgstr ""
 
-#: includes/class-theme-my-login.php:332
+#: includes/class-theme-my-login.php:334
 msgid "Registration complete. Please check your e-mail."
 msgstr ""
 
-#: includes/class-theme-my-login.php:334
+#: includes/class-theme-my-login.php:336
 msgid "Your session has expired. Please log-in again."
 msgstr ""
 
-#: includes/class-theme-my-login.php:388
+#: includes/class-theme-my-login.php:390
 msgid "Log Out"
 msgstr ""
 
-#: includes/class-theme-my-login.php:874
+#: includes/class-theme-my-login.php:884
 msgid "<strong>ERROR</strong>: Enter a username or e-mail address."
 msgstr ""
 
-#: includes/class-theme-my-login.php:879
+#: includes/class-theme-my-login.php:889
 msgid ""
 "<strong>ERROR</strong>: There is no user registered with that email address."
 msgstr ""
 
-#: includes/class-theme-my-login.php:891
+#: includes/class-theme-my-login.php:901
 msgid "<strong>ERROR</strong>: Invalid username or e-mail."
 msgstr ""
 
-#: includes/class-theme-my-login.php:905
+#: includes/class-theme-my-login.php:915
 msgid "Password reset is not allowed for this user"
 msgstr ""
 
-#: includes/class-theme-my-login.php:918
+#: includes/class-theme-my-login.php:928
 msgid ""
 "Someone has asked to reset the password for the following site and username."
 msgstr ""
 
-#: includes/class-theme-my-login.php:920 includes/class-theme-my-login.php:977
+#: includes/class-theme-my-login.php:930 includes/class-theme-my-login.php:987
 #: modules/custom-email/custom-email.php:474
 #: modules/custom-email/custom-email.php:491
-#: modules/custom-passwords/custom-passwords.php:329
-#: modules/user-moderation/admin/user-moderation-admin.php:124
-#: modules/user-moderation/user-moderation.php:301
+#: modules/custom-passwords/custom-passwords.php:321
+#: modules/user-moderation/admin/user-moderation-admin.php:165
+#: modules/user-moderation/user-moderation.php:370
 #, php-format
 msgid "Username: %s"
 msgstr ""
 
-#: includes/class-theme-my-login.php:921
+#: includes/class-theme-my-login.php:931
 msgid ""
 "To reset your password visit the following address, otherwise just ignore "
 "this email and nothing will happen."
 msgstr ""
 
-#: includes/class-theme-my-login.php:932
+#: includes/class-theme-my-login.php:942
 #, php-format
 msgid "[%s] Password Reset"
 msgstr ""
 
-#: includes/class-theme-my-login.php:938 includes/class-theme-my-login.php:995
-#: modules/custom-passwords/custom-passwords.php:347
-#: modules/user-moderation/admin/user-moderation-admin.php:134
-#: modules/user-moderation/admin/user-moderation-admin.php:169
+#: includes/class-theme-my-login.php:948
+#: includes/class-theme-my-login.php:1005
+#: modules/custom-passwords/custom-passwords.php:339
+#: modules/user-moderation/admin/user-moderation-admin.php:61
+#: modules/user-moderation/admin/user-moderation-admin.php:175
+#: modules/user-moderation/admin/user-moderation-admin.php:210
 msgid "The e-mail could not be sent."
 msgstr ""
 
-#: includes/class-theme-my-login.php:938 includes/class-theme-my-login.php:995
-#: modules/custom-passwords/custom-passwords.php:347
-#: modules/user-moderation/admin/user-moderation-admin.php:134
-#: modules/user-moderation/admin/user-moderation-admin.php:169
+#: includes/class-theme-my-login.php:948
+#: includes/class-theme-my-login.php:1005
+#: modules/custom-passwords/custom-passwords.php:339
+#: modules/user-moderation/admin/user-moderation-admin.php:61
+#: modules/user-moderation/admin/user-moderation-admin.php:175
+#: modules/user-moderation/admin/user-moderation-admin.php:210
 msgid "Possible reason: your host may have disabled the mail() function..."
 msgstr ""
 
-#: includes/class-theme-my-login.php:959 includes/class-theme-my-login.php:962
-#: includes/class-theme-my-login.php:966
-#: modules/custom-passwords/custom-passwords.php:283
-#: modules/custom-passwords/custom-passwords.php:287
-#: modules/custom-passwords/custom-passwords.php:292
-#: modules/user-moderation/user-moderation.php:192
-#: modules/user-moderation/user-moderation.php:195
-#: modules/user-moderation/user-moderation.php:200
+#: includes/class-theme-my-login.php:969 includes/class-theme-my-login.php:972
+#: includes/class-theme-my-login.php:976
+#: modules/custom-passwords/custom-passwords.php:275
+#: modules/custom-passwords/custom-passwords.php:279
+#: modules/custom-passwords/custom-passwords.php:284
+#: modules/user-moderation/user-moderation.php:248
+#: modules/user-moderation/user-moderation.php:251
+#: modules/user-moderation/user-moderation.php:256
 msgid "Invalid key"
 msgstr ""
 
-#: includes/class-theme-my-login.php:978
+#: includes/class-theme-my-login.php:988
 #: modules/custom-email/custom-email.php:492
-#: modules/custom-passwords/custom-passwords.php:330
-#: modules/user-moderation/admin/user-moderation-admin.php:125
+#: modules/custom-passwords/custom-passwords.php:322
+#: modules/user-moderation/admin/user-moderation-admin.php:166
 #, php-format
 msgid "Password: %s"
 msgstr ""
 
-#: includes/class-theme-my-login.php:989
-#: modules/custom-passwords/custom-passwords.php:338
+#: includes/class-theme-my-login.php:999
+#: modules/custom-passwords/custom-passwords.php:330
 #, php-format
 msgid "[%s] Your new password"
 msgstr ""
 
-#: includes/class-theme-my-login.php:1020
+#: includes/class-theme-my-login.php:1030
 msgid "<strong>ERROR</strong>: Please enter a username."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1022
+#: includes/class-theme-my-login.php:1032
 msgid ""
 "<strong>ERROR</strong>: This username is invalid because it uses illegal "
 "characters. Please enter a valid username."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1025
+#: includes/class-theme-my-login.php:1035
 msgid ""
 "<strong>ERROR</strong>: This username is already registered, please choose "
 "another one."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1030
+#: includes/class-theme-my-login.php:1040
 msgid "<strong>ERROR</strong>: Please type your e-mail address."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1032
+#: includes/class-theme-my-login.php:1042
 msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1035
+#: includes/class-theme-my-login.php:1045
 msgid ""
 "<strong>ERROR</strong>: This email is already registered, please choose "
 "another one."
 msgstr ""
 
-#: includes/class-theme-my-login.php:1048
+#: includes/class-theme-my-login.php:1058
 #, php-format
 msgid ""
 "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a "
@@ -432,7 +436,7 @@ msgstr ""
 
 #: modules/custom-email/admin/custom-email-admin.php:43
 #: modules/custom-email/admin/custom-email-admin.php:170
-#: modules/user-moderation/admin/user-moderation-admin.php:292
+#: modules/user-moderation/admin/user-moderation-admin.php:333
 msgid "User Notification"
 msgstr ""
 
@@ -442,7 +446,7 @@ msgstr ""
 
 #: modules/custom-email/admin/custom-email-admin.php:47
 #: modules/custom-email/admin/custom-email-admin.php:174
-#: modules/user-moderation/admin/user-moderation-admin.php:296
+#: modules/user-moderation/admin/user-moderation-admin.php:337
 msgid ""
 "Please be sure to include the variable %user_pass% if using default "
 "passwords or else the user will not know their password!"
@@ -453,10 +457,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:128
 #: modules/custom-email/admin/custom-email-admin.php:175
 #: modules/custom-email/admin/custom-email-admin.php:205
-#: modules/user-moderation/admin/user-moderation-admin.php:246
-#: modules/user-moderation/admin/user-moderation-admin.php:297
-#: modules/user-moderation/admin/user-moderation-admin.php:327
-#: modules/user-moderation/admin/user-moderation-admin.php:380
+#: modules/user-moderation/admin/user-moderation-admin.php:287
+#: modules/user-moderation/admin/user-moderation-admin.php:338
+#: modules/user-moderation/admin/user-moderation-admin.php:368
+#: modules/user-moderation/admin/user-moderation-admin.php:421
 msgid "If any field is left empty, the default will be used instead."
 msgstr ""
 
@@ -465,10 +469,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:131
 #: modules/custom-email/admin/custom-email-admin.php:178
 #: modules/custom-email/admin/custom-email-admin.php:211
-#: modules/user-moderation/admin/user-moderation-admin.php:249
-#: modules/user-moderation/admin/user-moderation-admin.php:300
-#: modules/user-moderation/admin/user-moderation-admin.php:333
-#: modules/user-moderation/admin/user-moderation-admin.php:383
+#: modules/user-moderation/admin/user-moderation-admin.php:290
+#: modules/user-moderation/admin/user-moderation-admin.php:341
+#: modules/user-moderation/admin/user-moderation-admin.php:374
+#: modules/user-moderation/admin/user-moderation-admin.php:424
 msgid "From Name"
 msgstr ""
 
@@ -477,10 +481,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:134
 #: modules/custom-email/admin/custom-email-admin.php:181
 #: modules/custom-email/admin/custom-email-admin.php:214
-#: modules/user-moderation/admin/user-moderation-admin.php:252
-#: modules/user-moderation/admin/user-moderation-admin.php:303
-#: modules/user-moderation/admin/user-moderation-admin.php:336
-#: modules/user-moderation/admin/user-moderation-admin.php:386
+#: modules/user-moderation/admin/user-moderation-admin.php:293
+#: modules/user-moderation/admin/user-moderation-admin.php:344
+#: modules/user-moderation/admin/user-moderation-admin.php:377
+#: modules/user-moderation/admin/user-moderation-admin.php:427
 msgid "From E-mail"
 msgstr ""
 
@@ -489,10 +493,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:137
 #: modules/custom-email/admin/custom-email-admin.php:184
 #: modules/custom-email/admin/custom-email-admin.php:217
-#: modules/user-moderation/admin/user-moderation-admin.php:255
-#: modules/user-moderation/admin/user-moderation-admin.php:306
-#: modules/user-moderation/admin/user-moderation-admin.php:339
-#: modules/user-moderation/admin/user-moderation-admin.php:389
+#: modules/user-moderation/admin/user-moderation-admin.php:296
+#: modules/user-moderation/admin/user-moderation-admin.php:347
+#: modules/user-moderation/admin/user-moderation-admin.php:380
+#: modules/user-moderation/admin/user-moderation-admin.php:430
 msgid "E-mail Format"
 msgstr ""
 
@@ -501,10 +505,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:143
 #: modules/custom-email/admin/custom-email-admin.php:190
 #: modules/custom-email/admin/custom-email-admin.php:223
-#: modules/user-moderation/admin/user-moderation-admin.php:261
-#: modules/user-moderation/admin/user-moderation-admin.php:312
-#: modules/user-moderation/admin/user-moderation-admin.php:345
-#: modules/user-moderation/admin/user-moderation-admin.php:395
+#: modules/user-moderation/admin/user-moderation-admin.php:302
+#: modules/user-moderation/admin/user-moderation-admin.php:353
+#: modules/user-moderation/admin/user-moderation-admin.php:386
+#: modules/user-moderation/admin/user-moderation-admin.php:436
 msgid "Subject"
 msgstr ""
 
@@ -513,10 +517,10 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:146
 #: modules/custom-email/admin/custom-email-admin.php:193
 #: modules/custom-email/admin/custom-email-admin.php:226
-#: modules/user-moderation/admin/user-moderation-admin.php:264
-#: modules/user-moderation/admin/user-moderation-admin.php:315
-#: modules/user-moderation/admin/user-moderation-admin.php:348
-#: modules/user-moderation/admin/user-moderation-admin.php:398
+#: modules/user-moderation/admin/user-moderation-admin.php:305
+#: modules/user-moderation/admin/user-moderation-admin.php:356
+#: modules/user-moderation/admin/user-moderation-admin.php:389
+#: modules/user-moderation/admin/user-moderation-admin.php:439
 msgid "Message"
 msgstr ""
 
@@ -525,16 +529,16 @@ msgstr ""
 #: modules/custom-email/admin/custom-email-admin.php:149
 #: modules/custom-email/admin/custom-email-admin.php:196
 #: modules/custom-email/admin/custom-email-admin.php:229
-#: modules/user-moderation/admin/user-moderation-admin.php:267
-#: modules/user-moderation/admin/user-moderation-admin.php:318
-#: modules/user-moderation/admin/user-moderation-admin.php:351
-#: modules/user-moderation/admin/user-moderation-admin.php:401
+#: modules/user-moderation/admin/user-moderation-admin.php:308
+#: modules/user-moderation/admin/user-moderation-admin.php:359
+#: modules/user-moderation/admin/user-moderation-admin.php:392
+#: modules/user-moderation/admin/user-moderation-admin.php:442
 msgid "Available Variables"
 msgstr ""
 
 #: modules/custom-email/admin/custom-email-admin.php:74
 #: modules/custom-email/admin/custom-email-admin.php:201
-#: modules/user-moderation/admin/user-moderation-admin.php:323
+#: modules/user-moderation/admin/user-moderation-admin.php:364
 msgid "Admin Notification"
 msgstr ""
 
@@ -547,7 +551,7 @@ msgstr ""
 
 #: modules/custom-email/admin/custom-email-admin.php:81
 #: modules/custom-email/admin/custom-email-admin.php:208
-#: modules/user-moderation/admin/user-moderation-admin.php:330
+#: modules/user-moderation/admin/user-moderation-admin.php:371
 msgid "To"
 msgstr ""
 
@@ -575,7 +579,7 @@ msgid ""
 msgstr ""
 
 #: modules/custom-email/admin/custom-email-admin.php:231
-#: modules/user-moderation/admin/user-moderation-admin.php:353
+#: modules/user-moderation/admin/user-moderation-admin.php:394
 msgid "Disable Admin Notification"
 msgstr ""
 
@@ -602,7 +606,7 @@ msgid "New user registration on your site %s:"
 msgstr ""
 
 #: modules/custom-email/custom-email.php:475
-#: modules/user-moderation/user-moderation.php:302
+#: modules/user-moderation/user-moderation.php:371
 #, php-format
 msgid "E-mail: %s"
 msgstr ""
@@ -650,21 +654,21 @@ msgid ""
 "length."
 msgstr ""
 
-#: modules/custom-passwords/custom-passwords.php:170
-msgid "Please enter a new password."
-msgstr ""
-
-#: modules/custom-passwords/custom-passwords.php:202
+#: modules/custom-passwords/custom-passwords.php:173
 msgid ""
 "Please enter your username or e-mail address. You will receive an e-mail "
 "with a link to reset your password."
 msgstr ""
 
-#: modules/custom-passwords/custom-passwords.php:217
+#: modules/custom-passwords/custom-passwords.php:176
+msgid "Please enter a new password."
+msgstr ""
+
+#: modules/custom-passwords/custom-passwords.php:209
 msgid "Registration complete. You may now log in."
 msgstr ""
 
-#: modules/custom-passwords/custom-passwords.php:220
+#: modules/custom-passwords/custom-passwords.php:212
 msgid "Your password has been saved. You may now log in."
 msgstr ""
 
@@ -751,8 +755,8 @@ msgstr ""
 
 #: modules/security/admin/security-admin.php:35
 #: modules/security/admin/security-admin.php:38
-#: modules/user-moderation/admin/user-moderation-admin.php:32
-#: modules/user-moderation/admin/user-moderation-admin.php:37
+#: modules/user-moderation/admin/user-moderation-admin.php:38
+#: modules/user-moderation/admin/user-moderation-admin.php:50
 msgid "You can&#8217;t edit that user."
 msgstr ""
 
@@ -799,14 +803,14 @@ msgid ""
 "$s %5$s."
 msgstr ""
 
-#: modules/security/security.php:42 modules/security/security.php:68
+#: modules/security/security.php:43 modules/security/security.php:69
 #, php-format
 msgid ""
 "<strong>ERROR</strong>: This account has been locked because of too many "
 "failed login attempts. You may try again in %s."
 msgstr ""
 
-#: modules/security/security.php:44
+#: modules/security/security.php:45
 msgid "<strong>ERROR</strong>: This account has been locked."
 msgstr ""
 
@@ -841,178 +845,203 @@ msgstr ""
 msgid "Profile updated."
 msgstr ""
 
-#: modules/themed-profiles/themed-profiles.php:175
+#: modules/themed-profiles/themed-profiles.php:178
 msgid "Your Profile"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:57
+#: modules/user-moderation/admin/user-moderation-admin.php:83
 msgid "User approved."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:109
-#: modules/user-moderation/user-moderation.php:219
+#: modules/user-moderation/admin/user-moderation-admin.php:85
+msgid "Activation sent."
+msgstr ""
+
+#: modules/user-moderation/admin/user-moderation-admin.php:111
+msgid "Resend Activation"
+msgstr ""
+
+#: modules/user-moderation/admin/user-moderation-admin.php:116
+msgid "Approve"
+msgstr ""
+
+#: modules/user-moderation/admin/user-moderation-admin.php:150
+#: modules/user-moderation/user-moderation.php:275
 msgid "Same as when you signed up."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:123
+#: modules/user-moderation/admin/user-moderation-admin.php:164
 #, php-format
 msgid "You have been approved access to %s"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:128
+#: modules/user-moderation/admin/user-moderation-admin.php:169
 #, php-format
 msgid "[%s] Registration Approved"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:162
+#: modules/user-moderation/admin/user-moderation-admin.php:203
 #, php-format
 msgid "You have been denied access to %s"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:163
+#: modules/user-moderation/admin/user-moderation-admin.php:204
 #, php-format
 msgid "[%s] Registration Denied"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:185
+#: modules/user-moderation/admin/user-moderation-admin.php:226
 msgid "Moderation"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:187
+#: modules/user-moderation/admin/user-moderation-admin.php:228
 msgid "User Activation"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:188
+#: modules/user-moderation/admin/user-moderation-admin.php:229
 msgid "User Approval"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:189
+#: modules/user-moderation/admin/user-moderation-admin.php:230
 msgid "User Denial"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:208
+#: modules/user-moderation/admin/user-moderation-admin.php:249
 msgid "User Moderation"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:211
+#: modules/user-moderation/admin/user-moderation-admin.php:252
 msgid "None"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:212
+#: modules/user-moderation/admin/user-moderation-admin.php:253
 msgid "Check this option to require no moderation."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:214
+#: modules/user-moderation/admin/user-moderation-admin.php:255
 msgid "E-mail Confirmation"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:215
+#: modules/user-moderation/admin/user-moderation-admin.php:256
 msgid ""
 "Check this option to require new users to confirm their e-mail address "
 "before they may log in."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:217
+#: modules/user-moderation/admin/user-moderation-admin.php:258
 msgid "Admin Approval"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:218
+#: modules/user-moderation/admin/user-moderation-admin.php:259
 msgid ""
 "Check this option to require new users to be approved by an administrator "
 "before they may log in."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:244
+#: modules/user-moderation/admin/user-moderation-admin.php:285
 msgid ""
 "This e-mail will be sent to a new user upon registration when \"E-mail "
 "Confirmation\" is checked for \"User Moderation\"."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:245
+#: modules/user-moderation/admin/user-moderation-admin.php:286
 msgid ""
 "Please be sure to include the variable %activateurl% or else the user will "
 "not be able to activate their account!"
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:295
+#: modules/user-moderation/admin/user-moderation-admin.php:336
 msgid ""
 "This e-mail will be sent to a new user upon admin approval when \"Admin "
 "Approval\" is checked for \"User Moderation\"."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:326
+#: modules/user-moderation/admin/user-moderation-admin.php:367
 msgid ""
 "This e-mail will be sent to the e-mail address or addresses (multiple "
 "addresses may be separated by commas) specified below upon user registration "
 "when \"Admin Approval\" is checked for \"User Moderation\"."
 msgstr ""
 
-#: modules/user-moderation/admin/user-moderation-admin.php:379
+#: modules/user-moderation/admin/user-moderation-admin.php:420
 msgid ""
 "This e-mail will be sent to a user who is deleted/denied when \"Admin "
 "Approval\" is checked for \"User Moderation\" and the user's role is "
 "\"Pending\"."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:117
-msgid "<strong>ERROR</strong>: You have not yet confirmed your e-mail address."
+#: modules/user-moderation/user-moderation.php:171
+#, php-format
+msgid ""
+"<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a "
+"href=\"%s\">Resend activation</a>?"
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:119
+#: modules/user-moderation/user-moderation.php:174
 msgid "<strong>ERROR</strong>: Your registration has not yet been approved."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:265
+#: modules/user-moderation/user-moderation.php:334
 #, php-format
 msgid "[%s] Activate Your Account"
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:266
+#: modules/user-moderation/user-moderation.php:335
 #, php-format
 msgid ""
 "Thanks for registering at %s! To complete the activation of your account "
 "please click the following link: "
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:298
+#: modules/user-moderation/user-moderation.php:367
 #, php-format
 msgid "[%s] New User Awaiting Approval"
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:300
+#: modules/user-moderation/user-moderation.php:369
 #, php-format
 msgid "New user requires approval on your blog %s:"
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:303
+#: modules/user-moderation/user-moderation.php:372
 msgid "To approve or deny this user:"
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:324
+#: modules/user-moderation/user-moderation.php:393
 msgid ""
 "Your registration was successful but you must now confirm your email address "
 "before you can log in. Please check your email and click on the link "
 "provided."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:326
+#: modules/user-moderation/user-moderation.php:395
 msgid ""
 "Your registration was successful but you must now be approved by an "
 "administrator before you can log in. You will be notified by e-mail once "
 "your account has been reviewed."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:329
+#: modules/user-moderation/user-moderation.php:398
 msgid "Your account has been activated. You may now log in."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:331
+#: modules/user-moderation/user-moderation.php:400
 msgid ""
 "Your account has been activated. Please check your e-mail for your password."
 msgstr ""
 
-#: modules/user-moderation/user-moderation.php:333
+#: modules/user-moderation/user-moderation.php:402
 msgid "<strong>ERROR</strong>: Sorry, that key does not appear to be valid."
+msgstr ""
+
+#: modules/user-moderation/user-moderation.php:405
+msgid "<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent."
+msgstr ""
+
+#: modules/user-moderation/user-moderation.php:407
+msgid ""
+"The activation e-mail has been sent to the e-mail address with which you "
+"registered. Please check your email and click on the link provided."
 msgstr ""
 
 #: templates/login-form.php:12 templates/profile-form.php:34
@@ -1024,7 +1053,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: templates/login-form.php:22
+#: templates/login-form.php:25
 msgid "Remember Me"
 msgstr ""
 
@@ -1032,7 +1061,7 @@ msgstr ""
 msgid "Username or E-mail:"
 msgstr ""
 
-#: templates/lostpassword-form.php:17
+#: templates/lostpassword-form.php:20
 msgid "Get New Password"
 msgstr ""
 
@@ -1119,7 +1148,7 @@ msgstr ""
 msgid "Update Profile"
 msgstr ""
 
-#: templates/register-form.php:20
+#: templates/register-form.php:23
 msgid "A password will be e-mailed to you."
 msgstr ""
 
@@ -1127,12 +1156,12 @@ msgstr ""
 msgid "New Password:"
 msgstr ""
 
-#: templates/resetpass-form.php:21
+#: templates/resetpass-form.php:24
 msgid "Change Password"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.jfarthing.com/extend/plugins/theme-my-login"
+msgid "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
 msgstr ""
 
 #. Description of the plugin/theme
