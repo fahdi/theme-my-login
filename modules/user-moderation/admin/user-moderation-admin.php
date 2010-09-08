@@ -18,26 +18,50 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	function load_users_page() {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
+		$user_moderation =& $GLOBALS['theme_my_login_user_moderation'];
 
-		if ( 'admin' == $theme_my_login->options['moderation']['type'] ) {
-			add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
-			add_action( 'delete_user', array( &$this, 'deny_user' ) );
-			add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
-			if ( isset( $_GET['action'] ) && 'approve' == $_GET['action'] ) {
-				check_admin_referer( 'approve-user' );
+		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
+		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
+		add_action( 'delete_user', array( &$this, 'deny_user' ) );
 
+		// Is there an action?
+		if ( isset( $_GET['action'] ) ) {
+
+			// Is it a sanctioned action?
+			if ( in_array( $_GET['action'], array( 'approve', 'resendactivation' ) ) ) {
+
+				// Is there a user ID?
 				$user = isset( $_GET['user'] ) ? $_GET['user'] : '';
 
+				// No user ID?
 				if ( !$user || !current_user_can( 'edit_user', $user ) )
 					wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
 
-				$newpass = $theme_my_login->is_module_active( 'custom-passwords/custom-passwords.php' ) ? 0 : 1;
-
-				if ( !$this->approve_user( $user, $newpass ) )
-					wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
-
+				// Where did we come from?
 				$redirect_to = isset( $_REQUEST['wp_http_referer'] ) ? remove_query_arg( array( 'wp_http_referer', 'updated', 'delete_count' ), stripslashes( $_REQUEST['wp_http_referer'] ) ) : 'users.php';
-				$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
+
+				// Are we approving?
+				if ( 'approve' == $_GET['action'] ) {
+					check_admin_referer( 'approve-user' );
+
+					$newpass = $theme_my_login->is_module_active( 'custom-passwords/custom-passwords.php' ) ? 0 : 1;
+
+					if ( !$this->approve_user( $user, $newpass ) )
+						wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
+
+					$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
+				}
+				// Are we resending an activation e-mail?
+				elseif ( 'resendactivation' == $_GET['action'] ) {
+					check_admin_referer( 'resend-activation' );
+
+					// Apply activation e-mail filters
+					$user_moderation->apply_user_activation_notification_filters();
+					if ( !$user_moderation->new_user_activation_notification( $user ) )
+						wp_die( __( 'The e-mail could not be sent.', $theme_my_login->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $theme_my_login->textdomain ) );
+
+					$redirect_to = add_query_arg( 'update', 'sendactivation', $redirect_to );
+				}
 				wp_redirect( $redirect_to );
 				exit;
 			}
@@ -53,8 +77,14 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function admin_notices() {
-		if ( isset( $_GET['update'] ) && 'approve' == $_GET['update'] )
-			echo '<div id="message" class="updated fade"><p>' . __( 'User approved.', $this->theme_my_login->textdomain ) . '</p></div>';
+		if ( isset( $_GET['update'] ) && in_array( $_GET['update'], array( 'approve', 'sendactivation' ) ) ) {
+			echo '<div id="message" class="updated fade"><p>';
+			if ( 'approve' == $_GET['update'] )
+				_e( 'User approved.', $this->theme_my_login->textdomain );
+			elseif ( 'sendactivation' == $_GET['update'] )
+				_e( 'Activation sent.', $this->theme_my_login->textdomain );
+			echo '</p></div>';
+		}
 	}
 
 	/**
@@ -73,8 +103,19 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		$current_user = wp_get_current_user();
 		if ( $current_user->ID != $user_object->ID ) {
 			if ( 'pending' == $user_object->roles[0] ) {
-				$approve['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=approve&amp;user=$user_object->ID", 'approve-user' ) ) . '">Approve</a>';
-				$actions = array_merge( $approve, $actions );
+				$_actions = array();
+				// If moderation type is e-mail activation, add "Resend Activation" link
+				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
+					$_actions['resend-activation'] = '<a href="' . add_query_arg( 'wp_http_referer',
+						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
+						wp_nonce_url( "users.php?action=resendactivation&amp;user=$user_object->ID", 'resend-activation' ) ) . '">' . __( 'Resend Activation', $this->theme_my_login->textdomain ) . '</a>';
+				} elseif ( 'admin' == $this->theme_my_login->options['moderation']['type'] ) {
+					// Add "Approve" link
+					$_actions['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer',
+						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
+						wp_nonce_url( "users.php?action=approve&amp;user=$user_object->ID", 'approve-user' ) ) . '">' . __( 'Approve', $this->theme_my_login->textdomain ) . '</a>';
+				}
+				$actions = array_merge( $_actions, $actions );
 			}
 		}
 		return $actions;

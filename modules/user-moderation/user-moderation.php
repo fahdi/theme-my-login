@@ -109,6 +109,45 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	}
 
 	/**
+	 * Handles "send_activation" action for login page
+	 *
+	 * Callback for "tml_request_send_activation" hook in method Theme_My_Login::the_request();
+	 *
+	 * @see Theme_My_Login::the_request();
+	 * @since 6.0
+	 * @access public
+	 */
+	function send_activation() {
+		global $wpdb;
+
+		// Shorthand reference
+		$theme_my_login =& $this->theme_my_login;
+
+		$login = isset( $_GET['login'] ) ? trim( $_GET['login'] ) : '';
+
+		if ( !$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login = %s", $login ) ) ) {
+			$redirect_to = $theme_my_login->get_current_url( 'sendactivation=failed' );
+			if ( !empty( $theme_my_login->request_instance ) )
+				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
+			wp_redirect( $redirect_to );
+			exit();
+		}
+
+		$user = new WP_User( $user_id );
+
+		if ( 'pending' == $user->roles[0] ) {
+			// Apply activation e-mail filters
+			$this->apply_user_activation_notification_filters();
+			// Send activation e-mail
+			$this->new_user_activation_notification( $user->ID );
+			// Now redirect them
+			$redirect_to = $theme_my_login->get_current_url( 'sendactivation=sent' );
+			wp_redirect( $redirect_to );
+			exit();
+		}
+	}
+
+	/**
 	 * Blocks "pending" users from loggin in
 	 *
 	 * Callback for "authenticate" hook in function wp_authenticate()
@@ -127,10 +166,13 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		if ( is_a( $user, 'WP_User' ) ) {
 			if ( 'pending' == $user->roles[0] ) {
-				if ( 'email' == $this->theme_my_login->options['moderation']['type'] )
-					return new WP_Error( 'pending', __('<strong>ERROR</strong>: You have not yet confirmed your e-mail address.', $this->theme_my_login->textdomain ) );
-				else
-					return new WP_Error( 'pending', __('<strong>ERROR</strong>: Your registration has not yet been approved.', $this->theme_my_login->textdomain ) );
+				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
+					return new WP_Error( 'pending', sprintf(
+						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', $this->theme_my_login->textdomain ),
+						$this->theme_my_login->get_login_page_link( 'action=sendactivation&login=' . $username ) ) );
+				} else {
+					return new WP_Error( 'pending', __( '<strong>ERROR</strong>: Your registration has not yet been approved.', $this->theme_my_login->textdomain ) );
+				}
 			}
 		}
 		return $user;
@@ -296,7 +338,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$title = apply_filters( 'user_activation_notification_title', $title, $user_id );
 		$message = apply_filters( 'user_activation_notification_message', $message, $activation_url, $user_id );
 
-		wp_mail( $user_email, $title, $message );
+		return wp_mail( $user_email, $title, $message );
 	}
 
 	/**
@@ -356,8 +398,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. You may now log in.', $theme_my_login->textdomain ), 'message' );
 			else
 				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', $theme_my_login->textdomain ), 'message' );
-		} elseif ( isset( $_GET['activation'] ) && 'invalidkey' == $_GET['activation'] )
+		} elseif ( isset( $_GET['activation'] ) && 'invalidkey' == $_GET['activation'] ) {
 			$theme_my_login->errors->add( 'invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', $theme_my_login->textdomain ) );
+		} elseif ( isset( $_GET['sendactivation'] ) ) {
+			if ( 'failed' == $_GET['sendactivation'] )
+				$theme_my_login->errors->add( 'sendactivation_failed', __('<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent.', $theme_my_login->textdomain ) );
+			elseif ( 'sent' == $_GET['sendactivation'] )
+				$theme_my_login->errors->add( 'sendactivation_sent', __('The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided.', $theme_my_login->textdomain ), 'message' );
+		}
 	}
 
 	/**
@@ -712,8 +760,10 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_action( 'deny_user', array( &$this, 'apply_user_denial_notification_filters' ) );
 
 			// Add activation action
-			if ( 'email' == $theme_my_login->options['moderation']['type'] )
+			if ( 'email' == $theme_my_login->options['moderation']['type'] ) {
 				add_action( 'tml_request_activate', array( &$this, 'user_activation' ) );
+				add_action( 'tml_request_sendactivation', array( &$this, 'send_activation' ) );
+			}
 		}
 	}
 
