@@ -14,7 +14,6 @@ Text Domain: theme-my-login
  * ----------------------------------------------------------------------
  * Allow separate permalinks for login, register and lostpassword
  * Allow users to delete themselves
- * Allow resending of activation e-mail in "Moderation" module
  * Add option to forward all "wp-login.php" requests to TML login page
  */
 
