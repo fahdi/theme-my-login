@@ -5,7 +5,7 @@ Theme My Login will always look in your theme's directory first, before using th
 */
 ?>
 <div class="login" id="theme-my-login<?php $template->the_instance(); ?>">
-	<?php $template->the_action_message( 'register' ); ?>
+	<?php $template->the_action_template_message( 'register' ); ?>
 	<?php $template->the_errors(); ?>
     <form name="registerform" id="registerform<?php $template->the_instance(); ?>" action="<?php $template->the_action_url( 'register' ); ?>" method="post">
         <p>
@@ -20,7 +20,7 @@ Theme My Login will always look in your theme's directory first, before using th
 do_action( 'register_form' ); // Wordpress hook
 do_action_ref_array( 'tml_register_form', array( &$template ) ); //TML hook
 ?>
-		<p id="reg_passmail<?php $template->the_instance(); ?>"><?php echo apply_filters( 'registration_pass_message', __( 'A password will be e-mailed to you.', $theme_my_login->textdomain ) ); ?></p>
+		<p id="reg_passmail<?php $template->the_instance(); ?>"><?php echo apply_filters( 'tml_register_passmail_template_message', __( 'A password will be e-mailed to you.', $theme_my_login->textdomain ) ); ?></p>
         <p class="submit">
             <input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php _e( 'Register', 'theme-my-login' ); ?>" />
 			<input type="hidden" name="redirect_to" value="<?php $template->the_redirect_url( 'register' ); ?>" />

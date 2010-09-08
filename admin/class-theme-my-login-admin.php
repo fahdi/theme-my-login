@@ -359,7 +359,7 @@ class Theme_My_Login_Admin {
 		}
 
 		// Merge current settings
-		$settings = wp_parse_args( $settings, $options );
+		$settings = $this->theme_my_login->array_merge_recursive( $options, $settings );
 
 		// Allow plugins/modules to add/modify settings
 		$settings = apply_filters( 'tml_save_settings', $settings );

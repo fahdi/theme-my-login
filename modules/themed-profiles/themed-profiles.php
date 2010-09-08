@@ -207,7 +207,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 
 		add_action( 'tml_request_profile', array( &$this, 'profile_action' ) );
-		add_action( 'tml_template_profile', array( &$this, 'get_profile_form' ) );
+		add_action( 'tml_display_profile', array( &$this, 'get_profile_form' ) );
 	}
 }
 

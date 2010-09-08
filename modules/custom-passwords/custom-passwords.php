@@ -68,7 +68,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	/**
 	 * Sets the user password
 	 *
-	 * Callback for "user_registration_pass" hook in Theme_My_Login::register_new_user()
+	 * Callback for "tml_user_registration_pass" hook in Theme_My_Login::register_new_user()
 	 *
 	 * @see Theme_My_Login::register_new_user()
 	 * @since 6.0
@@ -155,54 +155,46 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	}
 
 	/**
-	 * Changes the reset password template message
+	 * Changes template message according to a specific action
 	 *
-	 * Callback for "resetpass_message" hook in Theme_My_Login_Template::get_action_message()
+	 * Callback for "tml_action_template_message" hook in Theme_My_Login_Template::get_action_template_message()
 	 *
-	 * @see Theme_My_Login_Template::get_action_message()
+	 * @see Theme_My_Login_Template::get_action_template_message()
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @return string The new reset password message
+	 * @param string $message The original message
+	 * @param string $action The requested action
+	 * @return string The new messgage
 	 */
-	function resetpass_message() {
-		// Add a message to the reset password template created by this module
-		return __( 'Please enter a new password.', $this->theme_my_login->textdomain );
+	function action_template_message( $message, $action ) {
+		switch ( $action ) {
+			case 'lostpassword' :
+				$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', $this->theme_my_login->textdomain );
+				break;
+			case 'resetpass' :
+				$message = __( 'Please enter a new password.', $this->theme_my_login->textdomain );
+				break;
+			case 'register' :
+				$message = '';
+				break;
+		}
+		return $message;
 	}
 
 	/**
 	 * Changes the register template message
 	 *
-	 * Callback for "register_message" hook in Theme_My_Login_Template::get_action_message()
+	 * Callback for "tml_register_passmail_template_message" hook
 	 *
-	 * @see Theme_My_Login_Template::get_action_message()
 	 * @since 6.0
 	 * @access public
 	 *
 	 * @return string The new register message
 	 */
-	function registration_pass_message() {
-		// Clear out the "A password will be e-mailed to you." message
+	function register_passmail_template_message() {
 		return;
 	}
-
-	/**
-	 * Changes the lost password template message
-	 *
-	 * Callback for "lostpassword_message" hook in Theme_My_Login_Template::get_action_message()
-	 *
-	 * @see Theme_My_Login_Template::get_action_message()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @return string The new lost password message
-	 */
-	function lostpassword_message() {
-		// Change the lost password message to reflect that they will be able to reset their password after clicking a link in their e-mail
-		$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', $this->theme_my_login->textdomain );
-		return $message;
-	}
-
 	/**
 	 * Handles display of various action/status messages
 	 *
@@ -362,16 +354,15 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		// Register password
 		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
-		add_filter( 'user_registration_pass', array( &$this, 'set_password' ) );
+		add_filter( 'tml_user_registration_pass', array( &$this, 'set_password' ) );
 		// Reset password
-		add_action( 'tml_template_resetpass', array( &$this, 'get_resetpass_form' ) );
-		add_action( 'tml_template_rp', array( &$this, 'get_resetpass_form' ) );
+		add_action( 'tml_display_resetpass', array( &$this, 'get_resetpass_form' ) );
+		add_action( 'tml_display_rp', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'tml_request_resetpass', array( &$this, 'resetpass_action' ) );
 		add_action( 'tml_request_rp', array( &$this, 'resetpass_action' ) );
 		// Template messages
-		add_filter( 'registration_pass_message', array( &$this, 'registration_pass_message' ) );
-		add_filter( 'lostpassword_message', array( &$this, 'lostpassword_message' ) );
-		add_filter( 'resetpass_message', array( &$this, 'resetpass_message' ) );
+		add_filter( 'tml_register_passmail_template_message', array( &$this, 'register_passmail_template_message' ) );
+		add_filter( 'tml_action_template_message', array( &$this, 'action_template_message' ), 10, 2 );
 		add_action( 'tml_request', array( &$this, 'action_messages' ) );
 		// Redirection
 		add_filter( 'register_redirect', array( &$this, 'register_redirect' ) );

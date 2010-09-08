@@ -86,8 +86,8 @@ class Theme_My_Login_Template {
 		if ( $this->options['show_title'] )
 			echo $this->options['before_title'] . $this->get_title( $action ) . $this->options['after_title'] . "\n";
 		// Is there a specified template?
-		if ( has_action( 'tml_template_' . $action ) ) {
-			do_action_ref_array( 'tml_template_' . $action, array( &$this ) );
+		if ( has_action( 'tml_display_' . $action ) ) {
+			do_action_ref_array( 'tml_display_' . $action, array( &$this ) );
 		} else {
 			$template = array();
 			switch ( $action ) {
@@ -119,7 +119,7 @@ class Theme_My_Login_Template {
 		echo $this->options['after_widget'] . "\n";
 		$output = ob_get_contents();
 		ob_end_clean();
-		return apply_filters( 'tml_template', $output, $this->options );
+		return apply_filters( 'tml_display', $output, $this->options );
 	}
 
 	/**
@@ -350,26 +350,26 @@ class Theme_My_Login_Template {
 	}
 
 	/**
-	 * Returns requested action message
+	 * Returns template message for requested action
 	 *
 	 * @since 6.0
 	 * @access public
 	 *
 	 * @param string $action Action to retrieve
-	 * @return string The requested action message
+	 * @return string The requested template message
 	 */
-	function get_action_message( $action = '' ) {
+	function get_action_template_message( $action = '' ) {
 		if ( 'register' == $action )
 			$message = __( 'Register For This Site', 'theme-my-login' );
 		elseif ( 'lostpassword' == $action )
 			$message = __( 'Please enter your username or e-mail address. You will receive a new password via e-mail.', 'theme-my-login' );
 		else
 			$message = '';
-		return apply_filters( $action . '_message', $message );
+		return apply_filters( 'tml_action_template_message', $message, $action );
 	}
 
 	/**
-	 * Outputs requested action message
+	 * Outputs template message for requested action
 	 *
 	 * @since 6.0
 	 * @access public
@@ -378,8 +378,8 @@ class Theme_My_Login_Template {
 	 * @param string $before_message Text/HTML to add before the message
 	 * @param string $after_message Text/HTML to add after the message
 	 */
-	function the_action_message( $action = 'login', $before_message = '<p class="message">', $after_message = '</p>' ) {
-		if ( $message = $this->get_action_message( $action ) )
+	function the_action_template_message( $action = 'login', $before_message = '<p class="message">', $after_message = '</p>' ) {
+		if ( $message = $this->get_action_template_message( $action ) )
 			echo $before_message . $message . $after_message;
 	}
 
@@ -413,7 +413,7 @@ class Theme_My_Login_Template {
 			}
 		}
 
-		$template_path = apply_filters( 'tml_get_template', $template_path );
+		$template_path = apply_filters( 'tml_template', $template_path );
 
 		if ( $load && $template_path ) {
 			include( $template_path );

@@ -456,7 +456,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function new_user_notification( $user_id, $plaintext_pass = '' ) {
 		$user = new WP_User( $user_id );
 
-		do_action( 'new_user_notification', $user_id, $plaintext_pass );
+		do_action( 'tml_new_user_notification', $user_id, $plaintext_pass );
 
 		$user_login = stripslashes( $user->user_login );
 		$user_email = stripslashes( $user->user_email );
@@ -558,7 +558,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		foreach ( $matches[0] as $key => $match ) {
 			if ( !isset( $replacements[$match] ) ) {	
 				if ( isset( $user ) && isset( $user->{$matches[1][$key]} ) ) // Replacement from WP_User object
-					$replacements[$match] = $user->{$matches[1][$key]};
+					$replacements[$match] = ( '%user_pass%' == $match ) ? '' : $user->{$matches[1][$key]};
 				else
 					$replacements[$match] = get_bloginfo( $matches[1][$key] ); // Replacement from get_bloginfo()
 			}
@@ -662,7 +662,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 
 		add_action( 'retrieve_password', array( &$this, 'apply_retrieve_pass_filters' ) );
 		add_action( 'password_reset', array( &$this, 'apply_reset_pass_filters' ) );
-		add_action( 'register_post', array( &$this, 'apply_new_user_filters' ) );
+		add_action( 'tml_new_user_notification', array( &$this, 'apply_new_user_filters' ) );
 
 		remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_new_user_registered', array( &$this, 'new_user_notification' ), 10, 2 );

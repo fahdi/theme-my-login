@@ -264,7 +264,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 			<p><label for="theme_my_login_user_activation_message"><?php _e( 'Message', $theme_my_login->textdomain ); ?></label><br />
 			<textarea name="theme_my_login[email][user_activation][message]" id="theme_my_login_user_activation_message" class="large-text" rows="10"><?php if ( isset( $user_activation['message'] ) ) echo $user_activation['message']; ?></textarea></p>
 
-			<p class="description"><?php _e( 'Available Variables', $theme_my_login->textdomain ); ?>: %blogname%, %siteurl%, %activateurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</p>
+			<p class="description"><?php _e( 'Available Variables', $theme_my_login->textdomain ); ?>: %blogname%, %siteurl%, %activateurl%, %user_login%, %user_email%, %user_ip%</p>
 		</td>
 	</tr>
 </table>

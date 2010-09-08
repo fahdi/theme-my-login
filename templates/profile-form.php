@@ -9,7 +9,7 @@ $GLOBALS['profileuser'] = $profileuser = get_user_to_edit( $current_user->ID );
 ?>
 
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
-	<?php $template->the_action_message( 'profile' ); ?>
+	<?php $template->the_action_template_message( 'profile' ); ?>
 	<?php $template->the_errors(); ?>
 	<form id="your-profile" action="" method="post">
 		<?php wp_nonce_field( 'update-user_' . $current_user->ID ) ?>

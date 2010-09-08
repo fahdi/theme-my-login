@@ -23,6 +23,20 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	var $theme_my_login_custom_email;
 
 	/**
+	 * Applies user moderation upon registration
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function register_post() {
+		// Remove all other filters
+		remove_all_actions( 'tml_new_user_registered' );
+
+		// Moderate user upon registration
+		add_action( 'tml_new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
+	}
+
+	/**
 	 * Applies moderation to a newly registered user
 	 *
 	 * Callback for "register_post" hook in method Theme_My_Login::register_new_user()
@@ -199,11 +213,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		if ( empty( $user ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
 
-		do_action( 'user_activation_post', $user->user_login, $user->user_email );
+		do_action( 'tml_user_activation_post', $user->user_login, $user->user_email );
 
 		// Allow plugins to short-circuit process and send errors
 		$errors = new WP_Error();
-		$errors = apply_filters( 'user_activation_errors', $errors, $user->user_login, $user->user_email );
+		$errors = apply_filters( 'tml_user_activation_errors', $errors, $user->user_login, $user->user_email );
 
 		// Return errors if there are any
 		if ( $errors->get_error_code() )
@@ -222,9 +236,22 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			wp_set_password( $pass, $user->ID );
 		}
 
-		do_action( 'user_activated', $user->ID, $pass );
+		do_action( 'tml_new_user_activated', $user->ID, $pass );
 
 		return true;
+	}
+
+	/**
+	 * Calls the "tml_new_user_registered" hook
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param int $user_id The user's ID
+	 * @param string $user_pass The user's password
+	 */
+	function new_user_activated( $user_id, $user_pass ) {
+		do_action( 'tml_new_user_registered', $user_id, $user_pass );
 	}
 
 	/**
@@ -665,8 +692,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		// Moderation is enabled
 		if ( in_array( $theme_my_login->options['moderation']['type'], array( 'admin', 'email' ) ) ) {
-			// Moderate user upon registration
-			add_action( 'tml_new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
+			// Remove all other registration filters
+			add_action( 'register_post', array( &$this, 'register_post' ) );
+
 			// Redirect with proper message after registration
 			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
 
@@ -675,17 +703,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			// Block pending users from password reset
 			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
 
-			if ( $theme_my_login->is_module_active( 'custom-email/custom-email.php' ) ) {
-				// Remove custom e-mail module new user notification
-				remove_action( 'tml_new_user_registered', array( &$this->theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
-				// Attach it to the 'user_activated' action
-				add_action( 'user_activated', array( &$this->theme_my_login_custom_email, 'new_user_notification'), 10, 2 );
-			} else {
-				// Remove default new user notification
-				remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
-				// Attach it to the 'user_activated' action
-				add_action( 'user_activated', 'wp_new_user_notification', 10, 2 );
-			}
+			// Call "tml_new_user_registered" hook on successful activation
+			add_action( 'tml_new_user_activated', array( &$this, 'new_user_activated' ), 10, 2 );
 
 			// Apply user approval e-mail filters
 			add_action( 'approve_user', array( &$this, 'apply_user_approval_notification_filters' ) );
