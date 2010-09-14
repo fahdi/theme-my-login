@@ -1,18 +1,19 @@
 jQuery(document).ready( function($) {
 	$('#tml-options-user-links tbody').wpList( {
 		addBefore: function( s ) {
-			var parts = s.element.split('-');
-			var role = parts[1];
+			var cls = $(s.target).attr('class').split(':'),
+				role = cls[1].split('-')[0];
 			s.what = role + '-link';
 			return s;
 		},
 		addAfter: function( xml, s ) {
-			var parts = s.element.split('-');
-			var role = parts[1];
+			var cls = $(s.target).attr('class').split(':'),
+				role = cls[1].split('-')[0];
 			$('table#' + role + '-link-table').show();
 		},
 		delBefore: function( s ) {
-			var role = s.element.split('-', 1).toString();
+			var cls = $(s.target).attr('class').split(':'),
+				role = cls[1].split('-')[0];
 			s.data.user_role = role;
 			return s;
 		},
