@@ -249,7 +249,7 @@ class Theme_My_Login_Template {
 		if ( 'login' == $action && force_ssl_login() )
 			$url = preg_replace( '|^http://|', 'https://', $url );
 
-		return apply_filters( 'tml_action_url', $url );
+		return apply_filters( 'tml_action_url', $url, $action );
 	}
 
 	/**
