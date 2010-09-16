@@ -170,6 +170,9 @@ class Theme_My_Login {
 		$action =& $this->request_action;
 		$instance =& $this->request_instance;
 
+		if ( is_admin() )
+			return;
+
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
 		// Set a cookie now to see if they are supported by the browser.
