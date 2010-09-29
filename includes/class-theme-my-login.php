@@ -625,6 +625,9 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function print_footer_scripts() {
+		if ( is_admin() )
+			return;
+
 		$action = empty( $this->request_action ) ? 'login' : $this->request_action;
 		switch ( $action ) {
 			case 'lostpassword' :
