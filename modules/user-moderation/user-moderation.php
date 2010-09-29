@@ -649,7 +649,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$options = $this->init_options();
 		$theme_my_login->options['moderation'] = isset( $theme_my_login->options['moderation'] ) ? $theme_my_login->array_merge_recursive( $options['moderation'], $theme_my_login->options['moderation'] ) :  $options['moderation'];
 		$theme_my_login->options['email'] = isset( $theme_my_login->options['email'] ) ? $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] ) : $options['email'];
-		add_role( 'pending', 'Pending', array() );
 	}
 
 	/**
@@ -779,6 +778,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 		add_action( 'tml_request', array( &$this, 'action_messages' ) );
+
+		add_role( 'pending', 'Pending', array() );
 	}
 
 }
