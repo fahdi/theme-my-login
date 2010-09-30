@@ -471,7 +471,7 @@ class Theme_My_Login {
 	function wp_setup_nav_menu_item( $menu_item ) {
 		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->object_id ) ) {
 			$menu_item->title = $this->the_title( $menu_item->title, $menu_item->object_id );
-			$menu_item->url = $this->get_login_page_link( $menu_item->url, $menu_item->object_id );
+			$menu_item->url = is_user_logged_in() ? wp_logout_url() : $this->get_login_page_link();
 		}
 		return $menu_item;
 	}
