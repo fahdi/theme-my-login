@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0.1
-Stable tag: 5.1.6
+Stable tag: 6.0
 
 Themes the WordPress login pages according to your theme.
 
@@ -35,7 +35,7 @@ This plugin themes the WordPress login, registration and forgot password pages a
 
 == Frequently Asked Questions ==
 
-None yet. Please visit http://www.jfarthing.com/forum for any support!
+Please visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
 
 
 == Changelog ==
