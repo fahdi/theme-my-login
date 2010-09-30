@@ -85,6 +85,21 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	}
 
 	/**
+	 * Removes the default password nag
+	 *
+	 * Callback for "tml_new_user_registered" hook in Theme_My_Login::register_new_user()
+	 *
+	 * @see Theme_My_Login::register_new_user()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param int $user_id The user's ID
+	 */
+	function remove_default_password_nag( $user_id ) {
+		update_usermeta( $user_id, 'default_password_nag', false );
+	}
+
+	/**
 	 * Resets the user's password
 	 *
 	 * Callback for "tml_request_resetpass" and "tml_request_rp" hooks in Theme_My_Login::the_request()
@@ -355,6 +370,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'tml_user_registration_pass', array( &$this, 'set_password' ) );
+		add_action( 'tml_new_user_registered', array( &$this, 'remove_default_password_nag' ) );
 		// Reset password
 		add_action( 'tml_display_resetpass', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'tml_display_rp', array( &$this, 'get_resetpass_form' ) );
