@@ -105,7 +105,7 @@ class Theme_My_Login {
 		add_action( 'parse_request', array( &$this, 'the_request' ) );
 
 		add_action( 'init', array( &$this, 'init' ) );
-		add_action( 'wp_default_scripts', array( &$this, 'default_scripts' ) );
+
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
 
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
@@ -606,16 +606,6 @@ class Theme_My_Login {
 		else
 			$stylesheet = plugins_url( '/theme-my-login/' . $file );
 		return $stylesheet;
-	}
-
-	/**
-	 * Adds scripts to $wp_scripts object
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function default_scripts( $wp_scripts ) {
-		$wp_scripts->add( 'jquery-shake', plugins_url( 'theme-my-login/js/jquery.shake.js' ), array( 'jquery' ) );
 	}
 
 	/**

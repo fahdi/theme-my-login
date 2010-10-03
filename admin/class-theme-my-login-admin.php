@@ -154,8 +154,9 @@ class Theme_My_Login_Admin {
 		}
 
 		// Enqueue neccessary scripts and styles
-		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs', 'jquery-shake' ) );
 		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
+		wp_enqueue_script( 'jquery-shake', plugins_url( '/theme-my-login/admin/js/jquery.shake.js' ), array( 'jquery' ) );
+		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs', 'jquery-shake' ) );
 
 		// Set the correct admin style according to user setting (Only supports default admin schemes)
 		$admin_color = function_exists( 'get_user_meta' ) ? get_user_meta( $user_ID, 'admin_color' ) : get_usermeta( $user_ID, 'admin_color' );
