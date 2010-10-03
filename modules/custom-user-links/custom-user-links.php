@@ -32,12 +32,15 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 
 		$current_user = wp_get_current_user();
 
-		$links = $this->theme_my_login->options['user_links'][$current_user->roles[0]];
-		if ( !is_array( $links ) || empty( $links ) )
-			$links = array();
+		foreach( (array) $current_user->roles as $role ) {
+			if ( isset( $this->theme_my_login->options['user_links'][$role] ) ) {
+				$links = $this->theme_my_login->options['user_links'][$role];
+				break;
+			}
+		}
 
 		// Allow for user_id variable in link
-		foreach ( $links as $key => $link ) {
+		foreach ( (array) $links as $key => $link ) {
 			$links[$key]['url'] = str_replace( '%user_id%', $current_user->ID, $link['url'] );
 		}
 
