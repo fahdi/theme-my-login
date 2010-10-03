@@ -135,7 +135,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		$user = new WP_User( $user_id );
 
-		if ( 'pending' == $user->roles[0] ) {
+		if ( in_array( 'pending', (array) $user->roles ) ) {
 			// Apply activation e-mail filters
 			$this->apply_user_activation_notification_filters();
 			// Send activation e-mail
@@ -165,7 +165,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		global $wpdb;
 
 		if ( is_a( $user, 'WP_User' ) ) {
-			if ( 'pending' == $user->roles[0] ) {
+			if ( in_array( 'pending', (array) $user->roles ) ) {
 				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', $this->theme_my_login->textdomain ),
@@ -193,7 +193,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function allow_password_reset( $allow, $user_id ) {
 		$user = new WP_User( $user_id );
-		if ( 'pending' == $user->roles[0] )
+		if ( in_array( 'pending', (array) $user->roles ) )
 			$allow = false;
 		return $allow;
 	}

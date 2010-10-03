@@ -51,7 +51,13 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
-			$redirection = $this->theme_my_login->options['redirection'][$user->roles[0]];
+			$redirection = array();
+			foreach ( (array) $user->roles as $role ) {
+				if ( isset( $this->theme_my_login->options['redirection'][$role] ) ) {
+					$redirection = $this->theme_my_login->options['redirection'][$role];
+					break;
+				}
+			}
 			if ( 'referer' == $redirection['login_type'] ) {
 				// Send 'em back to the referer
 				$redirect_to = $http_referer;
@@ -98,7 +104,13 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
-			$redirection = $this->theme_my_login->options['redirection'][$user->roles[0]];
+			$redirection = array();
+			foreach ( (array) $user->roles as $role ) {
+				if ( isset( $this->theme_my_login->options['redirection'][$role] ) ) {
+					$redirection = $this->theme_my_login->options['redirection'][$role];
+					break;
+				}
+			}
 			if ( 'referer' == $redirection['logout_type'] ) {
 				// Send 'em back to the referer
 				$redirect_to = $http_referer;

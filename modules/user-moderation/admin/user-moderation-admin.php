@@ -102,7 +102,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	function user_row_actions( $actions, $user_object ) {
 		$current_user = wp_get_current_user();
 		if ( $current_user->ID != $user_object->ID ) {
-			if ( 'pending' == $user_object->roles[0] ) {
+			if ( in_array( 'pending', (array) $user_object->roles ) ) {
 				$_actions = array();
 				// If moderation type is e-mail activation, add "Resend Activation" link
 				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
@@ -187,7 +187,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		$user_id = (int) $user_id;
 
 		$user = new WP_User( $user_id );
-		if ( 'pending' != $user->roles[0] )
+		if ( in_array( 'pending', (array) $user->roles ) )
 			return;
 
 		do_action( 'deny_user', $user->ID );
