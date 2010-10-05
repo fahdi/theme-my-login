@@ -326,14 +326,14 @@ class Theme_My_Login_Template {
 	 * @access public
 	 */
 	function the_user_links() {
+		echo '<ul class="tml-user-links">';
 		if ( $user_links = $this->get_user_links() ) {
-			echo '<ul class="tml-user-links">';
 			foreach ( (array) $user_links as $link ) {
 				echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
 			}
-			echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out', $this->theme_my_login->textdomain ) . '</a></li>' . "\n";
-			echo '</ul>';
 		}
+		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out', $this->theme_my_login->textdomain ) . '</a></li>' . "\n";
+		echo '</ul>';
 	}
 
 	/**
