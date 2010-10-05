@@ -166,6 +166,8 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function the_request() {
+		global $action;
+
 		$errors =& $this->errors;
 		$action =& $this->request_action;
 		$instance =& $this->request_instance;
