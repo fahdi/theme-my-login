@@ -192,7 +192,7 @@ class Theme_My_Login_Debug {
 }
 
 if ( function_exists( 'memory_get_usage' ) )
-	$Theme_My_Login_Debug =& new Theme_My_Login_Debug();
+	$theme_my_login_debug =& new Theme_My_Login_Debug();
 	
 endif; // Class exists
 
