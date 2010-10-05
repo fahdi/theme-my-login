@@ -57,7 +57,7 @@ require_once( TML_ABSPATH . '/includes/class-theme-my-login-widget.php' );
  * @global object $theme_my_login_object
  * @since 6.0
  */
-$GLOBALS['theme_my_login_object'] =& new Theme_My_Login();
+$theme_my_login_object =& new Theme_My_Login();
 
 /**
  * Holds the reference to @see $theme_my_login_object
@@ -65,10 +65,10 @@ $GLOBALS['theme_my_login_object'] =& new Theme_My_Login();
  * @global object $theme_my_login
  * @since 1.0
  */
-$GLOBALS['theme_my_login'] =& $GLOBALS['theme_my_login_object'];
+$theme_my_login =& $theme_my_login_object;
 
 // Load active modules
-foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
+foreach ( $theme_my_login->get_active_and_valid_modules() as $module )
 	include_once( $module );
 unset( $module );
 
@@ -81,7 +81,7 @@ if ( is_admin() ) {
 	 * @global object $theme_my_login_admin
 	 * @since 6.0
 	 */
-	$GLOBALS['theme_my_login_admin'] =& new Theme_My_Login_Admin();
+	$theme_my_login_admin =& new Theme_My_Login_Admin();
 }
 
 if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
