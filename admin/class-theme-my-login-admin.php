@@ -568,8 +568,12 @@ class Theme_My_Login_Admin {
 		// Get existing page ID
 		$page_id = $theme_my_login->get_option( 'page_id' );
 
+		// Check if page exists
+		if ( !$page = get_page( $page_id ) )
+			$page = get_page_by_title( 'Login' );
+
 		// Maybe create login page?
-		if ( ( $page_id && $page = get_page( $page_id ) ) || $page = get_page_by_title( 'Login' ) ) {
+		if ( $page ) {
 			$page_id = $page->ID;
 			// Make sure the page is not in the trash
 			if ( 'trash' == $page->post_status )
@@ -661,8 +665,10 @@ class Theme_My_Login_Admin {
  */
 function theme_my_login_install() {
 	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
-	if ( is_object( $theme_my_login_admin ) )
-		$theme_my_login_admin->install();
+	if ( !is_object( $theme_my_login_admin ) )
+		$theme_my_login_admin =& new Theme_My_Login_Admin();
+
+	$theme_my_login_admin->install();
 }
 register_activation_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_install' );
 
@@ -675,8 +681,10 @@ register_activation_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_i
  */
 function theme_my_login_uninstall() {
 	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
-	if ( is_object( $theme_my_login_admin ) )
-		$theme_my_login_admin->uninstall();
+	if ( !is_object( $theme_my_login_admin ) )
+		$theme_my_login_admin =& new Theme_My_Login_Admin();
+
+	$theme_my_login_admin->uninstall();
 }
 register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_uninstall' );
 
