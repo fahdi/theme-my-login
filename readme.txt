@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 2.8
 Tested up to: 3.0.1
-Stable tag: 6.0.1
+Stable tag: 6.0.2
 
 Themes the WordPress login pages according to your theme.
 
@@ -39,6 +39,10 @@ Please visit http://www.jfarthing.com/support if you have any questions, concern
 
 
 == Changelog ==
+
+= 6.0.2 =
+* Fix Login page creation during install
+* Fix template tag argument parsing
 
 = 6.0.1 =
 * Fix logout link for wp_nav_menu()
