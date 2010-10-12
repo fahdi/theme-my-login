@@ -49,9 +49,12 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		if ( !$http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
 
+		// Remove some arguments that may be present and shouldn't be
+		$http_referer = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth' ), $http_referer );
+
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
-			$redirection = array();
+			$redirection = array( 'login_type' => 'default' );
 			foreach ( (array) $user->roles as $role ) {
 				if ( isset( $this->theme_my_login->options['redirection'][$role] ) ) {
 					$redirection = $this->theme_my_login->options['redirection'][$role];
@@ -99,6 +102,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		// Determine the correct referer
 		if ( !$http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
+
 		// Remove some arguments that may be present and shouldn't be
 		$http_referer = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce' ), $http_referer );
 
