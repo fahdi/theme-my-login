@@ -459,7 +459,7 @@ class Theme_My_Login_Template {
 	 * @access public
 	 */
 	function the_redirect_url() {
-		echo esc_url( $this->get_redirect_url() );
+		echo esc_attr( $this->get_redirect_url() );
 	}
 
 	/**
