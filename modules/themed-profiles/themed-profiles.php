@@ -40,14 +40,27 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function template_redirect() {
-		if ( $this->theme_my_login->is_login_page() && is_user_logged_in() && !( isset( $_REQUEST['action'] ) && in_array($_REQUEST['action'], array( 'profile', 'logout' ) ) ) ){
-			$redirect_to = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link() );
-			wp_redirect( $redirect_to );
-			exit();
-		} elseif ( $this->theme_my_login->is_login_page() && ( isset( $_REQUEST['action'] ) && 'profile' == $_REQUEST['action'] ) && isset( $_REQUEST['instance'] ) ) {
-			$redirect_to = remove_query_arg( array( 'instance' ) );
-			wp_redirect( $redirect_to );
-			exit();
+		$theme_my_login =& $this->theme_my_login;
+
+		if ( $theme_my_login->is_login_page() ) {
+			if ( 'profile' == $theme_my_login->request_action ) {
+				if ( !is_user_logged_in() ) {
+					// Redirect to login page if not logged in
+					$redirect_to = $theme_my_login->get_login_page_link();
+					wp_redirect( $redirect_to );
+					exit();
+				} elseif ( $theme_my_login->request_instance ) {
+					// Remove instance if instance requested
+					$redirect_to = remove_query_arg( array( 'instance' ) );
+					wp_redirect( $redirect_to );
+					exit();
+				}
+			} elseif ( is_user_logged_in() && 'logout' != $theme_my_login->request_action ) {
+				// Redirect to profile if trying to access login page while logged in
+				$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
+				wp_redirect( $redirect_to );
+				exit();
+			}
 		}
 	}
 
