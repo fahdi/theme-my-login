@@ -46,7 +46,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			if ( 'profile' == $theme_my_login->request_action ) {
 				if ( !is_user_logged_in() ) {
 					// Redirect to login page if not logged in
-					$redirect_to = $theme_my_login->get_login_page_link();
+					$redirect_to = add_query_arg( 'reauth', 1, $theme_my_login->get_login_page_link() );
 					wp_redirect( $redirect_to );
 					exit();
 				} elseif ( $theme_my_login->request_instance ) {
