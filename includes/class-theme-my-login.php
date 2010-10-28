@@ -337,6 +337,8 @@ class Theme_My_Login {
 						$errors->add( 'registered', __( 'Registration complete. Please check your e-mail.', $this->textdomain ), 'message' );
 					elseif	( $interim_login )
 						$errors->add( 'expired', __( 'Your session has expired. Please log-in again.', $this->textdomain ), 'message' );
+					elseif	( $reauth )
+						$errors->add( 'reauth', __( 'Please log in to continue.', $this->textdomain ), 'message' );
 
 					// Clear any stale cookies.
 					if ( $reauth )
