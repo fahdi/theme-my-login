@@ -572,7 +572,8 @@ class Theme_My_Login {
 	 * @return string The modified URL
 	 */
 	function site_url( $url, $path, $orig_scheme ) {
-		if ( strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
+		global $pagenow;
+		if ( 'wp-login.php' != $pagenow && strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
 			$parsed_url = parse_url( $url );
 			$url = $this->get_login_page_link();
 			if ( 'https' == strtolower( $orig_scheme ) )
