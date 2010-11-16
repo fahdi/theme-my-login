@@ -21,8 +21,8 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 */
 	function save_settings( $settings ) {
 		// Checkboxes
-		$settings['email']['new_user']['admin_disable'] = empty( $settings['email']['new_user']['admin_disable'] ) ? 0 : 1;
-		$settings['email']['reset_pass']['admin_disable'] = empty( $settings['email']['reset_pass']['admin_disable'] ) ? 0 : 1;
+		$settings['email']['new_user']['admin_disable'] = isset( $_POST['theme_my_login']['email']['new_user']['admin_disable'] );
+		$settings['email']['reset_pass']['admin_disable'] = isset( $_POST['theme_my_login']['email']['reset_pass']['admin_disable'] );
 		return $settings;
 	}
 
