@@ -124,6 +124,11 @@ class Theme_My_Login {
 		add_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
 
+		// Re-load options on switch_to_blog()
+		add_action( 'switch_blog', array( &$this, 'load_options' ) );
+		// Activate on new multisite blog registration
+		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ) );
+
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
 	}
 
@@ -863,6 +868,25 @@ if(typeof wpOnload=='function')wpOnload()
 				$user_login = $found;
 		}
 		return;
+	}
+
+	/**
+	 * Activates plugin for new multisite blogs
+	 *
+	 * @since 6.1
+	 * @access public
+	 */
+	function wpmu_new_blog( $blog_id ) {
+		global $wpdb;
+		require_once ( ABSPATH . '/wp-admin/includes/plugin.php' );
+		if ( is_plugin_active_for_network( 'theme-my-login/theme-my-login.php' ) ) {
+			require_once( TML_ABSPATH . '/admin/class-theme-my-login-admin.php' );
+			$admin =& new Theme_My_Login_Admin();
+			switch_to_blog( $blog_id );
+			$admin->_install();
+			restore_current_blog();
+			unset( $admin );
+		}
 	}
 
 	/**

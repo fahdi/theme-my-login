@@ -675,16 +675,6 @@ class Theme_My_Login_Admin {
 		delete_option( 'widget_' . $theme_my_login->options_key );
 	}
 
-	function new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-		global $wpdb;
-	 
-		if ( is_plugin_active_for_network( TML_ABSPATH . '/theme-my-login.php' ) ) {
-			switch_to_blog( $blog_id );
-			$this->install();
-			restore_current_blog();
-		}
-	}
-
 	/**
 	 * PHP4 style constructor
 	 *
