@@ -102,7 +102,7 @@ class Theme_My_Login {
 		// Re-load options after modules loaded so that modules can hook into "tml_init_options"
 		//add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 1 );
 
-		add_action( 'parse_request', array( &$this, 'the_request' ) );
+		add_action( 'parse_request', array( &$this, 'parse_request' ) );
 
 		add_action( 'init', array( &$this, 'init' ) );
 
@@ -165,7 +165,7 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_request() {
+	function parse_request() {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
 		$instance =& $this->request_instance;
