@@ -541,12 +541,35 @@ class Theme_My_Login_Admin {
 	}
 
 	/**
-	 * Installs TML
+	 * Wrapper for multisite installation
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
 	 */
 	function install() {
+		global $wpdb;
+
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
+				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
+				foreach ( $blogids as $blog_id ) {
+					switch_to_blog( $blog_id );
+					$this->_install();
+				}
+				restore_current_blog();
+			}	
+		} else {
+			$this->_install();
+		}
+	}
+
+	/**
+	 * Installs TML
+	 *
+	 * @since 6.0
+	 * @access private
+	 */
+	function _install() {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
 
@@ -597,12 +620,35 @@ class Theme_My_Login_Admin {
 	}
 
 	/**
-	 * Uninstalls TML
+	 * Wrapper for multisite uninstallation
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
 	 */
 	function uninstall() {
+		global $wpdb;
+
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
+				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
+				foreach ( $blogids as $blog_id ) {
+					switch_to_blog( $blog_id );
+					$this->_uninstall();
+				}
+				restore_current_blog();
+			}	
+		} else {
+			$this->_uninstall();
+		}
+	}
+
+	/**
+	 * Uninstalls TML
+	 *
+	 * @since 6.0
+	 * @access private
+	 */
+	function _uninstall() {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
 
@@ -627,6 +673,16 @@ class Theme_My_Login_Admin {
 		// Delete options
 		delete_option( $theme_my_login->options_key );
 		delete_option( 'widget_' . $theme_my_login->options_key );
+	}
+
+	function new_blog( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+		global $wpdb;
+	 
+		if ( is_plugin_active_for_network( TML_ABSPATH . '/theme-my-login.php' ) ) {
+			switch_to_blog( $blog_id );
+			$this->install();
+			restore_current_blog();
+		}
 	}
 
 	/**
