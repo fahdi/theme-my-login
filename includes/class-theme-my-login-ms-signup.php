@@ -54,12 +54,17 @@ class Theme_My_Login_MS_Signup {
 
 		require_once( ABSPATH . WPINC . '/registration.php' );
 
+		if ( is_array( get_site_option( 'illegal_names' )) && isset( $_GET[ 'new' ] ) && in_array( $_GET[ 'new' ], get_site_option( 'illegal_names' ) ) == true ) {
+			wp_redirect( network_home_url() );
+			exit;
+		}
+
 		if ( !is_main_site() ) {
 			switch_to_blog( $current_site->blog_id );
 			$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'register' ) );
 			restore_current_blog();
 			wp_redirect( $redirect_to );
-			exit();
+			exit;
 		}
 	}
 
