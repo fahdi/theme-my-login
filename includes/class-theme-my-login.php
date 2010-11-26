@@ -240,12 +240,6 @@ class Theme_My_Login {
 					exit();
 					break;
 				case 'register' :
-					if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-						// Multisite uses wp-signup.php
-						wp_redirect( apply_filters( 'wp_signup_location', get_bloginfo('wpurl') . '/wp-signup.php' ) );
-						exit;
-					}
-
 					if ( !get_option( 'users_can_register' ) ) {
 						wp_redirect( $this->get_current_url( 'registration=disabled' ) );
 						exit();
