@@ -1,25 +1,74 @@
 .login {
-    padding: 5px;
-    }
-    
+	padding: 5px;
+}
+
 .login p.error {
-    padding: 5px;
-    border: 1px solid #c00;
-    background-color: #ffebe8;
-    color: #333;
-    }
+	padding: 5px;
+	border: 1px solid #c00;
+	background-color: #ffebe8;
+	color: #333;
+}
 
 .login p.message {
-    padding: 5px;
-    border: 1px solid #e6db55;
-    background-color: #ffffe0;
-    color: #333;
-    }
-    
+	padding: 5px;
+	border: 1px solid #e6db55;
+	background-color: #ffffe0;
+	color: #333;
+}
+
 .login form label {
-    display: block;
-    }
-    
+	display: block;
+}
+
 .login form p.forgetmenot label {
-    display: inline;
-    }
+	display: inline;
+}
+
+.mu_register {
+	width: 90%;
+	margin:0 auto;
+}
+
+.mu_register form {
+	margin-top: 2em;
+}
+
+.mu_register input {
+	margin: 5px 0;
+}
+
+.mu_register input[type="submit"],
+.mu_register #blog_title,
+.mu_register #user_email,
+.mu_register #blogname,
+.mu_register #user_name {
+	width: 100%;
+	font-size: 24px;
+	margin: 5px 0;
+}
+
+.mu_register .prefix_address,
+.mu_register .suffix_address {
+	font-size: 18px;
+	display: inline;
+}
+
+.mu_register label {
+	font-weight: 700;
+	font-size: 15px;
+	display: block;
+	margin: 10px 0;
+	color: #333;
+}
+
+.mu_register label.checkbox {
+	display:inline;
+}
+
+.mu_register .mu_alert {
+	font-weight: 700;
+	padding: 10px;
+	color: #333333;
+	background: #ffffe0;
+	border: 1px solid #e6db55;
+}
