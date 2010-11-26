@@ -84,6 +84,16 @@ if ( is_admin() ) {
 	$GLOBALS['theme_my_login_admin'] =& new Theme_My_Login_Admin();
 }
 
+if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+	require_once( TML_ABSPATH . '/includes/class-theme-my-login-ms-signup.php' );
+	/**
+	 * Theme My Login MS Signup object
+	 * @global object $theme_my_login_ms_signup
+	 * @since 6.1
+	 */
+	$GLOBALS['theme_my_login_ms_signup'] =& new Theme_My_Login_MS_Signup();
+}
+
 if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
 	include_once( TML_ABSPATH . '/includes/class-theme-my-login-debug.php' );
 
