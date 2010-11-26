@@ -42,8 +42,7 @@ class Theme_My_Login_MS_Signup {
 	 * @access public
 	 */
 	function __construct() {
-		if ( isset( $_REQUEST['action'] ) && 'register' == $_REQUEST['action'] )
-			add_action( 'wp_head', array( &$this, 'wp_head' ) );
+		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		add_action( 'tml_request_register', array( &$this, 'request' ) );
 		add_action( 'tml_display_register', array( &$this, 'display' ) );
 	}
@@ -51,7 +50,7 @@ class Theme_My_Login_MS_Signup {
 	function request( &$theme_my_login ) {
 		global $current_site;
 
-		$this->theme_my_login =& $theme_my_login;
+		add_action( 'wp_head', array( &$this, 'wp_head' ) );
 
 		require_once( ABSPATH . WPINC . '/registration.php' );
 
