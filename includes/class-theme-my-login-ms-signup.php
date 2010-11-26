@@ -65,7 +65,7 @@ class Theme_My_Login_MS_Signup {
 	}
 
 	function display( &$template ) {
-		global $wpdb, $blogname, $blog_title, $errors, $domain, $path;
+		global $wpdb, $blogname, $blog_title, $domain, $path;
 
 		$this->theme_my_login_template =& $template;
 
@@ -108,13 +108,13 @@ class Theme_My_Login_MS_Signup {
 						$theme_my_login->errors = $errors;
 
 						if ( $errors->get_error_code() ) {
-							$this->signup_user( $user_name, $user_email, $errors );
-							return false;
+							$this->signup_user( $user_name, $user_email );
+							break;
 						}
 
 						if ( 'blog' == $_POST['signup_for'] ) {
 							$this->signup_blog( $user_name, $user_email );
-							return false;
+							break;
 						}
 
 						wpmu_signup_user( $user_name, $user_email, apply_filters( 'add_signup_meta', array() ) );
@@ -137,16 +137,16 @@ class Theme_My_Login_MS_Signup {
 						extract( $result );
 
 						if ( $errors->get_error_code() ) {
-							$this->signup_user( $user_name, $user_email, $errors );
-							return false;
+							$this->signup_user( $user_name, $user_email );
+							break;
 						}
 
 						$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'] );
 						extract( $result );
 
 						if ( $errors->get_error_code() ) {
-							$this->signup_blog( $user_name, $user_email, $blogname, $blog_title, $errors );
-							return false;
+							$this->signup_blog( $user_name, $user_email, $blogname, $blog_title );
+							break;
 						}
 
 						$public = (int) $_POST['blog_public'];
@@ -184,8 +184,8 @@ class Theme_My_Login_MS_Signup {
 					extract( $result );
 
 					if ( $errors->get_error_code() ) {
-						$this->signup_another_blog( $blogname, $blog_title, $errors );
-						return false;
+						$this->signup_another_blog( $blogname, $blog_title );
+						break;
 					}
 
 					$public = (int) $_POST['blog_public'];
@@ -241,13 +241,15 @@ class Theme_My_Login_MS_Signup {
 
 		$template =& $this->theme_my_login_template;
 
-		if ( isset( $_POST['signup_for'] ) )
-			$signup[esc_html( $_POST['signup_for'] )] = 'checked="checked"';
-		else
-			$signup['blog'] = 'checked="checked"';
+		$active_signup = get_site_option( 'registration' );
+		if ( !$active_signup )
+			$active_signup = 'all';
+
+		$active_signup = apply_filters( 'wpmu_active_signup', $active_signup ); // return "all", "none", "blog" or "user"
 
 		// allow definition of default variables
 		$filtered_results = apply_filters( 'signup_user_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'errors' => $this->theme_my_login->errors ) );
+		$filtered_results['active_signup'] = $active_signup;
 
 		if ( !empty( $this->theme_my_login_template->options['ms_signup_user_template'] ) )
 			$templates[] = $this->theme_my_login_template->options['ms_signup_user_template'];
