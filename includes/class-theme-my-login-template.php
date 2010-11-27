@@ -390,11 +390,12 @@ class Theme_My_Login_Template {
 	 * @access public
 	 *
 	 * @param string|array $template_names The template(s) to locate
+	 * @param string $template_path Directory of default template
 	 * @param bool $load If true, the template will be included if found
 	 * @param array $args Array of extra variables to make available to template
 	 * @return string|bool Template path if found, false if not
 	 */
-	function get_template( $template_names, $load = true, $args = array() ) {
+	function get_template( $template_names, $template_path = '', $load = true, $args = array() ) {
 		// Shothand reference to this
 		$template =& $this;
 
@@ -404,27 +405,30 @@ class Theme_My_Login_Template {
 		// Easy access to current user
 		$current_user = wp_get_current_user();
 
+		if ( empty( $template_path ) )
+			$template_path = TML_ABSPATH . '/templates';
+
 		extract( apply_filters_ref_array( 'tml_template_args', array( $args, &$this ) ) );
 
 		if ( !is_array( $template_names ) )
 			$template_names = array( $template_names );
 
-		if ( !$template_path = locate_template( $template_names ) ) {
+		if ( !$found_template = locate_template( $template_names ) ) {
 			foreach ( $template_names as $template_name ) {
-				if ( file_exists( TML_ABSPATH . '/templates/' . $template_name ) ) {
-					$template_path = TML_ABSPATH . '/templates/' . $template_name;
+				if ( file_exists( rtrim( $template_path, '/' ) . '/' . $template_name ) ) {
+					$found_template = rtrim( $template_path, '/' ) . '/' . $template_name;
 					break;
 				}
 			}
 		}
 
-		$template_path = apply_filters_ref_array( 'tml_template', array( $template_path, $template_names, &$this ) );
+		$found_template = apply_filters_ref_array( 'tml_template', array( $found_template, $template_names, $template_path, &$this ) );
 
-		if ( $load && $template_path ) {
-			include( $template_path );
+		if ( $load && $found_template ) {
+			include( $found_template );
 		}
 
-		return $template_path;
+		return $found_template;
 	}
 
 	/**
