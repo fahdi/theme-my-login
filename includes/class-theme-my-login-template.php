@@ -119,7 +119,7 @@ class Theme_My_Login_Template {
 		echo $this->options['after_widget'] . "\n";
 		$output = ob_get_contents();
 		ob_end_clean();
-		return apply_filters( 'tml_display', $output, $this->options );
+		return apply_filters_ref_array( 'tml_display', array( $output, $action, &$this ) );
 	}
 
 	/**
@@ -249,7 +249,7 @@ class Theme_My_Login_Template {
 		if ( 'login' == $action && force_ssl_login() )
 			$url = preg_replace( '|^http://|', 'https://', $url );
 
-		return apply_filters( 'tml_action_url', $url, $action );
+		return apply_filters( 'tml_action_url', $url, $action, $instance );
 	}
 
 	/**
@@ -282,7 +282,7 @@ class Theme_My_Login_Template {
 			$action_links[] = array( 'title' => $this->get_title( 'register' ), 'url' => $this->get_action_url( 'register' ) );
 		if ( $args['lostpassword'] && $this->options['show_pass_link'] )
 			$action_links[] = array( 'title' => $this->get_title( 'lostpassword' ), 'url' => $this->get_action_url( 'lostpassword' ) );
-		return apply_filters( 'tml_action_links', $action_links );
+		return apply_filters( 'tml_action_links', $action_links, $args );
 	}
 
 	/**
@@ -418,7 +418,7 @@ class Theme_My_Login_Template {
 			}
 		}
 
-		$template_path = apply_filters( 'tml_template', $template_path );
+		$template_path = apply_filters_ref_array( 'tml_template', array( $template_path, $template_names, &$this ) );
 
 		if ( $load && $template_path ) {
 			include( $template_path );
