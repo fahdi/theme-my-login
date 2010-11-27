@@ -395,16 +395,16 @@ class Theme_My_Login_Template {
 	 * @return string|bool Template path if found, false if not
 	 */
 	function get_template( $template_names, $load = true, $args = array() ) {
-		global $current_site;
-
 		// Shothand reference to this
 		$template =& $this;
+
 		// Shorthand reference to $theme_my_login
 		$theme_my_login =& $this->theme_my_login;
+
 		// Easy access to current user
 		$current_user = wp_get_current_user();
 
-		extract( $args );
+		extract( apply_filters_ref_array( 'tml_template_args', array( $args, &$this ) ) );
 
 		if ( !is_array( $template_names ) )
 			$template_names = array( $template_names );
