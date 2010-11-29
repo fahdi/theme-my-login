@@ -554,6 +554,9 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		// Allow %user_ip% variable
 		$replacements['%user_ip%'] = $_SERVER['REMOTE_ADDR'];
 
+		// Allow replacements to be filtered
+		$replacements = apply_filters( 'tml_custom_email_variables', $replacements, $user_id );
+
 		// Iterate through matches
 		foreach ( $matches[0] as $key => $match ) {
 			if ( !isset( $replacements[$match] ) ) {	
@@ -563,6 +566,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 					$replacements[$match] = get_bloginfo( $matches[1][$key] ); // Replacement from get_bloginfo()
 			}
 		}
+
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $input );
 	}
 
