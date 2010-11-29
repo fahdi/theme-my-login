@@ -143,8 +143,10 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		// Clear the activation key if there is one
 		$wpdb->update( $wpdb->users, array( 'user_activation_key' => '' ), array( 'ID' => $user->ID ) );
 
+		$approval_role = apply_filters( 'tml_approval_role', get_option( 'default_role' ) );
+
 		$user_object = new WP_User( $user->ID );
-		$user_object->set_role( get_option( 'default_role' ) );
+		$user_object->set_role( $approval_role );
 		unset( $user_object );
 
 		$user_pass = __( 'Same as when you signed up.', $this->theme_my_login->textdomain );
