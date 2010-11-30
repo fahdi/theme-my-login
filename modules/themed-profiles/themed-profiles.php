@@ -160,7 +160,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function site_url( $url, $path, $orig_scheme = '' ) {
 		if ( strpos( $url, 'profile.php' ) !== false ) {
 			$parsed_url = parse_url( $url );
-			$url = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link( '', true ) );
+			$url = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link() );
 			if ( isset( $parsed_url['query'] ) ) {
 				wp_parse_str( $parsed_url['query'], $r );
 				foreach ( $r as $k => $v ) {
