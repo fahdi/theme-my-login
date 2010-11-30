@@ -592,8 +592,7 @@ class Theme_My_Login_Admin {
 		$page_id = $theme_my_login->get_option( 'page_id' );
 
 		// Check if page exists
-		if ( !$page = get_page( $page_id ) )
-			$page = get_page_by_title( 'Login' );
+		$page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
 
 		// Maybe create login page?
 		if ( $page ) {
@@ -616,7 +615,9 @@ class Theme_My_Login_Admin {
 		$plugin_data = get_plugin_data( TML_ABSPATH . '/theme-my-login.php' );
 		$theme_my_login->set_option( 'version', $plugin_data['Version'] );
 		$theme_my_login->set_option( 'page_id', (int) $page_id );
-		return $theme_my_login->save_options();
+		$theme_my_login->save_options();
+
+		return $page_id;
 	}
 
 	/**
