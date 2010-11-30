@@ -17,18 +17,25 @@ class Theme_My_Login_MS_Signup {
 	/**
 	 * Holds reference to global $theme_my_login object
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
 	 * @var object
 	 */
 	var $theme_my_login;
 
+	/**
+	 * Holds reference to global $theme_my_login_template object
+	 *
+	 * @since 6.1
+	 * @access public
+	 * @var object
+	 */
 	var $theme_my_login_template;
 
 	/**
 	 * PHP4 style constructor
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
 	 */
 	function Theme_My_Login_MS_Signup() {
@@ -38,19 +45,41 @@ class Theme_My_Login_MS_Signup {
 	/**
 	 * PHP5 style constructor
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
 	 */
 	function __construct() {
-		$this->theme_my_login =& $GLOBALS['theme_my_login'];
-		add_action( 'tml_request_register', array( &$this, 'request' ) );
-		add_action( 'tml_display_register', array( &$this, 'display' ) );
+		global $theme_my_login;
+
+		$this->theme_my_login =& $theme_my_login;
+
+		add_action( 'tml_request_register', array( &$this, 'tml_request_register' ) );
+		add_action( 'tml_request_activate', array( &$this, 'tml_request_activate' ) );
+		add_action( 'tml_display_register', array( &$this, 'tml_display_register' ) );
+		add_action( 'tml_display_activate', array( &$this, 'tml_display_activate' ) );
+		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
+
+		add_action( 'switch_blog', array( &$theme_my_login, 'load_options' ) );
+		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 10, 2 );
+
+		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
+		add_filter( 'network_site_url', array( &$this, 'site_url' ), 10, 3 );
+
+		add_filter( 'clean_url', array( &$this, 'clean_url' ), 10, 3 );
 	}
 
-	function request( &$theme_my_login ) {
+	/**
+	 * Handles register action
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $theme_my_login Theme_My_Login object
+	 */
+	function tml_request_register( &$theme_my_login ) {
 		global $current_site;
 
-		add_action( 'wp_head', array( &$this, 'wp_head' ) );
+		add_action( 'wp_head', array( &$this, 'signup_header' ) );
 
 		require_once( ABSPATH . WPINC . '/registration.php' );
 
@@ -68,7 +97,15 @@ class Theme_My_Login_MS_Signup {
 		}
 	}
 
-	function display( &$template ) {
+	/**
+	 * Displays the registration page
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $template Theme_My_Login_Template object
+	 */
+	function tml_display_register( &$template ) {
 		global $wpdb, $blogname, $blog_title, $domain, $path;
 
 		$this->theme_my_login_template =& $template;
@@ -235,11 +272,26 @@ class Theme_My_Login_MS_Signup {
 		do_action( 'after_signup_form' );
 	}
 
-	function wp_head() {
+	/**
+	 * Fires WP signup hooks
+	 *
+	 * @since 6.1
+	 * @access public
+	 */
+	function signup_header() {
 		do_action( 'signup_header' );
 		echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 	}
 
+	/**
+	 * Processes/displays user signup form
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param string $user_name The posted username
+	 * @param string $user_email The posted user e-mail
+	 */
 	function signup_user( $user_name = '', $user_email = '' ) {
 		global $current_site;
 
@@ -253,15 +305,25 @@ class Theme_My_Login_MS_Signup {
 
 		// allow definition of default variables
 		$filtered_results = apply_filters( 'signup_user_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'errors' => $this->theme_my_login->errors ) );
-		$filtered_results['active_signup'] = $active_signup;
 
 		if ( !empty( $this->theme_my_login_template->options['ms_signup_user_template'] ) )
 			$templates[] = $this->theme_my_login_template->options['ms_signup_user_template'];
 		$templates[] = 'ms-signup-user-form.php';
 
-		$template->get_template( $templates, true, $filtered_results );
+		$template->get_template( $templates, '', true, array_merge( $filtered_results, compact( 'active_signup', 'current_site' ) ) );
 	}
 
+	/**
+	 * Processes/displays blog signup form
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param string $user_name The posted username
+	 * @param string $user_email The posted user e-mail
+	 * @param string $blogname The posted blog name
+	 * @param string $blog_title The posted blog title
+	 */
 	function signup_blog( $user_name = '', $user_email = '', $blogname = '', $blog_title = '' ) {
 		global $current_site;
 
@@ -277,9 +339,18 @@ class Theme_My_Login_MS_Signup {
 			$templates[] = $this->theme_my_login_template->options['ms_signup_blog_template'];
 		$templates[] = 'ms-signup-blog-form.php';
 
-		$template->get_template( $templates, true, $filtered_results );
+		$template->get_template( $templates, '', true, array_merge( $filtered_results, compact( 'current_site' ) ) );
 	}
 
+	/**
+	 * Processes/displays another blog signup form
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param string $blogname The posted blog name
+	 * @param string $blog_title The posted blog title
+	 */
 	function signup_another_blog( $blogname = '', $blog_title = '' ) {
 		global $current_site;
 
@@ -292,7 +363,207 @@ class Theme_My_Login_MS_Signup {
 			$templates[] = $this->theme_my_login_template->options['ms_signup_another_blog_template'];
 		$templates[] = 'ms-signup-another-blog-form.php';
 
-		$template->get_template( $templates, true, $filtered_results );
+		$template->get_template( $templates, '', true, array_merge( $filtered_results, compact( 'current_site' ) ) );
+	}
+
+	/**
+	 * Handles activation action
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $theme_my_login Theme_My_Login object
+	 */
+	function tml_request_activate( &$theme_my_login ) {
+		global $current_site;
+
+		add_action( 'wp_head', array( &$this, 'activate_header' ) );
+
+		require_once( ABSPATH . WPINC . '/registration.php' );
+	}
+
+	/**
+	 * Outputs the activation page
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $template Theme_My_Login_Template object
+	 */
+	function tml_display_activate( &$template ) {
+		echo '<div class="login" id="theme-my-login' . esc_attr( $template->instance ) . '">';
+
+		if ( empty( $_GET['key'] ) && empty( $_POST['key'] ) ) { ?>
+
+			<h2><?php _e( 'Activation Key Required', $this->theme_my_login->textdomain ) ?></h2>
+			<form name="activateform" id="activateform" method="post" action="<?php $template->the_action_url( 'activate' ); ?>">
+				<p>
+					<label for="key<?php $template->the_instance(); ?>"><?php _e( 'Activation Key:', $this->theme_my_login->textdomain ) ?></label>
+					<br /><input type="text" name="key<?php $template->the_instance(); ?>" id="key" value="" size="50" />
+				</p>
+				<p class="submit">
+					<input id="submit<?php $template->the_instance(); ?>" type="submit" name="Submit" class="submit" value="<?php esc_attr_e( 'Activate', $this->theme_my_login->textdomain ) ?>" />
+				</p>
+			</form>
+
+		<?php } else {
+
+			$key = !empty( $_GET['key'] ) ? $_GET['key'] : $_POST['key'];
+			$result = wpmu_activate_signup( $key );
+			if ( is_wp_error( $result ) ) {
+				if ( 'already_active' == $result->get_error_code() || 'blog_taken' == $result->get_error_code() ) {
+					$signup = $result->get_error_data();
+					?>
+					<h2><?php _e( 'Your account is now active!', $this->theme_my_login->textdomain ); ?></h2>
+					<?php
+					echo '<p class="lead-in">';
+					if ( $signup->domain . $signup->path == '' ) {
+						printf( __( 'Your account has been activated. You may now <a href="%1$s">login</a> to the site using your chosen username of &#8220;%2$s&#8221;.  Please check your email inbox at %3$s for your password and login instructions. If you do not receive an email, please check your junk or spam folder. If you still do not receive an email within an hour, you can <a href="%4$s">reset your password</a>.', $this->theme_my_login->textdomain ), network_site_url( 'wp-login.php', 'login' ), $signup->user_login, $signup->user_email, network_site_url( 'wp-login.php?action=lostpassword', 'login' ) );
+					} else {
+						printf( __( 'Your site at <a href="%1$s">%2$s</a> is active. You may now log in to your site using your chosen username of &#8220;%3$s&#8221;.  Please check your email inbox at %4$s for your password and login instructions.  If you do not receive an email, please check your junk or spam folder.  If you still do not receive an email within an hour, you can <a href="%5$s">reset your password</a>.', $this->theme_my_login->textdomain ), 'http://' . $signup->domain, $signup->domain, $signup->user_login, $signup->user_email, network_site_url( 'wp-login.php?action=lostpassword' ) );
+					}
+					echo '</p>';
+				} else {
+					?>
+					<h2><?php _e( 'An error occurred during the activation', $this->theme_my_login->textdomain ); ?></h2>
+					<?php
+					echo '<p>' . $result->get_error_message() . '</p>';
+				}
+			} else {
+				extract( $result );
+				$url = get_blogaddress_by_id( (int) $blog_id );
+				$user = new WP_User( (int) $user_id );
+				?>
+				<h2><?php _e( 'Your account is now active!', $this->theme_my_login->textdomain ); ?></h2>
+
+				<div id="signup-welcome">
+					<p><span class="h3"><?php _e( 'Username:', $this->theme_my_login->textdomain ); ?></span> <?php echo $user->user_login ?></p>
+					<p><span class="h3"><?php _e( 'Password:', $this->theme_my_login->textdomain ); ?></span> <?php echo $password; ?></p>
+				</div>
+
+				<?php if ( $url != network_home_url( '', 'http' ) ) : switch_to_blog( (int) $blog_id );?>
+					<p class="view"><?php printf( __( 'Your account is now activated. <a href="%1$s">View your site</a> or <a href="%2$s">Login</a>', $this->theme_my_login->textdomain ), $url, wp_login_url() ); ?></p>
+				<?php restore_current_blog(); else: ?>
+					<p class="view"><?php printf( __( 'Your account is now activated. <a href="%1$s">Login</a> or go back to the <a href="%2$s">homepage</a>.', $this->theme_my_login->textdomain ), network_site_url( 'wp-login.php', 'login' ), network_home_url() ); ?></p>
+				<?php endif;
+			}
+		}
+		echo '</div>';
+	}
+
+	/**
+	 * Fires WP activation hooks
+	 *
+	 * @since 6.1
+	 * @access public
+	 */
+	function activate_header() {
+		do_action( 'activate_header' );
+		do_action( 'activate_wp_head' );
+	}
+
+	/**
+	 * Changes page title for activation action
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param string $title The page title
+	 * @param string $action The requested action
+	 * @return string The filtered title
+	 */
+	function tml_title( $title, $action ) {
+		if ( 'activate' == $action )
+			$title = __( 'Activate', $this->theme_my_login->textdomain );
+		return $title;
+	}
+
+	/**
+	 * Activates plugin for new multisite blogs
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param int $blog_id ID of new blog
+	 * @param int $user_id ID of blog owner
+	 */
+	function wpmu_new_blog( $blog_id, $user_id ) {
+		global $wpdb;
+		require_once ( ABSPATH . '/wp-admin/includes/plugin.php' );
+		if ( is_plugin_active_for_network( 'theme-my-login/theme-my-login.php' ) ) {
+			require_once( TML_ABSPATH . '/admin/class-theme-my-login-admin.php' );
+			switch_to_blog( $blog_id );
+			$admin =& new Theme_My_Login_Admin();
+			$page_id = $admin->_install();
+			$wpdb->update( $wpdb->posts, array( 'post_author' => $user_id ), array( 'ID' => $page_id ) );
+			restore_current_blog();
+		}
+	}
+
+	/**
+	 * Rewrites URL's containing wp-login.php created by site_url()
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param string $url The URL
+	 * @param string $path The path specified
+	 * @param string $orig_scheme The current connection scheme (HTTP/HTTPS)
+	 * @return string The modified URL
+	 */
+	function site_url( $url, $path, $orig_scheme ) {
+		global $pagenow;
+
+		// Check if URL contains wp-signup.php
+		$signup = strpos( $url, 'wp-signup.php' ) !== false;
+
+		// Check if URL contains wp-activate.php
+		$activate = strpos( $url, 'wp-activate.php' ) !== false;
+
+		if ( ( $signup && 'wp-signup.php' != $pagenow ) || ( $activate && 'wp-activate.php' != $pagenow ) ) {
+
+			// Parse the URL
+			$parsed_url = parse_url( $url );
+
+			// Determine which action to set
+			if ( $signup )
+				$query = array( 'action' => 'register' );
+			elseif ( $activate )
+				$query = array( 'action' => 'activate' );
+
+			// Extract the query string
+			if ( isset( $parsed_url['query'] ) ) {
+				wp_parse_str( $parsed_url['query'], $r );
+				foreach ( $r as $k => $v ) {
+					if ( strpos( $v, ' ' ) !== false )
+						$r[$k] = rawurlencode( $v );
+				}
+			}
+
+			// Merge query args passed in by filter
+			if ( isset( $r ) )
+				$query = array_merge( $query, (array) $r );
+
+			// Get the login page link along with the query
+			$url = $this->theme_my_login->get_login_page_link( $query );
+
+			// Check if HTTPS is needed
+			if ( 'https' == strtolower( $orig_scheme ) )
+				$url = preg_replace( '|^http://|', 'https://', $url );
+		}
+		return $url;
+	}
+
+	/**
+	 * Don't clean activate URL
+	 *
+	 * @since 6.1
+	 * @access public
+	 */
+	function clean_url( $url, $original_url, $context ) {
+		if ( strpos( $original_url, 'action=activate' ) !== false )
+			return $original_url;
+		return $url;
 	}
 }
 endif;
