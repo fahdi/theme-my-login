@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
 "POT-Creation-Date: 2010-10-03 19:07+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Jeff Farthing <jeff@jfarthing.com>\n"
+"Last-Translator: Michał Jankowski <jankowski.m@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,54 +22,55 @@ msgid "Theme My Login"
 msgstr "Theme My Login"
 
 #: admin/class-theme-my-login-admin.php:88
-#, php-format
+#, fuzzy, php-format
 msgid "ERROR: The module \"%1$s\" could not be activated (%2$s)."
-msgstr "BŁĄD: Moduł \"%1$s\"  nie może być aktywowany (%2$s)."
+msgstr "Błąd: Moduł \"$module\"  nie może być aktywowany (%s)."
 
 #: admin/class-theme-my-login-admin.php:108
 msgid "NOTICE:"
-msgstr "INFORMACJA:"
+msgstr "UWAGA"
 
 #: admin/class-theme-my-login-admin.php:109
 #, php-format
 msgid "Now that you have activated Theme My Login, please <a href=\"%s\">visit the settings page</a> and familiarize yourself with all of the available options."
-msgstr "Teraz, gdy już aktywowany został Theme My login, proszę <a href=\"%s\">odwiedź stronę ustawień</a> i zapoznanaj się z wszystkimi dostępnymi opcjami."
+msgstr "Aktywowałeś plugin Theme My Login, proszę odwiedź <a href=\"%s\">stronę ustawień</a> i zapoznaj się ze wszystkimi opcjami."
 
 #: admin/class-theme-my-login-admin.php:111
 msgid "Take me to the settings page"
-msgstr "Przenieś mnie do strony z ustawieniami"
+msgstr "Przejdź do strony ustawień"
 
 #: admin/class-theme-my-login-admin.php:124
 msgid "You can now login with your e-mail address or username! Try it out!"
-msgstr "Możesz teraz się zalogować używając adresu e-mail lub nazwy użytkownika! Spróbuj !"
+msgstr "Możesz logować się za pomocą adresu e-mail lub nazwy użytkownika! Wypróbuj to!"
 
 #: admin/class-theme-my-login-admin.php:125
 msgid "Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel=\"tml-options\" href=\"#tml-modules\">Click here</a> to get started with modules now."
-msgstr "Theme My Login teraz wykorzystuje system modułów. Moduły są podobne do wtyczek WordPress. Każdy moduł rozszerza funkcjonalność domyślnego Theme My Login. <a rel=\"tml-options\" href=\"#tml-modules\">Kliknij tutaj</a> aby zacząć korzystać z modułów."
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:126
 msgid "Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from \"theme-my-login/templates\" to your current theme directory. Try it out!"
-msgstr "Theme My Login pozwala teraz na tworzenie formularzy niestandardowych. Możesz stworzyć swój własny szablon formularza kopiując wersję domyślna  \"theme-my-login/templates\" do bieżącego katalogu z motywem. Wypróbuj!"
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:127
+#, fuzzy
 msgid "You can maintain your stylesheet changes between upgrades. Just simply copy the file \"theme-my-login/theme-my-login.css\" to your current theme directory and edit it as you please!"
-msgstr "Możesz zachować swoje zmiany stylów między aktualizacjami. Można zapisać ustawienia \"theme-my-login.css\" w obecnym katalogu szablonu."
+msgstr "W celu zachowania zmian między aktualizacjami, można zapisać ustawienia \"theme-my-login.css\" w obecnym katalogu szablonu."
 
 #: admin/class-theme-my-login-admin.php:128
 msgid "Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Documentation</a> for usage instructions."
-msgstr "Theme My Login zapewnia kody, które można używać w postach z wieloma parametrami, aby dostosować formularz. Odwiedź <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Documentation</a> aby zapoznać się z instrukcjami użytkowania."
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:129
 msgid "Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">donations</a>!"
-msgstr "Theme My Login jest <em>DARMOWY</em> ale Jeff z przyjemnością przyjmie <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">dotację</a>!"
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:130
 msgid "Jeff is <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">available for hire</a>!"
-msgstr "Jeff'a <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">można zatrudnić</a>!"
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:134
 msgid "Did You Know?"
-msgstr "Czy wiesz, że?"
+msgstr ""
 
 #: admin/class-theme-my-login-admin.php:175
 msgid "General"
@@ -86,7 +87,7 @@ msgstr "Moduły"
 
 #: admin/class-theme-my-login-admin.php:184
 msgid "Theme My Login Settings"
-msgstr "Theme My Login Ustawienia"
+msgstr "Ustawienia Theme My Login"
 
 #: admin/class-theme-my-login-admin.php:190
 #: admin/class-theme-my-login-admin.php:247
@@ -99,7 +100,7 @@ msgstr "ID Strony"
 
 #: admin/class-theme-my-login-admin.php:269
 msgid "This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled \"Login\"."
-msgstr "Tutaj powinien by ID strony w systemie Wordpress zawierajcy \"[theme-my-login]\". Domylnie (utworzona po instalacji) strona nazywa się \"Login\"."
+msgstr "Tutaj powinien być ID strony w systemie Wordpress zawierający \"[theme-my-login]\". Domyślnie (utworzona po instalacji) strona nazywa się \"Login\"."
 
 #: admin/class-theme-my-login-admin.php:273
 msgid "Pagelist"
@@ -107,11 +108,11 @@ msgstr "Lista Podstron"
 
 #: admin/class-theme-my-login-admin.php:276
 msgid "Show Page In Pagelist"
-msgstr "Pokazuj stronę na liście podstron"
+msgstr "Pokazuj na liście podstron"
 
 #: admin/class-theme-my-login-admin.php:277
 msgid "Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu()."
-msgstr "Włącz tę opcję, aby dodać linki zaloguj/wyloguj do listy podstron automatycznie generowanych w twoim szablonie poprzez funkcje wp_list_pages() oraz wp_page_menu()."
+msgstr "Włącz tą opcję, aby dodać linki zaloguj/wyloguj do listy podstron automatycznie generowanych w twoim szablonie poprzez funkcje wp_list_pages() oraz wp_page_menu()."
 
 #: admin/class-theme-my-login-admin.php:281
 msgid "Stylesheet"
@@ -123,7 +124,7 @@ msgstr "Włącz \"theme-my-login.css\""
 
 #: admin/class-theme-my-login-admin.php:285
 msgid "In order to keep changes between upgrades, you can store your customized \"theme-my-login.css\" in your current theme directory."
-msgstr "W celu zachowania zmian pomiędzy aktualizacjami, można zapisać ustawienia \"theme-my-login.css\" w obecnym katalogu szablonu."
+msgstr "W celu zachowania zmian między aktualizacjami, można zapisać ustawienia \"theme-my-login.css\" w obecnym katalogu szablonu."
 
 #: admin/class-theme-my-login-admin.php:309
 #, php-format
@@ -135,18 +136,22 @@ msgid "No modules found."
 msgstr "Nie znaleziono modułów."
 
 #: admin/class-theme-my-login-admin.php:422
+#, fuzzy
 msgid "One of the modules is invalid."
 msgstr "Jedna z wtyczek jest nieprawidłowa."
 
 #: admin/class-theme-my-login-admin.php:475
+#, fuzzy
 msgid "Invalid module path."
-msgstr "Nieprawidłowa ścieżka pluginu."
+msgstr "Nieprawidowa ścieżka pluginu."
 
 #: admin/class-theme-my-login-admin.php:477
+#, fuzzy
 msgid "Module file does not exist."
-msgstr "Plik modułu nie istnieje."
+msgstr "Plik pluginu nie istnieje."
 
 #: admin/class-theme-my-login-admin.php:481
+#, fuzzy
 msgid "The module does not have a valid header."
 msgstr "Plugin nie posiada poprawnego nagłówka."
 
@@ -159,12 +164,12 @@ msgstr "Witaj, %s"
 #: includes/class-theme-my-login-widget.php:86
 #: templates/register-form.php:25
 msgid "Register"
-msgstr "Utwórz konto"
+msgstr "Utwórz Konto"
 
 #: includes/class-theme-my-login-template.php:150
 #: includes/class-theme-my-login-widget.php:86
 msgid "Lost Password"
-msgstr "Zapomniałeś hasło?"
+msgstr "Zapomniałeś hasła?"
 
 #: includes/class-theme-my-login-template.php:154
 #: includes/class-theme-my-login.php:393
@@ -193,19 +198,20 @@ msgstr "Zarejestruj się na stronie"
 
 #: includes/class-theme-my-login-template.php:365
 msgid "Please enter your username or e-mail address. You will receive a new password via e-mail."
-msgstr "Proszę podaj nazwę użytkownika, bądź adres e-mail. Otrzymasz nowe hasło w kolejnej wiadomości e-mail."
+msgstr "Proszę podać nazwę użytkownika, bądź adres e-mail. Nowe hasło zostanie wysłane na adres e-mail."
 
 #: includes/class-theme-my-login-widget.php:23
 msgid "A login form for your blog."
-msgstr "Formularz logowania dla twojej strony."
+msgstr "Formularz logowania dla twojego bloga."
 
 #: includes/class-theme-my-login-widget.php:86
+#, fuzzy
 msgid "Login"
-msgstr "Zaloguj się"
+msgstr "Zaloguj"
 
 #: includes/class-theme-my-login-widget.php:87
 msgid "Default Action"
-msgstr "Domyślna akcja"
+msgstr "Akcja domyślna"
 
 #: includes/class-theme-my-login-widget.php:94
 msgid "Show When Logged In"
@@ -221,11 +227,11 @@ msgstr "Pokaż link - Zaloguj"
 
 #: includes/class-theme-my-login-widget.php:100
 msgid "Show Register Link"
-msgstr "Pokaż Link - Utwórz Konto"
+msgstr "Pokaż link - Utwórz Konto"
 
 #: includes/class-theme-my-login-widget.php:102
 msgid "Show Lost Password Link"
-msgstr "Pokaż link - Zapomniałeś hasło?"
+msgstr "Pokaż link - Zapomniałem hasła?"
 
 #: includes/class-theme-my-login-widget.php:104
 msgid "Show Gravatar"
@@ -233,7 +239,7 @@ msgstr "Pokaż Gravatar"
 
 #: includes/class-theme-my-login-widget.php:105
 msgid "Gravatar Size"
-msgstr "Rozmiar Gravatar"
+msgstr "Rozmiar Gravatara"
 
 #: includes/class-theme-my-login-widget.php:107
 msgid "Allow Registration"
@@ -245,15 +251,16 @@ msgstr "Zezwól na przywracanie hasła"
 
 #: includes/class-theme-my-login.php:217
 msgid "Sorry, that key does not appear to be valid."
-msgstr "Przepraszamy, ale klucz nie jest prawidłowy."
+msgstr "Przepraszam, ale klucz nie jest prawidłowy."
 
 #: includes/class-theme-my-login.php:325
+#, fuzzy
 msgid "<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href=\"http://www.google.com/cookies.html\">enable cookies</a> to use WordPress."
-msgstr "<strong>BŁĄD:</strong> Ciasteczka (cookies) są zablokowane lub nie są obsługiwane przez Twoją przegldarkę. Należy <a href='http://www.google.com/cookies.html'>włączyć obsługę plików cookies</a> do poprawnej obsługi strony."
+msgstr "<strong>Błąd:</strong> Ciasteczka (cookies) są zablokowane lub nie są obsługiwane przez Twoją przeglądarkę. Należy <a href='http://www.google.com/cookies.html'>właczyć obsługę plików cookie</a> do poprawnej obsługi strony."
 
 #: includes/class-theme-my-login.php:329
 msgid "You are now logged out."
-msgstr "Zostałeś pomyślnie wylogowany."
+msgstr "Zostałeś pomyślnie wylogowany!"
 
 #: includes/class-theme-my-login.php:331
 msgid "User registration is currently not allowed."
@@ -261,19 +268,19 @@ msgstr "Rejestracja jest chwilowo wyłączona."
 
 #: includes/class-theme-my-login.php:333
 msgid "Check your e-mail for the confirmation link."
-msgstr "Za chwilę otrzymasz e-mail wraz z linkiem potwierdzającym twoje żądanie. Postępuj zgodnie z zawartymi w nim informacjami."
+msgstr "Za chwilę otrzymasz email wraz z linkiem potwierdzającym autentyczność, kliknij w niego aby zakończyć proces rejestracji."
 
 #: includes/class-theme-my-login.php:335
 msgid "Check your e-mail for your new password."
-msgstr "Za chwilę otrzymasz e-mail zawierający nowe hasło."
+msgstr "Za chwilę otrzymasz email wraz z linkiem potwierdzającym autentyczność, kliknij w niego aby wygenerować nowe hasło."
 
 #: includes/class-theme-my-login.php:337
 msgid "Registration complete. Please check your e-mail."
-msgstr "Rejestracja zakończona pomyślnie. Sprawdź skrzynkę pocztową."
+msgstr "Rejestracja zakończona pomyślnie."
 
 #: includes/class-theme-my-login.php:339
 msgid "Your session has expired. Please log-in again."
-msgstr "Twoja sesja wygasła. Proszę zalogować się ponownie."
+msgstr "Twoja sesja wygasła. Proszę ponownie się zalogować."
 
 #: includes/class-theme-my-login.php:393
 msgid "Log Out"
@@ -281,19 +288,19 @@ msgstr "Wyloguj"
 
 #: includes/class-theme-my-login.php:880
 msgid "<strong>ERROR</strong>: Enter a username or e-mail address."
-msgstr "<strong>BŁĄD:</strong> Wprowadź nazwę użytkownika lub adres e-mail."
+msgstr "<strong>Błąd:</strong> Wprowadź nazwę użytkownika lub adres e-mail."
 
 #: includes/class-theme-my-login.php:885
 msgid "<strong>ERROR</strong>: There is no user registered with that email address."
-msgstr "<strong>BŁĄD:</strong> Nie ma zarejestrowanego użytkownika z takim adresem e-mail."
+msgstr "<strong>Błąd:</strong> Nie ma zarejestrowanego użytkownika z takim adresem e-mail."
 
 #: includes/class-theme-my-login.php:897
 msgid "<strong>ERROR</strong>: Invalid username or e-mail."
-msgstr "<strong>BŁĄD:</strong> Nieprawidłowa nazwa użytkownika lub e-mail."
+msgstr "<strong>Błąd:</strong> Nieprawidłowa nazwa użytkownika lub e-mail."
 
 #: includes/class-theme-my-login.php:911
 msgid "Password reset is not allowed for this user"
-msgstr "Resetowanie hasła nie jest dozwolone dla tego użytkownika."
+msgstr "Resetowanie hasła nie jest dozwolone dla tego użytkownika"
 
 #: includes/class-theme-my-login.php:924
 msgid "Someone has asked to reset the password for the following site and username."
@@ -312,12 +319,12 @@ msgstr "Użytkownik: %s"
 
 #: includes/class-theme-my-login.php:927
 msgid "To reset your password visit the following address, otherwise just ignore this email and nothing will happen."
-msgstr "Aby zresetować hasło odwiedź poniższy adres, jeżli nie poprosiłeś o poniższą wiadomość po prostu ją zignoruj."
+msgstr "Aby zresetować hasło odwiedź poniższy adres, jeśli nie prosiłeś o jego reset po prostu zignoruj otrzymaną wiadomość."
 
 #: includes/class-theme-my-login.php:938
 #, php-format
 msgid "[%s] Password Reset"
-msgstr "[%s] Hasło zresetowane"
+msgstr "[%s] Hasło Zresetowane"
 
 #: includes/class-theme-my-login.php:944
 #: includes/class-theme-my-login.php:1001
@@ -335,7 +342,7 @@ msgstr "E-mail nie mógł zostać wysłany."
 #: modules/user-moderation/admin/user-moderation-admin.php:175
 #: modules/user-moderation/admin/user-moderation-admin.php:210
 msgid "Possible reason: your host may have disabled the mail() function..."
-msgstr "Możliwa przyczyna: serwer ma wyłączoną funkcje mail().."
+msgstr "Możliwa przyczyna: serwer ma wyłączoną funkcję mail().."
 
 #: includes/class-theme-my-login.php:965
 #: includes/class-theme-my-login.php:968
@@ -365,32 +372,33 @@ msgstr "[%s] Twoje nowe hasło"
 
 #: includes/class-theme-my-login.php:1026
 msgid "<strong>ERROR</strong>: Please enter a username."
-msgstr "<strong>BŁĄD:</strong> Proszę podać nazwę użytkownika."
+msgstr "<strong>Błąd:</strong> Proszę podać nazwę użytkownika."
 
 #: includes/class-theme-my-login.php:1028
+#, fuzzy
 msgid "<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username."
-msgstr "<strong>BŁĄD:</strong> Ta nazwa użytkownika jest nieprawidłowa, ponieważ zawiera niedozwolone znaki. Proszę podać poprawną nazwę użytkownika."
+msgstr "<strong>Błąd:</strong> Ta nazwa użytkownika jest nieprawidłowa. Proszę podać poprawną nazwę użytkownika."
 
 #: includes/class-theme-my-login.php:1031
 msgid "<strong>ERROR</strong>: This username is already registered, please choose another one."
-msgstr "<strong>BŁĄD:</strong> Ta nazwa użytkownika jest już zarejestrowana, należy wybrać inną."
+msgstr "<strong>Błąd:</strong> Ta nazwa użytkownika jest już zarejestrowana, należy wybrać inną."
 
 #: includes/class-theme-my-login.php:1036
 msgid "<strong>ERROR</strong>: Please type your e-mail address."
-msgstr "<strong>BŁĄD:</strong> Wpisz swój adres e-mail."
+msgstr "<strong>Błąd:</strong> Wpisz swój adres e-mail."
 
 #: includes/class-theme-my-login.php:1038
 msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
-msgstr "<strong>BŁĄD:</strong> Adres e-mail nie jest prawidłowy."
+msgstr "<strong>Błąd:</strong> Adres e-mail nie jest prawidłowy."
 
 #: includes/class-theme-my-login.php:1041
 msgid "<strong>ERROR</strong>: This email is already registered, please choose another one."
-msgstr "<strong>BŁĄD:</strong> Ten adres e-mail jest już zarejestrowany, proszę wybrać inny."
+msgstr "<strong>Błąd:</strong> Ten email jest już zarejestrowany, proszę wybrać inny."
 
 #: includes/class-theme-my-login.php:1054
 #, php-format
 msgid "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href=\"mailto:%s\">webmaster</a> !"
-msgstr "<strong>BŁĄD:</strong> Nie można zarejestrować Cię... prosimy o kontakt z <a href=\\\"mailto:%s\\\">administratorem</a> !"
+msgstr "<strong>Błąd:</strong> Nie można zarejestrować się ... prosimy o kontakt <a href=\\\"mailto:%s\\\">webmaster</a> !"
 
 #: modules/custom-email/admin/custom-email-admin.php:43
 #: modules/custom-email/admin/custom-email-admin.php:170
@@ -400,13 +408,13 @@ msgstr "Powiadamianie użytkownika"
 
 #: modules/custom-email/admin/custom-email-admin.php:46
 msgid "This e-mail will be sent to a new user upon registration."
-msgstr "Ten adres e-mail zostanie wysłany do nowego użytkownika podczas rejestracji."
+msgstr "Ten e-mail zostanie wysłany w momencie rejestracji nowego użytkownika."
 
 #: modules/custom-email/admin/custom-email-admin.php:47
 #: modules/custom-email/admin/custom-email-admin.php:174
 #: modules/user-moderation/admin/user-moderation-admin.php:337
 msgid "Please be sure to include the variable %user_pass% if using default passwords or else the user will not know their password!"
-msgstr "Upewnij się, aby zawarta została zmienna %user_pass% jeśli używasz domyślnych haseł, bo użytkownik nie bedzie znać swojego hasła!"
+msgstr "Proszę pamiętać aby zmienna %user_pass% była wartością domyślną, w przeciwnym wypadku użytkownicy nie będą znali swoich haseł!"
 
 #: modules/custom-email/admin/custom-email-admin.php:48
 #: modules/custom-email/admin/custom-email-admin.php:78
@@ -418,7 +426,7 @@ msgstr "Upewnij się, aby zawarta została zmienna %user_pass% jeśli używasz d
 #: modules/user-moderation/admin/user-moderation-admin.php:368
 #: modules/user-moderation/admin/user-moderation-admin.php:421
 msgid "If any field is left empty, the default will be used instead."
-msgstr "Jeżeli jakieś pole pozostało puste, zostanie uzupełnione domyślnymi wartościami."
+msgstr "W sytuacji pozostawienia jakiegoś pola pustego zostanie użyta jego wartość domyślna."
 
 #: modules/custom-email/admin/custom-email-admin.php:51
 #: modules/custom-email/admin/custom-email-admin.php:84
@@ -430,7 +438,7 @@ msgstr "Jeżeli jakieś pole pozostało puste, zostanie uzupełnione domyślnymi
 #: modules/user-moderation/admin/user-moderation-admin.php:374
 #: modules/user-moderation/admin/user-moderation-admin.php:424
 msgid "From Name"
-msgstr "Od nazwa"
+msgstr "Od"
 
 #: modules/custom-email/admin/custom-email-admin.php:54
 #: modules/custom-email/admin/custom-email-admin.php:87
@@ -442,7 +450,7 @@ msgstr "Od nazwa"
 #: modules/user-moderation/admin/user-moderation-admin.php:377
 #: modules/user-moderation/admin/user-moderation-admin.php:427
 msgid "From E-mail"
-msgstr "Od e-mail"
+msgstr "Od Email"
 
 #: modules/custom-email/admin/custom-email-admin.php:57
 #: modules/custom-email/admin/custom-email-admin.php:90
@@ -490,17 +498,17 @@ msgstr "Wiadomość"
 #: modules/user-moderation/admin/user-moderation-admin.php:392
 #: modules/user-moderation/admin/user-moderation-admin.php:442
 msgid "Available Variables"
-msgstr "Dozwolone możliwości"
+msgstr "Dostępne zmienne"
 
 #: modules/custom-email/admin/custom-email-admin.php:74
 #: modules/custom-email/admin/custom-email-admin.php:201
 #: modules/user-moderation/admin/user-moderation-admin.php:364
 msgid "Admin Notification"
-msgstr "Zawiadomienie "
+msgstr "Powiadomienie administratora"
 
 #: modules/custom-email/admin/custom-email-admin.php:77
 msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon new user registration."
-msgstr "Ten adres e-mail zostanie wysłany na adres e-mail lub adresy (wiele adresów może być oddzielone przecinkami) określonych poniżej, podczas nowej rejestracji użytkownika."
+msgstr "Ta wiadomość zostanie wysłana na podany adres / adresy (adresy należy oddzielać przecinkiem) w sytuacji rejestracji nowego użytkownika."
 
 #: modules/custom-email/admin/custom-email-admin.php:81
 #: modules/custom-email/admin/custom-email-admin.php:208
@@ -510,24 +518,24 @@ msgstr "Do"
 
 #: modules/custom-email/admin/custom-email-admin.php:126
 msgid "This e-mail will be sent to a user when they attempt to recover their password."
-msgstr "Ten adres e-mail zostanie wysłany do użytkownika przy próbie odzyskania hasła."
+msgstr "Ta wiadomość zostanie wysłana, gdy użytkownik będzię próbował zresetować hasło."
 
 #: modules/custom-email/admin/custom-email-admin.php:127
 msgid "Please be sure to include the variable %reseturl% or else the user will not be able to recover their password!"
-msgstr "Upewnij się, aby zawarta została zmienna %reseturl% albo użytkownik nie będzie mógł odzyskać swojego hasła!"
+msgstr "Proszę pamiętać, aby załączyć zmienną %reseturl% w przeciwnym wypadku użytkownik nie będzie mógł odzyskać hasła!"
 
 #: modules/custom-email/admin/custom-email-admin.php:173
 msgid "This e-mail will be sent to a user upon successful password recovery."
-msgstr "Ten e-mail zostanie wysłany do użytkownika po pomyślnym przywracaniu hasła."
+msgstr "Ta wiadomość zostanie wysłana w sytuacji poprawnego odzyskania hasła."
 
 #: modules/custom-email/admin/custom-email-admin.php:204
 msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon user password change."
-msgstr "Ten adres e-mail zostanie wysłany na adres e-mail lub adresy (wiele adresów może być oddzielone przecinkami) określonych poniżej, w momencie zmiany hasła użytkownika."
+msgstr "Ta wiadomość zostanie wysłana na podany adres / adresy (adresy należy oddzielać przecinkiem) w sytuacji zmiany hasła przez użytkownika."
 
 #: modules/custom-email/admin/custom-email-admin.php:231
 #: modules/user-moderation/admin/user-moderation-admin.php:394
 msgid "Disable Admin Notification"
-msgstr "Wyłącz powiadomienia Administratora."
+msgstr "Wyłącz powiadomienia administratorów"
 
 #: modules/custom-email/admin/custom-email-admin.php:251
 #: templates/profile-form.php:86
@@ -537,7 +545,7 @@ msgstr "E-mail"
 
 #: modules/custom-email/admin/custom-email-admin.php:252
 msgid "New User"
-msgstr "Nowy użytkownik"
+msgstr "Nowy Użytkownik"
 
 #: modules/custom-email/admin/custom-email-admin.php:253
 msgid "Retrieve Password"
@@ -548,9 +556,9 @@ msgid "Reset Password"
 msgstr "Resetuj hasło"
 
 #: modules/custom-email/custom-email.php:473
-#, php-format
+#, fuzzy, php-format
 msgid "New user registration on your site %s:"
-msgstr "Nowy użytkownik zarejestrował się na twojej stronie: %s"
+msgstr "Nowy użytkownik zarejestrował się na twoim blogu %s:"
 
 #: modules/custom-email/custom-email.php:475
 #: modules/user-moderation/user-moderation.php:371
@@ -561,7 +569,7 @@ msgstr "E-mail: %s"
 #: modules/custom-email/custom-email.php:477
 #, php-format
 msgid "[%s] New User Registration"
-msgstr "[%s] Nowy użytkownik"
+msgstr "[%s] Rejestracja nowego użytkownika"
 
 #: modules/custom-email/custom-email.php:495
 #, php-format
@@ -571,53 +579,61 @@ msgstr "[%s] Twoja nazwa użytkownika i hasło"
 #: modules/custom-email/custom-email.php:525
 #, php-format
 msgid "[%s] Password Lost/Changed"
-msgstr "[%s] Hasło utracone/zmienione"
+msgstr "[%s] Nowe hasło / zmienione"
 
 #: modules/custom-email/custom-email.php:526
 #, php-format
 msgid "Password Lost and Changed for user: %s"
-msgstr "Zmieniono utracone hasło dla użytkownika: %s"
+msgstr "Nowe hasło dla użytkownika: %s"
 
 #: modules/custom-passwords/custom-passwords.php:29
+#, fuzzy
 msgid "Password:"
-msgstr "Hasło:"
+msgstr "Hasło"
 
 #: modules/custom-passwords/custom-passwords.php:31
 #: templates/resetpass-form.php:16
+#, fuzzy
 msgid "Confirm Password:"
 msgstr "Potwierdź hasło:"
 
 #: modules/custom-passwords/custom-passwords.php:54
+#, fuzzy
 msgid "<strong>ERROR</strong>: Please enter a password."
-msgstr "<strong>BŁĄD:</strong> Proszę wprowadzić hasło."
+msgstr "<strong>Błąd:</strong> Proszę podać hasło."
 
 #: modules/custom-passwords/custom-passwords.php:57
+#, fuzzy
 msgid "<strong>ERROR</strong>: Your passwords do not match."
-msgstr "<strong>BŁĄD:</strong> Brak zgodności hasła. Wpisz je ponownie."
+msgstr "<strong>Błąd:</strong> Twoje hasło jest niepoprawne."
 
 #: modules/custom-passwords/custom-passwords.php:60
+#, fuzzy
 msgid "<strong>ERROR</strong>: Your password must be at least 6 characters in length."
-msgstr "<strong>BŁĄD:</strong> Twoje hasło musi sie składać z minimum 6 znaków."
+msgstr "<strong>Błąd:</strong> Hasło musi mieć co najmniej 6 znaków."
 
 #: modules/custom-passwords/custom-passwords.php:188
+#, fuzzy
 msgid "Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password."
-msgstr "Prosz podać nazwę użytkownika, bądź adres e-mail. Otrzymasz wiadomość e-mail z linkiem do resetowania hasła."
+msgstr "Proszę podać nazwę użytkownika lub adres e-mail. Otrzymasz e-mail zawierający link resetujący hasło"
 
 #: modules/custom-passwords/custom-passwords.php:191
+#, fuzzy
 msgid "Please enter a new password."
-msgstr "Wprowadź nowe hasło."
+msgstr "Proszę podaj nowe hasło."
 
 #: modules/custom-passwords/custom-passwords.php:224
+#, fuzzy
 msgid "Registration complete. You may now log in."
-msgstr "Rejestracja zakończona pomylśnie. Możesz się zalogować."
+msgstr "Rejestracja zakończona pomyślnie. Teraz możesz się już zalogować."
 
 #: modules/custom-passwords/custom-passwords.php:227
 msgid "Your password has been saved. You may now log in."
-msgstr "Twoje hasło zostało zapisane. Możesz się zalogować."
+msgstr "Twoje hasło zostało zapamiętane. Teraz możesz się już zalogować."
 
 #: modules/custom-redirection/custom-redirection.php:148
 msgid "Redirection"
-msgstr "Przekierowania"
+msgstr "Przekierowanie"
 
 #: modules/custom-redirection/custom-redirection.php:175
 msgid "Log in"
@@ -630,33 +646,33 @@ msgstr "Domyślne"
 
 #: modules/custom-redirection/custom-redirection.php:178
 msgid "Check this option to send the user to their WordPress Dashboard/Profile."
-msgstr "Zaznacz tę opcję, aby wysyłać użytkowników do ich Kokpitu."
+msgstr "Zaznacz tą opcję, aby przenieść użytkownika do WordPress Kokpitu / Profilu."
 
 #: modules/custom-redirection/custom-redirection.php:179
 #: modules/custom-redirection/custom-redirection.php:191
 msgid "Referer"
-msgstr "Poprzednia strona"
+msgstr "Odnośnik"
 
 #: modules/custom-redirection/custom-redirection.php:180
 msgid "Check this option to send the user back to the page they were visiting before logging in."
-msgstr "Zaznacz tę opcję, aby wysłać użytkownika z powrotem do strony, którą  odwiedzali przed zalogowaniem."
+msgstr "Zaznacz tą opcję, aby przenieść użytkownika do strony, którą przeglądał przez zalogowaniem."
 
 #: modules/custom-redirection/custom-redirection.php:183
 #: modules/custom-redirection/custom-redirection.php:195
 msgid "Check this option to send the user to a custom location, specified by the textbox above."
-msgstr "Zaznacz tę opcję, aby wysyłać użytkownika do niestandardowej lokalizacji, określonej przez pole tekstowe powyżej."
+msgstr "Zaznacz tą opcję, aby przenieść użytkownika do strony wpisanej w powyższym polu."
 
 #: modules/custom-redirection/custom-redirection.php:190
 msgid "Check this option to send the user to the log in page, displaying a message that they have successfully logged out."
-msgstr "Zaznacz tę opcję, aby wysłać do strony logowania, wyświetlając komunikat, że udało im się wylogować."
+msgstr "Zaznacz tą opcję, aby przenieść użytkownika do strony logowania oraz wyświetlić wiadomość, że został poprawnie wylogowany."
 
 #: modules/custom-redirection/custom-redirection.php:192
 msgid "Check this option to send the user back to the page they were visiting before logging out. (Note: If the previous page being visited was an admin page, this can have unexpected results.)"
-msgstr "Zaznacz tę opcję, aby wysłać użytkownika z powrotem do strony, którą  odwiedzał przed wylogowaniem. (Uwaga: Jeśli poprzednia strona odwiedzana była stroną administracyjną, może to spowodować nieoczekiwane efekty.)"
+msgstr "Zaznacz tą opcję, aby przenieść użytkownika do strony którą oglądał przed wylogowaniem. (W sytuacji, gdy poprzednią stroną była strona administracyjna, przeniesienie to może dać nieoczekiwane rezultaty)."
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:139
 msgid "User Links"
-msgstr "Linki użytkownika"
+msgstr "Linki Użytkownika"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:229
 #: modules/custom-user-links/admin/custom-user-links-admin.php:252
@@ -672,11 +688,11 @@ msgstr "URL"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:247
 msgid "Add New link:"
-msgstr "Dodaj nowy link:"
+msgstr "Dodaj Nowy Link"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:263
 msgid "Add link"
-msgstr "Dodaj link"
+msgstr "Dodaj Link"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:303
 msgid "Delete"
@@ -684,14 +700,14 @@ msgstr "Usuń"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:304
 msgid "Update"
-msgstr "Aktualizuj"
+msgstr "Zaktualizuj"
 
 #: modules/security/admin/security-admin.php:35
 #: modules/security/admin/security-admin.php:38
 #: modules/user-moderation/admin/user-moderation-admin.php:38
 #: modules/user-moderation/admin/user-moderation-admin.php:50
 msgid "You can&#8217;t edit that user."
-msgstr "Nie możesz edytować tego użytkownika."
+msgstr "Nie możesz modyfikować tego użytkownika"
 
 #: modules/security/admin/security-admin.php:70
 msgid "User locked."
@@ -711,19 +727,19 @@ msgstr "Zablokuj"
 
 #: modules/security/admin/security-admin.php:116
 msgid "Security"
-msgstr "Zabezpieczenie"
+msgstr "Bezpieczeństwo"
 
 #: modules/security/admin/security-admin.php:136
 msgid "Login Attempts"
-msgstr "Próby logowania"
+msgstr "Prób logowania"
 
 #: modules/security/admin/security-admin.php:141
 msgid "minute(s)"
-msgstr "minuty"
+msgstr "minut"
 
 #: modules/security/admin/security-admin.php:142
 msgid "hour(s)"
-msgstr "godziny"
+msgstr "godzin"
 
 #: modules/security/admin/security-admin.php:143
 msgid "day(s)"
@@ -732,17 +748,18 @@ msgstr "dni"
 #: modules/security/admin/security-admin.php:166
 #, php-format
 msgid "After %1$s failed login attempts within %2$s %3$s, lockout the account for %4$s %5$s."
-msgstr "Po %1$s nieudanych próbach logowania w ciągu %2$s %3$s, blokada konta na %4$s %5$s."
+msgstr "Po %1$s próbach nieudanego logowania w %2$s %3$s, konto zostało zablokowane na %4$s %5$s."
 
 #: modules/security/security.php:43
 #: modules/security/security.php:69
 #, php-format
 msgid "<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s."
-msgstr "<strong>BŁĄD</strong>: To konto zostało zablokowane ze względu na zbyt dużą ilość nieudanych prób logowania. Możesz spróbować ponownie za %s."
+msgstr "<strong>Błąd:</strong>Konto zostało zablokowane ze względu na zbyt dużo prób logowania. Proszę spróbować ponownie zalogować się za %s."
 
 #: modules/security/security.php:45
+#, fuzzy
 msgid "<strong>ERROR</strong>: This account has been locked."
-msgstr "<strong>BŁĄD:</strong> To konto zostalo zablokowane."
+msgstr "<strong>Błąd:</strong> Konto zostało zablokowane."
 
 #: modules/themed-profiles/themed-profiles.php:77
 #: templates/profile-form.php:125
@@ -765,31 +782,32 @@ msgstr "Średnie"
 
 #: modules/themed-profiles/themed-profiles.php:82
 msgid "Strong"
-msgstr "Mocne"
+msgstr "Silne"
 
 #: modules/themed-profiles/themed-profiles.php:92
 msgid "You do not have permission to edit this user."
 msgstr "Nie masz uprawnień do edycji tego użytkownika."
 
 #: modules/themed-profiles/themed-profiles.php:108
+#, fuzzy
 msgid "Profile updated."
-msgstr "Profil zaktualizowano."
+msgstr "Profil zaktualizowany."
 
 #: modules/themed-profiles/themed-profiles.php:178
 msgid "Your Profile"
-msgstr "Twój profil"
+msgstr "Twój Profil"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:83
 msgid "User approved."
-msgstr "Użytkownik zatwierdzony."
+msgstr "Użytkownik zaakceptowany."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:85
 msgid "Activation sent."
-msgstr "E-mail aktywacyjny został wysłany."
+msgstr "Aktywacja wysłana."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:111
 msgid "Resend Activation"
-msgstr "Ponów aktywację."
+msgstr "Wyślij ponownie aktywację."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:116
 msgid "Approve"
@@ -798,27 +816,27 @@ msgstr "Zatwierdź"
 #: modules/user-moderation/admin/user-moderation-admin.php:150
 #: modules/user-moderation/user-moderation.php:275
 msgid "Same as when you signed up."
-msgstr "(takie jak użyłeś podczas rejestracji)"
+msgstr "Tak samo, jak w momencie rejestracji"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:164
 #, php-format
 msgid "You have been approved access to %s"
-msgstr "Zaakceptowany został Twój dostęp do %s"
+msgstr "Dostałeś dostęp do %s"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:169
-#, php-format
+#, fuzzy, php-format
 msgid "[%s] Registration Approved"
-msgstr "[%s] Rejestracja zakceptowana"
+msgstr "[%s] Rejestracja zaakceptowana"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:203
 #, php-format
 msgid "You have been denied access to %s"
-msgstr "Odmówiono dostępu do %s"
+msgstr "Zabroniono dostępu do: %s"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:204
-#, php-format
+#, fuzzy, php-format
 msgid "[%s] Registration Denied"
-msgstr "[%s] Rejestracja odrzucona"
+msgstr "[%s] Rejestracja Zabroniona"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:226
 msgid "Moderation"
@@ -830,11 +848,12 @@ msgstr "Aktywacja użytkownika"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:229
 msgid "User Approval"
-msgstr "Zatwierdzenie użytkownika"
+msgstr "Akceptacja użytkownika"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:230
+#, fuzzy
 msgid "User Denial"
-msgstr "Użytkownik odrzucony"
+msgstr "Odmowa użytkownika"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:249
 msgid "User Moderation"
@@ -842,108 +861,113 @@ msgstr "Moderacja użytkownika"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:252
 msgid "None"
-msgstr "Brak"
+msgstr "Żaden"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:253
 msgid "Check this option to require no moderation."
-msgstr "Zaznacz tę opcję, aby nie wymagać moderacji."
+msgstr "Zaznacz tą opcję jeśli nie potrzebujesz moderacji."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:255
+#, fuzzy
 msgid "E-mail Confirmation"
-msgstr "Potwierdzenie przez e-mail"
+msgstr "Potwierdzenie e-mail"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:256
 msgid "Check this option to require new users to confirm their e-mail address before they may log in."
-msgstr "Zaznacz tę opcję, aby wymusić od nowych użytkowników, aby potwierdzili swój adres e-mail, zanim będą mogli się zalogować."
+msgstr "Zaznacz tą opcję, aby wymagać potwierdzenia e-maila przez nowych użytkowników przed pierwszym zalogowaniem."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:258
 msgid "Admin Approval"
-msgstr "Zatwierdzanie przez Administratora"
+msgstr "Akceptacja administratora"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:259
 msgid "Check this option to require new users to be approved by an administrator before they may log in."
-msgstr "Zaznacz tę opcję, aby wymusić zatwierdzenie przez administratora nowych użytkowników, zanim będą mogli się zalogować."
+msgstr "Zaznacz tą opcję, aby wymagać zatwierdzenia nowych użytkowników przez administratora przed pierwszym zalogowaniem."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:285
 msgid "This e-mail will be sent to a new user upon registration when \"E-mail Confirmation\" is checked for \"User Moderation\"."
-msgstr "Ten adres e-mail zostanie wysłany do nowego użytkownika w momencie rejestracji, gdy \"E-mail Confirmation\" jest zaznaczona na  \"User Moderation\"."
+msgstr "Ta wiadomość zostanie wysłana do nowego użytkownika, gdy \"Potwierdzenie e-mail\" jest zaznaczone dla \"Moderacji użytkownika\"."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:286
 msgid "Please be sure to include the variable %activateurl% or else the user will not be able to activate their account!"
-msgstr "Upewnij się, aby zawarta została zmienna %activateurl% albo użytkownik nie będzie mógł aktywować swojego konta!"
+msgstr "Proszę pamiętać, aby użyć zmiennej %activateurl%, w przeciwnym wypadku użytkownik nie bedzie mógł aktywować konta!"
 
 #: modules/user-moderation/admin/user-moderation-admin.php:336
 msgid "This e-mail will be sent to a new user upon admin approval when \"Admin Approval\" is checked for \"User Moderation\"."
-msgstr "Ten e-mail zostanie wysłany do nowego użytkownika po akceptacji Administratora, kiedy \"Admin Approval\" jest zaznaczony jako \"User Moderation\"."
+msgstr "Ta wiadomość zostanie wysłana do nowego użytkownika, gdy \"Zgoda administratora\" jest zaznaczona dla \"Moderacji użytkownika\"."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:367
 msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below upon user registration when \"Admin Approval\" is checked for \"User Moderation\"."
-msgstr "Ten e-mail zostanie wysłany na adres/adresy e-mail (kilka adresów może zostać oddzielone przecinkami)  wyszczególnione poniżej, gdy użytkownik przy rejestracji \"Admin Approval\" jest zaznaczony jako \"User Moderation\"."
+msgstr "Ta wiadomość zostanie wysłana na adres (adresy) e-mail (adresy należy oddzielić przecinikiem) zdefiniowane poniżej, gdy \"Zgoda administratora\" jest zaznaczona dla \"Moderacji użytkownika\"."
 
 #: modules/user-moderation/admin/user-moderation-admin.php:420
 msgid "This e-mail will be sent to a user who is deleted/denied when \"Admin Approval\" is checked for \"User Moderation\" and the user's role is \"Pending\"."
-msgstr "Ten e-mail zostanie wysłany do użytkownika, który jest usunięty/zablokowany, kiedy \"Admin Approval\" jest zaznaczony jako\"User Moderation\" i rola użytkownika jest \"Pending\"."
+msgstr "Ten e-mail zostanie wysłany do użytkownika, który został usunięty / zablokowany, gdy \"Zgoda administratora\" jest zaznaczona dla \"Moderacji użytkownika\" i rola użytkownika jest \"Oczekuje\"."
 
 #: modules/user-moderation/user-moderation.php:171
-#, php-format
+#, fuzzy, php-format
 msgid "<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href=\"%s\">Resend activation</a>?"
-msgstr "<strong>BŁĄD:</strong> Nie dokończyłeś jeszcze procesu rejestracji. Wysłać żądanie <a href=\"%s\">potwierdzenia ponownie</a>?"
+msgstr "<strong>Błąd:</strong> Do tej pory nie aktywowałeś jeszcze Twojego adresu e-mail. Przesłać ponownie <a href=\"%s\">e-mail aktywacyjny</a>?"
 
 #: modules/user-moderation/user-moderation.php:174
+#, fuzzy
 msgid "<strong>ERROR</strong>: Your registration has not yet been approved."
-msgstr "<strong>BŁĄD:</strong> Twoja rejestracja nie została jeszcze zakceptowana."
+msgstr "<strong>Błąd:</strong> Twoja rejestracja nie została jeszcze zaakceptowana."
 
 #: modules/user-moderation/user-moderation.php:334
 #, php-format
 msgid "[%s] Activate Your Account"
-msgstr "[%s] Aktywuj konto"
+msgstr "[%s] Aktywować Twoje Konto"
 
 #: modules/user-moderation/user-moderation.php:335
 #, php-format
 msgid "Thanks for registering at %s! To complete the activation of your account please click the following link: "
-msgstr "Dziekuję za rejestrację na %s! Aby dokończyć aktywację Twojego konta proszę kliknij w następujący link:"
+msgstr "Dziękuję za rejestrację na %s!. Aby ukończyć aktywację konta proszę kliknij następujący link: "
 
 #: modules/user-moderation/user-moderation.php:367
-#, php-format
+#, fuzzy, php-format
 msgid "[%s] New User Awaiting Approval"
-msgstr "[%s] Nowy użytkownik oczekuje akceptacji"
+msgstr "[%s] Nowy Użytkownik oczekuje na akceptację"
 
 #: modules/user-moderation/user-moderation.php:369
-#, php-format
+#, fuzzy, php-format
 msgid "New user requires approval on your blog %s:"
-msgstr "Nowy użytkownik zarejestrował sie na twojej stronie: %s"
+msgstr "Nowy użytkownik zarejestrował się na twoim blogu i wymaga akceptacji: %s"
 
 #: modules/user-moderation/user-moderation.php:372
 msgid "To approve or deny this user:"
-msgstr "Aby zaakceptować lub odrzucić tego użytkownika:"
+msgstr "Zaakceptuj, albo odrzuć tego użytkownika:"
 
 #: modules/user-moderation/user-moderation.php:393
 msgid "Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided."
-msgstr "Twoja rejestracja zakończyła się pomyślnie, ale musisz teraz potwierdzić adres e-mail zanim się zalogujesz.Sprawdź skrzynkę pocztową i kliknij w zamieszczony we wiadomości link. "
+msgstr "Twoja rejestracja została zakończona pomyślnie, ale przed zalogowaniem musisz potwierdzić Twój adres e-mail. Proszę sprawdź Twój e-mail i kliknij w załączony link."
 
 #: modules/user-moderation/user-moderation.php:395
 msgid "Your registration was successful but you must now be approved by an administrator before you can log in. You will be notified by e-mail once your account has been reviewed."
-msgstr "Twoja rejestracja przebiegła pomyślnie, jednak zanim się zalogujesz musisz poczekać na akceptację Administratora - może to potrwać od kilku minut do 1 dnia. Powiadomienie o wyniku rejestracji otrzymasz na podany adres e-mail."
+msgstr "Twoja rejestracja została zakończona pomyślnie, ale przed zalogowaniem Twoje konto musi zostać zaakceptowane przez Administratora. Po akceptacji otrzymasz e-mail."
 
 #: modules/user-moderation/user-moderation.php:398
 msgid "Your account has been activated. You may now log in."
-msgstr "Twoje konto zostało aktywowane. Możesz się zalogować."
+msgstr "Twoje konto zostało aktywowane. Możesz już się zalogować."
 
 #: modules/user-moderation/user-moderation.php:400
+#, fuzzy
 msgid "Your account has been activated. Please check your e-mail for your password."
-msgstr "Twoje konto zostało aktywowane. Hasło wysłaliśmy do Ciebie e-mailem."
+msgstr "Twoje konto zostało aktywowane. Proszę o sprawdzenie maila w celu otrzymania hasła."
 
 #: modules/user-moderation/user-moderation.php:402
+#, fuzzy
 msgid "<strong>ERROR</strong>: Sorry, that key does not appear to be valid."
-msgstr "<strong>BŁĄD:</strong> Przepraszamy, ale klucz nie jest prawidłowy."
+msgstr "<strong>Błąd:</strong>Przepraszamy, ale klucz nie jest prawidłowy."
 
 #: modules/user-moderation/user-moderation.php:405
+#, fuzzy
 msgid "<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent."
-msgstr "<strong>BŁĄD:</strong> Przepraszamy, ale e-mail aktywacyjny nie może zostać wysłany."
+msgstr "<strong>Błąd:</strong> Przepraszamy, ale e-mail aktywacyjny nie może zostać wysłany."
 
 #: modules/user-moderation/user-moderation.php:407
 msgid "The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided."
-msgstr "E-mail aktywacyjny został wysłany na adres e-mail podany podczas procesu rejestracji. Sprawdź swoją skrzynkę pocztową i kliknij w zamieszczony we wiadomości link."
+msgstr "E-mail aktywacyjny został wysłany na adres podany w trakcie rejestracji. Proszę sprawdź Twój e-mail i kliknij w załączony link."
 
 #: templates/login-form.php:12
 #: templates/profile-form.php:34
@@ -961,15 +985,15 @@ msgstr "Zapamiętaj Mnie"
 
 #: templates/lostpassword-form.php:12
 msgid "Username or E-mail:"
-msgstr "Użytkownik lub e-mail:"
+msgstr "Użytkownik/E-mail"
 
 #: templates/lostpassword-form.php:20
 msgid "Get New Password"
-msgstr "Wygeneruj nowe hasło"
+msgstr "Wygeneruj Nowe Hasło"
 
 #: templates/profile-form.php:22
 msgid "Personal Options"
-msgstr "Opcje personalne"
+msgstr "Opcje Personalne"
 
 #: templates/profile-form.php:30
 msgid "Name"
@@ -989,7 +1013,7 @@ msgstr "Nazwisko"
 
 #: templates/profile-form.php:49
 msgid "Nickname"
-msgstr "Pseudonim"
+msgstr "Nick"
 
 #: templates/profile-form.php:49
 #: templates/profile-form.php:86
@@ -998,15 +1022,15 @@ msgstr "(wymagane)"
 
 #: templates/profile-form.php:54
 msgid "Display name publicly as"
-msgstr "Wyświetlaj jako"
+msgstr "Wyświetl imię jako"
 
 #: templates/profile-form.php:82
 msgid "Contact Info"
-msgstr "Informacje kontaktowe"
+msgstr "Informacje Kontaktowe"
 
 #: templates/profile-form.php:91
 msgid "Website"
-msgstr "Strona internetowa"
+msgstr "Strona Internetowa"
 
 #: templates/profile-form.php:108
 msgid "About Yourself"
@@ -1018,41 +1042,44 @@ msgstr "Biografia"
 
 #: templates/profile-form.php:114
 msgid "Share a little biographical information to fill out your profile. This may be shown publicly."
-msgstr "Podziel się biografią na twój temat ze społecznością użytkowników."
+msgstr "Podziel się małą biografią na twój temat wraz ze społecznością."
 
 #: templates/profile-form.php:122
 msgid "New Password"
-msgstr "Nowe hasło"
+msgstr "Nowe Hasło"
 
 #: templates/profile-form.php:123
 msgid "If you would like to change the password type a new one. Otherwise leave this blank."
-msgstr "Jeśli chcesz zmienić hasło wpisz tutaj nowe, w przeciwnym wypadku zostaw to pole puste."
+msgstr "Jeśli chcesz zmienić hasło wpisz tutaj nowe hasło, w przeciwnym wypadku zostaw to pole puste."
 
 #: templates/profile-form.php:124
 msgid "Type your new password again."
-msgstr "Wprowadź ponownie Twoje nowe hasło."
+msgstr "Wprowadź nowe hasło ponownie"
 
 #: templates/profile-form.php:126
 msgid "Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols like ! \" ? $ % ^ &amp; )."
-msgstr "Wskazówka: Hasło powinno mieć minimum 7 znaków. Pamiętaj, by było bezpieczne."
+msgstr "Wskazówka: Hasło powinno mieć minimum 7 znaków. W celu poprawy bezpieczeństwa należy użyć dużych i małych liter, cyfr i symboli."
 
 #: templates/profile-form.php:140
 msgid "Additional Capabilities"
 msgstr "Dodatkowe możliwości"
 
 #: templates/profile-form.php:159
+#, fuzzy
 msgid "Update Profile"
-msgstr "Aktualizacja profilu"
+msgstr "Uaktualnij profil"
 
 #: templates/register-form.php:23
 msgid "A password will be e-mailed to you."
-msgstr "Hasło zostanie automatycznie wygenerowane oraz przesłane na podany adres e-mail."
+msgstr "Hasło zostanie wysłane e-mailem do Ciebie."
 
 #: templates/resetpass-form.php:12
+#, fuzzy
 msgid "New Password:"
-msgstr "Nowe hasło:"
+msgstr "Nowe Hasło"
 
 #: templates/resetpass-form.php:24
+#, fuzzy
 msgid "Change Password"
 msgstr "Zmień hasło"
 
@@ -1062,7 +1089,7 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid "Themes the WordPress login, registration and forgot password pages according to your theme."
-msgstr "Tematy WordPress: strona logowanie, rejestracja i zapomniałem hasła w zależności od tematu."
+msgstr ""
 
 #. Author of the plugin/theme
 msgid "Jeff Farthing"
@@ -1076,60 +1103,64 @@ msgstr ""
 #~ "<strong>WARNING</strong>: The function <em>wp_new_user_notification</em> "
 #~ "has already been overridden by another plugin. "
 #~ msgstr ""
-#~ "<strong>UWAGA:</strong> funkcja <em>wp_new_user_notification</em> zostaa "
-#~ "ju nadpisana przez inne wtyczki."
+#~ "<strong>Uwaga:</strong> Funkcja <em>wp_new_user_notification</em> została "
+#~ "już nadpisana przez inne wtyczki."
 
 #~ msgid ""
 #~ "<strong>WARNING</strong>: The function "
 #~ "<em>wp_password_change_notification</em> has already been overridden by "
 #~ "another plugin. "
 #~ msgstr ""
-#~ "<strong>UWAGA:</strong> funkcja <em>wp_password_change_notification</em> "
-#~ "zostaa ju nadpisana przez inne wtyczki."
+#~ "<strong>Uwaga:</strong> Funkcja <em>wp_password_change_notification</em> "
+#~ "została już nadpisana przez inne wtyczki."
 
 #~ msgid "Enable Template Tag"
-#~ msgstr "Wcz Tag Szablonu"
+#~ msgstr "Włącz Tag Szablonu"
 
 #~ msgid "Enable Widget"
-#~ msgstr "Wcz Widget"
+#~ msgstr "Włącz Widget"
 
 #~ msgid ""
 #~ "Enable this setting if you wish to use the \"Theme My Login\" widget. "
 #~ "Otherwise, leave it disabled for optimization purposes."
 #~ msgstr ""
-#~ "Wcz te opcje, jeeli zamierzasz uywa widget \"Theme My Login\". W "
-#~ "przeciwnym wypadku zaleca si wyczenie w celach optymalizacji."
+#~ "Włącz tą opcję, jeżeli zamierzasz używać widget \"Theme My Login\". W "
+#~ "przeciwnym wypadku zaleca się wyłączenie w celu optymalizacji."
 
 #~ msgid ""
 #~ "Enable this setting if you wish to use the theme_my_login() template tag. "
 #~ "Otherwise, leave it disabled for optimization purposes."
 #~ msgstr ""
-#~ "Wcz te opcje, jeli zamierzasz uy tag szablonu theme_my_login(). W "
-#~ "przeciwnym razie zaleca si zostawi wyczone w celu penej optymalizacji."
+#~ "Włącz tą opcję, jelśi zamierzasz użyć tag szablonu theme_my_login(). W "
+#~ "przeciwnym razie zaleca się zostawić ją wyłączoną w celu optymalizacji."
 
 #~ msgid ""
 #~ "Enable this setting to rewrite links generated by functions like "
 #~ "wp_loginout() and wp_register()."
 #~ msgstr ""
-#~ "Wcz t opcj aby system automatycznie przepisa linki generowane przez "
-#~ "funkcje  wp_loginout() oraz wp_register()."
+#~ "Włącz tą opcję aby system automatycznie przepisał linki generowane przez "
+#~ "funkcję  wp_loginout() oraz wp_register()."
 
 #~ msgid ""
 #~ "Enter the e-mail address you wish for e-mails to be sent from. If left "
 #~ "blank, the default will be used."
-#~ msgstr "Wpisz adres e-mail (od kogo zosta przesany?)"
+#~ msgstr ""
+#~ "Wpisz adres e-mail, który ma być wyświetlany jako adres nadawcy. "
+#~ "W przypadku pozostawienia pustego zostanie użyty adres domyślny."
 
 #~ msgid ""
 #~ "Enter the name you wish for e-mails to be sent from. If left blank, the "
 #~ "default will be used."
-#~ msgstr "Wprowad imi/nazwisko (od kogo ma by przesany email?)"
+#~ msgstr ""
+#~ "Wpisz nazwę, która ma być wyświetlona w polu adres nadawcy. "
+#~ "W przypadku pozostawienia pustego zostanie użyta wartość domyślna."
 
 #~ msgid ""
 #~ "If you like this plugin, please help keep it up to date by <a href="
 #~ "\"http://www.jfarthing.com/donate\">donating through PayPal</a>!"
 #~ msgstr ""
-#~ "Jeli podoba Ci si ten plugin moesz go <a href=\"http://www.jfarthing.com/"
-#~ "donate\">dofinansowa</a> poprzez system PayPal. Zapraszamy rwnie do "
+#~ "Jeśli podoba Ci się ten plugin możesz go <a href=\"http://www.jfarthing.com/"
+#~ "donate\">dofinansować</a> poprzez system PayPal. Zapraszamy również do "
 #~ "odwiedzenia wortalu <a href=\"http://webcommunity.pl\"> WebCommunity.pl</"
 #~ "a>"
 
@@ -1140,7 +1171,7 @@ msgstr ""
 #~ msgstr "Optymalizacja"
 
 #~ msgid "Rewrite Login Links"
-#~ msgstr "Przepisz Linki"
+#~ msgstr "Przepisz Linki Logowania"
 
 #~ msgid "Some features of <em>Theme My Login</em> may not function properly."
-#~ msgstr "Niektre funkcje <em>Theme My Login</em> mog nie dziaa prawidowo."
+#~ msgstr "Niektóre funkcje <em>Theme My Login</em> mogą nie działać prawidłowo."
