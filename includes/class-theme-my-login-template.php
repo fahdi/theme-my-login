@@ -342,7 +342,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_user_avatar( $size = 50 ) {
+	function the_user_avatar( $size = '' ) {
 		global $current_user;
 		if ( empty( $size ) )
 			$size = $this->options['gravatar_size'];
