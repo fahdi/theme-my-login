@@ -33,6 +33,28 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 <?php
 	}
 
+	function ms_password_fields( &$template ) {
+		$theme_my_login =& $template->theme_my_login;
+
+		$errors = array();
+		foreach ( $theme_my_login->errors->get_error_codes() as $code ) {
+			if ( in_array( $code, array( 'empty_password', 'password_mismatch', 'password_length' ) ) )
+				$errors[] = $theme_my_login->errors->get_error_message( $code );
+		}
+	?>
+	<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', $this->theme_my_login->textdomain );?></label>
+	<?php if ( !empty( $errors ) ) { ?>
+		<p class="error"><?php echo implode( '<br />', $errors ); ?></p>
+	<?php } ?>
+	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /><br />
+	<span class="hint"><?php echo apply_filters( 'tml_password_hint', __( '(Must be at least 6 characters.)', $this->theme_my_login->textdomain ) ); ?></span>
+
+	<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', $this->theme_my_login->textdomain );?></label>
+	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /><br />
+	<span class="hint"><?php echo apply_filters( 'tml_password_confirm_hint', __( 'Confirm that you\'ve typed your password correctly.', $this->theme_my_login->textdomain ) ); ?></span>
+<?php
+	}
+
 	/**
 	 * Handles password errors for registration form
 	 *
@@ -65,6 +87,15 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		return $errors;
 	}
 
+	function ms_password_errors( $result ) {
+		$errors =& $result['errors'];
+		$errors = $this->password_errors( $errors );
+		foreach ( $errors->errors as $code => $msg ) {
+			$errors->errors[$code] = preg_replace( '/<strong>([^<]+)<\/strong>: /', '', $msg );
+		}
+		return $result;
+	}
+
 	/**
 	 * Sets the user password
 	 *
@@ -82,6 +113,27 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		if ( isset( $_POST['user_pass'] ) && !empty( $_POST['user_pass'] ) )
 			$user_pass = $_POST['user_pass'];
 		return $user_pass;
+	}
+
+	function ms_save_password( $meta ) {
+		if ( isset( $_POST['stage'] ) && 'validate-user-signup' == $_POST['stage'] )
+			$meta['user_pass'] = wp_hash_password( $_POST['user_pass'] );
+		return $meta;
+	}
+
+	function ms_set_password( $user_id ) {
+		global $wpdb;
+
+		$user = get_userdata( $user_id );
+
+		if ( $signup_meta = $wpdb->get_var( $wpdb->prepare( "SELECT meta FROM $wpdb->signups WHERE user_login = %s", $user->user_login ) ) ) {
+			$signup_meta = maybe_unserialize( $signup_meta );
+			if ( is_array( $signup_meta ) && isset( $signup_meta['user_pass'] ) ) {
+				$wpdb->update( $wpdb->users, array( 'user_pass' => $signup_meta['user_pass'] ), array( 'user_login' => $user->user_login ) );
+				unset( $signup_meta['user_pass'] );
+				$wpdb->update( $wpdb->signups, array( 'meta' => $signup_meta ), array( 'user_login' => $user->user_login ) );
+			}
+		}
 	}
 
 	/**
@@ -368,8 +420,12 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	function load() {
 		// Register password
 		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
+		add_action( 'tml_signup_extra_fields', array( &$this, 'ms_password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
+		add_filter( 'wpmu_validate_user_signup',  array( &$this, 'ms_password_errors' ) );
 		add_filter( 'tml_user_registration_pass', array( &$this, 'set_password' ) );
+		add_filter( 'add_signup_meta', array( &$this, 'ms_save_password' ) );
+		add_action( 'wpmu_new_user', array( &$this, 'ms_set_password' ) );
 		add_action( 'tml_new_user_registered', array( &$this, 'remove_default_password_nag' ) );
 		// Reset password
 		add_action( 'tml_display_resetpass', array( &$this, 'get_resetpass_form' ) );
