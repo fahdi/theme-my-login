@@ -23,7 +23,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 		check_ajax_referer( 'add-user-link' );
 
 		// Create a reference to current links
-		$links =& $this->theme_my_login->options['user_links'];
+		$links =& $this->theme_my_login->options->get_option( 'user_links' );
 
 		$c = 0;
 		if ( isset( $_POST['new_user_link'] ) ) {
@@ -42,7 +42,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 					// Add new link
 					$links[$role][] = array( 'title' => $clean_title, 'url' => $clean_url );
 					// Save links
-					$this->theme_my_login->save_options();
+					$this->theme_my_login->options->save();
 
 					$link_row = array_merge( array( 'id' => max( array_keys( $links[$role] ) ) ), end( $links[$role] ) );
 
@@ -75,7 +75,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 				// Update the link if it has changed
 				if ( $current_link['title'] != $clean_title || $current_link['url'] != $clean_url ) {
 					$current_link = array( 'title' => $clean_title, 'url' => $clean_url );
-					$this->theme_my_login->save_options();
+					$this->theme_my_login->options->save();
 				}
 
 				$link_row = array_merge( array( 'id' => $id ), $current_link );
@@ -110,12 +110,12 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 
 		check_ajax_referer( "delete-user-link_$id" );
 
-		$links =& $this->theme_my_login->options['user_links'][$user_role];
+		$links =& $this->theme_my_login->options->get_option( array( 'user_links', $user_role ) );
 		if ( isset( $links[$id] ) ) {
 			// Delete link
 			unset( $links[$id] );
 			// Save links
-			$this->theme_my_login->save_options();
+			$this->theme_my_login->options->save();
 			die( '1' );
 		}
 		die( '0' );
@@ -136,7 +136,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	function admin_menu( &$admin ) {
 		global $wp_roles;
 		// Add menu tab
-		$admin->add_menu_page( __( 'User Links', $this->theme_my_login->textdomain ), 'tml-options-user-links' );
+		$admin->add_menu_page( __( 'User Links', 'theme-my-login' ), 'tml-options-user-links' );
 		// Iterate through each user role
 		foreach ( $wp_roles->get_names() as $role => $label ) {
 			// We don't want the 'pending' role created by the "User Moderation" module
@@ -217,7 +217,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * @param string $role Name of user role
 	 */
 	function display_settings( $role ) {
-		$links =& $this->theme_my_login->options['user_links'][$role];
+		$links =& $this->theme_my_login->options->get_option( array( 'user_links', $role ) );
 		if ( empty($links) )
 			$links = array();
 		?>
@@ -226,8 +226,8 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?> class="sortable">
 		<thead>
 		<tr>
-			<th class="left"><?php _e( 'Title', $this->theme_my_login->textdomain ); ?></th>
-			<th><?php _e( 'URL', $this->theme_my_login->textdomain ); ?></th>
+			<th class="left"><?php _e( 'Title', 'theme-my-login' ); ?></th>
+			<th><?php _e( 'URL', 'theme-my-login' ); ?></th>
 			<th></th>
 		</tr>
 		</thead>
@@ -244,13 +244,13 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 		</tbody>
 	</table>
 
-	<p><strong><?php _e( 'Add New link:' , $this->theme_my_login->textdomain ) ?></strong></p>
+	<p><strong><?php _e( 'Add New link:' , 'theme-my-login' ) ?></strong></p>
 
 	<table id="new-<?php echo $role; ?>-link">
 	<thead>
 	<tr>
-		<th class="left"><label for="new_user_link[<?php echo $role; ?>][title]"><?php _e( 'Title', $this->theme_my_login->textdomain ) ?></label></th>
-		<th><label for="new_user_link[<?php echo $role; ?>][url]"><?php _e( 'URL', $this->theme_my_login->textdomain ) ?></label></th>
+		<th class="left"><label for="new_user_link[<?php echo $role; ?>][title]"><?php _e( 'Title', 'theme-my-login' ) ?></label></th>
+		<th><label for="new_user_link[<?php echo $role; ?>][url]"><?php _e( 'URL', 'theme-my-login' ) ?></label></th>
 		<th></th>
 	</tr>
 	</thead>
@@ -260,7 +260,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 		<td class="left"><input id="new_user_link[<?php echo $role; ?>][title]" name="new_user_link[<?php echo $role; ?>][title]" type="text" tabindex="8" size="20" /></td>
 		<td class="center"><input id="new_user_link[<?php echo $role; ?>][url]" name="new_user_link[<?php echo $role; ?>][url]" type="text" tabindex="8" size="20" /></td>
 		<td class="submit">
-			<input type="submit" id="add_new_user_link_<?php echo $role; ?>" name="add_new_user_link[<?php echo $role; ?>]" class="add:<?php echo $role; ?>-link-list:new-<?php echo $role; ?>-link" tabindex="9" value="<?php esc_attr_e( 'Add link', $this->theme_my_login->textdomain ) ?>" />
+			<input type="submit" id="add_new_user_link_<?php echo $role; ?>" name="add_new_user_link[<?php echo $role; ?>]" class="add:<?php echo $role; ?>-link-list:new-<?php echo $role; ?>-link" tabindex="9" value="<?php esc_attr_e( 'Add link', 'theme-my-login' ) ?>" />
 			<?php wp_nonce_field( 'add-user-link', '_ajax_nonce', false ); ?>
 		</td>
 	</tr>
@@ -294,11 +294,11 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 		$update_nonce = wp_create_nonce( 'add-user-link' );
 
 		$r .= "\n\t<tr id='$role-link-$link->id' class='$style'>";
-		$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='user_links[$role][$link->id][title]'>" . __( 'Title', $this->theme_my_login->textdomain ) . "</label><input name='user_links[$role][$link->id][title]' id='user_links[$role][$link->id][title]' tabindex='6' type='text' size='20' value='$link->title' />";
+		$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='user_links[$role][$link->id][title]'>" . __( 'Title', 'theme-my-login' ) . "</label><input name='user_links[$role][$link->id][title]' id='user_links[$role][$link->id][title]' tabindex='6' type='text' size='20' value='$link->title' />";
 		$r .= wp_nonce_field( 'change-user-link', '_ajax_nonce', false, false );
 		$r .= "</td>";
 
-		$r .= "\n\t\t<td class='center'><label class='screen-reader-text' for='user_links[$role][$link->id][url]'>" . __( 'URL', $this->theme_my_login->textdomain ) . "</label><input name='user_links[$role][$link->id][url]' id='user_links[$role][$link->id][url]' tabindex='6' type='text' size='20' value='$link->url' /></td>";
+		$r .= "\n\t\t<td class='center'><label class='screen-reader-text' for='user_links[$role][$link->id][url]'>" . __( 'URL', 'theme-my-login' ) . "</label><input name='user_links[$role][$link->id][url]' id='user_links[$role][$link->id][url]' tabindex='6' type='text' size='20' value='$link->url' /></td>";
 
 		$r .= "\n\t\t<td class='submit'><input name='delete_user_link[$role][$link->id]' type='submit' class='delete:$role-link-list:$role-link-$link->id::_ajax_nonce=$delete_nonce deletelink' tabindex='6' value='". esc_attr__( 'Delete' ) ."' />";
 		$r .= "\n\t\t<input name='updatelink' type='submit' class='add:$role-link-list:$role-link-$link->id::_ajax_nonce=$update_nonce updatelink' tabindex='6' value='". esc_attr__( 'Update' ) ."' /></td>\n\t</tr>";

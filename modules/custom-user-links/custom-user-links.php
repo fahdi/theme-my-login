@@ -33,8 +33,8 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 		$current_user = wp_get_current_user();
 
 		foreach( (array) $current_user->roles as $role ) {
-			if ( isset( $this->theme_my_login->options['user_links'][$role] ) ) {
-				$links = $this->theme_my_login->options['user_links'][$role];
+			if ( $this->theme_my_login->options->get_option( array( 'user_links', $role ) ) ) {
+				$links = $this->theme_my_login->options->get_option( array( 'user_links', $role ) );
 				break;
 			}
 		}
@@ -60,10 +60,10 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		if ( !isset( $theme_my_login->options['user_links'] ) ) {
-			$theme_my_login->options['user_links'] = $options['user_links'];
+		if ( !$theme_my_login->options->get_option( 'user_links' ) ) {
+			$theme_my_login->options->set_option( 'user_links', $options['user_links'] );
 		} else {
-			$theme_my_login->options['user_links'] = $theme_my_login->array_merge_recursive( $options['user_links'], $theme_my_login->options['user_links'] );
+			$theme_my_login->options->set_option( 'user_links', $theme_my_login->array_merge_recursive( $options['user_links'], $theme_my_login->options['user_links'] ) );
 		}
 	}
 

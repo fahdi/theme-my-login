@@ -46,7 +46,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 			}
 		} elseif ( is_wp_error( $user ) && 'incorrect_password' == $user->get_error_code() ) {
 			// Get the options
-			$options = $this->theme_my_login->get_option( array( 'security', 'failed_login' ), array() );
+			$options = $this->theme_my_login->options->get_option( array( 'security', 'failed_login' ), array() );
 
 			// Get the attempts
 			$attempts = $this->get_failed_login_attempts( $userdata->ID );
@@ -374,10 +374,10 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		if ( !isset( $theme_my_login->options['security'] ) ) {
-			$theme_my_login->options['security'] = $options['security'];
+		if ( !$theme_my_login->options->get_option( 'security' ) ) {
+			$theme_my_login->options->set_option( 'security', $options['security'] );
 		} else {
-			$theme_my_login->options['security'] = $theme_my_login->array_merge_recursive( $options['security'], $theme_my_login->options['security'] );
+			$theme_my_login->options->set_option( 'security', $theme_my_login->array_merge_recursive( $options['security'], $theme_my_login->options['security'] ) );
 		}
 	}
 

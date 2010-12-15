@@ -56,8 +56,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = array( 'login_type' => 'default' );
 			foreach ( (array) $user->roles as $role ) {
-				if ( isset( $this->theme_my_login->options['redirection'][$role] ) ) {
-					$redirection = $this->theme_my_login->options['redirection'][$role];
+				if ( $this->theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -110,8 +110,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = array();
 			foreach ( (array) $user->roles as $role ) {
-				if ( isset( $this->theme_my_login->options['redirection'][$role] ) ) {
-					$redirection = $this->theme_my_login->options['redirection'][$role];
+				if ( $this->theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -172,7 +172,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @param string $role Name of user role
 	 */
 	function display_redirection_settings( $role ) {
-		$redirection =& $this->theme_my_login->options['redirection'][$role];
+		$redirection =& $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
 		?>
 <table class="form-table">
 	<tr valign="top">
@@ -216,10 +216,10 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		if ( !isset( $theme_my_login->options['redirection'] ) ) {
-			$theme_my_login->options['redirection'] = $options['redirection'];
+		if ( !$theme_my_login->options->get_option( 'redirection' ) ) {
+			$theme_my_login->options->set_option( 'redirection', $options['redirection'] );
 		} else {
-			$theme_my_login->options['redirection'] = $theme_my_login->array_merge_recursive( $options['redirection'], $theme_my_login->options['redirection'] );
+			$theme_my_login->options->set_option( 'redirection', $theme_my_login->array_merge_recursive( $options['redirection'], $theme_my_login->options->get_option( 'redirection' ) ) );
 		}
 	}
 
@@ -237,6 +237,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 */
 	function init_options( $options = array() ) {
 		global $wp_roles;
+
 		if ( empty( $wp_roles ) )
 			$wp_roles =& new WP_Roles();
 
@@ -258,17 +259,11 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		// Activate
 		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
-		// Initialize
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		// Admin
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
-		// Login form
 		add_action( 'tml_login_form', array( &$this, 'login_form' ) );
-		// Login redirect
 		add_filter( 'login_redirect', array( &$this, 'login_redirect' ), 10, 3 );
-		// Logout redirect
 		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 	}
 }

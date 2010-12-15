@@ -18,9 +18,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	function load_users_page() {
 		global $theme_my_login_security;
 
-		// Shorthand reference
-		$theme_my_login =& $this->theme_my_login;
-
 		wp_enqueue_script( 'tml-security-admin', plugins_url( TML_DIRNAME . '/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
 
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
@@ -129,7 +126,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 		// Shorthand reference
 		$theme_my_login =& $this->theme_my_login;
 		// Security options
-		$security = $theme_my_login->get_option( array( 'security', 'failed_login' ), array() );
+		$security = $theme_my_login->options->get_option( array( 'security', 'failed_login' ), array() );
 		?>
 <table class="form-table">
 	<tr valign="top">

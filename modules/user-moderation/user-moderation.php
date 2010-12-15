@@ -59,7 +59,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$theme_my_login =& $this->theme_my_login;
 
 		// Send appropriate e-mail depending on moderation type
-		if ( 'email' == $theme_my_login->options['moderation']['type'] ) { // User activation
+		if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) { // User activation
 			// Generate an activation key
 			$key = wp_generate_password( 20, false );
 			// Set the activation key for the user
@@ -68,7 +68,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$this->apply_user_activation_notification_filters();
 			// Send activation e-mail
 			$this->new_user_activation_notification( $user_id, $key );
-		} elseif ( 'admin' == $theme_my_login->options['moderation']['type'] ) { // Admin approval
+		} elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) { // Admin approval
 			// Apply approval admin e-mail filters
 			$this->apply_user_approval_admin_notification_filters();
 			// Send approval e-mail
@@ -166,7 +166,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		if ( is_a( $user, 'WP_User' ) ) {
 			if ( in_array( 'pending', (array) $user->roles ) ) {
-				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
+				if ( 'email' == $this->theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
 						$this->theme_my_login->get_login_page_link( 'action=sendactivation&login=' . $username ) ) );
@@ -220,9 +220,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		if ( !empty( $theme_my_login->request_instance ) )
 			$redirect_to = $theme_my_login->get_current_url( 'instance=' . $theme_my_login->request_instance );
 
-		if ( 'email' == $theme_my_login->options['moderation']['type'] )
+		if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
-		elseif ( 'admin' == $theme_my_login->options['moderation']['type'] )
+		elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'approval', $redirect_to );
 
 		return $redirect_to;
@@ -415,7 +415,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_activation_notification_filters() {
-		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_activation' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->options->get_option( array( 'email', 'user_activation' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_activation_notification_title', array( &$this, 'user_activation_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_activation_notification_message', array( &$this, 'user_activation_notification_message_filter' ), 10, 3 );
@@ -432,7 +432,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_approval_notification_filters() {
-		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->options->get_option( array( 'email', 'user_approval' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_approval_notification_title', array( &$this, 'user_approval_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_approval_notification_message', array( &$this, 'user_approval_notification_message_filter' ), 10, 3 );
@@ -446,7 +446,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_approval_admin_notification_filters() {
-		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_approval' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->options->get_option( array( 'email', 'user_approval' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 			add_filter( 'user_approval_admin_notifcation_mail_to', array( &$this, 'user_approval_admin_notifcation_mail_to_filter' ) );
 			add_filter( 'user_approval_admin_notification_title', array( &$this, 'user_approval_admin_notification_title_filter' ), 10, 2 );
@@ -464,7 +464,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_user_denial_notification_filters() {
-		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->get_option( array( 'email', 'user_denial' ) ) ) {
+		if ( $this->theme_my_login->is_module_active( 'custom-email/custom-email.php' ) && $options = $this->theme_my_login->options->get_option( array( 'email', 'user_denial' ) ) ) {
 			$this->theme_my_login_custom_email->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_denial_notification_title', array( &$this, 'user_denial_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_denial_notification_message', array( &$this, 'user_denial_notification_message_filter' ), 10, 2 );
@@ -485,7 +485,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered subject
 	 */
 	function user_activation_notification_title_filter( $title, $user_id ) {
-		$_title = $this->theme_my_login->get_option( array( 'email', 'user_activation', 'title' ) );
+		$_title = $this->theme_my_login->options->get_option( array( 'email', 'user_activation', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
 
@@ -504,7 +504,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered message
 	 */
 	function user_activation_notification_message_filter( $message, $activation_url, $user_id ) {
-		$_message = $this->theme_my_login->get_option( array( 'email', 'user_activation', 'message' ) );
+		$_message = $this->theme_my_login->options->get_option( array( 'email', 'user_activation', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%activateurl%' => $activation_url ) );
 	}
 
@@ -522,7 +522,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered subject
 	 */
 	function user_approval_notification_title_filter( $title, $user_id ) {
-		$_title = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'title' ) );
+		$_title = $this->theme_my_login->options->get_option( array( 'email', 'user_approval', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
 
@@ -541,7 +541,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered message
 	 */
 	function user_approval_notification_message_filter( $message, $new_pass, $user_id ) {
-		$_message = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'message' ) );
+		$_message = $this->theme_my_login->options->get_option( array( 'email', 'user_approval', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%loginurl%' => $this->theme_my_login->get_login_page_link(), '%user_pass%' => $new_pass ) );
 	}
 
@@ -558,7 +558,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered recipient
 	 */
 	function user_approval_admin_notifcation_mail_to_filter( $to ) {
-		$_to = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) );
+		$_to = $this->theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
 
@@ -576,7 +576,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered subject
 	 */
 	function user_approval_admin_notification_title_filter( $title, $user_id ) {
-		$_title = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_title' ) );
+		$_title = $this->theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
 
@@ -594,7 +594,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered message
 	 */
 	function user_approval_admin_notification_message_filter( $message, $user_id ) {
-		$_message = $this->theme_my_login->get_option( array( 'email', 'user_approval', 'admin_message' ) );
+		$_message = $this->theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id, array( '%pendingurl%' => admin_url( 'users.php?role=pending' ) ) );
 	}
 
@@ -612,7 +612,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered subject
 	 */
 	function user_denial_notification_title_filter( $title, $user_id ) {
-		$_title = $this->theme_my_login->get_option( array( 'email', 'user_denial', 'title' ) );
+		$_title = $this->theme_my_login->options->get_option( array( 'email', 'user_denial', 'title' ) );
 		return empty( $_title ) ? $title : $this->theme_my_login_custom_email->replace_vars( $_title, $user_id );
 	}
 
@@ -630,7 +630,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return string The filtered message
 	 */
 	function user_denial_notification_message_filter( $message, $user_id ) {
-		$_message = $this->theme_my_login->get_option( array( 'email', 'user_denial', 'message' ) );
+		$_message = $this->theme_my_login->options->get_option( array( 'email', 'user_denial', 'message' ) );
 		return empty( $_message ) ? $message : $this->theme_my_login_custom_email->replace_vars( $_message, $user_id );
 	}
 
@@ -647,8 +647,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		$theme_my_login->options['moderation'] = isset( $theme_my_login->options['moderation'] ) ? $theme_my_login->array_merge_recursive( $options['moderation'], $theme_my_login->options['moderation'] ) :  $options['moderation'];
-		$theme_my_login->options['email'] = isset( $theme_my_login->options['email'] ) ? $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] ) : $options['email'];
+		$theme_my_login->options->options['moderation'] = $theme_my_login->options->get_option( 'moderation' ) ? $theme_my_login->array_merge_recursive( $options['moderation'], $theme_my_login->options->get_option( 'moderation' ) ) :  $options['moderation'];
+		$theme_my_login->options->options['email'] = $theme_my_login->options->get_option( 'email' ) ? $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options->get_option( 'email' ) ) : $options['email'];
 	}
 
 	/**
@@ -738,7 +738,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$this->theme_my_login_custom_email =& $theme_my_login_custom_email;
 
 		// Moderation is enabled
-		if ( in_array( $theme_my_login->options['moderation']['type'], array( 'admin', 'email' ) ) ) {
+		if ( in_array( $theme_my_login->options->get_option( array( 'moderation', 'type' ) ), array( 'admin', 'email' ) ) ) {
 			// Remove all other registration filters
 			add_action( 'register_post', array( &$this, 'register_post' ) );
 
@@ -759,7 +759,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_action( 'deny_user', array( &$this, 'apply_user_denial_notification_filters' ) );
 
 			// Add activation action
-			if ( 'email' == $theme_my_login->options['moderation']['type'] ) {
+			if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
 				add_action( 'tml_request_activate', array( &$this, 'user_activation' ) );
 				add_action( 'tml_request_sendactivation', array( &$this, 'send_activation' ) );
 			}

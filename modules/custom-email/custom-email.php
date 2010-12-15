@@ -583,10 +583,10 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		if ( !isset( $theme_my_login->options['email'] ) ) {
-			$theme_my_login->options['email'] = $options['email'];
+		if ( !$theme_my_login->options->get_option( 'email' ) ) {
+			$theme_my_login->options->set_option( 'email', $options['email'] );
 		} else {
-			$theme_my_login->options['email'] = $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] );
+			$theme_my_login->options->set_option( 'email', $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] ) );
 		}
 	}
 
@@ -654,7 +654,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function load() {
 		// Create a reference to custom e-mail options
-		$this->options =& $this->theme_my_login->options['email'];
+		$this->options =& $this->theme_my_login->options->options['email'];
 		// Activate
 		add_action( 'tml_activate_custom-email/custom-email.php', array( &$this, 'activate' ) );
 		// Initialize

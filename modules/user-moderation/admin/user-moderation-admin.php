@@ -105,11 +105,11 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 			if ( in_array( 'pending', (array) $user_object->roles ) ) {
 				$_actions = array();
 				// If moderation type is e-mail activation, add "Resend Activation" link
-				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
+				if ( 'email' == $this->theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
 					$_actions['resend-activation'] = '<a href="' . add_query_arg( 'wp_http_referer',
 						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
 						wp_nonce_url( "users.php?action=resendactivation&amp;user=$user_object->ID", 'resend-activation' ) ) . '">' . __( 'Resend Activation', 'theme-my-login' ) . '</a>';
-				} elseif ( 'admin' == $this->theme_my_login->options['moderation']['type'] ) {
+				} elseif ( 'admin' == $this->theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
 					// Add "Approve" link
 					$_actions['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer',
 						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
@@ -250,13 +250,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	<tr valign="top">
 		<th scope="row"><?php _e( 'User Moderation', 'theme-my-login' ); ?></th>
 		<td>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->options['moderation']['type'] ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_none"><?php _e( 'None', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require no moderation.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->options['moderation']['type'] ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_email"><?php _e( 'E-mail Confirmation', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require new users to confirm their e-mail address before they may log in.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->options['moderation']['type'] ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_admin"><?php _e( 'Admin Approval', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require new users to be approved by an administrator before they may log in.', 'theme-my-login' ); ?></p>
 		</td>
@@ -278,7 +278,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
 		// User activation email options
-		$user_activation = $theme_my_login->get_option( array( 'email', 'user_activation' ), array() );
+		$user_activation = $theme_my_login->options->get_option( array( 'email', 'user_activation' ), array() );
 		?>
 <table class="form-table">
     <tr>
@@ -327,7 +327,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
 		// User approval email options
-		$user_approval = $theme_my_login->get_option( array( 'email', 'user_approval' ), array() );
+		$user_approval = $theme_my_login->options->get_option( array( 'email', 'user_approval' ), array() );
 		?>
 <table class="form-table">
     <tr>
@@ -413,7 +413,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		// Shorthand reference to $theme_my_login object
 		$theme_my_login =& $this->theme_my_login;
 		// User denial email options
-		$user_denial = $theme_my_login->get_option( array( 'email', 'user_denial' ), array() );
+		$user_denial = $theme_my_login->options->get_option( array( 'email', 'user_denial' ), array() );
 		?>
 <table class="form-table">
     <tr>

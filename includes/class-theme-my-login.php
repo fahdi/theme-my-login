@@ -15,25 +15,16 @@ if ( !class_exists( 'Theme_My_Login' ) ) :
  */
 class Theme_My_Login {
 	/**
-	 * Holds TML options key
+	 * Holds options object
 	 *
-	 * @since 6.0
+	 * @since 6.1
 	 * @access public
-	 * @var string
+	 * @var object
 	 */
-	var $options_key = 'theme_my_login';
+	var $options;
 
 	/**
-	 * Holds TML options
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var array
-	 */
-	var $options = array();
-
-	/**
-	 * Hold WP_Error object
+	 * Holds errors object
 	 *
 	 * @since 6.0
 	 * @access public
@@ -42,7 +33,7 @@ class Theme_My_Login {
 	var $errors;
 
 	/**
-	 * Total instances of TML
+	 * Holds total instances of TML
 	 *
 	 * @since 6.0
 	 * @access public
@@ -51,7 +42,7 @@ class Theme_My_Login {
 	var $count = 0;
 
 	/**
-	 * Current instance being requested via HTTP GET or POST
+	 * Holds current instance being requested
 	 *
 	 * @since 6.0
 	 * @access public
@@ -60,7 +51,7 @@ class Theme_My_Login {
 	var $request_instance;
 
 	/**
-	 * Current action being requested via HTTP GET or POST
+	 * Holds current action being requested
 	 *
 	 * @since 6.0
 	 * @access public
@@ -88,18 +79,19 @@ class Theme_My_Login {
 		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
 
-		$this->load_options();
-
-		// Re-load options after modules loaded so that modules can hook into "tml_init_options"
-		//add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 1 );
-
-		add_action( 'parse_request', array( &$this, 'parse_request' ) );
+		$this->options = new WDBJ_Plugin_Options( 'theme_my_login', array(
+			'page_id' => 0,
+			'show_page' => 1,
+			'enable_css' => 1,
+			'active_modules' => array(),
+			'initial_nag' => 1
+		) );
 
 		add_action( 'init', array( &$this, 'init' ) );
-
-		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
+		add_action( 'parse_request', array( &$this, 'parse_request' ) );
 
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
+		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
 
 		add_filter( 'the_title', array( &$this, 'the_title' ), 10, 2 );
 		add_filter( 'single_post_title', array( &$this, 'single_post_title' ) );
@@ -118,17 +110,23 @@ class Theme_My_Login {
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
 	}
 
+	/**
+	 * Initializes the plugin
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
 	function init() {
 		load_plugin_textdomain( 'theme-my-login', '', TML_DIRNAME . '/language' );
 
 		$this->errors = new WP_Error();
 
-		if ( $this->get_option( 'enable_css' ) )
-			wp_enqueue_style( 'theme-my-login', $this->get_stylesheet(), false, $this->get_option( 'version' ) );
+		if ( $this->options->get_option( 'enable_css' ) )
+			wp_enqueue_style( 'theme-my-login', $this->get_stylesheet(), false, $this->options->get_option( 'version' ) );
 	}
 
 	/**
-	 * Determine if specified page is the logn page
+	 * Determine if specified page is the login page
 	 *
 	 * since 6.0
 	 * @access public
@@ -142,7 +140,7 @@ class Theme_My_Login {
 				$page_id = $wp_query->get_queried_object_id();
 		}
 
-		$is_login_page = ( $page_id == $this->get_option( 'page_id' ) );
+		$is_login_page = ( $page_id == $this->options->get_option( 'page_id' ) );
 
 		return apply_filters( 'tml_is_login_page', $is_login_page );
 	}
@@ -344,7 +342,7 @@ class Theme_My_Login {
 	 * @return string Login page link with optional $query arguments appended
 	 */
 	function get_login_page_link( $query = '' ) {
-		$link = get_page_link( $this->get_option( 'page_id' ) );
+		$link = get_page_link( $this->options->get_option( 'page_id' ) );
 		if ( !empty( $query ) ) {
 			$q = wp_parse_args( $query );
 			$link = add_query_arg( $q, $link );
@@ -375,7 +373,7 @@ class Theme_My_Login {
 			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s", $title ) );
 		}
 
-		if ( $this->get_option( 'page_id' ) == $post_id ) {
+		if ( $this->options->get_option( 'page_id' ) == $post_id ) {
 			if ( !in_the_loop() ) {
 				$title = is_user_logged_in() ? __( 'Log Out', 'theme-my-login' ) : __( 'Log In', 'theme-my-login' );
 			} else {
@@ -420,8 +418,8 @@ class Theme_My_Login {
 	 */
 	function wp_list_pages_excludes( $exclude_array ) {
 		$exclude_array = (array) $exclude_array;
-		if ( !$this->get_option( 'show_page' ) )
-			$exclude_array[] = $this->get_option( 'page_id' );
+		if ( !$this->options->get_option( 'show_page' ) )
+			$exclude_array[] = $this->options->get_option( 'page_id' );
 		return $exclude_array;
 	}
 
@@ -659,112 +657,6 @@ if(typeof wpOnload=='function')wpOnload()
 	}
 
 	/**
-	 * Initializes TML options
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function init_options() {
-		$this->options = apply_filters( 'tml_init_options', array(
-			'page_id' => 0,
-			'show_page' => 1,
-			'enable_css' => 1,
-			'active_modules' => array(),
-			'initial_nag' => 1
-		) );
-	}
-
-	/**
-	 * Loads TML options
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function load_options( $return = false ) {
-
-		$this->init_options();
-
-		$options = get_option( $this->options_key );
-
-		if ( is_array( $options ) ) {
-			$this->options = array_merge( $this->options, $options );
-		} else {
-			update_option( $this->options_key, $this->options );
-		}
-
-		if ( $return )
-			return $this->options;
-	}
-
-	/**
-	 * Saves TML options
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function save_options() {
-		$options = get_option( $this->options_key );
-		if ( $options != $this->options )
-			update_option( $this->options_key, $this->options );
-	}
-
-	/**
-	 * Retrieve a TML option
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string|array $option Name of option to retrieve or an array of hierarchy for multidimensional options
-	 * @param mixed $default optional. Default value to return if $option is not set
-	 * @return mixed Value of requested option or $default if option is not set
-	 */
-	function get_option( $option, $default = false ) {
-		$options = $this->options;
-		$value = false;
-		if ( is_array( $option ) ) {
-			foreach ( $option as $key ) {
-				if ( !isset( $options[$key] ) ) {
-					$value = $default;
-					break;
-				}
-				$options = $value = $options[$key];
-			}
-		} else {
-			$value = isset( $options[$option] ) ? $options[$option] : $default;
-		}
-		return apply_filters( 'tml_get_option', $value, $option, $default );
-	}
-
-	/**
-	 * Set a TML option
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $option Name of option to set
-	 * @param mixed $value Value of new option
-	 * @param bool $save True will save to DB
-	 */
-	function set_option( $option, $value = '', $save = false ) {
-		$this->options[$option] = apply_filters( 'tml_set_option', $value, $option );
-		if ( $save )
-			$this->save_options();
-	}
-
-	/**
-	 * Deletes (unsets) a TML option
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $option Name of option to delete
-	 */
-	function delete_option( $option ) {
-		if ( isset( $this->options[$option] ) )
-			unset( $this->options[$option] );
-	}
-
-	/**
 	 * Merges arrays recursively, replacing duplicate string keys
 	 *
 	 * @since 6.0
@@ -805,7 +697,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function get_active_and_valid_modules() {
 		$modules = array();
-		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
+		$active_modules = apply_filters( 'tml_active_modules', $this->options->get_option( 'active_modules' ) );
 		foreach ( (array) $active_modules as $module ) {
 			// check the $plugin filename
 			// Validate plugin filename	
@@ -828,7 +720,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return bool True if $module is active, false if not
 	 */
 	function is_module_active( $module ) {
-		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
+		$active_modules = apply_filters( 'tml_active_modules', $this->options->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
 	}
 
