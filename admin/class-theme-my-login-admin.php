@@ -138,8 +138,10 @@ class Theme_My_Login_Admin {
 
 		if ( current_user_can( 'manage_options' ) ) {
 			// Remove initial nag now that the settings page has been visited
-			if ( $GLOBALS['theme_my_login']->options->get_option( 'initial_nag' ) )
-				$GLOBALS['theme_my_login']->options->set_option( 'initial_nag', 0, true );
+			if ( $GLOBALS['theme_my_login']->options->get_option( 'initial_nag' ) ) {
+				$GLOBALS['theme_my_login']->options->set_option( 'initial_nag', 0 );
+				$GLOBALS['theme_my_login']->options->save();
+			}
 			// Show "Did You Know" box
 			add_action( 'admin_notices', array( &$this, 'did_you_know' ) );
 		}
