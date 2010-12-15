@@ -16,15 +16,6 @@ if ( !class_exists( 'Theme_My_Login_Module' ) ) :
  */
 class Theme_My_Login_Module {
 	/**
-	 * Holds reference to global $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-
-	/**
 	 * Called when object is constructed
 	 *
 	 * @since 6.0
@@ -55,7 +46,6 @@ class Theme_My_Login_Module {
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	function __construct() {
-		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		$this->load();
 	}
 }
