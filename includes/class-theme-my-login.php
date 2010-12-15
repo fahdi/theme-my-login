@@ -219,7 +219,7 @@ class Theme_My_Login {
 					break;
 				case 'resetpass' :
 				case 'rp' :
-					$errors = $this->reset_password( $_GET['key'], $_GET['login'] );
+					$errors = Theme_My_Login::reset_password( $_GET['key'], $_GET['login'] );
 
 					if ( !is_wp_error( $errors ) ) {
 						$redirect_to = apply_filters( 'resetpass_redirect', Theme_My_Login::get_current_url( 'checkemail=newpass' ) );
