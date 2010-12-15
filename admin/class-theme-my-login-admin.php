@@ -545,7 +545,7 @@ class Theme_My_Login_Admin {
 				return;
 			}	
 		}
-		$this->_install();
+		Theme_My_Login_Admin::_install();
 	}
 
 	/**
@@ -622,7 +622,7 @@ class Theme_My_Login_Admin {
 				return;
 			}	
 		}
-		$this->_uninstall();
+		Theme_My_Login_Admin::_uninstall();
 	}
 
 	/**
@@ -639,7 +639,7 @@ class Theme_My_Login_Admin {
 		foreach ( array_keys( $modules ) as $module ) {
 			$module = plugin_basename( trim( $module ) );
 
-			$valid = $this->validate_module( $module );
+			$valid = Theme_My_Login_Admin::validate_module( $module );
 			if ( is_wp_error( $valid ) )
 				continue;
 
@@ -677,40 +677,11 @@ class Theme_My_Login_Admin {
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
 		add_action( 'admin_notices', array( &$this, 'initial_nag' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
+
+		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', 'Theme_My_Login_Admin::install' );
+		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', 'Theme_My_Login_Admin::uninstall' );
 	}
 }
-
-/**
- * Install method wrapper
- *
- * @see Theme_My_Login_Admin::install()
- * @since 6.0
- * @access public
- */
-function theme_my_login_install() {
-	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
-	if ( !is_object( $theme_my_login_admin ) )
-		$theme_my_login_admin =& new Theme_My_Login_Admin();
-
-	$theme_my_login_admin->install();
-}
-register_activation_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_install' );
-
-/**
- * Uninstall method wrapper
- *
- * @see Theme_My_Login_Admin::uninstall()
- * @since 6.0
- * @access public
- */
-function theme_my_login_uninstall() {
-	$theme_my_login_admin =& $GLOBALS['theme_my_login_admin'];
-	if ( !is_object( $theme_my_login_admin ) )
-		$theme_my_login_admin =& new Theme_My_Login_Admin();
-
-	$theme_my_login_admin->uninstall();
-}
-register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', 'theme_my_login_uninstall' );
 
 endif; // Class exists
 
