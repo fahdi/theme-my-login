@@ -344,7 +344,7 @@ class Theme_My_Login_Admin {
 		}
 
 		// Merge current settings
-		$settings = $GLOBALS['theme_my_login']->array_merge_recursive( $GLOBALS['theme_my_login']->options->options, $settings );
+		$settings = Theme_My_Login::array_merge_recursive( $GLOBALS['theme_my_login']->options->options, $settings );
 
 		// Allow plugins/modules to add/modify settings
 		$settings = apply_filters( 'tml_save_settings', $settings );
@@ -555,14 +555,11 @@ class Theme_My_Login_Admin {
 	 * @access private
 	 */
 	function _install() {
-		// Shorthand reference
-		$options =& $GLOBALS['theme_my_login']->options;
-
 		// Declare page_id to avoid notices
 		$page_id = 0;
 
 		// Current version
-		$version = $options->get_option( 'version' );
+		$version = $GLOBALS['theme_my_login']->options->get_option( 'version' );
 
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
@@ -574,7 +571,7 @@ class Theme_My_Login_Admin {
 		}
 
 		// Get existing page ID
-		$page_id = $options->get_option( 'page_id' );
+		$page_id = $GLOBALS['theme_my_login']->options->get_option( 'page_id' );
 
 		// Check if page exists
 		$page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
@@ -598,9 +595,9 @@ class Theme_My_Login_Admin {
 		}
 
 		$plugin_data = get_plugin_data( TML_ABSPATH . '/theme-my-login.php' );
-		$options->set_option( 'version', $plugin_data['Version'] );
-		$options->set_option( 'page_id', (int) $page_id );
-		$options->save();
+		$GLOBALS['theme_my_login']->options->set_option( 'version', $plugin_data['Version'] );
+		$GLOBALS['theme_my_login']->options->set_option( 'page_id', (int) $page_id );
+		$GLOBALS['theme_my_login']->options->save();
 
 		return $page_id;
 	}
