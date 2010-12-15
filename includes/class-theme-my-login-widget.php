@@ -34,11 +34,10 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
     function widget( $args, $instance ) {
-		global $theme_my_login;
         if ( is_user_logged_in() && !$instance['logged_in_widget'] )
             return;
         $args = array_merge( $args, $instance );
-        echo $theme_my_login->shortcode( $args );
+        echo $GLOBALS['theme_my_login']->shortcode( $args );
     }
 
 	/**

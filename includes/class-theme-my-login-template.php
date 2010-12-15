@@ -16,15 +16,6 @@ if ( !class_exists( 'Theme_My_Login_Template' ) ) :
  */
 class Theme_My_Login_Template {
 	/**
-	 * Holds reference to global $theme_my_login object
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var object
-	 */
-	var $theme_my_login;
-
-	/**
 	 * Holds this instance
 	 *
 	 * @since 6.0
@@ -178,7 +169,7 @@ class Theme_My_Login_Template {
 	function get_errors() {
 		global $error;
 
-		$wp_error =& $this->theme_my_login->errors;
+		$wp_error =& $GLOBALS['theme_my_login']->errors;
 
 		if ( empty( $wp_error ) )
 			$wp_error = new WP_Error();
@@ -237,12 +228,12 @@ class Theme_My_Login_Template {
 			$instance = $this->instance;
 
 		if ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) {
-			$url = $this->theme_my_login->get_login_page_link( 'action=' . $action );
+			$url = $GLOBALS['theme_my_login']->get_login_page_link( 'action=' . $action );
 		} else {
 			if ( empty( $instance ) )
-				$url = $this->theme_my_login->get_current_url( array( 'action' => $action ) );
+				$url = Theme_My_Login::get_current_url( array( 'action' => $action ) );
 			else
-				$url = $this->theme_my_login->get_current_url( array( 'action' => $action, 'instance' => $instance ) );
+				$url = Theme_My_Login::get_current_url( array( 'action' => $action, 'instance' => $instance ) );
 		}
 
 		// Respect FORCE_SSL_LOGIN
@@ -400,7 +391,7 @@ class Theme_My_Login_Template {
 		$template =& $this;
 
 		// Shorthand reference to $theme_my_login
-		$theme_my_login =& $this->theme_my_login;
+		$theme_my_login =& $GLOBALS['theme_my_login'];
 
 		// Easy access to current user
 		$current_user = wp_get_current_user();
@@ -449,10 +440,10 @@ class Theme_My_Login_Template {
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
-				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : $this->theme_my_login->get_current_url( 'checkemail=confirm' ) );
+				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_current_url( 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : $this->theme_my_login->get_current_url( 'checkemail=registered' ) );
+				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_current_url( 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :
@@ -561,14 +552,13 @@ class Theme_My_Login_Template {
 	 * @param array $options Instance options
 	 */
 	function __construct( $options = '' ) {
-		$this->theme_my_login =& $GLOBALS['theme_my_login'];
 		$this->load_options( $options );
 		
 		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : 'login';
 		$this->instance = $this->options['instance'];
-		if ( $this->theme_my_login->request_instance == $this->instance ) {
+		if ( $GLOBALS['theme_my_login']->request_instance == $this->instance ) {
 			$this->is_active = true;
-			$this->action = $this->theme_my_login->request_action;
+			$this->action = $GLOBALS['theme_my_login']->request_action;
 		}
 	}
 }
