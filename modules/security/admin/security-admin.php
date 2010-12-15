@@ -32,10 +32,10 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 			$user = isset( $_GET['user'] ) ? $_GET['user'] : '';
 
 			if ( !$user || !current_user_can( 'edit_user', $user ) )
-				wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
+				wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
 			if ( !$user = get_userdata( $user ) )
-				wp_die( __( 'You can&#8217;t edit that user.', $theme_my_login->textdomain ) );
+				wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
 			if ( 'lock' == $_GET['action'] ) {
 				check_admin_referer( 'lock-user_' . $user->ID );
@@ -67,9 +67,9 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	function admin_notices() {
 		if ( isset( $_GET['update'] ) ) {
 			if ( 'lock' == $_GET['update'] )
-				echo '<div id="message" class="updated fade"><p>' . __( 'User locked.', $this->theme_my_login->textdomain ) . '</p></div>';
+				echo '<div id="message" class="updated fade"><p>' . __( 'User locked.', 'theme-my-login' ) . '</p></div>';
 			elseif ( 'unlock' == $_GET['update'] )
-				echo '<div id="message" class="updated fade"><p>' . __( 'User unlocked.', $this->theme_my_login->textdomain ) . '</p></div>';
+				echo '<div id="message" class="updated fade"><p>' . __( 'User unlocked.', 'theme-my-login' ) . '</p></div>';
 		}
 	}
 
@@ -92,9 +92,9 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 
 		if ( $current_user->ID != $user_object->ID ) {
 			if ( isset( $security_meta['is_locked'] ) && $security_meta['is_locked'] )
-				$new_actions['unlock-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=unlock&amp;user=$user_object->ID", "unlock-user_$user_object->ID" ) ) . '">' . __( 'Unlock', $this->theme_my_login->textdomain ) . '</a>';
+				$new_actions['unlock-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=unlock&amp;user=$user_object->ID", "unlock-user_$user_object->ID" ) ) . '">' . __( 'Unlock', 'theme-my-login' ) . '</a>';
 			else
-				$new_actions['lock-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=lock&amp;user=$user_object->ID", "lock-user_$user_object->ID" ) ) . '">' . __( 'Lock', $this->theme_my_login->textdomain ) . '</a>';
+				$new_actions['lock-user'] = '<a href="' . add_query_arg( 'wp_http_referer', urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ), wp_nonce_url( "users.php?action=lock&amp;user=$user_object->ID", "lock-user_$user_object->ID" ) ) . '">' . __( 'Lock', 'theme-my-login' ) . '</a>';
 			$actions = array_merge( $new_actions, $actions );
 		}
 		return $actions;
@@ -113,7 +113,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
 	function admin_menu( &$admin ) {
-		$admin->add_menu_page( __( 'Security', $this->theme_my_login->textdomain ), 'tml-options-security', array( &$this, 'display_settings' ) );
+		$admin->add_menu_page( __( 'Security', 'theme-my-login' ), 'tml-options-security', array( &$this, 'display_settings' ) );
 	}
 
 	/**
@@ -133,14 +133,14 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 		?>
 <table class="form-table">
 	<tr valign="top">
-		<th scope="row"><?php _e( 'Login Attempts', $this->theme_my_login->textdomain ); ?></th>
+		<th scope="row"><?php _e( 'Login Attempts', 'theme-my-login' ); ?></th>
 		<td>
 			<?php
 			// Units
 			$units = array(
-				'minute' => __( 'minute(s)', $this->theme_my_login->textdomain ),
-				'hour' => __( 'hour(s)', $this->theme_my_login->textdomain ),
-				'day' => __( 'day(s)', $this->theme_my_login->textdomain )
+				'minute' => __( 'minute(s)', 'theme-my-login' ),
+				'hour' => __( 'hour(s)', 'theme-my-login' ),
+				'day' => __( 'day(s)', 'theme-my-login' )
 				);
 			// Threshold
 			$threshold = '<input type="text" name="theme_my_login[security][failed_login][threshold]" id="theme_my_login_security_failed_login_threshold" value="' . $security['threshold'] . '" size="1" />';
@@ -163,7 +163,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 			}
 			$lockout_duration_unit .= '</select>';
 			// Output them all
-			printf( __( 'After %1$s failed login attempts within %2$s %3$s, lockout the account for %4$s %5$s.', $this->theme_my_login->textdomain ), $threshold, $threshold_duration, $threshold_duration_unit, $lockout_duration, $lockout_duration_unit ); ?>
+			printf( __( 'After %1$s failed login attempts within %2$s %3$s, lockout the account for %4$s %5$s.', 'theme-my-login' ), $threshold, $threshold_duration, $threshold_duration_unit, $lockout_duration, $lockout_duration_unit ); ?>
 		</td>
 	</tr>
 </table>

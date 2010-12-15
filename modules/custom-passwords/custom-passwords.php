@@ -26,9 +26,9 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 */
 	function password_fields( &$template ) {
 	?>
-	<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', $this->theme_my_login->textdomain );?></label>
+	<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
 	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /></p>
-	<p><label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', $this->theme_my_login->textdomain );?></label>
+	<p><label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
 	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /></p>
 <?php
 	}
@@ -42,16 +42,16 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 				$errors[] = $theme_my_login->errors->get_error_message( $code );
 		}
 	?>
-	<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', $this->theme_my_login->textdomain );?></label>
+	<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
 	<?php if ( !empty( $errors ) ) { ?>
 		<p class="error"><?php echo implode( '<br />', $errors ); ?></p>
 	<?php } ?>
 	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /><br />
-	<span class="hint"><?php echo apply_filters( 'tml_password_hint', __( '(Must be at least 6 characters.)', $this->theme_my_login->textdomain ) ); ?></span>
+	<span class="hint"><?php echo apply_filters( 'tml_password_hint', __( '(Must be at least 6 characters.)', 'theme-my-login' ) ); ?></span>
 
-	<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', $this->theme_my_login->textdomain );?></label>
+	<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
 	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /><br />
-	<span class="hint"><?php echo apply_filters( 'tml_password_confirm_hint', __( 'Confirm that you\'ve typed your password correctly.', $this->theme_my_login->textdomain ) ); ?></span>
+	<span class="hint"><?php echo apply_filters( 'tml_password_confirm_hint', __( 'Confirm that you\'ve typed your password correctly.', 'theme-my-login' ) ); ?></span>
 <?php
 	}
 
@@ -73,13 +73,13 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 			$errors = new WP_Error();
 		// Make sure passwords aren't empty
 		if ( empty( $_POST['pass1'] ) || $_POST['pass1'] == '' || empty( $_POST['pass2'] ) || $_POST['pass2'] == '' ) {
-			$errors->add( 'empty_password', __( '<strong>ERROR</strong>: Please enter a password.', $this->theme_my_login->textdomain ) );
+			$errors->add( 'empty_password', __( '<strong>ERROR</strong>: Please enter a password.', 'theme-my-login' ) );
 		// Make sure passwords match
 		} elseif ( $_POST['pass1'] !== $_POST['pass2'] ) {
-			$errors->add( 'password_mismatch', __( '<strong>ERROR</strong>: Your passwords do not match.', $this->theme_my_login->textdomain ) );
+			$errors->add( 'password_mismatch', __( '<strong>ERROR</strong>: Your passwords do not match.', 'theme-my-login' ) );
 		// Make sure password is long enough
 		} elseif ( strlen( $_POST['pass1'] ) < 6 ) {
-			$errors->add( 'password_length', __( '<strong>ERROR</strong>: Your password must be at least 6 characters in length.', $this->theme_my_login->textdomain ) );
+			$errors->add( 'password_length', __( '<strong>ERROR</strong>: Your password must be at least 6 characters in length.', 'theme-my-login' ) );
 		// All is good, assign password to a friendlier key
 		} else {
 			$_POST['user_pass'] = $_POST['pass1'];
@@ -237,10 +237,10 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	function action_template_message( $message, $action ) {
 		switch ( $action ) {
 			case 'lostpassword' :
-				$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', $this->theme_my_login->textdomain );
+				$message = __( 'Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password.', 'theme-my-login' );
 				break;
 			case 'resetpass' :
-				$message = __( 'Please enter a new password.', $this->theme_my_login->textdomain );
+				$message = __( 'Please enter a new password.', 'theme-my-login' );
 				break;
 			case 'register' :
 				$message = '';
@@ -273,10 +273,10 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	function action_messages( &$theme_my_login ) {
 		// Change "Registration complete. Please check your e-mail." to reflect the fact that they already set a password
 		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
-			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', $this->theme_my_login->textdomain ), 'message' );
+			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
 		// Display the following message instead of "Check your e-mail for your new password."
 		elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
-			$theme_my_login->errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', $this->theme_my_login->textdomain ), 'message' );
+			$theme_my_login->errors->add( 'password_saved', __( 'Your password has been saved. You may now log in.', 'theme-my-login' ), 'message' );
 	}
 
 	/**
@@ -339,16 +339,16 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 
 		// Make sure $key isn't empty
 		if ( empty( $key ) || !is_string( $key ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		// Make sure $login isn't empty
 		if ( empty( $login ) || !is_string( $login ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		// Make sure the $key and $login pair match
 		$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login ) );
 		if ( empty( $user ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		return $user;
 	}
@@ -385,8 +385,8 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		update_usermeta( $user->ID, 'default_password_nag', false );
 
 		// Notification e-mail message
-		$message  = sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user->user_login ) . "\r\n";
-		$message .= sprintf( __( 'Password: %s', $this->theme_my_login->textdomain ), $new_pass ) . "\r\n";
+		$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
+		$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $new_pass ) . "\r\n";
 		$message .= site_url( 'wp-login.php', 'login' ) . "\r\n";
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -394,7 +394,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
 		// Notification e-mail subject
-		$title = sprintf( __( '[%s] Your new password', $this->theme_my_login->textdomain ), $blogname );
+		$title = sprintf( __( '[%s] Your new password', 'theme-my-login' ), $blogname );
 
 		// Apply filters to notification e-mail subject
 		$title = apply_filters( 'password_reset_title', $title, $user->ID );
@@ -403,7 +403,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 
 		// Make sure the message sends
 		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
-			die( '<p>' . __( 'The e-mail could not be sent.', $this->theme_my_login->textdomain ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', $this->theme_my_login->textdomain ) . '</p>' );
+			die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
 
 		// Notify the admin of the change
 		wp_password_change_notification( $user );

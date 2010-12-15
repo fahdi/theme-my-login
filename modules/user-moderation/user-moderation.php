@@ -168,10 +168,10 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			if ( in_array( 'pending', (array) $user->roles ) ) {
 				if ( 'email' == $this->theme_my_login->options['moderation']['type'] ) {
 					return new WP_Error( 'pending', sprintf(
-						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', $this->theme_my_login->textdomain ),
+						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
 						$this->theme_my_login->get_login_page_link( 'action=sendactivation&login=' . $username ) ) );
 				} else {
-					return new WP_Error( 'pending', __( '<strong>ERROR</strong>: Your registration has not yet been approved.', $this->theme_my_login->textdomain ) );
+					return new WP_Error( 'pending', __( '<strong>ERROR</strong>: Your registration has not yet been approved.', 'theme-my-login' ) );
 				}
 			}
 		}
@@ -245,15 +245,15 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$key = preg_replace('/[^a-z0-9]/i', '', $key);
 
 		if ( empty( $key ) || !is_string( $key ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		if ( empty( $login ) || !is_string( $login ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		// Validate activation key
 		$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login ) );
 		if ( empty( $user ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
 
 		do_action( 'tml_user_activation_post', $user->user_login, $user->user_email );
 
@@ -272,7 +272,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$user_object->set_role( get_option( 'default_role' ) );
 		unset( $user_object );
 
-		$pass = __( 'Same as when you signed up.', $this->theme_my_login->textdomain );
+		$pass = __( 'Same as when you signed up.', 'theme-my-login' );
 		if ( $newpass ) {
 			$pass = wp_generate_password();
 			wp_set_password( $pass, $user->ID );
@@ -331,8 +331,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		$activation_url = add_query_arg( array( 'action' => 'activate', 'key' => $key, 'login' => rawurlencode( $user_login ) ), wp_login_url() );
 
-		$title = sprintf( __( '[%s] Activate Your Account', $this->theme_my_login->textdomain ), $blogname );
-		$message  = sprintf( __( 'Thanks for registering at %s! To complete the activation of your account please click the following link: ', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
+		$title = sprintf( __( '[%s] Activate Your Account', 'theme-my-login' ), $blogname );
+		$message  = sprintf( __( 'Thanks for registering at %s! To complete the activation of your account please click the following link: ', 'theme-my-login' ), $blogname ) . "\r\n\r\n";
 		$message .=  $activation_url . "\r\n";
 
 		$title = apply_filters( 'user_activation_notification_title', $title, $user_id );
@@ -364,12 +364,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
 
-		$title = sprintf( __( '[%s] New User Awaiting Approval', $this->theme_my_login->textdomain ), $blogname );
+		$title = sprintf( __( '[%s] New User Awaiting Approval', 'theme-my-login' ), $blogname );
 
-		$message  = sprintf( __( 'New user requires approval on your blog %s:', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n";
-		$message .= sprintf( __( 'E-mail: %s', $this->theme_my_login->textdomain ), $user_email ) . "\r\n\r\n";
-		$message .= __( 'To approve or deny this user:', $this->theme_my_login->textdomain ) . "\r\n";
+		$message  = sprintf( __( 'New user requires approval on your blog %s:', 'theme-my-login' ), $blogname ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s', 'theme-my-login' ), $user_login ) . "\r\n";
+		$message .= sprintf( __( 'E-mail: %s', 'theme-my-login' ), $user_email ) . "\r\n\r\n";
+		$message .= __( 'To approve or deny this user:', 'theme-my-login' ) . "\r\n";
 		$message .= admin_url( 'users.php?role=pending' );
 
 		$title = apply_filters( 'user_approval_admin_notification_title', $title, $user_id );
@@ -390,21 +390,21 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 */
 	function action_messages( &$theme_my_login ) {
 		if ( isset( $_GET['pending'] ) && 'activation' == $_GET['pending'] ) {
-			$theme_my_login->errors->add( 'pending_activation', __( 'Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided.', $theme_my_login->textdomain ), 'message' );
+			$theme_my_login->errors->add( 'pending_activation', __( 'Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
 		} elseif ( isset( $_GET['pending'] ) && 'approval' == $_GET['pending'] ) {
-			$theme_my_login->errors->add( 'pending_approval', __( 'Your registration was successful but you must now be approved by an administrator before you can log in. You will be notified by e-mail once your account has been reviewed.', $theme_my_login->textdomain ), 'message' );
+			$theme_my_login->errors->add( 'pending_approval', __( 'Your registration was successful but you must now be approved by an administrator before you can log in. You will be notified by e-mail once your account has been reviewed.', 'theme-my-login' ), 'message' );
 		} elseif ( isset( $_GET['activation'] ) && 'complete' == $_GET['activation'] ) {
 			if ( $theme_my_login->is_module_active( 'custom-passwords/custom-passwords.php' ) )
-				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. You may now log in.', $theme_my_login->textdomain ), 'message' );
+				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. You may now log in.', 'theme-my-login' ), 'message' );
 			else
-				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', $theme_my_login->textdomain ), 'message' );
+				$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', 'theme-my-login' ), 'message' );
 		} elseif ( isset( $_GET['activation'] ) && 'invalidkey' == $_GET['activation'] ) {
-			$theme_my_login->errors->add( 'invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', $theme_my_login->textdomain ) );
+			$theme_my_login->errors->add( 'invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', 'theme-my-login' ) );
 		} elseif ( isset( $_GET['sendactivation'] ) ) {
 			if ( 'failed' == $_GET['sendactivation'] )
-				$theme_my_login->errors->add( 'sendactivation_failed', __('<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent.', $theme_my_login->textdomain ) );
+				$theme_my_login->errors->add( 'sendactivation_failed', __('<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent.', 'theme-my-login' ) );
 			elseif ( 'sent' == $_GET['sendactivation'] )
-				$theme_my_login->errors->add( 'sendactivation_sent', __('The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided.', $theme_my_login->textdomain ), 'message' );
+				$theme_my_login->errors->add( 'sendactivation_sent', __('The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
 		}
 	}
 

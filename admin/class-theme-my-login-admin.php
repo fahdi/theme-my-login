@@ -48,8 +48,8 @@ class Theme_My_Login_Admin {
 	function admin_menu() {
 		// Create our settings link in the default WP "Settings" menu
 		add_options_page(
-			__( 'Theme My Login', $this->theme_my_login->textdomain ),
-			__( 'Theme My Login', $this->theme_my_login->textdomain ),
+			__( 'Theme My Login', 'theme-my-login' ),
+			__( 'Theme My Login', 'theme-my-login' ),
 			'manage_options',
 			'theme-my-login',
 			array( &$this, 'display_settings_page' )
@@ -85,7 +85,7 @@ class Theme_My_Login_Admin {
 			// Display them
 			echo '<div class="error">';
 			foreach ( (array) $module_errors as $module => $error ) {
-				echo '<p><strong>' . sprintf( __( 'ERROR: The module "%1$s" could not be activated (%2$s).', $this->theme_my_login->textdomain ), $module, $error ) . '</strong></p>';
+				echo '<p><strong>' . sprintf( __( 'ERROR: The module "%1$s" could not be activated (%2$s).', 'theme-my-login' ), $module, $error ) . '</strong></p>';
 			}
 			echo '</div>';
 			// Unset the error array
@@ -105,10 +105,10 @@ class Theme_My_Login_Admin {
 		if ( $this->theme_my_login->get_option( 'initial_nag' ) && current_user_can( 'manage_options' ) ) {
 			echo '<div id="tml-initial-nag" class="updated">';
 			echo '<p>';
-			echo '<strong>' . __( 'NOTICE:', $this->theme_my_login->textdomain ) . '</strong> ';
-			printf( __( 'Now that you have activated Theme My Login, please <a href="%s">visit the settings page</a> and familiarize yourself with all of the available options.', $this->theme_my_login->textdomain ), admin_url( 'options-general.php?page=theme-my-login' ) );
+			echo '<strong>' . __( 'NOTICE:', 'theme-my-login' ) . '</strong> ';
+			printf( __( 'Now that you have activated Theme My Login, please <a href="%s">visit the settings page</a> and familiarize yourself with all of the available options.', 'theme-my-login' ), admin_url( 'options-general.php?page=theme-my-login' ) );
 			echo '</p><p>';
-			printf( '<a href="%s">' . __( 'Take me to the settings page', $this->theme_my_login->textdomain ) . '</a>', admin_url( 'options-general.php?page=theme-my-login' ) );
+			printf( '<a href="%s">' . __( 'Take me to the settings page', 'theme-my-login' ) . '</a>', admin_url( 'options-general.php?page=theme-my-login' ) );
 			echo '</p></div>';
 		}
 	}
@@ -121,17 +121,17 @@ class Theme_My_Login_Admin {
 	 */
 	function did_you_know() {
 		$tips = apply_filters( 'tml_tips', array(
-			__( 'You can now login with your e-mail address or username! Try it out!', $this->theme_my_login->textdomain ),
-			__( 'Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel="tml-options" href="#tml-modules">Click here</a> to get started with modules now.', $this->theme_my_login->textdomain ),
-			__( 'Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from "theme-my-login/templates" to your current theme directory. Try it out!', $this->theme_my_login->textdomain ),
-			__( 'You can maintain your stylesheet changes between upgrades. Just simply copy the file "theme-my-login/theme-my-login.css" to your current theme directory and edit it as you please!', $this->theme_my_login->textdomain ),
-			__( 'Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href="http://www.jfarthing.com/docs/theme-my-login/shortcode" target="_blank">Theme My Login Documentation</a> for usage instructions.', $this->theme_my_login->textdomain ),
-			__( 'Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href="http://www.jfarthing.com/donate" target="_blank">donations</a>!', $this->theme_my_login->textdomain ),
-			__( 'Jeff is <a href="http://www.jfarthing.com/hire-me" target="_blank">available for hire</a>!', $this->theme_my_login->textdomain )
+			__( 'You can now login with your e-mail address or username! Try it out!', 'theme-my-login' ),
+			__( 'Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel="tml-options" href="#tml-modules">Click here</a> to get started with modules now.', 'theme-my-login' ),
+			__( 'Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from "theme-my-login/templates" to your current theme directory. Try it out!', 'theme-my-login' ),
+			__( 'You can maintain your stylesheet changes between upgrades. Just simply copy the file "theme-my-login/theme-my-login.css" to your current theme directory and edit it as you please!', 'theme-my-login' ),
+			__( 'Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href="http://www.jfarthing.com/docs/theme-my-login/shortcode" target="_blank">Theme My Login Documentation</a> for usage instructions.', 'theme-my-login' ),
+			__( 'Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href="http://www.jfarthing.com/donate" target="_blank">donations</a>!', 'theme-my-login' ),
+			__( 'Jeff is <a href="http://www.jfarthing.com/hire-me" target="_blank">available for hire</a>!', 'theme-my-login' )
 			) );
 		$key = array_rand( $tips );
 		echo '<div id="tml-tips" class="updated">';
-		echo '<p><strong>' . __( 'Did You Know?', $this->theme_my_login->textdomain ) . '</strong></p>';
+		echo '<p><strong>' . __( 'Did You Know?', 'theme-my-login' ) . '</strong></p>';
 		echo '<p>' . $tips[$key] . '</p>';
 		echo '</div>';
 	}
@@ -172,22 +172,22 @@ class Theme_My_Login_Admin {
 	 */
 	function display_settings_page() {
 		// Default menu
-		$this->add_menu_page( __('General', $this->theme_my_login->textdomain ), 'tml-options' );
-		$this->add_submenu_page( 'tml-options', __( 'Basic', $this->theme_my_login->textdomain ), 'tml-options-basic', array( &$this, 'display_basic_settings' ) );
-		$this->add_submenu_page( 'tml-options', __( 'Modules', $this->theme_my_login->textdomain ), 'tml-options-modules', array( &$this, 'display_module_settings' ) );
+		$this->add_menu_page( __('General', 'theme-my-login' ), 'tml-options' );
+		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-options-basic', array( &$this, 'display_basic_settings' ) );
+		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-options-modules', array( &$this, 'display_module_settings' ) );
 
 		// Allow plugins to add to menu
 		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
 		?>
 <div class="wrap">
     <?php screen_icon( 'options-general' ); ?>
-    <h2><?php esc_html_e( 'Theme My Login Settings', $this->theme_my_login->textdomain ); ?></h2>
+    <h2><?php esc_html_e( 'Theme My Login Settings', 'theme-my-login' ); ?></h2>
 
     <form action="options.php" method="post">
     <?php settings_fields( 'theme_my_login' ); ?>
 
 	<div style="display:none;">
-		<p><input type="submit" name="submit" value="<?php esc_attr_e( 'Save Changes', $this->theme_my_login->textdomain ) ?>" /></p>
+		<p><input type="submit" name="submit" value="<?php esc_attr_e( 'Save Changes', 'theme-my-login' ) ?>" /></p>
 	</div>
 
     <div id="tml-container">
@@ -244,7 +244,7 @@ class Theme_My_Login_Admin {
 
     </div>
 	
-    <p><input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', $this->theme_my_login->textdomain ) ?>" /></p>
+    <p><input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'theme-my-login' ) ?>" /></p>
     </form>
 
 </div>
@@ -263,26 +263,26 @@ class Theme_My_Login_Admin {
 	?>
 <table class="form-table">
     <tr valign="top">
-        <th scope="row"><label for="theme_my_login_page_id"><?php _e( 'Page ID', $theme_my_login->textdomain ); ?></label></th>
+        <th scope="row"><label for="theme_my_login_page_id"><?php _e( 'Page ID', 'theme-my-login' ); ?></label></th>
         <td>
             <input name="theme_my_login[page_id]" type="text" id="theme_my_login_page_id" value="<?php echo (int) $theme_my_login->get_option( 'page_id' ); ?>" class="small-text" />
-            <p class="description"><?php _e( 'This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', $theme_my_login->textdomain ); ?></p>
+            <p class="description"><?php _e( 'This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', 'theme-my-login' ); ?></p>
         </td>
     </tr>
     <tr valign="top">
-        <th scope="row"><?php _e( 'Pagelist', $theme_my_login->textdomain ); ?></th>
+        <th scope="row"><?php _e( 'Pagelist', 'theme-my-login' ); ?></th>
         <td>
             <input name="theme_my_login[show_page]" type="checkbox" id="theme_my_login_show_page" value="1"<?php checked( 1, $theme_my_login->get_option( 'show_page' ) ); ?> />
-            <label for="theme_my_login_show_page"><?php _e( 'Show Page In Pagelist', $theme_my_login->textdomain ); ?></label>
-            <p class="description"><?php _e( 'Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu().', $theme_my_login->textdomain ); ?></p>
+            <label for="theme_my_login_show_page"><?php _e( 'Show Page In Pagelist', 'theme-my-login' ); ?></label>
+            <p class="description"><?php _e( 'Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu().', 'theme-my-login' ); ?></p>
         </td>
     </tr>
     <tr valign="top">
-        <th scope="row"><?php _e( 'Stylesheet', $theme_my_login->textdomain ); ?></th>
+        <th scope="row"><?php _e( 'Stylesheet', 'theme-my-login' ); ?></th>
         <td>
             <input name="theme_my_login[enable_css]" type="checkbox" id="theme_my_login_enable_css" value="1"<?php checked( 1, $theme_my_login->get_option( 'enable_css' ) ); ?> />
-            <label for="theme_my_login_enable_css"><?php _e( 'Enable "theme-my-login.css"', $theme_my_login->textdomain ); ?></label>
-            <p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', $theme_my_login->textdomain ); ?></p>
+            <label for="theme_my_login_enable_css"><?php _e( 'Enable "theme-my-login.css"', 'theme-my-login' ); ?></label>
+            <p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login' ); ?></p>
         </td>
     </tr>
     <?php do_action( 'tml_settings_basic' ); ?>
@@ -302,13 +302,13 @@ class Theme_My_Login_Admin {
 	?>
 <table class="form-table">
     <tr valign="top">
-        <th scope="row"><?php _e( 'Modules', $this->theme_my_login->textdomain ); ?></th>
+        <th scope="row"><?php _e( 'Modules', 'theme-my-login' ); ?></th>
         <td>
             <?php if ( !empty( $all_modules ) ) : foreach ( $all_modules as $module_file => $module_data ) : ?>
             <input name="theme_my_login_modules[]" type="checkbox" id="theme_my_login_modules_<?php echo $module_file; ?>" value="<?php echo $module_file; ?>"<?php checked( 1, in_array( $module_file, (array) $active_modules ) ); ?> />
-            <label for="theme_my_login_modules_<?php echo $module_file; ?>"><?php printf( __( 'Enable %s', $this->theme_my_login->textdomain ), $module_data['Name'] ); ?></label><br />
+            <label for="theme_my_login_modules_<?php echo $module_file; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $module_data['Name'] ); ?></label><br />
             <?php if ( $module_data['Description'] ) echo '<p class="description">' . $module_data['Description'] . '</p>'; ?>
-            <?php endforeach; else : _e( 'No modules found.', $this->theme_my_login->textdomain ); endif; ?>
+            <?php endforeach; else : _e( 'No modules found.', 'theme-my-login' ); endif; ?>
         </td>
     </tr>
     <?php do_action( 'tml_settings_modules' ); ?>
@@ -419,7 +419,7 @@ class Theme_My_Login_Admin {
 		}
 
 		if ( !empty( $errors ) )
-			return new WP_Error( 'modules_invalid', __( 'One of the modules is invalid.', $this->theme_my_login->textdomain ), $errors );
+			return new WP_Error( 'modules_invalid', __( 'One of the modules is invalid.', 'theme-my-login' ), $errors );
 
 		return true;
 	}
@@ -472,13 +472,13 @@ class Theme_My_Login_Admin {
 	 */
 	function validate_module( $module ) {
 		if ( validate_file( $module ) )
-			return new WP_Error( 'module_invalid', __( 'Invalid module path.', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'module_invalid', __( 'Invalid module path.', 'theme-my-login' ) );
 		if ( !file_exists( TML_ABSPATH. '/modules/' . $module ) )
-			return new WP_Error( 'module_not_found', __( 'Module file does not exist.', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'module_not_found', __( 'Module file does not exist.', 'theme-my-login' ) );
 
 		$installed_modules = get_plugins( '/' . TML_DIRNAME . '/modules' );
 		if ( !isset( $installed_modules[$module] ) )
-			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', $this->theme_my_login->textdomain ) );
+			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
 		return 0;
 	}
 

@@ -87,12 +87,12 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		wp_enqueue_script( 'user-profile', admin_url( "js/user-profile$suffix.js" ), array( 'jquery' ), '', true );
 		wp_enqueue_script( 'password-strength-meter', admin_url( "js/password-strength-meter$suffix.js" ), array( 'jquery' ), '', true );
 		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-			'empty' => __( 'Strength indicator', $this->theme_my_login->textdomain ),
-			'short' => __( 'Very weak', $this->theme_my_login->textdomain ),
-			'bad' => __( 'Weak', $this->theme_my_login->textdomain ),
+			'empty' => __( 'Strength indicator', 'theme-my-login' ),
+			'short' => __( 'Very weak', 'theme-my-login' ),
+			'bad' => __( 'Weak', 'theme-my-login' ),
 			/* translators: password strength */
-			'good' => _x( 'Medium', 'password strength', $this->theme_my_login->textdomain ),
-			'strong' => __( 'Strong', $this->theme_my_login->textdomain ),
+			'good' => _x( 'Medium', 'password strength', 'theme-my-login' ),
+			'strong' => __( 'Strong', 'theme-my-login' ),
 			'l10n_print_after' => 'try{convertEntities(pwsL10n);}catch(e){};'
 		) );
 
@@ -102,7 +102,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			check_admin_referer( 'update-user_' . $current_user->ID );
 
 			if ( !current_user_can( 'edit_user', $current_user->ID ) )
-				wp_die( __( 'You do not have permission to edit this user.', $this->theme_my_login->textdomain ) );
+				wp_die( __( 'You do not have permission to edit this user.', 'theme-my-login' ) );
 
 			do_action( 'personal_options_update', $current_user->ID );
 
@@ -118,7 +118,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		}
 
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
-			$this->theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', $this->theme_my_login->textdomain ), 'message' );
+			$this->theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 */
 	function tml_title( $title, $action ) {
 		if ( 'profile' == $action && is_user_logged_in() && '' == $this->theme_my_login->request_instance )
-			$title = __( 'Your Profile', $this->theme_my_login->textdomain );
+			$title = __( 'Your Profile', 'theme-my-login' );
 		return $title;
 	}
 

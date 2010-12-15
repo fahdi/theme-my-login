@@ -14,9 +14,9 @@ Theme My Login will always look in your theme's directory first, before using th
 	?>
 
 	<?php if ( !is_subdomain_install() ) { ?>
-	<label for="blogname<?php $template->the_instance(); ?>"><?php _e( 'Site Name:', $theme_my_login->textdomain ); ?></label>
+	<label for="blogname<?php $template->the_instance(); ?>"><?php _e( 'Site Name:', 'theme-my-login' ); ?></label>
 	<?php } else { ?>
-	<label for="blogname<?php $template->the_instance(); ?>"><?php _e( 'Site Domain:', $theme_my_login->textdomain ); ?></label>
+	<label for="blogname<?php $template->the_instance(); ?>"><?php _e( 'Site Domain:', 'theme-my-login' ); ?></label>
 	<?php } ?>
 
 	<?php if ( $errmsg = $errors->get_error_message( 'blogname' ) ) { ?>
@@ -32,15 +32,15 @@ Theme My Login will always look in your theme's directory first, before using th
 	<?php } ?>
 
 	<?php if ( !is_user_logged_in() ) {
-		echo '(<strong>' . __( 'Your address will be ', $theme_my_login->textdomain );
+		echo '(<strong>' . __( 'Your address will be ', 'theme-my-login' );
 		if ( !is_subdomain_install() )
 			echo $current_site->domain . $current_site->path . __( 'sitename' );
 		else
-			echo __( 'domain.', $theme_my_login->textdomain ) . $site_domain . $current_site->path;
-		echo '.</strong>) ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed, so choose carefully!', $theme_my_login->textdomain );
+			echo __( 'domain.', 'theme-my-login' ) . $site_domain . $current_site->path;
+		echo '.</strong>) ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed, so choose carefully!', 'theme-my-login' );
 	} ?>
 
-	<label for="blog_title"><?php _e( 'Site Title:', $theme_my_login->textdomain ); ?></label>
+	<label for="blog_title"><?php _e( 'Site Title:', 'theme-my-login' ); ?></label>
 	<?php if ( $errmsg = $errors->get_error_message( 'blog_title' ) ) { ?>
 		<p class="error"><?php echo $errmsg ?></p>
 	<?php } ?>
@@ -48,16 +48,16 @@ Theme My Login will always look in your theme's directory first, before using th
 
 	<div id="privacy">
 		<p class="privacy-intro">
-			<label for="blog_public_on<?php $template->the_instance(); ?>"><?php _e( 'Privacy:', $theme_my_login->textdomain ); ?></label>
-			<?php _e( 'Allow my site to appear in search engines like Google, Technorati, and in public listings around this network.', $theme_my_login->textdomain ); ?>
+			<label for="blog_public_on<?php $template->the_instance(); ?>"><?php _e( 'Privacy:', 'theme-my-login' ); ?></label>
+			<?php _e( 'Allow my site to appear in search engines like Google, Technorati, and in public listings around this network.', 'theme-my-login' ); ?>
 			<br style="clear:both" />
 			<label class="checkbox" for="blog_public_on<?php $template->the_instance(); ?>">
 				<input type="radio" id="blog_public_on<?php $template->the_instance(); ?>" name="blog_public" value="1" <?php if ( !isset( $_POST['blog_public'] ) || $_POST['blog_public'] == '1' ) { ?>checked="checked"<?php } ?> />
-				<strong><?php _e( 'Yes', $theme_my_login->textdomain ); ?></strong>
+				<strong><?php _e( 'Yes', 'theme-my-login' ); ?></strong>
 			</label>
 			<label class="checkbox" for="blog_public_off<?php $template->the_instance(); ?>">
 				<input type="radio" id="blog_public_off<?php $template->the_instance(); ?>" name="blog_public" value="0" <?php if ( isset( $_POST['blog_public'] ) && $_POST['blog_public'] == '0' ) { ?>checked="checked"<?php } ?> />
-				<strong><?php _e( 'No', $theme_my_login->textdomain ); ?></strong>
+				<strong><?php _e( 'No', 'theme-my-login' ); ?></strong>
 			</label>
 		</p>
 	</div>
@@ -67,6 +67,6 @@ Theme My Login will always look in your theme's directory first, before using th
 	do_action_ref_array( 'tml_signup_blogform', array( &$template ) ); // TML hook
 	?>
 
-	<p class="submit"><input type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Signup', $theme_my_login->textdomain ); ?>" /></p>
+	<p class="submit"><input type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Signup', 'theme-my-login' ); ?>" /></p>
 </form>
 <?php $template->the_action_links( array( 'register' => false ) ); ?>

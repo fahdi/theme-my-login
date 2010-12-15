@@ -92,8 +92,8 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 			if ( 'pending' == $role )
 				continue;
 			$options['user_links'][$role] = array(
-				array( 'title' => __( 'Dashboard', $this->theme_my_login->textdomain ), 'url' => admin_url() ),
-				array( 'title' => __( 'Profile', $this->theme_my_login->textdomain ), 'url' => admin_url( 'profile.php' ) )
+				array( 'title' => __( 'Dashboard', 'theme-my-login' ), 'url' => admin_url() ),
+				array( 'title' => __( 'Profile', 'theme-my-login' ), 'url' => admin_url( 'profile.php' ) )
 			);
 		}
 		return $options;

@@ -40,9 +40,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 				if ( $time > $expiration )
 					$this->unlock_user( $userdata->ID );
 				else
-					return new WP_Error( 'locked_account', sprintf( __( '<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s.', $this->theme_my_login->textdomain ), human_time_diff( $time, $expiration ) ) );
+					return new WP_Error( 'locked_account', sprintf( __( '<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s.', 'theme-my-login' ), human_time_diff( $time, $expiration ) ) );
 			} else {
-				return new WP_Error( 'locked_account', __( '<strong>ERROR</strong>: This account has been locked.', $this->theme_my_login->textdomain ) );
+				return new WP_Error( 'locked_account', __( '<strong>ERROR</strong>: This account has been locked.', 'theme-my-login' ) );
 			}
 		} elseif ( is_wp_error( $user ) && 'incorrect_password' == $user->get_error_code() ) {
 			// Get the options
@@ -66,7 +66,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 					// Create new expiration
 					$expiration = $time + $this->get_seconds_from_unit( $options['lockout_duration'], $options['lockout_duration_unit'] );
 					$this->lock_user( $userdata->ID, $expiration );
-					return new WP_Error( 'locked_account', sprintf( __( '<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s.', $this->theme_my_login->textdomain ), human_time_diff( $time, $expiration ) ) );
+					return new WP_Error( 'locked_account', sprintf( __( '<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s.', 'theme-my-login' ), human_time_diff( $time, $expiration ) ) );
 				}
 			} else {
 				// Clear the attempts

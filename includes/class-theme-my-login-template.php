@@ -332,7 +332,7 @@ class Theme_My_Login_Template {
 				echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
 			}
 		}
-		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out', $this->theme_my_login->textdomain ) . '</a></li>' . "\n";
+		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out', 'theme-my-login' ) . '</a></li>' . "\n";
 		echo '</ul>';
 	}
 

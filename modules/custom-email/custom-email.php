@@ -470,11 +470,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		}
 
 		if ( apply_filters( 'send_new_user_admin_notification', true ) ) {
-			$message  = sprintf( __( 'New user registration on your site %s:', $this->theme_my_login->textdomain ), $blogname ) . "\r\n\r\n";
-			$message .= sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n\r\n";
-			$message .= sprintf( __( 'E-mail: %s', $this->theme_my_login->textdomain ), $user_email ) . "\r\n";
+			$message  = sprintf( __( 'New user registration on your site %s:', 'theme-my-login' ), $blogname ) . "\r\n\r\n";
+			$message .= sprintf( __( 'Username: %s', 'theme-my-login' ), $user_login ) . "\r\n\r\n";
+			$message .= sprintf( __( 'E-mail: %s', 'theme-my-login' ), $user_email ) . "\r\n";
 
-			$title = sprintf( __( '[%s] New User Registration', $this->theme_my_login->textdomain ), $blogname );
+			$title = sprintf( __( '[%s] New User Registration', 'theme-my-login' ), $blogname );
 
 			$title = apply_filters( 'new_user_admin_notification_title', $title, $user_id );
 			$message = apply_filters( 'new_user_admin_notification_message', $message, $user_id );
@@ -488,11 +488,11 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			return;
 
 		if ( apply_filters( 'send_new_user_notification', true ) ) {
-			$message  = sprintf( __( 'Username: %s', $this->theme_my_login->textdomain ), $user_login ) . "\r\n";
-			$message .= sprintf( __( 'Password: %s', $this->theme_my_login->textdomain ), $plaintext_pass ) . "\r\n";
+			$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user_login ) . "\r\n";
+			$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $plaintext_pass ) . "\r\n";
 			$message .= wp_login_url() . "\r\n";
 
-			$title = sprintf( __( '[%s] Your username and password', $this->theme_my_login->textdomain ), $blogname);
+			$title = sprintf( __( '[%s] Your username and password', 'theme-my-login' ), $blogname);
 
 			$title = apply_filters( 'new_user_notification_title', $title, $user_id );
 			$message = apply_filters( 'new_user_notification_message', $message, $plaintext_pass, $user_id );
