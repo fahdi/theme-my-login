@@ -542,10 +542,10 @@ class Theme_My_Login_Admin {
 					$this->_install();
 				}
 				restore_current_blog();
+				return;
 			}	
-		} else {
-			$this->_install();
 		}
+		$this->_install();
 	}
 
 	/**
@@ -619,10 +619,10 @@ class Theme_My_Login_Admin {
 					$this->_uninstall();
 				}
 				restore_current_blog();
+				return;
 			}	
-		} else {
-			$this->_uninstall();
 		}
+		$this->_uninstall();
 	}
 
 	/**
