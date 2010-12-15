@@ -122,7 +122,7 @@ class Theme_My_Login {
 		$this->errors = new WP_Error();
 
 		if ( $this->options->get_option( 'enable_css' ) )
-			wp_enqueue_style( 'theme-my-login', $this->get_stylesheet(), false, $this->options->get_option( 'version' ) );
+			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->options->get_option( 'version' ) );
 	}
 
 	/**
@@ -194,7 +194,7 @@ class Theme_My_Login {
 					if ( $http_post ) {
 						$errors = $this->retrieve_password();
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->get_current_url( 'checkemail=confirm' );
+							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login::get_current_url( 'checkemail=confirm' );
 							if ( !empty( $instance ) )
 								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							wp_safe_redirect( $redirect_to );
@@ -210,14 +210,14 @@ class Theme_My_Login {
 					$errors = $this->reset_password( $_GET['key'], $_GET['login'] );
 
 					if ( !is_wp_error( $errors ) ) {
-						$redirect_to = apply_filters( 'resetpass_redirect', $this->get_current_url( 'checkemail=newpass' ) );
+						$redirect_to = apply_filters( 'resetpass_redirect', Theme_My_Login::get_current_url( 'checkemail=newpass' ) );
 						if ( !empty( $instance ) )
 							$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 						wp_safe_redirect( $redirect_to );
 						exit();
 					}
 
-					$redirect_to = $this->get_current_url( 'action=lostpassword&error=invalidkey' );
+					$redirect_to = Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey' );
 					if ( !empty( $instance ) )
 						$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 					wp_redirect( $redirect_to );
@@ -225,7 +225,7 @@ class Theme_My_Login {
 					break;
 				case 'register' :
 					if ( !get_option( 'users_can_register' ) ) {
-						wp_redirect( $this->get_current_url( 'registration=disabled' ) );
+						wp_redirect( Theme_My_Login::get_current_url( 'registration=disabled' ) );
 						exit();
 					}
 
@@ -237,9 +237,9 @@ class Theme_My_Login {
 						$user_login = $_POST['user_login'];
 						$user_email = $_POST['user_email'];
 
-						$errors = $this->register_new_user( $user_login, $user_email );
+						$errors = Theme_My_Login::register_new_user( $user_login, $user_email );
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_current_url( 'checkemail=registered' );
+							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login::get_current_url( 'checkemail=registered' );
 							if ( !empty( $instance ) )
 								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
@@ -676,7 +676,7 @@ if(typeof wpOnload=='function')wpOnload()
 				}
 				// Recurse only when both values are arrays.
 				elseif ( array_key_exists( $key, $result ) && is_array( $result[$key] ) && is_array( $value ) ) {
-					$result[$key] = $this->array_merge_recursive( $result[$key], $value );
+					$result[$key] = Theme_My_Login::array_merge_recursive( $result[$key], $value );
 				}
 				// Otherwise, use the latter value.
 				else {
