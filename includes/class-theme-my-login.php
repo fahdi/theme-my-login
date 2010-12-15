@@ -88,6 +88,7 @@ class Theme_My_Login {
 		) );
 
 		add_action( 'init', array( &$this, 'init' ) );
+		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 		add_action( 'parse_request', array( &$this, 'parse_request' ) );
 
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
@@ -126,9 +127,20 @@ class Theme_My_Login {
 	}
 
 	/**
+	 * Registers the widget
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	function widgets_init() {
+		if ( class_exists( 'Theme_My_Login_Widget' ) )
+			register_widget( 'Theme_My_Login_Widget' );
+	}
+
+	/**
 	 * Determine if specified page is the login page
 	 *
-	 * since 6.0
+	 * @since 6.0
 	 * @access public
 	 *
 	 * @param int $page_id Optional. The page ID (Defaults to current page)
