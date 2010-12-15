@@ -34,12 +34,10 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	}
 
 	function ms_password_fields( &$template ) {
-		$theme_my_login =& $template->theme_my_login;
-
 		$errors = array();
-		foreach ( $theme_my_login->errors->get_error_codes() as $code ) {
+		foreach ( $GLOBALS['theme_my_login']->errors->get_error_codes() as $code ) {
 			if ( in_array( $code, array( 'empty_password', 'password_mismatch', 'password_length' ) ) )
-				$errors[] = $theme_my_login->errors->get_error_message( $code );
+				$errors[] = $GLOBALS['theme_my_login']->errors->get_error_message( $code );
 		}
 	?>
 	<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
@@ -163,15 +161,12 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param object $theme_my_login
 	 */
 	function resetpass_action( &$theme_my_login ) {
-		// Set local reference to $theme_my_login->errors
-		$errors =& $theme_my_login->errors;
-
 		// Validate the reset key
-		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
+		$user = Theme_My_Login_Custom_Passwords::validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 		// Handle errors
 		if ( is_wp_error( $user ) ) {
 			// Redirect to current page with "action=lostpassword&error=invalidkey" added to the query
-			$redirect_to = $theme_my_login->get_current_url( 'action=lostpassword&error=invalidkey' );
+			$redirect_to = Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey' );
 			// Add instance to query if specified
 			if ( !empty( $theme_my_login->request_instance ) )
 				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
@@ -183,11 +178,11 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		// Check if form has been posted
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			// Reset the password
-			$errors = $this->reset_password();
+			$theme_my_login->errors = Theme_My_Login_Custom_Passwords::reset_password();
 			// Make sure there aren't any errors
-			if ( !is_wp_error( $errors ) ) {
+			if ( !is_wp_error( $theme_my_login->errors ) ) {
 				// Redirect to current page with "resetpass=complete" added to the query
-				$redirect_to = $theme_my_login->get_current_url( 'resetpass=complete' );
+				$redirect_to = Theme_My_Login::get_current_url( 'resetpass=complete' );
 				// Add instance to query if specified
 				if ( !empty( $theme_my_login->request_instance ) )
 					$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
@@ -363,12 +358,12 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 */
 	function reset_password() {
 		// Validate the reset key
-		$user = $this->validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
+		$user = Theme_My_Login_Custom_Passwords::validate_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 		if ( is_wp_error( $user ) )
 			return $user;
 
 		// Validate the password
-		$errors = $this->password_errors( new WP_Error() );
+		$errors = Theme_My_Login_Custom_Passwords::password_errors();
 		if ( $errors->get_error_code() )
 			return $errors;
 
