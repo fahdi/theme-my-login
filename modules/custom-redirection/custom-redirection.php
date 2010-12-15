@@ -56,8 +56,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = array( 'login_type' => 'default' );
 			foreach ( (array) $user->roles as $role ) {
-				if ( $this->theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
-					$redirection = $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
+				if ( $GLOBALS['theme_my_login']->options->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $GLOBALS['theme_my_login']->options->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -110,8 +110,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			$redirection = array();
 			foreach ( (array) $user->roles as $role ) {
-				if ( $this->theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
-					$redirection = $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
+				if ( $GLOBALS['theme_my_login']->options->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $GLOBALS['theme_my_login']->options->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -129,7 +129,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 
 		// Make sure $redirect_to isn't empty or pointing to an admin URL (causing an endless loop)
 		if ( empty( $redirect_to ) || strpos( $redirect_to, 'wp-admin' ) !== false )
-			$redirect_to = $this->theme_my_login->get_login_page_link( 'loggedout=true' );
+			$redirect_to = $GLOBALS['theme_my_login']->get_login_page_link( 'loggedout=true' );
 
 		return $redirect_to;
 	}
@@ -172,7 +172,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @param string $role Name of user role
 	 */
 	function display_redirection_settings( $role ) {
-		$redirection =& $this->theme_my_login->options->get_option( array( 'redirection', $role ) );
+		$redirection =& $GLOBALS['theme_my_login']->options->get_option( array( 'redirection', $role ) );
 		?>
 <table class="form-table">
 	<tr valign="top">

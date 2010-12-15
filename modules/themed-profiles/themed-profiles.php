@@ -24,7 +24,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function init() {
 		global $pagenow;
 		if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
-			$redirect_to = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link() );
+			$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
 			$redirect_to = add_query_arg( $_GET, $redirect_to );
 			wp_redirect( $redirect_to );
 			exit();
@@ -40,24 +40,22 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function template_redirect() {
-		$theme_my_login =& $this->theme_my_login;
-
-		if ( $theme_my_login->is_login_page() ) {
-			if ( 'profile' == $theme_my_login->request_action ) {
+		if ( $GLOBALS['theme_my_login']->is_login_page() ) {
+			if ( 'profile' == $GLOBALS['theme_my_login']->request_action ) {
 				if ( !is_user_logged_in() ) {
 					// Redirect to login page if not logged in
-					$redirect_to = add_query_arg( 'reauth', 1, $theme_my_login->get_login_page_link() );
+					$redirect_to = add_query_arg( 'reauth', 1, $GLOBALS['theme_my_login']->get_login_page_link() );
 					wp_redirect( $redirect_to );
 					exit();
-				} elseif ( $theme_my_login->request_instance ) {
+				} elseif ( $GLOBALS['theme_my_login']->request_instance ) {
 					// Remove instance if instance requested
 					$redirect_to = remove_query_arg( array( 'instance' ) );
 					wp_redirect( $redirect_to );
 					exit();
 				}
-			} elseif ( is_user_logged_in() && 'logout' != $theme_my_login->request_action ) {
+			} elseif ( is_user_logged_in() && 'logout' != $GLOBALS['theme_my_login']->request_action ) {
 				// Redirect to profile if trying to access login page while logged in
-				$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
+				$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
 				wp_redirect( $redirect_to );
 				exit();
 			}
@@ -114,11 +112,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				exit();
 			}
 
-			$this->theme_my_login->errors = $errors;
+			$GLOBALS['theme_my_login']->errors = $errors;
 		}
 
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
-			$this->theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
+			$GLOBALS['theme_my_login']->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
 	}
 
 	/**
@@ -160,7 +158,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function site_url( $url, $path, $orig_scheme = '' ) {
 		if ( strpos( $url, 'profile.php' ) !== false ) {
 			$parsed_url = parse_url( $url );
-			$url = add_query_arg( 'action', 'profile', $this->theme_my_login->get_login_page_link() );
+			$url = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
 			if ( isset( $parsed_url['query'] ) ) {
 				wp_parse_str( $parsed_url['query'], $r );
 				foreach ( $r as $k => $v ) {
@@ -187,7 +185,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @return string The filtered title
 	 */
 	function tml_title( $title, $action ) {
-		if ( 'profile' == $action && is_user_logged_in() && '' == $this->theme_my_login->request_instance )
+		if ( 'profile' == $action && is_user_logged_in() && '' == $GLOBALS['theme_my_login']->request_instance )
 			$title = __( 'Your Profile', 'theme-my-login' );
 		return $title;
 	}

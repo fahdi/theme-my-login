@@ -46,7 +46,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 			}
 		} elseif ( is_wp_error( $user ) && 'incorrect_password' == $user->get_error_code() ) {
 			// Get the options
-			$options = $this->theme_my_login->options->get_option( array( 'security', 'failed_login' ), array() );
+			$options = $GLOBALS['theme_my_login']->options->get_option( array( 'security', 'failed_login' ), array() );
 
 			// Get the attempts
 			$attempts = $this->get_failed_login_attempts( $userdata->ID );
