@@ -499,42 +499,38 @@ class Theme_My_Login_MS_Signup {
 	function site_url( $url, $path, $orig_scheme ) {
 		global $pagenow;
 
-		// Check if URL contains wp-signup.php
-		$signup = strpos( $url, 'wp-signup.php' ) !== false;
+		$actions = array( 'wp-signup.php' => 'register', 'wp-activate.php' => 'activate', 'wp-login.php' => '' );
 
-		// Check if URL contains wp-activate.php
-		$activate = strpos( $url, 'wp-activate.php' ) !== false;
+		foreach ( $actions as $page => $action ) {
+			if ( false !== strpos( $url, $page )  && $pagenow != $page ) {
+				// Parse the URL
+				$parsed_url = parse_url( $url );
 
-		if ( ( $signup && 'wp-signup.php' != $pagenow ) || ( $activate && 'wp-activate.php' != $pagenow ) ) {
+				// Set action
+				$query = array( 'action' => $action );
 
-			// Parse the URL
-			$parsed_url = parse_url( $url );
-
-			// Determine which action to set
-			if ( $signup )
-				$query = array( 'action' => 'register' );
-			elseif ( $activate )
-				$query = array( 'action' => 'activate' );
-
-			// Extract the query string
-			if ( isset( $parsed_url['query'] ) ) {
-				wp_parse_str( $parsed_url['query'], $r );
-				foreach ( $r as $k => $v ) {
-					if ( strpos( $v, ' ' ) !== false )
-						$r[$k] = rawurlencode( $v );
+				// Extract the query string
+				if ( isset( $parsed_url['query'] ) ) {
+					wp_parse_str( $parsed_url['query'], $r );
+					foreach ( $r as $k => $v ) {
+						if ( strpos( $v, ' ' ) !== false )
+							$r[$k] = rawurlencode( $v );
+					}
 				}
+
+				// Merge query args passed in by filter
+				if ( isset( $r ) )
+					$query = array_merge( $query, (array) $r );
+
+				// Get the login page link along with the query
+				$url = $GLOBALS['theme_my_login']->get_login_page_link( $query );
+
+				// Check if HTTPS is needed
+				if ( 'https' == strtolower( $orig_scheme ) )
+					$url = preg_replace( '|^http://|', 'https://', $url );
+
+				break;
 			}
-
-			// Merge query args passed in by filter
-			if ( isset( $r ) )
-				$query = array_merge( $query, (array) $r );
-
-			// Get the login page link along with the query
-			$url = $GLOBALS['theme_my_login']->get_login_page_link( $query );
-
-			// Check if HTTPS is needed
-			if ( 'https' == strtolower( $orig_scheme ) )
-				$url = preg_replace( '|^http://|', 'https://', $url );
 		}
 		return $url;
 	}
