@@ -21,7 +21,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 */
     function Theme_My_Login_Widget() {
         $widget_options = array( 'classname' => 'widget_theme_my_login', 'description' => __( 'A login form for your blog.', 'theme-my-login' ) );
-        $this->WP_Widget( 'theme-my-login', __( 'Theme My Login', 'theme-my-login' ), $widget_options );
+        $this->WP_Widget( 'theme_my_login', __( 'Theme My Login', 'theme-my-login' ), $widget_options );
     }
 
 	/**
