@@ -615,23 +615,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	}
 
 	/**
-	 * Activates this module
-	 *
-	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function activate( &$theme_my_login ) {
-		$options = $this->init_options();
-		$theme_my_login->options->options['moderation'] = $theme_my_login->options->get_option( 'moderation' ) ? $theme_my_login->array_merge_recursive( $options['moderation'], $theme_my_login->options->get_option( 'moderation' ) ) :  $options['moderation'];
-		$theme_my_login->options->options['email'] = $theme_my_login->options->get_option( 'email' ) ? $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options->get_option( 'email' ) ) : $options['email'];
-	}
-
-	/**
 	 * Deactivates this module
 	 *
 	 * Callback for "tml_deactivate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
@@ -742,7 +725,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		add_action( 'tml_activate_user-moderation/user-moderation.php', array( &$this, 'activate' ) );
 		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );

@@ -204,26 +204,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	}
 
 	/**
-	 * Activates this module
-	 *
-	 * Callback for "tml_activate_custom-redirection/custom-redirection.php" hook in method Theme_My_Login_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function activate( &$theme_my_login ) {
-		$options = $this->init_options();
-		if ( !$theme_my_login->options->get_option( 'redirection' ) ) {
-			$theme_my_login->options->set_option( 'redirection', $options['redirection'] );
-		} else {
-			$theme_my_login->options->set_option( 'redirection', $theme_my_login->array_merge_recursive( $options['redirection'], $theme_my_login->options->get_option( 'redirection' ) ) );
-		}
-	}
-
-	/**
 	 * Initializes options for this module
 	 *
 	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
@@ -259,7 +239,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'tml_login_form', array( &$this, 'login_form' ) );

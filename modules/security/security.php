@@ -362,26 +362,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	}
 
 	/**
-	 * Activates this module
-	 *
-	 * Callback for "tml_activate_security/security.php" hook in method Theme_My_Login_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function activate( &$theme_my_login ) {
-		$options = $this->init_options();
-		if ( !$theme_my_login->options->get_option( 'security' ) ) {
-			$theme_my_login->options->set_option( 'security', $options['security'] );
-		} else {
-			$theme_my_login->options->set_option( 'security', $theme_my_login->array_merge_recursive( $options['security'], $theme_my_login->options['security'] ) );
-		}
-	}
-
-	/**
 	 * Initializes options for this module
 	 *
 	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
@@ -416,8 +396,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		// Activate
-		add_action( 'tml_activate_security/security.php', array( &$this, 'activate' ) );
 		// Initialize
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 

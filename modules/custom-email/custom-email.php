@@ -583,26 +583,6 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	}
 
 	/**
-	 * Activates this module
-	 *
-	 * Callback for "tml_activate_custom-email/custom-email.php" hook in method Theme_My_Login_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function activate( &$theme_my_login ) {
-		$options = $this->init_options();
-		if ( !$theme_my_login->options->get_option( 'email' ) ) {
-			$theme_my_login->options->set_option( 'email', $options['email'] );
-		} else {
-			$theme_my_login->options->set_option( 'email', $theme_my_login->array_merge_recursive( $options['email'], $theme_my_login->options['email'] ) );
-		}
-	}
-
-	/**
 	 * Initializes options for this module
 	 *
 	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
@@ -665,7 +645,6 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		add_action( 'tml_activate_custom-email/custom-email.php', array( &$this, 'activate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 
 		add_filter( 'wp_mail_from', array( &$this, 'mail_from_filter' ) );
