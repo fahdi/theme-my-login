@@ -146,7 +146,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param int $user_id The user's ID
 	 */
 	function remove_default_password_nag( $user_id ) {
-		update_usermeta( $user_id, 'default_password_nag', false );
+		update_user_meta( $user_id, 'default_password_nag', false );
 	}
 
 	/**
@@ -377,7 +377,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		wp_set_password( $new_pass, $user->ID );
 
 		// Remove the password nag
-		update_usermeta( $user->ID, 'default_password_nag', false );
+		update_user_meta( $user->ID, 'default_password_nag', false );
 
 		// Notification e-mail message
 		$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";

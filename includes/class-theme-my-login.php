@@ -388,17 +388,11 @@ class Theme_My_Login {
 	 * @param int $post_id The current post ID
 	 * @return string The modified post title
 	 */
-	function the_title( $title, $post_id = '' ) {
-		if ( is_admin() && !defined( 'IS_PROFILE_PAGE' ) )
+	function the_title( $title, $post_id ) {
+		if ( is_admin() )
 			return $title;
 
-		// No post ID until WP 3.0!
-		if ( empty( $post_id ) ) {
-			global $wpdb;
-			$post_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s", $title ) );
-		}
-
-		if ( $this->options->get_option( 'page_id' ) == $post_id ) {
+		if ( $this->is_login_page( $post_id ) ) {
 			if ( !in_the_loop() ) {
 				$title = is_user_logged_in() ? __( 'Log Out', 'theme-my-login' ) : __( 'Log In', 'theme-my-login' );
 			} else {
@@ -825,9 +819,8 @@ if(typeof wpOnload=='function')wpOnload()
 			// Now insert the new md5 key into the db
 			$wpdb->update( $wpdb->users, array( 'user_activation_key' => $key ), array( 'user_login' => $user_login ) );
 		}
-		$site_url = ( function_exists( 'network_site_url' ) ) ? 'network_site_url' : 'site_url'; // Pre 3.0 compatibility
 		$message = __( 'Someone has asked to reset the password for the following site and username.', 'theme-my-login' ) . "\r\n\r\n";
-		$message .= $site_url() . "\r\n\r\n";
+		$message .= network_site_url() . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s', 'theme-my-login' ), $user_login ) . "\r\n\r\n";
 		$message .= __( 'To reset your password visit the following address, otherwise just ignore this email and nothing will happen.', 'theme-my-login' ) . "\r\n\r\n";
 		$message .= $site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) . "\r\n";
@@ -881,13 +874,11 @@ if(typeof wpOnload=='function')wpOnload()
 
 		do_action( 'password_reset', $user, $new_pass );
 
-		$site_url = ( function_exists( 'network_site_url' ) ) ? 'network_site_url' : 'site_url'; // Pre 3.0 compatibility
-
 		wp_set_password( $new_pass, $user->ID );
 		update_user_option( $user->ID, 'default_password_nag', true, true ); //Set up the Password change nag.
 		$message  = sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
 		$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $new_pass ) . "\r\n";
-		$message .= $site_url( 'wp-login.php', 'login' ) . "\r\n";
+		$message .= network_site_url( 'wp-login.php', 'login' ) . "\r\n";
 
 		if ( function_exists( 'is_multisite') && is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
