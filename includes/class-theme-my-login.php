@@ -79,13 +79,10 @@ class Theme_My_Login {
 		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
 
-		$this->options = new WDBJ_Plugin_Options( 'theme_my_login', array(
-			'page_id' => 0,
-			'show_page' => 1,
-			'enable_css' => 1,
-			'active_modules' => array(),
-			'initial_nag' => 1
-		) );
+		$this->init_options();
+
+		// Load options again to allow modules to tap in
+		add_action( 'tml_modules_loaded', array( &$this, 'init_options' ), 0 );
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
@@ -109,6 +106,22 @@ class Theme_My_Login {
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
 
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
+	}
+
+	/**
+	 * Initializes plugin options object
+	 *
+	 * @since 6.1
+	 * @access public
+	 */
+	function init_options() {
+		$this->options = new WDBJ_Plugin_Options( 'theme_my_login', apply_filters( 'tml_init_options', array(
+			'page_id' => 0,
+			'show_page' => 1,
+			'enable_css' => 1,
+			'active_modules' => array(),
+			'initial_nag' => 1
+		) ) );
 	}
 
 	/**
