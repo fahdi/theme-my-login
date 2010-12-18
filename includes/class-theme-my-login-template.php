@@ -508,7 +508,7 @@ class Theme_My_Login_Template {
 	 * @param array $options Instance options
 	 */
 	function load_options( $options = array() ) {
-		$this->options = shortcode_atts( array(
+		$this->options = wp_parse_args( $options, array(
 			'instance' => '',
 			'default_action' => 'login',
 			'login_template' => '',
@@ -528,7 +528,7 @@ class Theme_My_Login_Template {
 			'after_widget' => '</li>',
 			'before_title' => '<h2>',
 			'after_title' => '</h2>'
-		), (array) $options );
+		) );
 	}
 
 	/**
