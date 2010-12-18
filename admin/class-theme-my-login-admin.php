@@ -654,7 +654,7 @@ class Theme_My_Login_Admin {
 
 		// Delete options
 		delete_option( 'theme_my_login' );
-		delete_option( 'widget_theme_my_login' );
+		delete_option( 'widget_theme-my-login' );
 	}
 
 	/**
