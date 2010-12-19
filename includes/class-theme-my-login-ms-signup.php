@@ -46,7 +46,7 @@ class Theme_My_Login_MS_Signup {
 		add_action( 'tml_display_activate', array( &$this, 'tml_display_activate' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
 
-		add_action( 'switch_blog', array( &$theme_my_login, 'load_options' ) );
+		add_action( 'switch_blog', array( &$GLOBALS['theme_my_login'], 'init_options' ) );
 		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 10, 2 );
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
