@@ -823,7 +823,7 @@ if(typeof wpOnload=='function')wpOnload()
 		$message .= network_site_url() . "\r\n\r\n";
 		$message .= sprintf( __( 'Username: %s', 'theme-my-login' ), $user_login ) . "\r\n\r\n";
 		$message .= __( 'To reset your password visit the following address, otherwise just ignore this email and nothing will happen.', 'theme-my-login' ) . "\r\n\r\n";
-		$message .= $site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) . "\r\n";
+		$message .= network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) . "\r\n";
 
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
