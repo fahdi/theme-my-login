@@ -162,6 +162,8 @@ class Theme_My_Login_MS_Signup {
 						$result = wpmu_validate_user_signup( $_POST['user_name'], $_POST['user_email'] );
 						extract( $result );
 
+						$GLOBALS['theme_my_login']->errors = $errors;
+
 						if ( $errors->get_error_code() ) {
 							$this->signup_user( $user_name, $user_email );
 							break;
@@ -169,6 +171,8 @@ class Theme_My_Login_MS_Signup {
 
 						$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'] );
 						extract( $result );
+
+						$GLOBALS['theme_my_login']->errors = $errors;
 
 						if ( $errors->get_error_code() ) {
 							$this->signup_blog( $user_name, $user_email, $blogname, $blog_title );
@@ -208,6 +212,8 @@ class Theme_My_Login_MS_Signup {
 
 					$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'], $current_user );
 					extract( $result );
+
+					$GLOBALS['theme_my_login']->errors = $errors;
 
 					if ( $errors->get_error_code() ) {
 						$this->signup_another_blog( $blogname, $blog_title );
