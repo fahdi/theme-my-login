@@ -46,6 +46,10 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$user = new WP_User( $user_id );
 		$user->set_role( 'pending' );
 
+		// Temporarily save plaintext pass
+		if ( isset( $_POST['user_pass'] ) )
+			update_user_meta( $user_id, 'user_pass', $_POST['user_pass'] );
+
 		// Send appropriate e-mail depending on moderation type
 		if ( 'email' == $GLOBALS['theme_my_login']->options->get_option( array( 'moderation', 'type' ) ) ) { // User activation
 			// Generate an activation key
@@ -74,10 +78,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function user_activation() {
-		// Determine if a new password needs to be set
-		$newpass = $GLOBALS['theme_my_login']->is_module_active('custom-passwords/custom-passwords.php') ? 0 : 1;
 		// Attempt to activate the user
-		$errors = $this->activate_new_user( $_GET['key'], $_GET['login'], $newpass );
+		$errors = $this->activate_new_user( $_GET['key'], $_GET['login'] );
 		// Make sure there are no errors
 		if ( !is_wp_error( $errors ) ) {
 			$redirect_to = Theme_My_Login::get_current_url( 'activation=complete' );
@@ -216,10 +218,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 *
 	 * @param string $key Hash to validate sending confirmation email
 	 * @param string $login User's username for logging in
-	 * @param bool $newpass Whether or not to assign a new password
 	 * @return bool|WP_Error True if successful, WP_Error otherwise
 	 */
-	function activate_new_user( $key, $login, $newpass = false ) {
+	function activate_new_user( $key, $login ) {
 		global $wpdb;
 
 		$key = preg_replace('/[^a-z0-9]/i', '', $key);
@@ -248,17 +249,21 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		// Clear the activation key
 		$wpdb->update( $wpdb->users, array( 'user_activation_key' => '' ), array( 'user_login' => $login ) );
 
+		// Set user role
 		$user_object = new WP_User( $user->ID );
 		$user_object->set_role( get_option( 'default_role' ) );
 		unset( $user_object );
 
-		$pass = __( 'Same as when you signed up.', 'theme-my-login' );
-		if ( $newpass ) {
-			$pass = wp_generate_password();
-			wp_set_password( $pass, $user->ID );
+		// Check for plaintext pass
+		if ( !$user_pass = get_user_meta( $user->ID, 'user_pass', true ) ) {
+			$user_pass = wp_generate_password();
+			wp_set_password( $user_pass, $user->ID );
 		}
 
-		do_action( 'tml_new_user_activated', $user->ID, $pass );
+		// Delete plaintext pass
+		delete_user_meta( $user->ID, 'user_pass' );
+
+		do_action( 'tml_new_user_activated', $user->ID, $user_pass );
 
 		return true;
 	}

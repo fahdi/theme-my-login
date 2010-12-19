@@ -42,7 +42,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 
 					$newpass = $GLOBALS['theme_my_login']->is_module_active( 'custom-passwords/custom-passwords.php' ) ? 0 : 1;
 
-					if ( !Theme_My_Login_User_Moderation_Admin::approve_user( $user, $newpass ) )
+					if ( !Theme_My_Login_User_Moderation_Admin::approve_user( $user ) )
 						wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
 					$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
@@ -121,10 +121,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * Handles activating a new user by admin approval
 	 *
 	 * @param string $user_id User's ID
-	 * @param bool $newpass Whether or not to assign a new password
 	 * @return bool Returns false if not a valid user
 	 */
-	function approve_user( $user_id, $newpass = false ) {
+	function approve_user( $user_id ) {
 		global $wpdb;
 
 		$user_id = (int) $user_id;
@@ -141,15 +140,19 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 
 		$approval_role = apply_filters( 'tml_approval_role', get_option( 'default_role' ), $user->ID );
 
+		// Set user role
 		$user_object = new WP_User( $user->ID );
 		$user_object->set_role( $approval_role );
 		unset( $user_object );
 
-		$user_pass = __( 'Same as when you signed up.', 'theme-my-login' );
-		if ( $newpass ) {
+		// Check for plaintext pass
+		if ( !$user_pass = get_user_meta( $user->ID, 'user_pass', true ) ) {
 			$user_pass = wp_generate_password();
 			wp_set_password( $user_pass, $user->ID );
 		}
+
+		// Delete plaintext pass
+		delete_user_meta( $user->ID, 'user_pass' );
 
 		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
