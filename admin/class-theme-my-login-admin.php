@@ -541,7 +541,7 @@ class Theme_My_Login_Admin {
 				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
 				foreach ( $blogids as $blog_id ) {
 					switch_to_blog( $blog_id );
-					$this->_install();
+					Theme_My_Login_Admin::_install();
 				}
 				restore_current_blog();
 				return;
