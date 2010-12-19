@@ -53,6 +53,11 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 <?php
 	}
 
+	function ms_hidden_password_field() {
+		if ( isset( $_POST['user_pass'] ) )
+			echo '<input type="hidden" name="user_pass" value="' . $_POST['user_pass'] . '" />' . "\n";
+	}
+
 	/**
 	 * Handles password errors for registration form
 	 *
@@ -86,52 +91,51 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	}
 
 	function ms_password_errors( $result ) {
-		$errors =& $result['errors'];
-		$errors = $this->password_errors( $errors );
-		foreach ( $errors->errors as $code => $msg ) {
-			$errors->errors[$code] = preg_replace( '/<strong>([^<]+)<\/strong>: /', '', $msg );
+		if ( isset( $_POST['stage'] ) && 'validate-user-signup' == $_POST['stage'] ) {
+			$errors =& $result['errors'];
+			$errors = $this->password_errors( $errors );
+			foreach ( $errors->errors as $code => $msg ) {
+				$errors->errors[$code] = preg_replace( '/<strong>([^<]+)<\/strong>: /', '', $msg );
+			}
 		}
 		return $result;
+	}
+
+	function ms_save_password( $meta ) {
+		if ( isset( $_POST['user_pass'] ) )
+			$meta['user_pass'] = $_POST['user_pass'];
+		return $meta;
 	}
 
 	/**
 	 * Sets the user password
 	 *
-	 * Callback for "tml_user_registration_pass" hook in Theme_My_Login::register_new_user()
+	 * Callback for "random_password" hook in wp_generate_password()
 	 *
-	 * @see Theme_My_Login::register_new_user()
+	 * @see wp_generate_password()
 	 * @since 6.0
 	 * @access public
 	 *
-	 * @param string $user_pass Auto-generated password passed in from filter
-	 * @return string Password POSTed by user
+	 * @param string $password Auto-generated password passed in from filter
+	 * @return string Password chosen by user
 	 */
-	function set_password( $user_pass ) {
-		// Make sure password isn't empty
-		if ( isset( $_POST['user_pass'] ) && !empty( $_POST['user_pass'] ) )
-			$user_pass = $_POST['user_pass'];
-		return $user_pass;
-	}
-
-	function ms_save_password( $meta ) {
-		if ( isset( $_POST['stage'] ) && 'validate-user-signup' == $_POST['stage'] )
-			$meta['user_pass'] = wp_hash_password( $_POST['user_pass'] );
-		return $meta;
-	}
-
-	function ms_set_password( $user_id ) {
+	function set_password( $password ) {
 		global $wpdb;
 
-		$user = get_userdata( $user_id );
-
-		if ( $signup_meta = $wpdb->get_var( $wpdb->prepare( "SELECT meta FROM $wpdb->signups WHERE user_login = %s", $user->user_login ) ) ) {
-			$signup_meta = maybe_unserialize( $signup_meta );
-			if ( is_array( $signup_meta ) && isset( $signup_meta['user_pass'] ) ) {
-				$wpdb->update( $wpdb->users, array( 'user_pass' => $signup_meta['user_pass'] ), array( 'user_login' => $user->user_login ) );
-				unset( $signup_meta['user_pass'] );
-				$wpdb->update( $wpdb->signups, array( 'meta' => $signup_meta ), array( 'user_login' => $user->user_login ) );
+		if ( function_exists( 'is_multisite' ) && is_multisite() && isset( $_REQUEST['key'] ) ) {
+			if ( $meta = $wpdb->get_var( $wpdb->prepare( "SELECT meta FROM $wpdb->signups WHERE activation_key = %s", $_REQUEST['key'] ) ) ) {
+				$meta = unserialize( $meta );
+				if ( isset( $meta['user_pass'] ) ) {
+					$password = $meta['user_pass'];
+					$wpdb->update( $wpdb->signups, array( 'meta' => serialize( $meta ) ), array( 'activation_key' => $_REQUEST['key'] ) );
+				}
 			}
+		} else {
+			// Make sure password isn't empty
+			if ( isset( $_POST['user_pass'] ) && !empty( $_POST['user_pass'] ) )
+				$password = $_POST['user_pass'];
 		}
+		return $password;
 	}
 
 	/**
@@ -416,11 +420,11 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		// Register password
 		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
 		add_action( 'tml_signup_extra_fields', array( &$this, 'ms_password_fields' ) );
+		add_action( 'tml_signup_blogform', array( &$this, 'ms_hidden_password_field' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'wpmu_validate_user_signup',  array( &$this, 'ms_password_errors' ) );
-		add_filter( 'tml_user_registration_pass', array( &$this, 'set_password' ) );
 		add_filter( 'add_signup_meta', array( &$this, 'ms_save_password' ) );
-		add_action( 'wpmu_new_user', array( &$this, 'ms_set_password' ) );
+		add_filter( 'random_password', array( &$this, 'set_password' ) );
 		add_action( 'tml_new_user_registered', array( &$this, 'remove_default_password_nag' ) );
 		// Reset password
 		add_action( 'tml_display_resetpass', array( &$this, 'get_resetpass_form' ) );
