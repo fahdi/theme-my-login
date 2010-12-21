@@ -189,11 +189,6 @@ class Theme_My_Login {
 
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-		if ( SITECOOKIEPATH != COOKIEPATH )
-			setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-
 		// allow plugins to override the default actions, and to add extra actions if they want
 		do_action( 'login_form_' . $action );
 
@@ -307,6 +302,11 @@ class Theme_My_Login {
 						$secure_cookie = false;
 
 					if ( $http_post ) {
+						// Set a cookie now to see if they are supported by the browser.
+						setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
+						if ( SITECOOKIEPATH != COOKIEPATH )
+							setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
+
 						$user = wp_signon( '', $secure_cookie );
 
 						$redirect_to = apply_filters( 'login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
