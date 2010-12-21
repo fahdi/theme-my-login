@@ -196,7 +196,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$redirect_to = $GLOBALS['theme_my_login']->get_login_page_link();
 
 		if ( !empty( $GLOBALS['theme_my_login']->request_instance ) )
-			$redirect_to = $theme_my_login->get_current_url( 'instance=' . $GLOBALS['theme_my_login']->request_instance );
+			$redirect_to = $GLOBALS['theme_my_login']->get_current_url( 'instance=' . $GLOBALS['theme_my_login']->request_instance );
 
 		if ( 'email' == $GLOBALS['theme_my_login']->options->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
