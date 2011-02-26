@@ -371,7 +371,8 @@ class Theme_My_Login_MS_Signup {
 
 		add_action( 'wp_head', array( &$this, 'activate_header' ) );
 
-		require_once( ABSPATH . WPINC . '/registration.php' );
+		if ( version_compare( $wp_version, '3.1', '<' ) )
+			require_once( ABSPATH . WPINC . '/registration.php' );
 	}
 
 	/**
