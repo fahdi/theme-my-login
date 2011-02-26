@@ -72,7 +72,7 @@ class Theme_My_Login_Admin {
 	function module_errors() {
 		$module_errors = $GLOBALS['theme_my_login']->options->get_option( 'module_errors' );
 		// If we have errors to display
-		if ( $module_errors ) {
+		if ( $module_errors && current_user_can( 'manage_options' ) ) {
 			// Display them
 			echo '<div class="error">';
 			foreach ( (array) $module_errors as $module => $error ) {
