@@ -253,6 +253,21 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 </table><?php
 	}
 
+	function admin_init() {
+		// Disable moderation if using multisite
+		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			if ( $GLOBALS['theme_my_login']->is_module_active( 'user-moderation/user-moderation.php' ) ) {
+				// Deactivate the module
+				$GLOBALS['theme_my_login_admin']->deactivate_modules( 'user-moderation/user-moderation.php' );
+
+				// Set an error so the administrator will know
+				$module_errors = $GLOBALS['theme_my_login']->options->get_option( 'module_errors', array() );
+				$module_errors['user-moderation/user-moderation.php'] = __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' );
+				$GLOBALS['theme_my_login']->options->set_option( 'module_errors', $module_errors );
+			}
+		}
+	}
+
 	/**
 	 * Loads the module
 	 *
@@ -260,6 +275,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		if ( function_exists( 'is_multisite' ) && is_multisite() )
+			return;
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'load-users.php', array( &$this, 'load_users_page' ) );
 	}

@@ -495,6 +495,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
+		if ( function_exists( 'is_multisite' ) && is_multisite() )
+			return;
+
 		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
