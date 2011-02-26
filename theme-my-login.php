@@ -3,19 +3,11 @@
 Plugin Name: Theme My Login
 Plugin URI: http://www.jfarthing.com/wordpress-plugins/theme-my-login/
 Description: Themes the WordPress login, registration and forgot password pages according to your theme.
-Version: 6.1-alpha
+Version: 6.1
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
 */
-
-/*
- * = Future Ideas =
- * ----------------------------------------------------------------------
- * Allow separate permalinks for login, register and lostpassword
- * Allow users to delete themselves
- * Add option to forward all "wp-login.php" requests to TML login page
- */
 
 // Allow custom functions file
 if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
