@@ -392,9 +392,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	/**
 	 * Deactivates this module
 	 *
-	 * Callback for "tml_deactivate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
+	 * Callback for "tml_deactivate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::deactivate_modules()
 	 *
-	 * @see Theme_My_Login_Admin::activate_module()
+	 * @see Theme_My_Login_Admin::deactivate_modules()
 	 * @since 6.0
 	 * @access public
 	 *
