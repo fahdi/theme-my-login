@@ -74,7 +74,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function profile_action() {
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
-		if ( version_compare( $wp_version, '3.1', '<' ) )
+		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
 			require_once( ABSPATH . WPINC . '/registration.php' );
 
 		define( 'IS_PROFILE_PAGE', true );

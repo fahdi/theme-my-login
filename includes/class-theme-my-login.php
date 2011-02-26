@@ -252,7 +252,7 @@ class Theme_My_Login {
 					$user_login = '';
 					$user_email = '';
 					if ( $http_post ) {
-						if ( version_compare( $wp_version, '3.1', '<' ) )
+						if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
 							require_once( ABSPATH . WPINC . '/registration.php' );
 
 						$user_login = $_POST['user_login'];

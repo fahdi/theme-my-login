@@ -64,11 +64,11 @@ class Theme_My_Login_MS_Signup {
 	 * @param object $theme_my_login Theme_My_Login object
 	 */
 	function tml_request_register( &$theme_my_login ) {
-		global $current_site, $wp_version;
+		global $current_site;
 
 		add_action( 'wp_head', array( &$this, 'signup_header' ) );
 
-		if ( version_compare( $wp_version, '3.1', '<' ) )
+		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
 			require_once( ABSPATH . WPINC . '/registration.php' );
 
 		if ( is_array( get_site_option( 'illegal_names' )) && isset( $_GET[ 'new' ] ) && in_array( $_GET[ 'new' ], get_site_option( 'illegal_names' ) ) == true ) {
@@ -371,7 +371,7 @@ class Theme_My_Login_MS_Signup {
 
 		add_action( 'wp_head', array( &$this, 'activate_header' ) );
 
-		if ( version_compare( $wp_version, '3.1', '<' ) )
+		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
 			require_once( ABSPATH . WPINC . '/registration.php' );
 	}
 
