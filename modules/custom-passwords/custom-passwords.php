@@ -170,6 +170,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 				$meta = unserialize( $meta );
 				if ( isset( $meta['user_pass'] ) ) {
 					$password = $meta['user_pass'];
+					unset( $meta['user_pass'] );
 					$wpdb->update( $wpdb->signups, array( 'meta' => serialize( $meta ) ), array( 'activation_key' => $_REQUEST['key'] ) );
 				}
 			}
