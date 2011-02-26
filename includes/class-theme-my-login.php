@@ -167,7 +167,7 @@ class Theme_My_Login {
 
 		$is_login_page = ( $page_id == $this->options->get_option( 'page_id' ) );
 
-		return apply_filters( 'tml_is_login_page', $is_login_page );
+		return apply_filters( 'tml_is_login_page', $is_login_page, $page_id );
 	}
 
 	/**
