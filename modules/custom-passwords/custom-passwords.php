@@ -33,6 +33,17 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 <?php
 	}
 
+	/**
+	 * Outputs password fields to multisite signup user form
+	 *
+	 * Callback for "tml_signup_extra_fields" hook in file "ms-signup-user-form.php", included by Theme_My_Login_Template::display()
+	 *
+	 * @see Theme_My_Login::display()
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $template Reference to Theme_My_Login_Template object
+	 */
 	function ms_password_fields( &$template ) {
 		$errors = array();
 		foreach ( $GLOBALS['theme_my_login']->errors->get_error_codes() as $code ) {
@@ -53,6 +64,17 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 <?php
 	}
 
+	/**
+	 * Outputs password field to multisite signup blog form
+	 *
+	 * Callback for "tml_signup_hidden_fields" hook in file "ms-signup-blog-form.php", included by Theme_My_Login_Template::display()
+	 *
+	 * @see Theme_My_Login::display()
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param object $template Reference to Theme_My_Login_Template object
+	 */
 	function ms_hidden_password_field() {
 		if ( isset( $_POST['user_pass'] ) )
 			echo '<input type="hidden" name="user_pass" value="' . $_POST['user_pass'] . '" />' . "\n";
@@ -90,6 +112,18 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		return $errors;
 	}
 
+	/**
+	 * Handles password errors for multisite signup form
+	 *
+	 * Callback for "registration_errors" hook in Theme_My_Login::register_new_user()
+	 *
+	 * @see Theme_My_Login::register_new_user()
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param WP_Error $errors WP_Error object
+	 * @return WP_Error WP_Error object
+	 */
 	function ms_password_errors( $result ) {
 		if ( isset( $_POST['stage'] ) && 'validate-user-signup' == $_POST['stage'] ) {
 			$errors =& $result['errors'];
@@ -101,6 +135,15 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		return $result;
 	}
 
+	/**
+	 * Adds password to signup meta array
+	 *
+	 * @since 6.1
+	 * @access public
+	 *
+	 * @param array $meta Signup meta
+	 * @return array $meta Signup meta
+	 */
 	function ms_save_password( $meta ) {
 		if ( isset( $_POST['user_pass'] ) )
 			$meta['user_pass'] = $_POST['user_pass'];
