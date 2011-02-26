@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.0
-Tested up to: 3.0.3
+Tested up to: 3.1
 Stable tag: 6.0.4
 
 Themes the WordPress login pages according to your theme.
@@ -43,6 +43,9 @@ Please visit http://www.jfarthing.com/support if you have any questions, concern
 = 6.1 =
 * Fully support multisite
 * Require WordPress 3.0+
+* Add Bulgarian translation
+* Add (Belgian) Dutch translation
+* Add Romanian translation
 
 = 6.0.4 =
 * Fix admin e-mail notification disabling
