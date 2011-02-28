@@ -389,7 +389,7 @@ class Theme_My_Login {
 	 * @param int $post_id The current post ID
 	 * @return string The modified post title
 	 */
-	function the_title( $title, $post_id ) {
+	function the_title( $title, $post_id = 0 ) {
 		if ( is_admin() )
 			return $title;
 
