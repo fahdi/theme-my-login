@@ -82,7 +82,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 
 		register_admin_color_schemes();
 
-		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/password-strength.css' ) );
+		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/themed-profiles.css' ) );
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
