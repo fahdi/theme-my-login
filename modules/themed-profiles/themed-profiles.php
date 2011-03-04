@@ -74,10 +74,13 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function profile_action() {
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
+		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
 		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
 			require_once( ABSPATH . WPINC . '/registration.php' );
 
 		define( 'IS_PROFILE_PAGE', true );
+
+		register_admin_color_schemes();
 
 		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/password-strength.css' ) );
 
