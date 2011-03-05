@@ -49,8 +49,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 				elseif ( 'resendactivation' == $_GET['action'] ) {
 					check_admin_referer( 'resend-activation' );
 
-					// Apply activation e-mail filters
-					$GLOBALS['theme_my_login_user_moderation']->apply_user_activation_notification_filters();
 					if ( !Theme_My_Login_User_Moderation::new_user_activation_notification( $user ) )
 						wp_die( __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) );
 
