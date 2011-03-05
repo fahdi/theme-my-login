@@ -181,6 +181,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 
 				// Remove filter as not to filter User Moderation activation key
 				remove_filter( 'random_password', array( &$this, 'set_password' ) );
+			}
 		}
 		return $password;
 	}
