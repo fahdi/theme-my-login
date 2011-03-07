@@ -44,6 +44,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( !empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e( 'Enable keyboard shortcuts for comment moderation.', 'theme-my-login' ); ?></label> <?php _e( '<a href="http://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>', 'theme-my-login' ); ?></td>
 		</tr>
 		<?php endif; ?>
+		<?php if ( function_exists( '_get_admin_bar_pref' ) ) : ?>
 		<tr class="show-admin-bar">
 			<th scope="row"><?php _e( 'Show Admin Bar', 'theme-my-login' )?></th>
 			<td><fieldset><legend class="screen-reader-text"><span><?php _e( 'Show Admin Bar', 'theme-my-login' ); ?></span></legend>
@@ -55,6 +56,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 				<?php /* translators: Show admin bar in dashboard */ _e( 'in dashboard', 'theme-my-login' ); ?></label>
 			</td>
 		</tr>
+		<?php endif; // function exists ?>
 		<?php do_action( 'personal_options', $profileuser ); ?>
 		</table>
 		<?php do_action( 'profile_personal_options', $profileuser ); ?>
