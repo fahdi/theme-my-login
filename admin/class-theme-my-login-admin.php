@@ -680,8 +680,8 @@ class Theme_My_Login_Admin {
 		add_action( 'admin_notices', array( &$this, 'initial_nag' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 
-		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( &$this, 'install' ) );
-		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( &$this, 'uninstall' ) );
+		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
+		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
 }
 
