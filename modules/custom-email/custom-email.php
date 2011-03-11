@@ -782,6 +782,8 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		// Get all matches ($matches[0] will be '%value%'; $matches[1] will be 'value')
 		preg_match_all( '/%([^%]*)%/', $input, $matches );
 
+		//Avoid deprecated 'siteurl' notice
+		$replacements['%siteurl%'] = get_bloginfo( 'url' );
 		// Allow %user_ip% variable
 		$replacements['%user_ip%'] = $_SERVER['REMOTE_ADDR'];
 
