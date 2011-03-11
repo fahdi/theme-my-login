@@ -474,11 +474,13 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 		add_filter( 'add_signup_meta', array( &$this, 'ms_save_password' ) );
 		add_filter( 'random_password', array( &$this, 'set_password' ) );
 		add_action( 'tml_new_user_registered', array( &$this, 'remove_default_password_nag' ) );
+		add_action( 'approve_user', array( &$this, 'remove_default_password_nag' ) );
 		// Reset password
 		add_action( 'tml_display_resetpass', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'tml_display_rp', array( &$this, 'get_resetpass_form' ) );
 		add_action( 'tml_request_resetpass', array( &$this, 'resetpass_action' ) );
 		add_action( 'tml_request_rp', array( &$this, 'resetpass_action' ) );
+		add_action( 'tml_user_password_changed', array( &$this, 'remove_default_password_nag' ) );
 		// Template messages
 		add_filter( 'tml_register_passmail_template_message', array( &$this, 'register_passmail_template_message' ) );
 		add_filter( 'tml_action_template_message', array( &$this, 'action_template_message' ), 10, 2 );
