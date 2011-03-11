@@ -77,7 +77,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 					$GLOBALS['theme_my_login']->options->save();
 				}
 
-				$link_row = array_merge( array( 'id' => $id ), $current_link );
+				$link_row = array_merge( array( 'id' => $id ), $links[$role][$id] );
 
 				$x = new WP_Ajax_Response( array(
 					'what' => $role . '-link',
@@ -306,12 +306,29 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	}
 
 	/**
+	 * Activates this module
+	 *
+	 * Callback for "tml_activate_custom-user-links/custom-user-links.php" hook in method Theme_My_Login_Admin::activate_module()
+	 *
+	 * @see Theme_My_Login_Admin::activate_module()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
+	 */
+	function activate( &$theme_my_login ) {
+		$options = Theme_My_Login_Custom_User_Links::init_options();
+		$theme_my_login->options->set_option( 'user_links', $options['user_links'] );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
 	function load() {
+		add_action( 'tml_activate_custom-user-links/custom-user-links.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
 

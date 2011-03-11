@@ -422,7 +422,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$options['moderation'] = array(
 			'type' => 'none'
 			);
-		$options['email'] = array(
+
+		$email = array(
 			'user_activation' => array(
 				'mail_from' => '',
 				'mail_from_name' => '',
@@ -452,6 +453,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 				'message' => ''
 				)
 			);
+		if ( isset( $options['email'] ) )
+			$options['email'] = array_merge( $options['email'], $email );
+		else
+			$options['email'] = $email;
+
 		return $options;
 	}
 
