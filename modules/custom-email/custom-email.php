@@ -319,7 +319,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	function send_password_change_notification_filter( $enable ) {
 		$options = $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass' ) );
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
-		if ( $this->options['reset_pass']['admin_disable'] )
+		if ( $options['admin_disable'] )
 			return false;
 		return $enable;
 	}
