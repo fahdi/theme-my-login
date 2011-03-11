@@ -75,7 +75,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_retrieve_pass_filters() {
-		$options =& $GLOBALS['theme_my_login']->options->get_option( 'retrieve_pass' );
+		$options =& $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'retrieve_pass' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		add_filter( 'retrieve_password_title', array( &$this, 'retrieve_pass_title_filter' ), 10, 2 );
 		add_filter( 'retrieve_password_message', array( &$this, 'retrieve_pass_message_filter' ), 10, 3 );
@@ -91,7 +91,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function apply_reset_pass_filters() {
-		$options =& $GLOBALS['theme_my_login']->options->get_option( 'reset_pass' );
+		$options =& $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		add_filter( 'password_reset_title', array( &$this, 'reset_pass_title_filter' ), 10, 2 );
 		add_filter( 'password_reset_message', array( &$this, 'reset_pass_message_filter' ), 10, 3 );
