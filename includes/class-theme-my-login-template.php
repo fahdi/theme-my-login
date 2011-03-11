@@ -81,29 +81,29 @@ class Theme_My_Login_Template {
 			do_action_ref_array( 'tml_display_' . $action, array( &$this ) );
 		} else {
 			$template = array();
-			switch ( $action ) {
-				case 'lostpassword':
-				case 'retrievepassword':
-					if ( !empty( $this->options['lostpassword_template'] ) )
-						$template[] = $this->options['lostpassword_template'];
-					$template[] = 'lostpassword-form.php';
-					break;
-				case 'register':
-					if ( !empty( $this->options['register_template'] ) )
-						$template[] = $this->options['register_template'];
-					$template[] = 'register-form.php';
-					break;
-				case 'login':
-				default :
-					if ( is_user_logged_in() ) {
-						if ( !empty( $this->options['user_template'] ) )
-							$template[] = $this->options['user_template'];
-						$template[] = 'user-panel.php';
-					} else {
+			if ( is_user_logged_in() ) {
+				if ( !empty( $this->options['user_template'] ) )
+					$template[] = $this->options['user_template'];
+				$template[] = 'user-panel.php';
+			} else {
+				switch ( $action ) {
+					case 'lostpassword':
+					case 'retrievepassword':
+						if ( !empty( $this->options['lostpassword_template'] ) )
+							$template[] = $this->options['lostpassword_template'];
+						$template[] = 'lostpassword-form.php';
+						break;
+					case 'register':
+						if ( !empty( $this->options['register_template'] ) )
+							$template[] = $this->options['register_template'];
+						$template[] = 'register-form.php';
+						break;
+					case 'login':
+					default :
 						if ( !empty( $this->options['login_template'] ) )
 							$template[] = $this->options['login_template'];
 						$template[] = 'login-form.php';
-					}
+				}
 			}
 			$this->get_template( $template );
 		}
