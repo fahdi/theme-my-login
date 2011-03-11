@@ -453,7 +453,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 			die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
 
 		// Notify the admin of the change
-		wp_password_change_notification( $user );
+		do_action( 'tml_user_password_changed', $user );
 
 		return true;
 	}
