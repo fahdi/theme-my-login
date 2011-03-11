@@ -117,8 +117,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$user = new WP_User( $user_id );
 
 		if ( in_array( 'pending', (array) $user->roles ) ) {
-			// Apply activation e-mail filters
-			$this->apply_user_activation_notification_filters();
 			// Send activation e-mail
 			$this->new_user_activation_notification( $user->ID );
 			// Now redirect them
