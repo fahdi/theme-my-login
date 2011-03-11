@@ -88,6 +88,8 @@ class Theme_My_Login {
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 		add_action( 'parse_request', array( &$this, 'parse_request' ) );
 
+		add_action( 'wp', array( &$this, 'wp' ) );
+
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
 
@@ -382,6 +384,28 @@ class Theme_My_Login {
 					break;
 			} // end switch
 		} // endif has_filter()
+	}
+
+	/**
+	 * Used to add/remove filters from login page
+	 *
+	 * @since 6.1.1
+	 * @access public
+	 */
+	function wp() {
+		if ( $this->is_login_page() ) {
+			remove_action( 'wp_head', 'feed_links', 2 );
+			remove_action( 'wp_head', 'feed_links_extra', 3 );
+			remove_action( 'wp_head', 'rsd_link' );
+			remove_action( 'wp_head', 'wlwmanifest_link' );
+			remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
+			remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
+			remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+			remove_action( 'wp_head', 'rel_canonical' );
+
+			add_filter( 'pre_option_blog_public', '__return_zero' );
+			add_action( 'login_head', 'noindex' );
+		}
 	}
 
 	/*
