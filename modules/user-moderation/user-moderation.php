@@ -141,10 +141,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @return WP_User|WP_Error WP_User if the user can login, WP_Error otherwise
 	 */
 	function authenticate( $user, $username, $password ) {
-		global $wpdb;
-
-		if ( is_a( $user, 'WP_User' ) ) {
-			if ( in_array( 'pending', (array) $user->roles ) ) {
+		if ( $userdata = get_user_by( 'login', $username ) ) {
+			if ( array_key_exists( 'pending', (array) $userdata->wp_capabilities ) ) {
 				if ( 'email' == $GLOBALS['theme_my_login']->options->get_option( array( 'moderation', 'type' ) ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
