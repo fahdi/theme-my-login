@@ -40,6 +40,22 @@ Please visit http://www.jfarthing.com/docs/Theme_My_Login first and then visit h
 
 == Changelog ==
 
+= 6.1.1 =
+* Implement 3.1 password reset routine
+* Add 3.1 fields to Themed Profiles
+* Better default stylesheet for Themed Profiles
+* Add 'nofollow' attribute to action links
+* Check for SSL
+* Add nofollow and noindex to login page
+* Fix missing argument notices
+* Fix deprecated argument notices
+* Fix undefined method notices
+* Fix install/uninstall routines
+* Fix Custom user Links AJAX
+* Fix Custom E-mail "From" filters
+* Fix disabling of admin password change notification
+* Fix "resent" custom activation e-mail
+
 = 6.1 =
 * Fully support multisite
 * Require WordPress 3.0+
