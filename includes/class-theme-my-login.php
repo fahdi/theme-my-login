@@ -88,6 +88,8 @@ class Theme_My_Login {
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 		add_action( 'parse_request', array( &$this, 'parse_request' ) );
 
+		add_action( 'wp', array( &$this, 'wp' ) );
+
 		add_action( 'wp_head', array( &$this, 'login_head' ) );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts' ) );
 
@@ -211,6 +213,8 @@ class Theme_My_Login {
 					break;
 				case 'lostpassword' :
 				case 'retrievepassword' :
+					self::check_ssl();
+
 					if ( $http_post ) {
 						$errors = $this->retrieve_password();
 						if ( !is_wp_error( $errors ) ) {
@@ -227,6 +231,8 @@ class Theme_My_Login {
 					break;
 				case 'resetpass' :
 				case 'rp' :
+					self::check_ssl();
+
 					$user = self::check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error($user) ) {
@@ -267,6 +273,8 @@ class Theme_My_Login {
 						wp_redirect( Theme_My_Login::get_current_url( 'registration=disabled' ) );
 						exit();
 					}
+
+					self::check_ssl();
 
 					$user_login = '';
 					$user_email = '';
@@ -322,6 +330,8 @@ class Theme_My_Login {
 						$secure_cookie = false;
 
 					if ( $http_post ) {
+						self::check_ssl();
+
 						// Set a cookie now to see if they are supported by the browser.
 						setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
 						if ( SITECOOKIEPATH != COOKIEPATH )
@@ -374,6 +384,46 @@ class Theme_My_Login {
 					break;
 			} // end switch
 		} // endif has_filter()
+	}
+
+	/**
+	 * Used to add/remove filters from login page
+	 *
+	 * @since 6.1.1
+	 * @access public
+	 */
+	function wp() {
+		if ( $this->is_login_page() ) {
+			remove_action( 'wp_head', 'feed_links', 2 );
+			remove_action( 'wp_head', 'feed_links_extra', 3 );
+			remove_action( 'wp_head', 'rsd_link' );
+			remove_action( 'wp_head', 'wlwmanifest_link' );
+			remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 );
+			remove_action( 'wp_head', 'start_post_rel_link', 10, 0 );
+			remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0 );
+			remove_action( 'wp_head', 'rel_canonical' );
+
+			add_filter( 'pre_option_blog_public', '__return_zero' );
+			add_action( 'login_head', 'noindex' );
+		}
+	}
+
+	/*
+	 * Redirects to https login if forced to use SSL
+	 *
+	 * @since 6.1.1
+	 * @access public
+	 */
+	function check_ssl() {
+		if ( force_ssl_admin() && !is_ssl() ) {
+			if ( 0 === strpos( $_SERVER['REQUEST_URI'], 'http' ) ) {
+				wp_redirect( preg_replace( '|^http://|', 'https://', $_SERVER['REQUEST_URI'] ) );
+				exit();
+			} else {
+				wp_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+				exit();
+			}
+		}
 	}
 
 	/**
