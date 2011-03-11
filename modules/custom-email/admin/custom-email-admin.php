@@ -164,37 +164,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 ?><table class="form-table">
 	<tr>
 		<td>
-			<h3><?php _e( 'User Notification', 'theme-my-login' ); ?></h3>
-
-			<p class="description">
-				<?php _e( 'This e-mail will be sent to a user upon successful password recovery.', 'theme-my-login' ); ?>
-				<?php _e( 'Please be sure to include the variable %user_pass% if using default passwords or else the user will not know their password!', 'theme-my-login' ); ?>
-				<?php _e( 'If any field is left empty, the default will be used instead.', 'theme-my-login' ); ?>
-			</p>
-
-			<p><label for="theme_my_login_reset_pass_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][mail_from_name]" type="text" id="theme_my_login_reset_pass_mail_from_name" value="<?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
-
-			<p><label for="theme_my_login_retrieve_pass_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][mail_from]" type="text" id="theme_my_login_reset_pass_mail_from" value="<?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'mail_from' ) ); ?>" class="extended-text" /></p>
-
-            <p><label for="theme_my_login_retrieve_pass_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
-            <select name="theme_my_login[email][reset_pass][mail_content_type]" id="theme_my_login_reset_pass_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
-            </select></p>
-
-			<p><label for="theme_my_login_reset_pass_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][title]" type="text" id="theme_my_login_reset_pass_title" value="<?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'title' ) ); ?>" class="full-text" /></p>
-
-			<p><label for="theme_my_login_reset_pass_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][reset_pass][message]" id="theme_my_login_reset_pass_message" class="large-text" rows="10"><?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'reset_pass', 'message' ) ); ?></textarea></p>
-
-			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</p>
-		</td>
-	</tr>
-	<tr>
-		<td>
 			<h3><?php _e( 'Admin Notification', 'theme-my-login' ); ?></h3>
 
 			<p class="description">
