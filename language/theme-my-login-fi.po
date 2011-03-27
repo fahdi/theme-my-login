@@ -1,0 +1,1078 @@
+# Translation of the WordPress plugin Theme My Login 6.0 by Jeff Farthing.
+# Copyright (C) 2010 Jeff Farthing
+# This file is distributed under the same license as the Theme My Login package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Theme My Login 6.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
+"POT-Creation-Date: 2010-10-03 19:07+0000\n"
+"PO-Revision-Date: 2011-01-20 11:11+0100\n"
+"Last-Translator: Vili Maunula <vili.maunula@gmail.com>\n"
+"Language-Team: Vili Maunula <vili.maunula@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#. #-#-#-#-#  plugin.pot (Theme My Login 6.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: admin/class-theme-my-login-admin.php:51
+#: admin/class-theme-my-login-admin.php:52
+#: includes/class-theme-my-login-widget.php:24
+msgid "Theme My Login"
+msgstr "Theme My Login"
+
+#: admin/class-theme-my-login-admin.php:88
+#, php-format
+msgid "ERROR: The module \"%1$s\" could not be activated (%2$s)."
+msgstr "VIRHE: Modulia \"%1$s\" ei saatu aktivoitua (%2$s)."
+
+#: admin/class-theme-my-login-admin.php:108
+msgid "NOTICE:"
+msgstr "HUOM! "
+
+#: admin/class-theme-my-login-admin.php:109
+#, php-format
+msgid "Now that you have activated Theme My Login, please <a href=\"%s\">visit the settings page</a> and familiarize yourself with all of the available options."
+msgstr "Nyt kun olet aktivoinut Theme My Loginin, <a href=\"%s\">vieraile asetuksissa</a> ja tutustu tarjolla oleviin asetuksiin."
+
+#: admin/class-theme-my-login-admin.php:111
+msgid "Take me to the settings page"
+msgstr "Vie minut asetuksiin"
+
+#: admin/class-theme-my-login-admin.php:124
+msgid "You can now login with your e-mail address or username! Try it out!"
+msgstr "Voit nyt kirjautua sisään sähköpostiosoitteellasi tai käyttäjätunnuksellasi. Kokeile!"
+
+#: admin/class-theme-my-login-admin.php:125
+msgid "Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel=\"tml-options\" href=\"#tml-modules\">Click here</a> to get started with modules now."
+msgstr "Theme My Login käyttää nykyään moduulista järjestelmää. Moduulit ovat WordPressin lisäosion kaltaisia asioita. Jokainen moduuli lisää Theme My Loginin toimintoja. <a rel=\"tml-options\" href=\"#tml-modules\">Klikkaa tässä</a> tutustuaksesi moduuleihin."
+
+#: admin/class-theme-my-login-admin.php:126
+msgid "Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from \"theme-my-login/templates\" to your current theme directory. Try it out!"
+msgstr "Theme My Login sallii nykyään muokattujen lomakkeiden käytön. Voit luoda omia lomakepohjia kopioimalla niiden perusversiot \"theme-my-login/templates\" -hakemistosta käyttämäsi teeman hakemistoon. Kokeile!"
+
+#: admin/class-theme-my-login-admin.php:127
+msgid "You can maintain your stylesheet changes between upgrades. Just simply copy the file \"theme-my-login/theme-my-login.css\" to your current theme directory and edit it as you please!"
+msgstr "On mahdollista ylläpitää tyyliohjeiden muutokset päivityksestä toiseen. Kopioi tiedosto \"theme-my-login/theme-my-login.css\" nykyisen teemasi hakemistoon ja muokkaa sitä vapaasti!"
+
+#: admin/class-theme-my-login-admin.php:128
+msgid "Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Documentation</a> for usage instructions."
+msgstr "Theme My Login tarjoaa pikakoodin, jota voit käyttää artikkeleissasi kustomoidaksesi lomakkeen. Katso käyttöohjeet sivulta <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Documentation</a>."
+
+#: admin/class-theme-my-login-admin.php:129
+msgid "Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">donations</a>!"
+msgstr "Theme My Login on <em>ILMAINEN</em> mutta Jeff ottaa ihan miellään vastaan <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">lahjoituksia</a>!"
+
+#: admin/class-theme-my-login-admin.php:130
+msgid "Jeff is <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">available for hire</a>!"
+msgstr "Jeff on <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">palkattavissa</a>!"
+
+#: admin/class-theme-my-login-admin.php:134
+msgid "Did You Know?"
+msgstr "Tiesitkö?"
+
+#: admin/class-theme-my-login-admin.php:175
+msgid "General"
+msgstr "Yleiset asetukset"
+
+#: admin/class-theme-my-login-admin.php:176
+msgid "Basic"
+msgstr "Perusasetukset"
+
+#: admin/class-theme-my-login-admin.php:177
+#: admin/class-theme-my-login-admin.php:305
+msgid "Modules"
+msgstr "Moduulit"
+
+#: admin/class-theme-my-login-admin.php:184
+msgid "Theme My Login Settings"
+msgstr "Theme My Loginin asetukset"
+
+#: admin/class-theme-my-login-admin.php:190
+#: admin/class-theme-my-login-admin.php:247
+msgid "Save Changes"
+msgstr "Tallenna Muutokset"
+
+#: admin/class-theme-my-login-admin.php:266
+msgid "Page ID"
+msgstr "Sivun ID"
+
+#: admin/class-theme-my-login-admin.php:269
+msgid "This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled \"Login\"."
+msgstr "Tämän tulee olla sen WordPress-sivun ID joka sisältää [theme-my-login] -tekstin. Oletuksena tämä sivu on nimeltään \"Login\"."
+
+#: admin/class-theme-my-login-admin.php:273
+msgid "Pagelist"
+msgstr "Sivulistaus"
+
+#: admin/class-theme-my-login-admin.php:276
+msgid "Show Page In Pagelist"
+msgstr "Näytä sivulistauksessa"
+
+#: admin/class-theme-my-login-admin.php:277
+msgid "Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu()."
+msgstr "Aktivoi tämä asetus lisätäksesi sisään- ja uloskirjautumislinkit wp_list_pages() ja wp_page_menu() -funktioiden kaltaisten funktioiden luomiin sivulistoihin."
+
+#: admin/class-theme-my-login-admin.php:281
+msgid "Stylesheet"
+msgstr "Tyyliohjeet"
+
+#: admin/class-theme-my-login-admin.php:284
+msgid "Enable \"theme-my-login.css\""
+msgstr "Aktivoi \"theme-my-login.css\""
+
+#: admin/class-theme-my-login-admin.php:285
+msgid "In order to keep changes between upgrades, you can store your customized \"theme-my-login.css\" in your current theme directory."
+msgstr "Pitääksesi muutokset päivityksestä toiseen, voit tallentaa muokatun \"theme-my-login.css\" -tiedoston nykyisen teemasi hakemistoon."
+
+#: admin/class-theme-my-login-admin.php:309
+#, php-format
+msgid "Enable %s"
+msgstr "Aktivoi %s"
+
+#: admin/class-theme-my-login-admin.php:311
+msgid "No modules found."
+msgstr "Moduuleita ei löytynyt."
+
+#: admin/class-theme-my-login-admin.php:422
+msgid "One of the modules is invalid."
+msgstr "Yksi moduuleista on virheellinen."
+
+#: admin/class-theme-my-login-admin.php:475
+msgid "Invalid module path."
+msgstr "Virheellinen polku moduulille."
+
+#: admin/class-theme-my-login-admin.php:477
+msgid "Module file does not exist."
+msgstr "Moduulitiedostoa ei ole."
+
+#: admin/class-theme-my-login-admin.php:481
+msgid "The module does not have a valid header."
+msgstr "Moduulilla ei ole kelvollista ylätunnistetta."
+
+#: includes/class-theme-my-login-template.php:140
+#, php-format
+msgid "Welcome, %s"
+msgstr "Tervetuloa, %s"
+
+#: includes/class-theme-my-login-template.php:144
+#: includes/class-theme-my-login-widget.php:86
+#: templates/register-form.php:25
+msgid "Register"
+msgstr "Rekisteröidy"
+
+#: includes/class-theme-my-login-template.php:150
+#: includes/class-theme-my-login-widget.php:86
+msgid "Lost Password"
+msgstr "Unohditko salasanasi?"
+
+#: includes/class-theme-my-login-template.php:154
+#: includes/class-theme-my-login.php:393
+#: templates/login-form.php:28
+msgid "Log In"
+msgstr "Kirjaudu sisään"
+
+#: includes/class-theme-my-login-template.php:316
+#: modules/custom-user-links/custom-user-links.php:95
+msgid "Dashboard"
+msgstr "Ohjausnäkymä"
+
+#: includes/class-theme-my-login-template.php:317
+#: modules/custom-user-links/custom-user-links.php:96
+msgid "Profile"
+msgstr "Profiili"
+
+#: includes/class-theme-my-login-template.php:334
+#: modules/custom-redirection/custom-redirection.php:187
+msgid "Log out"
+msgstr "Uloskirjautuminen"
+
+#: includes/class-theme-my-login-template.php:363
+msgid "Register For This Site"
+msgstr "Rekisteröidy sivun käyttäjäksi"
+
+#: includes/class-theme-my-login-template.php:365
+msgid "Please enter your username or e-mail address. You will receive a new password via e-mail."
+msgstr "Anna käyttäjänimesi tai sähköpostiosoitteesi. Saat uuden salasanan sähköpostitse."
+
+#: includes/class-theme-my-login-widget.php:23
+msgid "A login form for your blog."
+msgstr "Sisäänkirjautumislomake blogiisi."
+
+#: includes/class-theme-my-login-widget.php:86
+msgid "Login"
+msgstr "Kirjaudu sisään"
+
+#: includes/class-theme-my-login-widget.php:87
+msgid "Default Action"
+msgstr "Oletustoiminto"
+
+#: includes/class-theme-my-login-widget.php:94
+msgid "Show When Logged In"
+msgstr "Näytä sisäänkirjautuneelle"
+
+#: includes/class-theme-my-login-widget.php:96
+msgid "Show Title"
+msgstr "Näytä otsikko"
+
+#: includes/class-theme-my-login-widget.php:98
+msgid "Show Login Link"
+msgstr "Näytä sisäänkirjautumislinkki"
+
+#: includes/class-theme-my-login-widget.php:100
+msgid "Show Register Link"
+msgstr "Näytä rekisteröitymislinkki"
+
+#: includes/class-theme-my-login-widget.php:102
+msgid "Show Lost Password Link"
+msgstr "Näytä kadonneen salasanan linkki"
+
+#: includes/class-theme-my-login-widget.php:104
+msgid "Show Gravatar"
+msgstr "Näytä Gravatar"
+
+#: includes/class-theme-my-login-widget.php:105
+msgid "Gravatar Size"
+msgstr "Gravatarin koko"
+
+#: includes/class-theme-my-login-widget.php:107
+msgid "Allow Registration"
+msgstr "Mahdollista rekisteröityminen"
+
+#: includes/class-theme-my-login-widget.php:109
+msgid "Allow Password Recovery"
+msgstr "Mahdollista salasanan palauttaminen"
+
+#: includes/class-theme-my-login.php:217
+msgid "Sorry, that key does not appear to be valid."
+msgstr "Kyseinen avain ei näytä olevan kelvollinen."
+
+#: includes/class-theme-my-login.php:325
+msgid "<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href=\"http://www.google.com/cookies.html\">enable cookies</a> to use WordPress."
+msgstr "<strong>VIRHE</strong>: Selaimesi joko estää evästeet tai ei tue niiden käyttöä. Sinun tulee <a href=\"http://www.google.com/cookies.html\">sallia evästeet</a> käyttääksesi WordPressiä."
+
+#: includes/class-theme-my-login.php:329
+msgid "You are now logged out."
+msgstr "Olet nyt kirjautunut ulos."
+
+#: includes/class-theme-my-login.php:331
+msgid "User registration is currently not allowed."
+msgstr "Rekisteröityminen ei ole tällä hetkellä käytössä."
+
+#: includes/class-theme-my-login.php:333
+msgid "Check your e-mail for the confirmation link."
+msgstr "Katso vahvistuslinkki sähköpostistasi."
+
+#: includes/class-theme-my-login.php:335
+msgid "Check your e-mail for your new password."
+msgstr "Katso uusi salasanasi sähköpostistasi."
+
+#: includes/class-theme-my-login.php:337
+msgid "Registration complete. Please check your e-mail."
+msgstr "Rekisteröityminen on tehty. Tarkista sähköpostisi."
+
+#: includes/class-theme-my-login.php:339
+msgid "Your session has expired. Please log-in again."
+msgstr "Sessiosi on päättynyt. Kirjaudu sisään uudestaan."
+
+#: includes/class-theme-my-login.php:393
+msgid "Log Out"
+msgstr "Kirjaudu ulos"
+
+#: includes/class-theme-my-login.php:880
+msgid "<strong>ERROR</strong>: Enter a username or e-mail address."
+msgstr "<strong>VIRHE</strong>: Lisää käyttäjänimi tai sähköpostiosoite."
+
+#: includes/class-theme-my-login.php:885
+msgid "<strong>ERROR</strong>: There is no user registered with that email address."
+msgstr "<strong>VIRHE</strong>: Kyseisellä sähköpostiosoitteella ei ole rekisteröityneitä käyttäjiä."
+
+#: includes/class-theme-my-login.php:897
+msgid "<strong>ERROR</strong>: Invalid username or e-mail."
+msgstr "<strong>VIRHE</strong>: Käyttäjänimi tai sähköpostiosoite ei ole kelvollinen."
+
+#: includes/class-theme-my-login.php:911
+msgid "Password reset is not allowed for this user"
+msgstr "Salasanan resetointia ei sallita tälle käyttäjälle"
+
+#: includes/class-theme-my-login.php:924
+msgid "Someone has asked to reset the password for the following site and username."
+msgstr "Joku on pyytänyt, että salasana seuraavalle sivustolle ja käyttäjänimelle resetoidaan."
+
+#: includes/class-theme-my-login.php:926
+#: includes/class-theme-my-login.php:983
+#: modules/custom-email/custom-email.php:474
+#: modules/custom-email/custom-email.php:491
+#: modules/custom-passwords/custom-passwords.php:336
+#: modules/user-moderation/admin/user-moderation-admin.php:165
+#: modules/user-moderation/user-moderation.php:370
+#, php-format
+msgid "Username: %s"
+msgstr "Käyttäjänimi: %s"
+
+#: includes/class-theme-my-login.php:927
+msgid "To reset your password visit the following address, otherwise just ignore this email and nothing will happen."
+msgstr "Resetoidaksesi salasanasi vieraile seuraavassa osoitteessa. Muussa tapauksessa jätä tämä viesti huomioimatta, eikä mitään muutoksia tehdä."
+
+#: includes/class-theme-my-login.php:938
+#, php-format
+msgid "[%s] Password Reset"
+msgstr "[%s] Salasanan resetointi"
+
+#: includes/class-theme-my-login.php:944
+#: includes/class-theme-my-login.php:1001
+#: modules/custom-passwords/custom-passwords.php:354
+#: modules/user-moderation/admin/user-moderation-admin.php:61
+#: modules/user-moderation/admin/user-moderation-admin.php:175
+#: modules/user-moderation/admin/user-moderation-admin.php:210
+msgid "The e-mail could not be sent."
+msgstr "Sähköpostia ei pystytty lähettämään."
+
+#: includes/class-theme-my-login.php:944
+#: includes/class-theme-my-login.php:1001
+#: modules/custom-passwords/custom-passwords.php:354
+#: modules/user-moderation/admin/user-moderation-admin.php:61
+#: modules/user-moderation/admin/user-moderation-admin.php:175
+#: modules/user-moderation/admin/user-moderation-admin.php:210
+msgid "Possible reason: your host may have disabled the mail() function..."
+msgstr "Mahdollinen syy: palveluntarjoajasi on estänyt mail() -funktion toiminnan..."
+
+#: includes/class-theme-my-login.php:965
+#: includes/class-theme-my-login.php:968
+#: includes/class-theme-my-login.php:972
+#: modules/custom-passwords/custom-passwords.php:290
+#: modules/custom-passwords/custom-passwords.php:294
+#: modules/custom-passwords/custom-passwords.php:299
+#: modules/user-moderation/user-moderation.php:248
+#: modules/user-moderation/user-moderation.php:251
+#: modules/user-moderation/user-moderation.php:256
+msgid "Invalid key"
+msgstr "Kelvoton avain"
+
+#: includes/class-theme-my-login.php:984
+#: modules/custom-email/custom-email.php:492
+#: modules/custom-passwords/custom-passwords.php:337
+#: modules/user-moderation/admin/user-moderation-admin.php:166
+#, php-format
+msgid "Password: %s"
+msgstr "Salasana: %s"
+
+#: includes/class-theme-my-login.php:995
+#: modules/custom-passwords/custom-passwords.php:345
+#, php-format
+msgid "[%s] Your new password"
+msgstr "[%s] Uusi salasanasi"
+
+#: includes/class-theme-my-login.php:1026
+msgid "<strong>ERROR</strong>: Please enter a username."
+msgstr "<strong>VIRHE</strong>: Anna käyttäjänimi."
+
+#: includes/class-theme-my-login.php:1028
+msgid "<strong>ERROR</strong>: This username is invalid because it uses illegal characters. Please enter a valid username."
+msgstr "<strong>VIRHE</strong>: Tämä käyttäjänimi ei kelpaa, koska se käyttää sopimattomia kirjaimia. Anna kelvollinen käyttäjänimi."
+
+#: includes/class-theme-my-login.php:1031
+msgid "<strong>ERROR</strong>: This username is already registered, please choose another one."
+msgstr "<strong>VIRHE</strong>: Tämä käyttäjätunnus on jo käytössä. Valitse toinen tunnus."
+
+#: includes/class-theme-my-login.php:1036
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr "<strong>VIRHE</strong>: Anna sähköpostiosoite."
+
+#: includes/class-theme-my-login.php:1038
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr "<strong>VIRHE</strong>: Antamasi sähköpostiosoite ei ole kelvollinen."
+
+#: includes/class-theme-my-login.php:1041
+msgid "<strong>ERROR</strong>: This email is already registered, please choose another one."
+msgstr "<strong>VIRHE</strong>: Tämä sähköpostiosoite on jo rekisteröity. Valitse toinen sähköpostiosoite."
+
+#: includes/class-theme-my-login.php:1054
+#, php-format
+msgid "<strong>ERROR</strong>: Couldn&#8217;t register you... please contact the <a href=\"mailto:%s\">webmaster</a> !"
+msgstr "<strong>VIRHE</strong>: Rekisteröityminen epäonnistui. Ota yhteyttä <a href=\"mailto:%s\">webmasteriin</a> !"
+
+#: modules/custom-email/admin/custom-email-admin.php:43
+#: modules/custom-email/admin/custom-email-admin.php:170
+#: modules/user-moderation/admin/user-moderation-admin.php:333
+msgid "User Notification"
+msgstr "Käyttäjäilmoitus"
+
+#: modules/custom-email/admin/custom-email-admin.php:46
+msgid "This e-mail will be sent to a new user upon registration."
+msgstr "Tämä sähköposti lähetetään uudelle käyttäjälle rekisteröitymisen yhteydessä."
+
+#: modules/custom-email/admin/custom-email-admin.php:47
+#: modules/custom-email/admin/custom-email-admin.php:174
+#: modules/user-moderation/admin/user-moderation-admin.php:337
+msgid "Please be sure to include the variable %user_pass% if using default passwords or else the user will not know their password!"
+msgstr "Muista lisätä muuttuja %user_pass% jos käytät WordPressin generoimia oletussalasanoja, tai muuten käyttäjä ei voi tietää salasanaansa!"
+
+#: modules/custom-email/admin/custom-email-admin.php:48
+#: modules/custom-email/admin/custom-email-admin.php:78
+#: modules/custom-email/admin/custom-email-admin.php:128
+#: modules/custom-email/admin/custom-email-admin.php:175
+#: modules/custom-email/admin/custom-email-admin.php:205
+#: modules/user-moderation/admin/user-moderation-admin.php:287
+#: modules/user-moderation/admin/user-moderation-admin.php:338
+#: modules/user-moderation/admin/user-moderation-admin.php:368
+#: modules/user-moderation/admin/user-moderation-admin.php:421
+msgid "If any field is left empty, the default will be used instead."
+msgstr "Jos jokin kenttä on jätetty tyhjäksi, sen kohdalla käytetään oletusarvoa."
+
+#: modules/custom-email/admin/custom-email-admin.php:51
+#: modules/custom-email/admin/custom-email-admin.php:84
+#: modules/custom-email/admin/custom-email-admin.php:131
+#: modules/custom-email/admin/custom-email-admin.php:178
+#: modules/custom-email/admin/custom-email-admin.php:211
+#: modules/user-moderation/admin/user-moderation-admin.php:290
+#: modules/user-moderation/admin/user-moderation-admin.php:341
+#: modules/user-moderation/admin/user-moderation-admin.php:374
+#: modules/user-moderation/admin/user-moderation-admin.php:424
+msgid "From Name"
+msgstr "Lähettäjän nimi"
+
+#: modules/custom-email/admin/custom-email-admin.php:54
+#: modules/custom-email/admin/custom-email-admin.php:87
+#: modules/custom-email/admin/custom-email-admin.php:134
+#: modules/custom-email/admin/custom-email-admin.php:181
+#: modules/custom-email/admin/custom-email-admin.php:214
+#: modules/user-moderation/admin/user-moderation-admin.php:293
+#: modules/user-moderation/admin/user-moderation-admin.php:344
+#: modules/user-moderation/admin/user-moderation-admin.php:377
+#: modules/user-moderation/admin/user-moderation-admin.php:427
+msgid "From E-mail"
+msgstr "Lähettäjän sähköpostiosoite"
+
+#: modules/custom-email/admin/custom-email-admin.php:57
+#: modules/custom-email/admin/custom-email-admin.php:90
+#: modules/custom-email/admin/custom-email-admin.php:137
+#: modules/custom-email/admin/custom-email-admin.php:184
+#: modules/custom-email/admin/custom-email-admin.php:217
+#: modules/user-moderation/admin/user-moderation-admin.php:296
+#: modules/user-moderation/admin/user-moderation-admin.php:347
+#: modules/user-moderation/admin/user-moderation-admin.php:380
+#: modules/user-moderation/admin/user-moderation-admin.php:430
+msgid "E-mail Format"
+msgstr "Sähköpostin formaatti"
+
+#: modules/custom-email/admin/custom-email-admin.php:63
+#: modules/custom-email/admin/custom-email-admin.php:96
+#: modules/custom-email/admin/custom-email-admin.php:143
+#: modules/custom-email/admin/custom-email-admin.php:190
+#: modules/custom-email/admin/custom-email-admin.php:223
+#: modules/user-moderation/admin/user-moderation-admin.php:302
+#: modules/user-moderation/admin/user-moderation-admin.php:353
+#: modules/user-moderation/admin/user-moderation-admin.php:386
+#: modules/user-moderation/admin/user-moderation-admin.php:436
+msgid "Subject"
+msgstr "Otsikko"
+
+#: modules/custom-email/admin/custom-email-admin.php:66
+#: modules/custom-email/admin/custom-email-admin.php:99
+#: modules/custom-email/admin/custom-email-admin.php:146
+#: modules/custom-email/admin/custom-email-admin.php:193
+#: modules/custom-email/admin/custom-email-admin.php:226
+#: modules/user-moderation/admin/user-moderation-admin.php:305
+#: modules/user-moderation/admin/user-moderation-admin.php:356
+#: modules/user-moderation/admin/user-moderation-admin.php:389
+#: modules/user-moderation/admin/user-moderation-admin.php:439
+msgid "Message"
+msgstr "Viesti"
+
+#: modules/custom-email/admin/custom-email-admin.php:69
+#: modules/custom-email/admin/custom-email-admin.php:102
+#: modules/custom-email/admin/custom-email-admin.php:149
+#: modules/custom-email/admin/custom-email-admin.php:196
+#: modules/custom-email/admin/custom-email-admin.php:229
+#: modules/user-moderation/admin/user-moderation-admin.php:308
+#: modules/user-moderation/admin/user-moderation-admin.php:359
+#: modules/user-moderation/admin/user-moderation-admin.php:392
+#: modules/user-moderation/admin/user-moderation-admin.php:442
+msgid "Available Variables"
+msgstr "Käytössä olevat muuttujat"
+
+#: modules/custom-email/admin/custom-email-admin.php:74
+#: modules/custom-email/admin/custom-email-admin.php:201
+#: modules/user-moderation/admin/user-moderation-admin.php:364
+msgid "Admin Notification"
+msgstr "Ylläpitäjän muistutus"
+
+#: modules/custom-email/admin/custom-email-admin.php:77
+msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon new user registration."
+msgstr "Uuden rekisteröitymisen yhteydessä tämä sähköposti lähetetään osoitteeseen tai osoitteisiin jotka on nimetty alla (useamman osoitteen tapauksessa osoitteet voi eritellä toisistaan pilkulla)."
+
+#: modules/custom-email/admin/custom-email-admin.php:81
+#: modules/custom-email/admin/custom-email-admin.php:208
+#: modules/user-moderation/admin/user-moderation-admin.php:371
+msgid "To"
+msgstr "Vastaanottaja"
+
+#: modules/custom-email/admin/custom-email-admin.php:126
+msgid "This e-mail will be sent to a user when they attempt to recover their password."
+msgstr "Tämä sähköposti lähetetään käyttäjälle salasanan palautuspyynnön yhteydessä."
+
+#: modules/custom-email/admin/custom-email-admin.php:127
+msgid "Please be sure to include the variable %reseturl% or else the user will not be able to recover their password!"
+msgstr "Muista lisätä muuttuja %reseturl% tai muuten käyttäjä ei pysty palauttamaan salasanaansa!"
+
+#: modules/custom-email/admin/custom-email-admin.php:173
+msgid "This e-mail will be sent to a user upon successful password recovery."
+msgstr "Tämä sähköposti lähetetään käyttäjälle onnistuneen salasanan palautuksen jälkeen."
+
+#: modules/custom-email/admin/custom-email-admin.php:204
+msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon user password change."
+msgstr "Tämä sähköposti lähetetään alla mainittuun osoitteeseen tai osoitteisiin käyttäjän vaihtaessa salasanaa (useamman osoitteen tapauksessa osoitteet voi eritellä toisistaan pilkulla)."
+
+#: modules/custom-email/admin/custom-email-admin.php:231
+#: modules/user-moderation/admin/user-moderation-admin.php:394
+msgid "Disable Admin Notification"
+msgstr "Älä lähetä ilmoitusta ylläpitäjälle"
+
+#: modules/custom-email/admin/custom-email-admin.php:251
+#: templates/profile-form.php:86
+#: templates/register-form.php:16
+msgid "E-mail"
+msgstr "Sähköpostiosoite"
+
+#: modules/custom-email/admin/custom-email-admin.php:252
+msgid "New User"
+msgstr "Uusi käyttäjä"
+
+#: modules/custom-email/admin/custom-email-admin.php:253
+msgid "Retrieve Password"
+msgstr "Salasanan palautus"
+
+#: modules/custom-email/admin/custom-email-admin.php:254
+msgid "Reset Password"
+msgstr "Salasanan resetointi"
+
+#: modules/custom-email/custom-email.php:473
+#, php-format
+msgid "New user registration on your site %s:"
+msgstr "Uusi rekisteröityminen sivustolle %s:"
+
+#: modules/custom-email/custom-email.php:475
+#: modules/user-moderation/user-moderation.php:371
+#, php-format
+msgid "E-mail: %s"
+msgstr "Sähköposti: %s"
+
+#: modules/custom-email/custom-email.php:477
+#, php-format
+msgid "[%s] New User Registration"
+msgstr "[%s] Uusi rekisteröityminen"
+
+#: modules/custom-email/custom-email.php:495
+#, php-format
+msgid "[%s] Your username and password"
+msgstr "[%s] Käyttäjänimesi ja salasanasi"
+
+#: modules/custom-email/custom-email.php:525
+#, php-format
+msgid "[%s] Password Lost/Changed"
+msgstr "[%s] Salasana kadonnut/muuttunut"
+
+#: modules/custom-email/custom-email.php:526
+#, php-format
+msgid "Password Lost and Changed for user: %s"
+msgstr "Salasana kadonnut ja muutettu käyttäjälle: %s"
+
+#: modules/custom-passwords/custom-passwords.php:29
+msgid "Password:"
+msgstr "Salasana:"
+
+#: modules/custom-passwords/custom-passwords.php:31
+#: templates/resetpass-form.php:16
+msgid "Confirm Password:"
+msgstr "Vahvista salasana:"
+
+#: modules/custom-passwords/custom-passwords.php:54
+msgid "<strong>ERROR</strong>: Please enter a password."
+msgstr "<strong>VIRHE</strong>: Anna salasana."
+
+#: modules/custom-passwords/custom-passwords.php:57
+msgid "<strong>ERROR</strong>: Your passwords do not match."
+msgstr "<strong>VIRHE</strong>: Annetut salasanat ovat erilaisia."
+
+#: modules/custom-passwords/custom-passwords.php:60
+msgid "<strong>ERROR</strong>: Your password must be at least 6 characters in length."
+msgstr "<strong>VIRHE</strong>: Salasanan tulee olla ainakin kuusi merkkiä pitkä."
+
+#: modules/custom-passwords/custom-passwords.php:188
+msgid "Please enter your username or e-mail address. You will receive an e-mail with a link to reset your password."
+msgstr "Anna käyttäjänimesi tai sähköpostiosoitteesi. Saat sähköpostitse linkin, jonka kautta voit resetoida salasanasi."
+
+#: modules/custom-passwords/custom-passwords.php:191
+msgid "Please enter a new password."
+msgstr "Anna uusi salasana."
+
+#: modules/custom-passwords/custom-passwords.php:224
+msgid "Registration complete. You may now log in."
+msgstr "Rekisteröityminen on suoritettu. Voit nyt kirjautua sisään."
+
+#: modules/custom-passwords/custom-passwords.php:227
+msgid "Your password has been saved. You may now log in."
+msgstr "Salasanasi on talletettu. Voit nyt kirjautua sisään."
+
+#: modules/custom-redirection/custom-redirection.php:148
+msgid "Redirection"
+msgstr "Uudelleenohjaus"
+
+#: modules/custom-redirection/custom-redirection.php:175
+msgid "Log in"
+msgstr "Sisäänkirjautuminen"
+
+#: modules/custom-redirection/custom-redirection.php:177
+#: modules/custom-redirection/custom-redirection.php:189
+msgid "Default"
+msgstr "Oletus"
+
+#: modules/custom-redirection/custom-redirection.php:178
+msgid "Check this option to send the user to their WordPress Dashboard/Profile."
+msgstr "Valitse tämä lähettääksesi käyttäjä heidän WordPress ohjausnäkymään/profiiliinsa"
+
+#: modules/custom-redirection/custom-redirection.php:179
+#: modules/custom-redirection/custom-redirection.php:191
+msgid "Referer"
+msgstr "Viittaaja"
+
+#: modules/custom-redirection/custom-redirection.php:180
+msgid "Check this option to send the user back to the page they were visiting before logging in."
+msgstr "Valitse tämä lähettääksesi käyttäjä sivulle, jolla hän oli ennen sisäänkirjautumista."
+
+#: modules/custom-redirection/custom-redirection.php:183
+#: modules/custom-redirection/custom-redirection.php:195
+msgid "Check this option to send the user to a custom location, specified by the textbox above."
+msgstr "Valitse tämä lähettääksesi käyttäjä yllä annettuun osoitteeseen."
+
+#: modules/custom-redirection/custom-redirection.php:190
+msgid "Check this option to send the user to the log in page, displaying a message that they have successfully logged out."
+msgstr "Valitse tämä lähettääksesi käyttäjä sisäänkirjautumissivulle, jossa näytetään viesti että hän on kirjautunut ulos onnistuneesti."
+
+#: modules/custom-redirection/custom-redirection.php:192
+msgid "Check this option to send the user back to the page they were visiting before logging out. (Note: If the previous page being visited was an admin page, this can have unexpected results.)"
+msgstr "Valitse tämä lähettääksesi käyttäjä sivulle, jolla hän oli ennen uloskirjautumista. (Huom: Jos edellinen sivu oli admin-sivu, tällä voi olla arvaamattomia seurauksia.)"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:139
+msgid "User Links"
+msgstr "Käyttäjälinkit"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:229
+#: modules/custom-user-links/admin/custom-user-links-admin.php:252
+#: modules/custom-user-links/admin/custom-user-links-admin.php:297
+msgid "Title"
+msgstr "Otsikko"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:230
+#: modules/custom-user-links/admin/custom-user-links-admin.php:253
+#: modules/custom-user-links/admin/custom-user-links-admin.php:301
+msgid "URL"
+msgstr "URL"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:247
+msgid "Add New link:"
+msgstr "Lisää uusi linkki:"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:263
+msgid "Add link"
+msgstr "Lisää linkki"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:303
+msgid "Delete"
+msgstr "Poista"
+
+#: modules/custom-user-links/admin/custom-user-links-admin.php:304
+msgid "Update"
+msgstr "Päivitä"
+
+#: modules/security/admin/security-admin.php:35
+#: modules/security/admin/security-admin.php:38
+#: modules/user-moderation/admin/user-moderation-admin.php:38
+#: modules/user-moderation/admin/user-moderation-admin.php:50
+msgid "You can&#8217;t edit that user."
+msgstr "Et voi muokata kyseistä käyttäjää."
+
+#: modules/security/admin/security-admin.php:70
+msgid "User locked."
+msgstr "Käyttäjä lukittu."
+
+#: modules/security/admin/security-admin.php:72
+msgid "User unlocked."
+msgstr "Käyttäjän lukitus poistettu."
+
+#: modules/security/admin/security-admin.php:95
+msgid "Unlock"
+msgstr "Poista lukitus"
+
+#: modules/security/admin/security-admin.php:97
+msgid "Lock"
+msgstr "Lukitse"
+
+#: modules/security/admin/security-admin.php:116
+msgid "Security"
+msgstr "Turvallisuus"
+
+#: modules/security/admin/security-admin.php:136
+msgid "Login Attempts"
+msgstr "Sisäänkirjautumisyritykset"
+
+#: modules/security/admin/security-admin.php:141
+msgid "minute(s)"
+msgstr "minuutin"
+
+#: modules/security/admin/security-admin.php:142
+msgid "hour(s)"
+msgstr "tunnin"
+
+#: modules/security/admin/security-admin.php:143
+msgid "day(s)"
+msgstr "päivän"
+
+#: modules/security/admin/security-admin.php:166
+#, php-format
+msgid "After %1$s failed login attempts within %2$s %3$s, lockout the account for %4$s %5$s."
+msgstr "%1$s epäonnistuneen sisäänkirjautumisyrityksen jälkeen jotka ovat tapahtuneet %2$s %3$s sisällä, lukitse käyttäjätili %4$s %5$s ajaksi."
+
+#: modules/security/security.php:43
+#: modules/security/security.php:69
+#, php-format
+msgid "<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s."
+msgstr "<strong>VIRHE</strong>: Tämä käyttäjätili on lukittu liian monen epäonnistuneen sisäänkirjautumisyrityksen johdosta. Voit yrittää uudelleen %s kuluttua."
+
+#: modules/security/security.php:45
+msgid "<strong>ERROR</strong>: This account has been locked."
+msgstr "<strong>VIRHE</strong>: Käyttäjätili on lukittu."
+
+#: modules/themed-profiles/themed-profiles.php:77
+#: templates/profile-form.php:125
+msgid "Strength indicator"
+msgstr "Vahvuusmittari"
+
+#: modules/themed-profiles/themed-profiles.php:78
+msgid "Very weak"
+msgstr "Erittäin heikko"
+
+#: modules/themed-profiles/themed-profiles.php:79
+msgid "Weak"
+msgstr "Heikko"
+
+#. translators: password strength
+#: modules/themed-profiles/themed-profiles.php:81
+msgctxt "password strength"
+msgid "Medium"
+msgstr "Keskiverto"
+
+#: modules/themed-profiles/themed-profiles.php:82
+msgid "Strong"
+msgstr "Vahva"
+
+#: modules/themed-profiles/themed-profiles.php:92
+msgid "You do not have permission to edit this user."
+msgstr "Sinulla ei ole oikeuksia muokata tätä käyttäjää."
+
+#: modules/themed-profiles/themed-profiles.php:108
+msgid "Profile updated."
+msgstr "Profiili päivitetty."
+
+#: modules/themed-profiles/themed-profiles.php:178
+msgid "Your Profile"
+msgstr "Omat tiedot"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:83
+msgid "User approved."
+msgstr "Käyttäjä hyväksytty."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:85
+msgid "Activation sent."
+msgstr "Aktivointi lähetetty."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:111
+msgid "Resend Activation"
+msgstr "Lähetä aktivointi uudelleen."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:116
+msgid "Approve"
+msgstr "Hyväksy"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:150
+#: modules/user-moderation/user-moderation.php:275
+msgid "Same as when you signed up."
+msgstr "Sama kuin rekisteröityessäsi."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:164
+#, php-format
+msgid "You have been approved access to %s"
+msgstr "Sinulle on myönnetty pääsy kohteeseen %s"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:169
+#, php-format
+msgid "[%s] Registration Approved"
+msgstr "[%s] Rekisteröityminen hyväksytty"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:203
+#, php-format
+msgid "You have been denied access to %s"
+msgstr "Pääsysi sivustolle %s on evätty."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:204
+#, php-format
+msgid "[%s] Registration Denied"
+msgstr "[%s] Rekisteröityminen hylätty"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:226
+msgid "Moderation"
+msgstr "Moderointi"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:228
+msgid "User Activation"
+msgstr "Käyttäjän aktivointi"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:229
+msgid "User Approval"
+msgstr "Käyttäjän hyväksyminen"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:230
+msgid "User Denial"
+msgstr "Käyttäjän hylkääminen"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:249
+msgid "User Moderation"
+msgstr "Käyttäjän moderointi"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:252
+msgid "None"
+msgstr "Ei mitään"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:253
+msgid "Check this option to require no moderation."
+msgstr "Valitse tämä jos et halua käyttää moderointia."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:255
+msgid "E-mail Confirmation"
+msgstr "Sähköpostin vahvistus"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:256
+msgid "Check this option to require new users to confirm their e-mail address before they may log in."
+msgstr "Valitse tämä, jos haluat että uudet käyttäjät vahvistavat sähköpostiosoitteensa ennen kuin he voivat kirjautua sisään."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:258
+msgid "Admin Approval"
+msgstr "Ylläpitäjän hyväksyminen"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:259
+msgid "Check this option to require new users to be approved by an administrator before they may log in."
+msgstr "Valitse tämä, jos haluat että ylläpitäjä hyväksyy uudet käyttäjät ennen kuin he voivat kirjautua sisään."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:285
+msgid "This e-mail will be sent to a new user upon registration when \"E-mail Confirmation\" is checked for \"User Moderation\"."
+msgstr "Tämä sähköposti lähetetään uudelle käyttäjälle rekisteröitymisen yhteydessä jos \"Sähköpostin vahvistus\" on valittuna kohdassa \"Käyttäjän moderointi\"."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:286
+msgid "Please be sure to include the variable %activateurl% or else the user will not be able to activate their account!"
+msgstr "Muita käyttää muuttujaa %activateurl% tai muuten käyttäjä ei pysty aktivoimaan tiliään!"
+
+#: modules/user-moderation/admin/user-moderation-admin.php:336
+msgid "This e-mail will be sent to a new user upon admin approval when \"Admin Approval\" is checked for \"User Moderation\"."
+msgstr "Tämä sähköposti lähetetään uudelle käyttäjälle ylläpitäjän suorittaman hyväksymisen jälkeen jos \"Ylläpitäjän hyväksyminen\" on valittuna kohdasta \"Käyttajän moderointi\"."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:367
+msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below upon user registration when \"Admin Approval\" is checked for \"User Moderation\"."
+msgstr "Tämä sähköposti lähetetään alla olevaan osoitteeseen tai osoitteisiin (useamman osoitteen tapauksessa osoitteet tulee erottaa toisistaan pilkuilla) kun käyttäjä rekisteröityy ja \"Ylläpitäjän hyväksyminen\" on valittuna kohdassa \"Käyttäjän moderointi\"."
+
+#: modules/user-moderation/admin/user-moderation-admin.php:420
+msgid "This e-mail will be sent to a user who is deleted/denied when \"Admin Approval\" is checked for \"User Moderation\" and the user's role is \"Pending\"."
+msgstr "Tämä sähköposti lähetetään käyttäjälle joka on poistettu tai hylätty, jos \"Ylläpitäjän hyväksyminen\" on valittuna kohdasta \"Käyttäjän moderointi\" ja käyttäjän rooli on \"Käsittelemätön\"."
+
+#: modules/user-moderation/user-moderation.php:171
+#, php-format
+msgid "<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href=\"%s\">Resend activation</a>?"
+msgstr "<strong>VIRHE</strong>: Et ole vielä vahvistanut sähköpostiosoitettasi. Haluatko, että <a href=\"%s\">aktivointi lähetetään uudelleen</a>?"
+
+#: modules/user-moderation/user-moderation.php:174
+msgid "<strong>ERROR</strong>: Your registration has not yet been approved."
+msgstr "<strong>VIRHE</strong>: Rekisteröitymistäsi ei ole vielä hyväksytty."
+
+#: modules/user-moderation/user-moderation.php:334
+#, php-format
+msgid "[%s] Activate Your Account"
+msgstr "[%s] Aktivoi tilisi"
+
+#: modules/user-moderation/user-moderation.php:335
+#, php-format
+msgid "Thanks for registering at %s! To complete the activation of your account please click the following link: "
+msgstr "Kiitoksia rekisteröitymisestäsi sivustolla %s! Aktivoidaksesi käyttäjätilisi, klikkaa alla olevaa linkkiä:"
+
+#: modules/user-moderation/user-moderation.php:367
+#, php-format
+msgid "[%s] New User Awaiting Approval"
+msgstr "[%s] Uusi käyttäjä odottaa hyväksymistä"
+
+#: modules/user-moderation/user-moderation.php:369
+#, php-format
+msgid "New user requires approval on your blog %s:"
+msgstr "Uusi käyttäjä tarvitsee hyväksynnän sivustolle %s:"
+
+#: modules/user-moderation/user-moderation.php:372
+msgid "To approve or deny this user:"
+msgstr "Hyväksyäksesi tai hylätäksesi käyttäjän:"
+
+#: modules/user-moderation/user-moderation.php:393
+msgid "Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided."
+msgstr "Rekisteröitymisesi onnistui, mutta ennen kuin voit kirjautua sisään sinun tulee vahvistaa sähköpostiosoitteesi. Tarkista sähköpostisi ja klikkaa sinne lähetettyä linkkiä."
+
+#: modules/user-moderation/user-moderation.php:395
+msgid "Your registration was successful but you must now be approved by an administrator before you can log in. You will be notified by e-mail once your account has been reviewed."
+msgstr "Rekisteröitymisesi onnistui, mutta sivuston ylläpitäjän on hyväksyttävä käyttäjätilisi ennen kuin voit kirjautua sisään. Saat sähköpostin kun rekisteröitymisesi on käsitelty."
+
+#: modules/user-moderation/user-moderation.php:398
+msgid "Your account has been activated. You may now log in."
+msgstr "Käyttäjätilisi on aktivoitu. Voit nyt kirjautua sisään."
+
+#: modules/user-moderation/user-moderation.php:400
+msgid "Your account has been activated. Please check your e-mail for your password."
+msgstr "Käyttäjätilisi on aktivoitu. Salasana on lähetetty sähköpostiosoitteeseesi."
+
+#: modules/user-moderation/user-moderation.php:402
+msgid "<strong>ERROR</strong>: Sorry, that key does not appear to be valid."
+msgstr "<strong>VIRHE</strong>: Avain ei kelpaa."
+
+#: modules/user-moderation/user-moderation.php:405
+msgid "<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent."
+msgstr "<strong>VIRHE</strong>: Aktivointisähköpostia ei saatu lähetettyä."
+
+#: modules/user-moderation/user-moderation.php:407
+msgid "The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided."
+msgstr "Aktivointisähköposti on lähetetty sähköpostiosoitteeseen jolla rekisteröidyit. Tarkista sähköpostisi ja klikkaa sähköpostissa annettua linkkiä."
+
+#: templates/login-form.php:12
+#: templates/profile-form.php:34
+#: templates/register-form.php:12
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+#: templates/login-form.php:16
+msgid "Password"
+msgstr "Salasana"
+
+#: templates/login-form.php:25
+msgid "Remember Me"
+msgstr "Muista minut"
+
+#: templates/lostpassword-form.php:12
+msgid "Username or E-mail:"
+msgstr "Käyttäjänimi tai sähköpostiosoite:"
+
+#: templates/lostpassword-form.php:20
+msgid "Get New Password"
+msgstr "Pyydä uusi salasana"
+
+#: templates/profile-form.php:22
+msgid "Personal Options"
+msgstr "Henkilökohtaiset asetukset"
+
+#: templates/profile-form.php:30
+msgid "Name"
+msgstr "Nimi"
+
+#: templates/profile-form.php:35
+msgid "Your username cannot be changed."
+msgstr "Käyttäjänimeä ei voi vaihtaa."
+
+#: templates/profile-form.php:39
+msgid "First name"
+msgstr "Etunimi"
+
+#: templates/profile-form.php:44
+msgid "Last name"
+msgstr "Sukunimi"
+
+#: templates/profile-form.php:49
+msgid "Nickname"
+msgstr "Kutsumanimi"
+
+#: templates/profile-form.php:49
+#: templates/profile-form.php:86
+msgid "(required)"
+msgstr "(pakollinen)"
+
+#: templates/profile-form.php:54
+msgid "Display name publicly as"
+msgstr "Julkisesti näytetty nimi"
+
+#: templates/profile-form.php:82
+msgid "Contact Info"
+msgstr "Yhteystiedot"
+
+#: templates/profile-form.php:91
+msgid "Website"
+msgstr "Kotisivut"
+
+#: templates/profile-form.php:108
+msgid "About Yourself"
+msgstr "Tietoa sinusta"
+
+#: templates/profile-form.php:112
+msgid "Biographical Info"
+msgstr "Elämäkerrallista tietoa"
+
+#: templates/profile-form.php:114
+msgid "Share a little biographical information to fill out your profile. This may be shown publicly."
+msgstr "Jaa hieman tietoa itsestäsi profiilissasi. Tämä tieto saaatetaan näyttää julkisesti."
+
+#: templates/profile-form.php:122
+msgid "New Password"
+msgstr "Uusi salasana"
+
+#: templates/profile-form.php:123
+msgid "If you would like to change the password type a new one. Otherwise leave this blank."
+msgstr "Jos haluat muuttaa salasanasi, kirjoita uusi salasana. Muussa tapauksessa jätä tyhjäksi."
+
+#: templates/profile-form.php:124
+msgid "Type your new password again."
+msgstr "Kirjoita uusi salasanasi uudelleen."
+
+#: templates/profile-form.php:126
+msgid "Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols like ! \" ? $ % ^ &amp; )."
+msgstr "Vinkki: Salasanan tulisi olla ainakin seitsemän merkkiä pitkä. Tehdäksesi siitä vahvan, käytä sekä isoja että pieniä kirjaimia, numeroita ja symboleja kuten ! \" ? $ % ^ &amp; )."
+
+#: templates/profile-form.php:140
+msgid "Additional Capabilities"
+msgstr "Muita käyttömahdollisuuksia"
+
+#: templates/profile-form.php:159
+msgid "Update Profile"
+msgstr "Päivitä profiilia"
+
+#: templates/register-form.php:23
+msgid "A password will be e-mailed to you."
+msgstr "Salasana lähetetään sinulle sähköpostitse."
+
+#: templates/resetpass-form.php:12
+msgid "New Password:"
+msgstr "Uusi salasana:"
+
+#: templates/resetpass-form.php:24
+msgid "Change Password"
+msgstr "Vaihda salasanaa"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
+msgstr "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
+
+#. Description of the plugin/theme
+msgid "Themes the WordPress login, registration and forgot password pages according to your theme."
+msgstr "Sulauttaa WordPressin sisäänkirjautumisen, rekisteröitymisen ja unohtuneen salasanan sivun käyttämääsi teemaan."
+
+#. Author of the plugin/theme
+msgid "Jeff Farthing"
+msgstr "Jeff Farthing"
+
+#. Author URI of the plugin/theme
+msgid "http://www.jfarthing.com"
+msgstr "http://www.jfarthing.com"
+
