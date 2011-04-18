@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: Theme My Login 6.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/theme-my-login\n"
 "POT-Creation-Date: 2010-10-03 19:07+0000\n"
-"PO-Revision-Date: 2010-10-03 15:33-0500\n"
-"Last-Translator: Jeff Farthing <jeff@jfarthing.com>\n"
+"PO-Revision-Date: 2011-04-17 10:53+0100\n"
+"Last-Translator: Torsten Liebig <torsten.liebig@web.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: admin/class-theme-my-login-admin.php:52
 #: includes/class-theme-my-login-widget.php:24
 msgid "Theme My Login"
-msgstr ""
+msgstr "Theme My Login"
 
 # @ theme-my-login
 #: admin/class-theme-my-login-admin.php:88
@@ -35,28 +35,28 @@ msgstr "FEHLER: Das Modul \"$module\" konnte nicht aktiviert werden (%s)."
 
 #: admin/class-theme-my-login-admin.php:108
 msgid "NOTICE:"
-msgstr ""
+msgstr "HINWEIS:"
 
 #: admin/class-theme-my-login-admin.php:109
 #, php-format
 msgid "Now that you have activated Theme My Login, please <a href=\"%s\">visit the settings page</a> and familiarize yourself with all of the available options."
-msgstr ""
+msgstr "Theme My Login erfolgreich aktiviert. Bitte besuche die <a href=\"%s\">Einstellungs-Seite</a>, um dich mit den verfügbaren Optionen vertraut zu machen."
 
 #: admin/class-theme-my-login-admin.php:111
 msgid "Take me to the settings page"
-msgstr ""
+msgstr "Zur Einstellungs-Seite"
 
 #: admin/class-theme-my-login-admin.php:124
 msgid "You can now login with your e-mail address or username! Try it out!"
-msgstr ""
+msgstr "Du kannst dich jetzt mit deiner E-Mail oder deinem Benutzernamen anmelden. Probier es aus!"
 
 #: admin/class-theme-my-login-admin.php:125
 msgid "Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel=\"tml-options\" href=\"#tml-modules\">Click here</a> to get started with modules now."
-msgstr ""
+msgstr "Theme My Login arbeitet jetzt mit einem Modul-System. Module sind so ähnlich wie WordPress-Plugins. Jedes Modul erweitert die Standard-Funktionalität von Theme My Login. <a rel=\"tml-options\" href=\"#tml-modules\">Klicke hier</a> um die Module einzurichten."
 
 #: admin/class-theme-my-login-admin.php:126
 msgid "Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from \"theme-my-login/templates\" to your current theme directory. Try it out!"
-msgstr ""
+msgstr "Theme My Login erlaubt jetzt eigene Formulare. Du kannst deinen eigenen Formular-Templates anlegen, indem du die Default-Version(en) aus \"theme-my-login/templates\" in dein Theme-Verzeichnis kopierst. Probier es aus!"
 
 # @ theme-my-login
 #: admin/class-theme-my-login-admin.php:127
@@ -66,19 +66,19 @@ msgstr "Um Veränderungen zwischen Upgrades zu bewahren, können Sie Ihre indivi
 
 #: admin/class-theme-my-login-admin.php:128
 msgid "Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Documentation</a> for usage instructions."
-msgstr ""
+msgstr "Theme My Login stellt einen Shortcode bereit, mit dem du das Login-Formular bequem in beliebige Artikel integrieren kannst. Besuche die <a href=\"http://www.jfarthing.com/docs/theme-my-login/shortcode\" target=\"_blank\">Theme My Login Dokumentation</a>für Tipps und Tricks zur Verwendung des Shortcodes und eine Übersicht der verfügbaren Paramenter."
 
 #: admin/class-theme-my-login-admin.php:129
 msgid "Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">donations</a>!"
-msgstr ""
+msgstr "Theme My Login is <em>KOSTENLOS</em> aber Jeff weiß auf jeden Fall <a href=\"http://www.jfarthing.com/donate\" target=\"_blank\">Spenden</a> zu schätzen!"
 
 #: admin/class-theme-my-login-admin.php:130
 msgid "Jeff is <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">available for hire</a>!"
-msgstr ""
+msgstr "Jeff ist <a href=\"http://www.jfarthing.com/hire-me\" target=\"_blank\">für Projekte verfügbar</a>!"
 
 #: admin/class-theme-my-login-admin.php:134
 msgid "Did You Know?"
-msgstr ""
+msgstr "Wusstest du schon?"
 
 # @ theme-my-login
 #: admin/class-theme-my-login-admin.php:175
@@ -229,7 +229,7 @@ msgstr "Ausloggen"
 
 #: includes/class-theme-my-login-template.php:363
 msgid "Register For This Site"
-msgstr ""
+msgstr "Registriere dich für diese Seite"
 
 # @ theme-my-login
 #: includes/class-theme-my-login-template.php:365
@@ -336,7 +336,7 @@ msgstr "Anmeldung abgeschlossen. Bitte überprüfen Sie Ihre E-Mails."
 
 #: includes/class-theme-my-login.php:339
 msgid "Your session has expired. Please log-in again."
-msgstr ""
+msgstr "Deine Session ist abgelaufen. Bitte melde dich erneut an."
 
 # @ theme-my-login
 #: includes/class-theme-my-login.php:393
@@ -599,13 +599,13 @@ msgstr "Deaktivieren Admin-Benachrichtigung"
 
 #: modules/custom-email/admin/custom-email-admin.php:77
 msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon new user registration."
-msgstr ""
+msgstr "Diese E-Mail wird an die unten stehende(n) Adresse oder Adressen (mehrere Adressen können durch Komma getrennt werden), nachdem sich ein neuer Nutzer registriert hat."
 
 #: modules/custom-email/admin/custom-email-admin.php:81
 #: modules/custom-email/admin/custom-email-admin.php:208
 #: modules/user-moderation/admin/user-moderation-admin.php:371
 msgid "To"
-msgstr ""
+msgstr "An"
 
 # @ theme-my-login
 #: modules/custom-email/admin/custom-email-admin.php:126
@@ -624,7 +624,7 @@ msgstr "Diese E-Mail wird an einen Benutzer nach erfolgreicher Kennwort-Erneueru
 
 #: modules/custom-email/admin/custom-email-admin.php:204
 msgid "This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon user password change."
-msgstr ""
+msgstr "Diese E-Mail wird an die unten stehende(n) Adresse oder Adressen (mehrere Adressen können durch Komma getrennt werden), nachdem ein Nutzer sein Kennwort geändert hat."
 
 # @ theme-my-login
 #: modules/custom-email/admin/custom-email-admin.php:231
@@ -816,11 +816,11 @@ msgstr "Link hinzufügen"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:303
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: modules/custom-user-links/admin/custom-user-links-admin.php:304
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 # @ theme-my-login
 #: modules/security/admin/security-admin.php:35
@@ -832,50 +832,50 @@ msgstr "Sie können diesen Benutzer nicht bearbeiten."
 
 #: modules/security/admin/security-admin.php:70
 msgid "User locked."
-msgstr ""
+msgstr "Nutzer gesperrt."
 
 #: modules/security/admin/security-admin.php:72
 msgid "User unlocked."
-msgstr ""
+msgstr "Nutzer entsperrt."
 
 #: modules/security/admin/security-admin.php:95
 msgid "Unlock"
-msgstr ""
+msgstr "Entsperren"
 
 #: modules/security/admin/security-admin.php:97
 msgid "Lock"
-msgstr ""
+msgstr "Sperren"
 
 #: modules/security/admin/security-admin.php:116
 msgid "Security"
-msgstr ""
+msgstr "Sicherheit"
 
 #: modules/security/admin/security-admin.php:136
 msgid "Login Attempts"
-msgstr ""
+msgstr "Anmeldeversuche"
 
 #: modules/security/admin/security-admin.php:141
 msgid "minute(s)"
-msgstr ""
+msgstr "Minute(n)"
 
 #: modules/security/admin/security-admin.php:142
 msgid "hour(s)"
-msgstr ""
+msgstr "Stunde(n)"
 
 #: modules/security/admin/security-admin.php:143
 msgid "day(s)"
-msgstr ""
+msgstr "Tag(e)"
 
 #: modules/security/admin/security-admin.php:166
 #, php-format
 msgid "After %1$s failed login attempts within %2$s %3$s, lockout the account for %4$s %5$s."
-msgstr ""
+msgstr "Nach %1$s fehlgeschlagenen Login-Versuchen innerhalb von %2$s %3$s, sperre das Konto für %4$s %5$s."
 
 #: modules/security/security.php:43
 #: modules/security/security.php:69
 #, php-format
 msgid "<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s."
-msgstr ""
+msgstr "<strong>FEHLER</strong>: Dieser Account ist wegen zu vieler fehlgeschlagener Login-Versuche gesperrt worden. Du kannst es in %s erneut versuchen."
 
 # @ theme-my-login
 #: modules/security/security.php:45
@@ -891,21 +891,21 @@ msgstr "Stärke-Indikator"
 
 #: modules/themed-profiles/themed-profiles.php:78
 msgid "Very weak"
-msgstr ""
+msgstr "Sehr schwach"
 
 #: modules/themed-profiles/themed-profiles.php:79
 msgid "Weak"
-msgstr ""
+msgstr "Schwach"
 
 #. translators: password strength
 #: modules/themed-profiles/themed-profiles.php:81
 msgctxt "password strength"
 msgid "Medium"
-msgstr ""
+msgstr "Mittel"
 
 #: modules/themed-profiles/themed-profiles.php:82
 msgid "Strong"
-msgstr ""
+msgstr "Stark"
 
 # @ theme-my-login
 #: modules/themed-profiles/themed-profiles.php:92
@@ -1254,7 +1254,7 @@ msgstr "Zusätzliche Funktionen"
 
 #: templates/profile-form.php:159
 msgid "Update Profile"
-msgstr ""
+msgstr "Profil aktualisieren"
 
 # @ theme-my-login
 #: templates/register-form.php:23
@@ -1273,17 +1273,17 @@ msgstr "Kennwort ändern"
 
 #. Plugin URI of the plugin/theme
 msgid "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
-msgstr ""
+msgstr "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
 
 #. Description of the plugin/theme
 msgid "Themes the WordPress login, registration and forgot password pages according to your theme."
-msgstr ""
+msgstr "Passt das WordPress Login, die Registrierungs- und die Passwort-Vergessen-Seite an dein Theme an."
 
 #. Author of the plugin/theme
 msgid "Jeff Farthing"
-msgstr ""
+msgstr "Jeff Farthing"
 
 #. Author URI of the plugin/theme
 msgid "http://www.jfarthing.com"
-msgstr ""
+msgstr "http://www.jfarthing.com"
 
