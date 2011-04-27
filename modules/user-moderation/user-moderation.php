@@ -403,9 +403,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	/**
 	 * Initializes options for this module
 	 *
-	 * Callback for "tml_init_options" hook in method Theme_My_Login_Base::init_options()
+	 * Callback for "tml_init_options" hook in method Theme_My_Login::init_options()
 	 *
-	 * @see Theme_My_Login_Base::init_options()
+	 * @see Theme_My_Login::init_options()
 	 * @since 6.0
 	 * @access public
 	 *

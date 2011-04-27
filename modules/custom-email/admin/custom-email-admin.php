@@ -360,6 +360,8 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			<textarea name="theme_my_login[email][user_denial][message]" id="theme_my_login_user_denial_message" class="large-text" rows="10"><?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'user_denial', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%</p>
+			
+			<p><label for="theme_my_login_user_denial_disable"><input name="theme_my_login[email][user_denial][disable]" type="checkbox" id="theme_my_login_user_denial_disable" value="1"<?php checked( 1, $GLOBALS['theme_my_login']->options->get_option( array( 'email', 'user_denial', 'disable' ) ) ); ?> /> Disable User Notification</label></p>
 		</td>
 	</tr>
 </table><?php
