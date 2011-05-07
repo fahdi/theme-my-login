@@ -4,7 +4,7 @@ Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.0
 Tested up to: 3.1
-Stable tag: 6.1.2
+Stable tag: 6.1.3
 
 Themes the WordPress login pages according to your theme.
 
@@ -39,6 +39,10 @@ Please visit http://www.jfarthing.com/docs/Theme_My_Login first and then visit h
 
 
 == Changelog ==
+
+= 6.1.3 =
+* Fix password change error
+* Update POT file
 
 = 6.1.2 =
 * Replace "self" keyword with "$this" for PHP 4
@@ -229,6 +233,7 @@ Please visit http://www.jfarthing.com/docs/Theme_My_Login first and then visit h
 * Implemented custom links for logged in users based on role
 * Implemented custom redirection upon log in based on role
 * Implemented custom registration/password recovery emails
+
 * Implemented true shortcode and template tag functionality
 * Implemented true multi-instance functionality
 * Implemented an easy-to-use jQuery tabbed administration menu
