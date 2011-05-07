@@ -959,7 +959,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 		wp_set_password( $new_pass, $user->ID );
 
-		do_action( 'tml_user_password_changed', $user );
+		do_action_ref_array( 'tml_user_password_changed', array( &$user ) );
 	}
 
 	/**
