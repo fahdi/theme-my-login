@@ -523,7 +523,7 @@ class Theme_My_Login_Template {
 	function load_options( $options = array() ) {
 		$this->options = wp_parse_args( $options, array(
 			'instance' => '',
-			'default_action' => 'login',
+			'default_action' => '',
 			'login_template' => '',
 			'register_template' => '',
 			'lostpassword_template' => '',
@@ -567,7 +567,7 @@ class Theme_My_Login_Template {
 	function __construct( $options = '' ) {
 		$this->load_options( $options );
 		
-		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : 'login';
+		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : '';
 		$this->instance = $this->options['instance'];
 		if ( $GLOBALS['theme_my_login']->request_instance == $this->instance ) {
 			$this->is_active = true;

@@ -76,7 +76,7 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function __construct() {
-		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
+		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
 
 		$this->init_options();
