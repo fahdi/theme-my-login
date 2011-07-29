@@ -35,7 +35,7 @@ This plugin themes the WordPress login, registration and forgot password pages a
 
 == Frequently Asked Questions ==
 
-Please visit http://www.jfarthing.com/docs/Theme_My_Login first and then visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
+Please visit http://www.jfarthing.com/docs/category/theme-my-login first and then visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
 
 
 == Changelog ==
