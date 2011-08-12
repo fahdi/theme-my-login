@@ -189,6 +189,9 @@ class Theme_My_Login {
 		if ( is_admin() )
 			return;
 
+		if ( $this->is_login_page() )
+			$this->check_ssl();
+
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
 		// allow plugins to override the default actions, and to add extra actions if they want
