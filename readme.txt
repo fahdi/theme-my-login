@@ -40,6 +40,10 @@ Please visit http://www.jfarthing.com/docs/category/theme-my-login first and the
 
 == Changelog ==
 
+= 6.2 =
+* Add option to Themed Profiles module to theme profiles per user role
+* Add option to Themed Profiles module to restrict admin access per user role
+
 = 6.1.4 =
 * Don't hijack non-related form posts
 
