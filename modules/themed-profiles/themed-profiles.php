@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Themed Profiles
-Description: Enabling this module will initialize and enable themed profiles. There are no other settings for this module.
+Description: Enabling this module will initialize and enable themed profiles. You will then have to configure the settings via the "Themed Profiles" tab.
 */
 
 if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
@@ -22,13 +22,43 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function init() {
-		global $pagenow;
-		if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
-			$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
-			$redirect_to = add_query_arg( $_GET, $redirect_to );
-			wp_redirect( $redirect_to );
-			exit();
-		}
+		global $current_user, $pagenow;
+
+        if ( is_user_logged_in() && is_admin() ) {
+        	$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
+			$user_role = reset( $current_user->roles );
+			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
+                if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
+                	if ( !empty( $_GET ) )
+                		$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
+					wp_redirect( $redirect_to );
+                    exit;
+                }
+            } else {
+            	if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
+                	wp_redirect( $redirect_to );
+                	exit();
+                }
+            }
+        }
+	}
+
+	/**
+	 * Hides admin bar is admin is restricted
+	 *
+	 * Callback for "show_admin_bar" hook
+	 *
+	 * @since 6.2
+	 * @access public
+	 */
+	function show_admin_bar( $show_admin_bar ) {
+		global $current_user;
+
+		$user_role = reset( $current_user->roles );
+		if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
+			return false;
+
+		return $show_admin_bar;
 	}
 
 	/**
@@ -195,6 +225,38 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	}
 
 	/**
+	 * Initializes options for this module
+	 *
+	 * Callback for "tml_init_options" hook in method Theme_My_Login::init_options()
+	 *
+	 * @see Theme_My_Login::init_options()
+	 * @since 6.2
+	 * @access public
+	 *
+	 * @param array $options Options passed in from filter
+	 * @return array Original $options array with module options appended
+	 */
+	function init_options( $options = array() ) {
+		global $wp_roles;
+
+		if ( empty( $wp_roles ) )
+			$wp_roles =& new WP_Roles();
+
+		$options = (array) $options;
+
+		$options['themed_profiles'] = array();
+		foreach ( $wp_roles->get_names() as $role => $label ) {
+			if ( 'pending' == $role )
+				continue;
+			$options['themed_profiles'][$role] = array(
+				'theme_profile' => 1,
+				'resrict_admin' => 0
+			);
+		}
+		return $options;
+	}
+
+	/**
 	 * Adds filters to site_url() and admin_url()
 	 *
 	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
@@ -220,6 +282,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
+		add_filter( 'show_admin_bar', array( &$this, 'show_admin_bar' ) );
 
 		add_action( 'tml_request_profile', array( &$this, 'profile_action' ) );
 		add_action( 'tml_display_profile', array( &$this, 'get_profile_form' ) );
@@ -232,6 +295,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
  * @since 6.0
  */
 $theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles();
+
+if ( is_admin() )
+	include_once( TML_ABSPATH . '/modules/themed-profiles/admin/themed-profiles-admin.php' );
 
 endif; // Class exists
 
