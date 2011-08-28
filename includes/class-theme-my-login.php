@@ -189,9 +189,6 @@ class Theme_My_Login {
 		if ( is_admin() )
 			return;
 
-		if ( $this->is_login_page() )
-			$this->check_ssl();
-
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
 		// allow plugins to override the default actions, and to add extra actions if they want
@@ -333,7 +330,6 @@ class Theme_My_Login {
 						$secure_cookie = false;
 
 					if ( $http_post && isset( $_POST['log'] ) ) {
-						$this->check_ssl();
 
 						// Set a cookie now to see if they are supported by the browser.
 						setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
@@ -408,23 +404,15 @@ class Theme_My_Login {
 
 			add_filter( 'pre_option_blog_public', '__return_zero' );
 			add_action( 'login_head', 'noindex' );
-		}
-	}
 
-	/*
-	 * Redirects to https login if forced to use SSL
-	 *
-	 * @since 6.1.1
-	 * @access public
-	 */
-	function check_ssl() {
-		if ( force_ssl_admin() && !is_ssl() ) {
-			if ( 0 === strpos( $_SERVER['REQUEST_URI'], 'http' ) ) {
-				wp_redirect( preg_replace( '|^http://|', 'https://', $_SERVER['REQUEST_URI'] ) );
-				exit();
-			} else {
-				wp_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
-				exit();
+			if ( force_ssl_admin() && !is_ssl() ) {
+				if ( 0 === strpos( $_SERVER['REQUEST_URI'], 'http' ) ) {
+					wp_redirect( preg_replace( '|^http://|', 'https://', $_SERVER['REQUEST_URI'] ) );
+					exit();
+				} else {
+					wp_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+					exit();
+				}
 			}
 		}
 	}
