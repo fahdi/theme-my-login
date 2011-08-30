@@ -213,8 +213,6 @@ class Theme_My_Login {
 					break;
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					$this->check_ssl();
-
 					if ( $http_post ) {
 						$errors = $this->retrieve_password();
 						if ( !is_wp_error( $errors ) ) {
@@ -231,8 +229,6 @@ class Theme_My_Login {
 					break;
 				case 'resetpass' :
 				case 'rp' :
-					$this->check_ssl();
-
 					$user = $this->check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error($user) ) {
@@ -273,8 +269,6 @@ class Theme_My_Login {
 						wp_redirect( Theme_My_Login::get_current_url( 'registration=disabled' ) );
 						exit();
 					}
-
-					$this->check_ssl();
 
 					$user_login = '';
 					$user_email = '';
