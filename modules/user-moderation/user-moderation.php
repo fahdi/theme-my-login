@@ -20,8 +20,15 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function register_post() {
-		// Remove all other filters
-		remove_all_actions( 'tml_new_user_registered' );
+		// Remove default new user notification
+		if ( has_action( 'tml_new_user_registered', 'wp_new_user_notification' ) )
+			remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
+
+		// Remove Custom Email new user notification
+		if ( $GLOBALS['theme_my_login']->is_module_active( 'custom-email/custom-email.php' ) ) {
+			if ( has_action( 'tml_new_user_registered', array( &$GLOBALS['theme_my_login_custom_email'], 'new_user_notification' ) ) )
+				remove_action( 'tml_new_user_registered', array( &$GLOBALS['theme_my_login_custom_email'], 'new_user_notification' ), 10, 2 );
+		}
 
 		// Moderate user upon registration
 		add_action( 'tml_new_user_registered', array( &$this, 'moderate_user' ), 100, 2 );
