@@ -39,9 +39,15 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 			}
 		}
 
-		// Allow for user_id variable in link
+		// Define and allow filtering of replacement variables
+		$replacements = apply_filters( 'tml_custom_user_links_variables', array(
+			'%user_id%' => $current_user->ID,
+			'%username%' => $current_user->user_nicename
+		) );
+
+		// Replace variables in link
 		foreach ( (array) $links as $key => $link ) {
-			$links[$key]['url'] = str_replace( '%user_id%', $current_user->ID, $link['url'] );
+			$links[$key]['url'] = str_replace( array_keys( $replacements ), array_values( $replacements ), $link['url'] );
 		}
 
 		return $links;
