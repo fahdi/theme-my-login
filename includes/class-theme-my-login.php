@@ -98,6 +98,7 @@ class Theme_My_Login {
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
+		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
 
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
@@ -133,12 +134,23 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function init() {
+		global $wp;
+
 		load_plugin_textdomain( 'theme-my-login', '', TML_DIRNAME . '/language' );
 
 		$this->errors = new WP_Error();
 
 		if ( $this->options->get_option( 'enable_css' ) )
 			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->options->get_option( 'version' ) );
+
+		$wp->add_query_var( 'action' );
+		
+		$page_id = $this->options->get_option( 'page_id' );
+
+		foreach ( $this->options->get_option( 'permalinks', array() ) as $action => $slug ) {
+			if ( !empty( $slug ) )
+				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
+		}
 	}
 
 	/**
@@ -181,9 +193,11 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function parse_request() {
+	function parse_request( &$wp ) {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
+		if ( isset( $wp->query_vars['action'] ) )
+			$action = $wp->query_vars['action'];
 		$instance =& $this->request_instance;
 
 		if ( is_admin() )
@@ -418,16 +432,39 @@ class Theme_My_Login {
 	 * @access public
 	 *
 	 * @param string|array $query Optional. Query arguments to add to link
-	 * @param bool $remove_filter True to remove "page_link" filter
 	 * @return string Login page link with optional $query arguments appended
 	 */
 	function get_login_page_link( $query = '' ) {
-		$link = get_page_link( $this->options->get_option( 'page_id' ) );
-		if ( !empty( $query ) ) {
-			$q = wp_parse_args( $query );
-			$link = add_query_arg( $q, $link );
+		global $wp_rewrite;
+
+		$q = wp_parse_args( $query );
+
+		$page = get_page( $this->options->get_option( 'page_id' ) );
+
+		$link = $wp_rewrite->get_page_permastruct();
+		if ( !empty( $link ) ) {
+			$action = isset( $q['action'] ) ? $q['action'] : 'login';
+			if ( $slug = $this->options->get_option( array( 'permalinks', $action ) ) )
+				unset( $q['action'] );
+			else
+				$slug = $page->post_name;
+			$link = str_replace( '%pagename%', $slug, $link );
+			$link = home_url( $link );
+			$link = user_trailingslashit( $link, 'page' );
+		} else {
+			$link = home_url( "?page_id={$page->ID}" );
 		}
+
+		if ( !empty( $q ) )
+			$link = add_query_arg( $q, $link );
+
 		return apply_filters( 'tml_page_link', $link, $query );
+	}
+
+	function page_link( $link, $id ) {
+		if ( $this->is_login_page( $id ) )
+			return $this->get_login_page_link();
+		return $link;
 	}
 
 	/**
