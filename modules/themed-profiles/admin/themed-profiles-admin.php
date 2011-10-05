@@ -51,10 +51,9 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
         <th scope="row"><?php _e( 'Restrict Admin Access', 'theme-my-login' ); ?></label></th>
         <td>
     <?php foreach ( $wp_roles->get_names() as $role => $label ) : if ( 'pending' == $role ) continue; ?>
-            <input name="theme_my_login[themed_profiles][<?php echo $role; ?>][restrict_admin]" type="checkbox" id="theme_my_login_themed_profiles_<?php echo $role; ?>_restrict_admin" value="1"<?php checked( 1, $options[$role]['restrict_admin'] ); ?> />
+            <input name="theme_my_login[themed_profiles][<?php echo $role; ?>][restrict_admin]" type="checkbox" id="theme_my_login_themed_profiles_<?php echo $role; ?>_restrict_admin" value="1"<?php checked( 1, $options[$role]['restrict_admin'] ); ?><?php if ( 'administrator' == $role ) echo ' disabled="disabled"'; ?> />
             <label for="theme_my_login_themed_profiles_<?php echo $role; ?>_restrict_admin"><?php echo $label; ?></label><br />
     <?php endforeach; ?>
-        	<p class="description"><?php _e( '<strong>NOTICE</strong>: Do not lock yourself out or you will have to delete the plugin to re-gain access!', 'theme-my-login' ); ?></p>
         </td>
     </tr>
 </table><?php
