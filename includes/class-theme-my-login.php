@@ -122,6 +122,7 @@ class Theme_My_Login {
 			'page_id' => 0,
 			'show_page' => 1,
 			'enable_css' => 1,
+			'email_login' => 1,
 			'active_modules' => array(),
 			'initial_nag' => 1
 		) ) );
@@ -846,7 +847,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function wp_authenticate( &$user_login ) {
 		global $wpdb;
-		if ( is_email( $user_login ) ) {
+		if ( is_email( $user_login ) && $this->options->get_option( 'email_login' ) ) {
 			if ( $found = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email = %s", $user_login ) ) )
 				$user_login = $found;
 		}

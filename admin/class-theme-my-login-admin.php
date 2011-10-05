@@ -203,6 +203,9 @@ class Theme_My_Login_Admin {
                 echo '<ul>' . "\n";
                 foreach ( $this->submenu[$menu[1]] as $submenu ) {
                     echo '<li><a href="#' . $submenu[1] . '">' . $submenu[0] . '</a></li>' . "\n";
+
+
+
                 }
                 echo '</ul>' . "\n";
 
@@ -281,6 +284,14 @@ class Theme_My_Login_Admin {
             <p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login' ); ?></p>
         </td>
     </tr>
+    <tr valign="top">
+    	<th scope="row"><?php _e( 'E-mail Login', 'theme-my-login' ); ?></th>
+    	<td>
+    		<input name="theme_my_login[email_login]" type="checkbox" id="theme_my_login_email_login" value="1"<?php checked( 1, $GLOBALS['theme_my_login']->options->get_option( 'email_login' ) ); ?> />
+    		<label for="theme_my_login_email_login"><?php _e( 'Enable e-mail address login', 'theme-my-login' ); ?></label>
+    		<p class="description"><?php _e( 'Allows users to login using their e-mail address in place of their username.', 'theme-my-login' ); ?></p>
+    	</td>
+    </tr>
     <?php do_action( 'tml_settings_basic' ); ?>
 </table><?php
 	}
@@ -350,8 +361,9 @@ class Theme_My_Login_Admin {
 	function save_settings( $settings ) {
 		// Sanitize new settings
 		$settings['page_id'] = absint( $settings['page_id'] );
-		$settings['show_page'] = ( isset( $settings['show_page'] ) && $settings['show_page'] ) ? 1 : 0;
-		$settings['enable_css'] = ( isset( $settings['enable_css'] ) && $settings['enable_css'] ) ? 1 : 0;
+		$settings['show_page'] = isset( $settings['show_page'] );
+		$settings['enable_css'] = isset( $settings['enable_css'] );
+		$settings['email_login'] = isset( $settings['email_login'] );
 
 		$modules = isset( $_POST['theme_my_login_modules'] ) ? $_POST['theme_my_login_modules'] : array();
 
