@@ -146,6 +146,10 @@ class Theme_My_Login_Admin {
 			add_action( 'admin_notices', array( &$this, 'did_you_know' ) );
 		}
 
+		// Flush rewrite rules if slugs have been updated
+		if ( $GLOBALS['theme_my_login']->options->get_option( 'flush_rules' ) )
+			flush_rewrite_rules();
+
 		// Enqueue neccessary scripts and styles
 		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
 		wp_enqueue_script( 'jquery-shake', plugins_url( '/theme-my-login/admin/js/jquery.shake.js' ), array( 'jquery' ) );
@@ -168,6 +172,8 @@ class Theme_My_Login_Admin {
 		$this->add_menu_page( __('General', 'theme-my-login' ), 'tml-options' );
 		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-options-basic', array( &$this, 'display_basic_settings' ) );
 		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-options-modules', array( &$this, 'display_module_settings' ) );
+		if ( $GLOBALS['wp_rewrite']->using_permalinks() )
+			$this->add_submenu_page( 'tml-options', __( 'Permalinks', 'theme-my-login' ), 'tml-options-permalinks', array( &$this, 'display_permalink_settings' ) );
 
 		// Allow plugins to add to menu
 		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
@@ -306,6 +312,31 @@ class Theme_My_Login_Admin {
 	}
 
 	/**
+	 * Outputs HTML for "Permalinks" settings tab
+	 *
+	 * @since 6.2
+	 * @access public
+	 */
+	function display_permalink_settings() {
+		$actions = array(
+			'login' => __( 'Login', 'theme-my-login' ),
+			'register' => __( 'Register', 'theme-my-login' ),
+			'lostpassword' => __( 'Lost Password', 'theme-my-login' )
+		); ?>
+<table class="form-table">
+	<?php foreach ( $actions as $action => $label ) : ?>
+	<tr valign="top">
+		<th scope="row"><label for="theme_my_login_permalinks_<?php echo $action; ?>"><?php echo $label; ?></label></th>
+		<td>
+			<input name="theme_my_login[permalinks][<?php echo $action; ?>]" type="text" id="theme_my_login_permalinks_<?php echo $action; ?>" value="<?php echo $GLOBALS['theme_my_login']->options->get_option( array( 'permalinks', $action ) ); ?>" class="regular-text" />
+		</td>
+	</tr>
+	<?php endforeach;
+	do_action( 'tml_settings_permalinks' ); ?>
+</table><?php
+	}
+
+	/**
 	 * Sanitizes TML settings
 	 *
 	 * This is the callback for register_setting()
@@ -343,6 +374,16 @@ class Theme_My_Login_Admin {
 		if ( $deactivate = array_diff( (array) $GLOBALS['theme_my_login']->options->get_option( 'active_modules' ), $modules ) ) {
 			// Deactive them
 			$this->deactivate_modules( $deactivate );
+		}
+
+		// Flush permalinks if they have changed
+		if ( isset( $settings['permalinks'] ) ) {
+			foreach ( $settings['permalinks'] as $action => $slug ) {
+				if ( $slug !== $GLOBALS['theme_my_login']->options->get_option( array( 'permalinks', $action ) ) ) {
+					$settings['flush_rules'] = true;
+					break;
+				}
+			}
 		}
 
 		// Merge current settings
