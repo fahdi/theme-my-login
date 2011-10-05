@@ -6,7 +6,7 @@ Description: Enabling this module will initialize security. You will then have t
 
 if ( !class_exists( 'Theme_My_Login_Security' ) ) :
 /**
- * Theme My Login Custom User Links module class
+ * Theme My Login Security module class
  *
  * Adds options to help protect your site.
  *
