@@ -233,7 +233,7 @@ class Theme_My_Login_Template {
 		if ( empty( $instance ) )
 			$instance = $this->instance;
 
-		if ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) {
+		if ( ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) || $GLOBALS['theme_my_login']->is_login_page() ) {
 			$url = $GLOBALS['theme_my_login']->get_login_page_link( 'action=' . $action );
 		} else {
 			if ( empty( $instance ) )
