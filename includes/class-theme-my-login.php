@@ -583,6 +583,7 @@ class Theme_My_Login {
 	 * - login_template - The template used for the login form. Defaults to "login-form.php".
 	 * - register_template - The template used for the register form. Defaults to "register-form.php".
 	 * - lostpassword_template - The template used for the lost password form. Defaults to "lostpassword-form.php".
+	 * - resetpass_template - The template used for the reset password form. Defaults to "resetpass-form.php".
 	 * - user_template - The templated used for when a user is logged in. Defalts to "user-panel.php".
 	 * - show_title - True to display the current title, false to hide. Defaults to true.
 	 * - show_log_link - True to display the login link, false to hide. Defaults to true.
