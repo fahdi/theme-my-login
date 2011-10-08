@@ -527,6 +527,7 @@ class Theme_My_Login_Template {
 			'login_template' => '',
 			'register_template' => '',
 			'lostpassword_template' => '',
+			'resetpass_template' => '',
 			'user_template' => '',
 			'show_title' => true,
 			'show_log_link' => true,
