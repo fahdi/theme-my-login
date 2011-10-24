@@ -76,8 +76,8 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function __construct() {
-		$this->request_action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
-		$this->request_instance = isset( $_REQUEST['instance'] ) ? $_REQUEST['instance'] : '';
+		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
+		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
 
 		$this->init_options();
 
