@@ -117,9 +117,8 @@ class Theme_My_Login_Admin {
 			__( 'Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from "theme-my-login/templates" to your current theme directory. Try it out!', 'theme-my-login' ),
 			__( 'You can maintain your stylesheet changes between upgrades. Just simply copy the file "theme-my-login/theme-my-login.css" to your current theme directory and edit it as you please!', 'theme-my-login' ),
 			__( 'Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href="http://www.jfarthing.com/docs/theme-my-login/shortcode" target="_blank">Theme My Login Documentation</a> for usage instructions.', 'theme-my-login' ),
-			__( 'Theme My Login is <em>FREE</em> but Jeff sure appreciates <a href="http://www.jfarthing.com/donate" target="_blank">donations</a>!', 'theme-my-login' ),
 			__( 'Jeff is <a href="http://www.jfarthing.com/hire-me" target="_blank">available for hire</a>!', 'theme-my-login' )
-			) );
+		) );
 		$key = array_rand( $tips );
 		echo '<div id="tml-tips" class="updated">';
 		echo '<p><strong>' . __( 'Did You Know?', 'theme-my-login' ) . '</strong></p>';
