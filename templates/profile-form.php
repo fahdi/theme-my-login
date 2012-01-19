@@ -46,15 +46,35 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 		<?php endif; ?>
 		<?php if ( function_exists( '_get_admin_bar_pref' ) ) : ?>
 		<tr class="show-admin-bar">
-			<th scope="row"><?php _e( 'Show Admin Bar', 'theme-my-login' )?></th>
-			<td><fieldset><legend class="screen-reader-text"><span><?php _e( 'Show Admin Bar', 'theme-my-login' ); ?></span></legend>
-				<label for="admin_bar_front">
-				<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1" <?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
-				<?php /* translators: Show admin bar when viewing site */ _e( 'when viewing site', 'theme-my-login' ); ?></label><br />
-				<label for="admin_bar_admin">
-				<input name="admin_bar_admin" type="checkbox" id="admin_bar_admin" value="1" <?php checked( _get_admin_bar_pref( 'admin', $profileuser->ID ) ); ?> />
-				<?php /* translators: Show admin bar in dashboard */ _e( 'in dashboard', 'theme-my-login' ); ?></label>
+			<?php if ( version_compare( $GLOBALS['wp_version'], '3.3', '>=' ) ) : ?>
+			<th scope="row"><?php _e('Toolbar')?></th>
+			<td>
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e('Toolbar') ?></span></legend>
+					<label for="admin_bar_front">
+						<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
+						<?php _e( 'Show Toolbar when viewing site' ); ?>
+					</label>
+					<br />
+				</fieldset>
 			</td>
+			<?php else : ?>
+			<th scope="row"><?php _e( 'Show Admin Bar', 'theme-my-login' )?></th>
+			<td>
+				<fieldset>
+					<legend class="screen-reader-text"><span><?php _e( 'Show Admin Bar', 'theme-my-login' ); ?></span></legend>
+					<label for="admin_bar_front">
+						<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1" <?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
+						<?php /* translators: Show admin bar when viewing site */ _e( 'when viewing site', 'theme-my-login' ); ?>
+					</label>
+					<br />
+					<label for="admin_bar_admin">
+						<input name="admin_bar_admin" type="checkbox" id="admin_bar_admin" value="1" <?php checked( _get_admin_bar_pref( 'admin', $profileuser->ID ) ); ?> />
+						<?php /* translators: Show admin bar in dashboard */ _e( 'in dashboard', 'theme-my-login' ); ?>
+					</label>
+				</fieldset>
+			</td>
+			<?php endif; ?>
 		</tr>
 		<?php endif; // function exists ?>
 		<?php do_action( 'personal_options', $profileuser ); ?>
