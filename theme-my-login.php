@@ -77,7 +77,7 @@ if ( is_admin() ) {
 	$GLOBALS['theme_my_login_admin'] =& new Theme_My_Login_Admin();
 }
 
-if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+if ( is_multisite() ) {
 	require_once( TML_ABSPATH . '/includes/class-theme-my-login-ms-signup.php' );
 	/**
 	 * Theme My Login MS Signup object

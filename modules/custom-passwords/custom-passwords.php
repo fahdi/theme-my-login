@@ -165,7 +165,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	function set_password( $password ) {
 		global $wpdb;
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() && isset( $_REQUEST['key'] ) ) {
+		if ( is_multisite() && isset( $_REQUEST['key'] ) ) {
 			if ( $meta = $wpdb->get_var( $wpdb->prepare( "SELECT meta FROM $wpdb->signups WHERE activation_key = %s", $_REQUEST['key'] ) ) ) {
 				$meta = unserialize( $meta );
 				if ( isset( $meta['user_pass'] ) ) {

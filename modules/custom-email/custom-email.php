@@ -631,7 +631,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		$user_login = stripslashes( $user->user_login );
 		$user_email = stripslashes( $user->user_email );
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -684,7 +684,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		// send a copy of password change notification to the admin
 		// but check to see if it's the admin whose password we're changing, and skip this
 		if ( $user->user_email != $to && apply_filters( 'send_password_change_notification', true ) ) {
-			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+			if ( is_multisite() ) {
 				$blogname = $GLOBALS['current_site']->site_name;
 			} else {
 				// The blogname option is escaped with esc_html on the way into the database in sanitize_option

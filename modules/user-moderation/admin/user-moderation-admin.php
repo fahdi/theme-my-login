@@ -150,7 +150,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 		// Delete plaintext pass
 		delete_user_meta( $user->ID, 'user_pass' );
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -189,7 +189,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 
 		do_action( 'deny_user', $user->ID );
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -253,7 +253,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 
 	function admin_init() {
 		// Disable moderation if using multisite
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			if ( $GLOBALS['theme_my_login']->is_module_active( 'user-moderation/user-moderation.php' ) ) {
 				// Deactivate the module
 				$GLOBALS['theme_my_login_admin']->deactivate_modules( 'user-moderation/user-moderation.php' );
@@ -294,7 +294,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	function load() {
 		add_action( 'tml_activate_user-moderaiton/user-moderation.php', array( &$this, 'activate' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-		if ( function_exists( 'is_multisite' ) && is_multisite() )
+		if ( is_multisite() )
 			return;
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'load-users.php', array( &$this, 'load_users_page' ) );

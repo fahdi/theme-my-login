@@ -588,7 +588,7 @@ class Theme_My_Login_Admin {
 	function install() {
 		global $wpdb;
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
 				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
 				foreach ( $blogids as $blog_id ) {
@@ -665,7 +665,7 @@ class Theme_My_Login_Admin {
 	function uninstall() {
 		global $wpdb;
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
 				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
 				foreach ( $blogids as $blog_id ) {

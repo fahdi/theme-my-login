@@ -305,7 +305,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			}
 		}
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -340,7 +340,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		$user_login = stripslashes( $user->user_login );
 		$user_email = stripslashes( $user->user_email );
 
-		if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+		if ( is_multisite() ) {
 			$blogname = $GLOBALS['current_site']->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -504,7 +504,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		if ( function_exists( 'is_multisite' ) && is_multisite() )
+		if ( is_multisite() )
 			return;
 
 		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
