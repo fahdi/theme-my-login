@@ -369,6 +369,8 @@ class Theme_My_Login_Template {
 			default:
 				$message = '';
 		}
+		$message = apply_filters( 'login_message', $message );
+
 		return apply_filters( 'tml_action_template_message', $message, $action );
 	}
 
