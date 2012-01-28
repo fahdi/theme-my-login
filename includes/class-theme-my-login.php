@@ -764,7 +764,7 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function print_footer_scripts() {
-		if ( is_admin() )
+		if ( !$this->is_login_page() )
 			return;
 
 		switch ( $this->request_action ) {
