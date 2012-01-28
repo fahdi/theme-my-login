@@ -74,9 +74,6 @@ class Theme_My_Login_MS_Signup {
 		}
 		add_action( 'wp_head', array( &$this, 'signup_header' ) );
 
-		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
-			require_once( ABSPATH . WPINC . '/registration.php' );
-
 		if ( is_array( get_site_option( 'illegal_names' )) && isset( $_GET[ 'new' ] ) && in_array( $_GET[ 'new' ], get_site_option( 'illegal_names' ) ) == true ) {
 			wp_redirect( network_home_url() );
 			exit;
@@ -381,9 +378,6 @@ class Theme_My_Login_MS_Signup {
 
 		if ( is_object( $wp_object_cache ) )
 			$wp_object_cache->cache_enabled = false;
-
-		if ( version_compare( $GLOBALS['wp_version'], '3.1', '<' ) )
-			require_once( ABSPATH . WPINC . '/registration.php' );
 
 		add_action( 'wp_head', array( &$this, 'activate_header' ) );
 	}

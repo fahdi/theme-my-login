@@ -2,7 +2,7 @@
 Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
-Requires at least: 3.0
+Requires at least: 3.1
 Tested up to: 3.2.1
 Stable tag: 6.1.4
 
@@ -41,8 +41,11 @@ Please visit http://www.jfarthing.com/docs/category/theme-my-login first and the
 == Changelog ==
 
 = 6.2 =
+* Require WP 3.1+
+* Add custom permalinks for default actions
 * Add option to Themed Profiles module to theme profiles per user role
 * Add option to Themed Profiles module to restrict admin access per user role
+* Add option to disable e-mail login
 
 = 6.1.4 =
 * Don't hijack non-related form posts
