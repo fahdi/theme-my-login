@@ -99,6 +99,7 @@ class Theme_My_Login {
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
 		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
+		add_filter( 'tml_redirect_url', array( &$this, 'tml_redirect_url' ), 10, 2 );
 
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
@@ -462,10 +463,57 @@ class Theme_My_Login {
 		return apply_filters( 'tml_page_link', $link, $query );
 	}
 
+	/**
+	 * Changes login page link to custom permalink
+	 *
+	 * Callback for "page_link" filter in get_page_link()
+	 *
+	 * @see get_page_link()
+	 * @since 6.2
+	 * @access public
+	 *
+	 * @param string $link Page link
+	 * @param int $id Page ID
+	 * @return string Page link
+	 */
 	function page_link( $link, $id ) {
 		if ( $this->is_login_page( $id ) )
 			return $this->get_login_page_link();
 		return $link;
+	}
+
+	/**
+	 * Changes redirect URL to login page permalink for specific actions
+	 *
+	 * Callback for "tml_redirect_url" filter in Theme_My_Login_Template::get_redirect_url()
+	 *
+	 * @since 6.2
+	 * @access public
+	 *
+	 * @param string $url Redirect URL
+	 * @param string $action Requested action
+	 * @return string Redirect URL
+	 */
+	function tml_redirect_url( $url, $action ) {
+		global $wp_rewrite;
+
+		if ( $wp_rewrite->using_permalinks() && $this->is_login_page() && $this->request_action == $action ) {
+			if ( $slug = $this->options->get_option( 'permalinks', $action ) ) {
+				switch ( $action ) {
+					case 'lostpassword' :
+					case 'retrievepassword' :
+					case 'register' :
+						$permalink = $this->get_login_page_link();
+
+						$parsed_permalink = parse_url( $permalink );
+						$parsed_url = parse_url( $url );
+
+						$url = str_replace( $parsed_url['path'], $parsed_permalink['path'], $url );
+						break;
+				}
+			}
+		}
+		return $url;
 	}
 
 	/**
