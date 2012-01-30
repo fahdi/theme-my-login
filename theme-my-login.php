@@ -50,15 +50,7 @@ require_once( TML_ABSPATH . '/includes/class-theme-my-login-widget.php' );
  * @global object $theme_my_login_object
  * @since 6.0
  */
-$GLOBALS['theme_my_login_object'] =& new Theme_My_Login();
-
-/**
- * Holds the reference to @see $theme_my_login_object
- * Use this global for interfacing
- * @global object $theme_my_login
- * @since 1.0
- */
-$GLOBALS['theme_my_login'] =& $GLOBALS['theme_my_login_object'];
+$GLOBALS['theme_my_login'] =& new Theme_My_Login();
 
 // Load active modules
 foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
@@ -100,7 +92,8 @@ if ( !function_exists( 'theme_my_login' ) ) :
  * @param string|array $args Template tag arguments
  */
 function theme_my_login( $args = '' ) {
-	echo $GLOBALS['theme_my_login']->shortcode( wp_parse_args( $args ) );
+	global $theme_my_login;
+	echo $theme_my_login->shortcode( wp_parse_args( $args ) );
 }
 endif;
 

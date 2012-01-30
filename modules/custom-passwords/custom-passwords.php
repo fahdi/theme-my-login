@@ -45,10 +45,12 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
 	function ms_password_fields( &$template ) {
+		global $theme_my_login;
+
 		$errors = array();
-		foreach ( $GLOBALS['theme_my_login']->errors->get_error_codes() as $code ) {
+		foreach ( $theme_my_login->errors->get_error_codes() as $code ) {
 			if ( in_array( $code, array( 'empty_password', 'password_mismatch', 'password_length' ) ) )
-				$errors[] = $GLOBALS['theme_my_login']->errors->get_error_message( $code );
+				$errors[] = $theme_my_login->errors->get_error_message( $code );
 		}
 	?>
 	<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>

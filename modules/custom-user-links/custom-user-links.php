@@ -26,6 +26,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 * @return array New user links
 	 */
 	function get_user_links( $links = array() ) {
+		global $theme_my_login;
 
 		if ( !is_user_logged_in() )
 			return $links;
@@ -33,8 +34,8 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 		$current_user = wp_get_current_user();
 
 		foreach( (array) $current_user->roles as $role ) {
-			if ( false !== $GLOBALS['theme_my_login']->options->get_option( array( 'user_links', $role ) ) ) {
-				$links = $GLOBALS['theme_my_login']->options->get_option( array( 'user_links', $role ) );
+			if ( false !== $theme_my_login->options->get_option( array( 'user_links', $role ) ) ) {
+				$links = $theme_my_login->options->get_option( array( 'user_links', $role ) );
 				break;
 			}
 		}

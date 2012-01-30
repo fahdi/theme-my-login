@@ -4,9 +4,6 @@ If you would like to edit this file, copy it to your current theme's directory a
 Theme My Login will always look in your theme's directory first, before using this default template.
 */
 
-$GLOBALS['current_user'] = $current_user = wp_get_current_user();
-$GLOBALS['profileuser'] = $profileuser = get_user_to_edit( $current_user->ID );
-
 $user_can_edit = false;
 foreach ( array( 'posts', 'pages' ) as $post_cap )
 	$user_can_edit |= current_user_can( "edit_$post_cap" );
@@ -31,7 +28,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<td><label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php checked( 'false', $profileuser->rich_editing ); ?> /> <?php _e( 'Disable the visual editor when writing', 'theme-my-login' ); ?></label></td>
 		</tr>
 		<?php endif; ?>
-		<?php if ( count( $GLOBALS['_wp_admin_css_colors'] ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
+		<?php if ( count( $wp_admin_css_colors ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
 		<tr>
 			<th scope="row"><?php _e( 'Admin Color Scheme', 'theme-my-login' )?></th>
 			<td><?php do_action( 'admin_color_scheme_picker' ); ?></td>
@@ -46,7 +43,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 		<?php endif; ?>
 		<?php if ( function_exists( '_get_admin_bar_pref' ) ) : ?>
 		<tr class="show-admin-bar">
-			<?php if ( version_compare( $GLOBALS['wp_version'], '3.3', '>=' ) ) : ?>
+			<?php if ( version_compare( $wp_version, '3.3', '>=' ) ) : ?>
 			<th scope="row"><?php _e('Toolbar')?></th>
 			<td>
 				<fieldset>

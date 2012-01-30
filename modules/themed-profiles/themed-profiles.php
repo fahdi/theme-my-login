@@ -22,20 +22,20 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function init() {
-		global $current_user, $pagenow;
+		global $theme_my_login, $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-        	$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
+        	$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
 			$user_role = reset( $current_user->roles );
 			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
-                if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
+                if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
                 	if ( !empty( $_GET ) )
                 		$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
 					wp_redirect( $redirect_to );
                     exit;
                 }
             } else {
-            	if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
+            	if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
                 	wp_redirect( $redirect_to );
                 	exit();
                 }
@@ -52,10 +52,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function show_admin_bar( $show_admin_bar ) {
-		global $current_user;
+		global $theme_my_login, $current_user;
 
 		$user_role = reset( $current_user->roles );
-		if ( $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
+		if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
 			return false;
 
 		return $show_admin_bar;
@@ -70,22 +70,24 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function template_redirect() {
-		if ( $GLOBALS['theme_my_login']->is_login_page() ) {
-			if ( 'profile' == $GLOBALS['theme_my_login']->request_action ) {
+		global $theme_my_login;
+
+		if ( $theme_my_login->is_login_page() ) {
+			if ( 'profile' == $theme_my_login->request_action ) {
 				if ( !is_user_logged_in() ) {
 					// Redirect to login page if not logged in
-					$redirect_to = add_query_arg( 'reauth', 1, $GLOBALS['theme_my_login']->get_login_page_link() );
+					$redirect_to = add_query_arg( 'reauth', 1, $theme_my_login->get_login_page_link() );
 					wp_redirect( $redirect_to );
 					exit();
-				} elseif ( $GLOBALS['theme_my_login']->request_instance ) {
+				} elseif ( $theme_my_login->request_instance ) {
 					// Remove instance if instance requested
 					$redirect_to = remove_query_arg( array( 'instance' ) );
 					wp_redirect( $redirect_to );
 					exit();
 				}
-			} elseif ( is_user_logged_in() && 'logout' != $GLOBALS['theme_my_login']->request_action ) {
+			} elseif ( is_user_logged_in() && 'logout' != $theme_my_login->request_action ) {
 				// Redirect to profile if trying to access login page while logged in
-				$redirect_to = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
+				$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
 				wp_redirect( $redirect_to );
 				exit();
 			}
@@ -102,6 +104,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function profile_action() {
+		global $theme_my_login;
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
@@ -144,11 +147,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				exit();
 			}
 
-			$GLOBALS['theme_my_login']->errors = $errors;
+			$theme_my_login->errors = $errors;
 		}
 
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
-			$GLOBALS['theme_my_login']->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
+			$theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
 	}
 
 	/**
@@ -163,6 +166,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
 	function get_profile_form( &$template ) {
+		global $current_user, $profileuser, $_wp_admin_css_colors, $wp_version;
+
+		$current_user = wp_get_current_user();
+		$profileuser = get_user_to_edit( $current_user->ID );
+
 		$_template = array();
 		// Allow template override via shortcode or template tag args
 		if ( !empty( $template->options['profile_template'] ) )
@@ -170,7 +178,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		// Default template
 		$_template[] = 'profile-form.php';
 		// Load template
-		$template->get_template( $_template );
+		$template->get_template( $_template, '', true, compact( 'current_user', 'profileuser', '_wp_admin_css_colors', 'wp_version' ) );
 	}
 
 	/**
@@ -188,9 +196,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @return string The filtered link
 	 */
 	function site_url( $url, $path, $orig_scheme = '' ) {
+		global $theme_my_login;
+
 		if ( strpos( $url, 'profile.php' ) !== false ) {
 			$parsed_url = parse_url( $url );
-			$url = add_query_arg( 'action', 'profile', $GLOBALS['theme_my_login']->get_login_page_link() );
+			$url = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
 			if ( isset( $parsed_url['query'] ) ) {
 				wp_parse_str( $parsed_url['query'], $r );
 				foreach ( $r as $k => $v ) {
@@ -217,7 +227,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @return string The filtered title
 	 */
 	function tml_title( $title, $action ) {
-		if ( 'profile' == $action && is_user_logged_in() && '' == $GLOBALS['theme_my_login']->request_instance )
+		global $theme_my_login;
+		if ( 'profile' == $action && is_user_logged_in() && '' == $theme_my_login->request_instance )
 			$title = __( 'Your Profile', 'theme-my-login' );
 		return $title;
 	}

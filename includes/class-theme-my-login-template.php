@@ -173,9 +173,9 @@ class Theme_My_Login_Template {
 	 * @access public
 	 */
 	function get_errors() {
-		global $error;
+		global $theme_my_login, $error;
 
-		$wp_error =& $GLOBALS['theme_my_login']->errors;
+		$wp_error =& $theme_my_login->errors;
 
 		if ( empty( $wp_error ) )
 			$wp_error = new WP_Error();
@@ -230,11 +230,13 @@ class Theme_My_Login_Template {
 	 * @return string The requested action URL
 	 */
 	function get_action_url( $action = 'login', $instance = '' ) {
+		global $theme_my_login;
+
 		if ( empty( $instance ) )
 			$instance = $this->instance;
 
-		if ( ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) || $GLOBALS['theme_my_login']->is_login_page() ) {
-			$url = $GLOBALS['theme_my_login']->get_login_page_link( 'action=' . $action );
+		if ( ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) || $theme_my_login->is_login_page() ) {
+			$url = $theme_my_login->get_login_page_link( 'action=' . $action );
 		} else {
 			if ( empty( $instance ) )
 				$url = Theme_My_Login::get_current_url( array( 'action' => $action ) );
@@ -402,11 +404,10 @@ class Theme_My_Login_Template {
 	 * @return string|bool Template path if found, false if not
 	 */
 	function get_template( $template_names, $template_path = '', $load = true, $args = array() ) {
+		global $theme_my_login;
+
 		// Shothand reference to this
 		$template =& $this;
-
-		// Shorthand reference to $theme_my_login
-		$theme_my_login =& $GLOBALS['theme_my_login'];
 
 		// Easy access to current user
 		$current_user = wp_get_current_user();
@@ -568,13 +569,15 @@ class Theme_My_Login_Template {
 	 * @param array $options Instance options
 	 */
 	function __construct( $options = '' ) {
+		global $theme_my_login;
+
 		$this->load_options( $options );
 		
 		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : '';
 		$this->instance = $this->options['instance'];
-		if ( $GLOBALS['theme_my_login']->request_instance == $this->instance ) {
+		if ( $theme_my_login->request_instance == $this->instance ) {
 			$this->is_active = true;
-			$this->action = $GLOBALS['theme_my_login']->request_action;
+			$this->action = $theme_my_login->request_action;
 		}
 	}
 }

@@ -396,6 +396,8 @@ class Theme_My_Login {
 	 * @access public
 	 */
 	function wp() {
+		global $wp_version;
+
 		if ( $this->is_login_page() ) {
 			remove_action( 'wp_head', 'feed_links', 2 );
 			remove_action( 'wp_head', 'feed_links_extra', 3 );
@@ -407,7 +409,7 @@ class Theme_My_Login {
 			remove_action( 'wp_head', 'rel_canonical' );
 
 			// Don't index any of these forms
-			if ( version_compare( $GLOBALS['wp_version'], '3.3', '<' ) ) {
+			if ( version_compare( $wp_version, '3.3', '<' ) ) {
 				add_filter( 'pre_option_blog_public', '__return_zero' );
 				add_action( 'login_head', 'noindex' );
 			} else {
@@ -764,7 +766,8 @@ class Theme_My_Login {
 		if ( !$this->is_login_page() )
 			return;
 
-		switch ( $this->request_action ) {
+		$action = empty( $this->request_action ) ? 'login' : $this->request_action;
+		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
 			case 'register' :
@@ -776,7 +779,6 @@ if(typeof wpOnload=='function')wpOnload()
 <?php
 				break;
 			case 'login' :
-			default :
 				$user_login = '';
 				if ( isset($_POST['log']) )
 					$user_login = ( 'incorrect_password' == $this->errors->get_error_code() || 'empty_password' == $this->errors->get_error_code() ) ? esc_attr( stripslashes( $_POST['log'] ) ) : '';
@@ -914,7 +916,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return bool|WP_Error True: when finish. WP_Error on error
 	 */
 	function retrieve_password() {
-		global $wpdb;
+		global $wpdb, $current_site;
 
 		$errors = new WP_Error();
 
@@ -969,7 +971,7 @@ if(typeof wpOnload=='function')wpOnload()
 		$message .= '<' . network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) . ">\r\n";
 
 		if ( is_multisite() ) {
-			$blogname = $GLOBALS['current_site']->site_name;
+			$blogname = $current_site->site_name;
 		} else {
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 			// we want to reverse this for the plain text arena of emails.

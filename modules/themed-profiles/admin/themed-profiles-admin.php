@@ -33,9 +33,9 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function display_settings() {
-		global $wp_roles;
+		global $theme_my_login, $wp_roles;
 
-		$options = $GLOBALS['theme_my_login']->options->get_option( array( 'themed_profiles' ), array() );
+		$options = $theme_my_login->options->get_option( array( 'themed_profiles' ), array() );
 		?>
 <table class="form-table">
     <tr valign="top">

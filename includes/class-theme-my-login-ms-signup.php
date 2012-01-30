@@ -40,13 +40,15 @@ class Theme_My_Login_MS_Signup {
 	 * @access public
 	 */
 	function __construct() {
+		global $theme_my_login;
+
 		add_action( 'tml_request_register', array( &$this, 'tml_request_register' ) );
 		add_action( 'tml_request_activate', array( &$this, 'tml_request_activate' ) );
 		add_action( 'tml_display_register', array( &$this, 'tml_display_register' ) );
 		add_action( 'tml_display_activate', array( &$this, 'tml_display_activate' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
 
-		add_action( 'switch_blog', array( &$GLOBALS['theme_my_login'], 'init_options' ) );
+		add_action( 'switch_blog', array( &$theme_my_login, 'init_options' ) );
 		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 10, 2 );
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
@@ -64,9 +66,9 @@ class Theme_My_Login_MS_Signup {
 	 * @param object $theme_my_login Theme_My_Login object
 	 */
 	function tml_request_register( &$theme_my_login ) {
-		global $current_site;
+		global $current_site, $wp_version;
 
-		if ( version_compare( $GLOBALS['wp_version'], '3.3', '<' ) ) {
+		if ( version_compare( $wp_version, '3.3', '<' ) ) {
 			add_filter( 'pre_option_blog_public', '__return_zero' );
 			add_action( 'wp_head', 'noindex' );
 		} else {
@@ -97,7 +99,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param object $template Theme_My_Login_Template object
 	 */
 	function tml_display_register( &$template ) {
-		global $wpdb, $blogname, $blog_title, $domain, $path, $active_signup;
+		global $theme_my_login, $wpdb, $blogname, $blog_title, $domain, $path, $active_signup;
 
 		$this->theme_my_login_template =& $template;
 
@@ -135,7 +137,7 @@ class Theme_My_Login_MS_Signup {
 						$result = wpmu_validate_user_signup( $_POST['user_name'], $_POST['user_email'] );
 						extract( $result );
 
-						$GLOBALS['theme_my_login']->errors = $errors;
+						$theme_my_login->errors = $errors;
 
 						if ( $errors->get_error_code() ) {
 							$this->signup_user( $user_name, $user_email );
@@ -166,7 +168,7 @@ class Theme_My_Login_MS_Signup {
 						$result = wpmu_validate_user_signup( $_POST['user_name'], $_POST['user_email'] );
 						extract( $result );
 
-						$GLOBALS['theme_my_login']->errors = $errors;
+						$theme_my_login->errors = $errors;
 
 						if ( $errors->get_error_code() ) {
 							$this->signup_user( $user_name, $user_email );
@@ -176,7 +178,7 @@ class Theme_My_Login_MS_Signup {
 						$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'] );
 						extract( $result );
 
-						$GLOBALS['theme_my_login']->errors = $errors;
+						$theme_my_login->errors = $errors;
 
 						if ( $errors->get_error_code() ) {
 							$this->signup_blog( $user_name, $user_email, $blogname, $blog_title );
@@ -217,7 +219,7 @@ class Theme_My_Login_MS_Signup {
 					$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'], $current_user );
 					extract( $result );
 
-					$GLOBALS['theme_my_login']->errors = $errors;
+					$theme_my_login->errors = $errors;
 
 					if ( $errors->get_error_code() ) {
 						$this->signup_another_blog( $blogname, $blog_title );
@@ -287,12 +289,12 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $user_email The posted user e-mail
 	 */
 	function signup_user( $user_name = '', $user_email = '' ) {
-		global $current_site, $active_signup;
+		global $theme_my_login, $current_site, $active_signup;
 
 		$template =& $this->theme_my_login_template;
 
 		// allow definition of default variables
-		$filtered_results = apply_filters( 'signup_user_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'errors' => $GLOBALS['theme_my_login']->errors ) );
+		$filtered_results = apply_filters( 'signup_user_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'errors' => $theme_my_login->errors ) );
 		$user_name = $filtered_results['user_name'];
 		$user_email = $filtered_results['user_email'];
 		$errors = $filtered_results['errors'];
@@ -316,12 +318,12 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blog_title The posted blog title
 	 */
 	function signup_blog( $user_name = '', $user_email = '', $blogname = '', $blog_title = '' ) {
-		global $current_site;
+		global $theme_my_login, $current_site;
 
 		$template =& $this->theme_my_login_template;
 
 		// allow definition of default variables
-		$filtered_results = apply_filters( 'signup_blog_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $GLOBALS['theme_my_login']->errors ) );
+		$filtered_results = apply_filters( 'signup_blog_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $theme_my_login->errors ) );
 		$user_name = $filtered_results['user_name'];
 		$user_email = $filtered_results['user_email'];
 		$blogname = $filtered_results['blogname'];
@@ -348,12 +350,12 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blog_title The posted blog title
 	 */
 	function signup_another_blog( $blogname = '', $blog_title = '' ) {
-		global $current_site;
+		global $theme_my_login, $current_site;
 
 		$template =& $this->theme_my_login_template;
 
 		// allow definition of default variables
-		$filtered_results = apply_filters( 'signup_another_blog_init', array( 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $GLOBALS['theme_my_login']->errors ) );
+		$filtered_results = apply_filters( 'signup_another_blog_init', array( 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $theme_my_login->errors ) );
 		$blogname = $filtered_results['blogname'];
 		$blog_title = $filtered_results['blog_title'];
 		$errors = $filtered_results['errors'];
@@ -514,7 +516,7 @@ class Theme_My_Login_MS_Signup {
 	 * @return string The modified URL
 	 */
 	function site_url( $url, $path, $orig_scheme ) {
-		global $pagenow;
+		global $theme_my_login, $pagenow;
 
 		$actions = array( 'wp-signup.php' => 'register', 'wp-activate.php' => 'activate', 'wp-login.php' => '' );
 
@@ -540,7 +542,7 @@ class Theme_My_Login_MS_Signup {
 					$query = array_merge( $query, (array) $r );
 
 				// Get the login page link along with the query
-				$url = $GLOBALS['theme_my_login']->get_login_page_link( $query );
+				$url = $theme_my_login->get_login_page_link( $query );
 
 				// Check if HTTPS is needed
 				if ( 'https' == strtolower( $orig_scheme ) )
