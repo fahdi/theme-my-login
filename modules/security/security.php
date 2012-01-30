@@ -14,6 +14,26 @@ if ( !class_exists( 'Theme_My_Login_Security' ) ) :
  */
 class Theme_My_Login_Security extends Theme_My_Login_Module {
 	/**
+	 * Blocks entire site if user is not logged in and private site is enabled
+	 *
+	 * Callback for "template_redirect" hook in the file wp-settings.php
+	 *
+	 * @since 6.2
+	 * @access public
+	 */
+	function template_redirect() {
+		global $theme_my_login;
+
+		if ( $theme_my_login->options->get_option( array( 'security', 'private_site' ) ) ) {
+			if ( !( is_user_logged_in() || $theme_my_login->is_login_page() ) ) {
+				$redirect_to = apply_filters( 'tml_security_private_site_redirect', wp_login_url( $_SERVER['REQUEST_URI'], true ) );
+				wp_safe_redirect( $redirect_to );
+				exit;
+			}
+		}
+	}
+
+	/**
 	 * Blocks locked users from logging in
 	 *
 	 * Callback for "authenticate" hook in function wp_authenticate()
@@ -336,14 +356,15 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 		$options = (array) $options;
 		// Assign our options
 		$options['security'] = array(
+			'private_site' => 0,
 			'failed_login' => array(
 				'threshold' => 5,
 				'threshold_duration' => 1,
 				'threshold_duration_unit' => 'hour',
 				'lockout_duration' => 24,
 				'lockout_duration_unit' => 'hour'
-				)
-			);
+			)
+		);
 		return $options;
 	}
 
@@ -354,12 +375,11 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @access public
 	 */
 	function load() {
-		// Initialize
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 
-		// Block locked users from logging in
+		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 		add_action( 'authenticate', array( &$this, 'authenticate' ), 100, 3 );
-		// Block locked users from password reset
+
 		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
 	}
 }
