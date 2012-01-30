@@ -347,9 +347,9 @@ class Theme_My_Login {
 									$redirect_to = get_dashboard_url( $user->ID );
 								elseif ( !$user->has_cap( 'edit_posts' ) )
 									$redirect_to = admin_url( 'profile.php' );
-								wp_safe_redirect( $redirect_to );
-								exit();
 							}
+							wp_safe_redirect( $redirect_to );
+							exit();
 						}
 
 						$errors = $user;
