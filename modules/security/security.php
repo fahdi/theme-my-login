@@ -118,6 +118,37 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 		return $allow;
 	}
 
+	function show_user_profile( $profileuser ) {
+		if ( !current_user_can( 'manage_users' ) )
+			return;
+
+		if ( $failed_login_attempts = $this->get_failed_login_attempts( $profileuser->ID ) ) : ?>
+			<h3><?php _e( 'Failed Login Attempts', 'theme-my-login' ); ?></h3>
+
+			<table class="form-table">
+			<tr>
+				<th scope="col"><?php _e( 'IP Address', 'theme-my-login' ); ?></th>
+				<th scope="col"><?php _e( 'Date', 'theme-my-login' ); ?></th>
+			</tr>
+			<?php foreach ( $failed_login_attempts as $attempt ) :
+				$t_time = date_i18n( __( 'Y/m/d g:i:s A' ), $attempt['time'] );
+
+				$time_diff = time() - $attempt['time'];
+
+				if ( $time_diff > 0 && $time_diff < 24*60*60 )
+					$h_time = sprintf( __( '%s ago' ), human_time_diff( $attempt['time'] ) );
+				else
+					$h_time = date_i18n( __( 'Y/m/d' ), $attempt['time'] );
+			?>
+			<tr>
+				<td><?php echo $attempt['ip']; ?></td>
+				<td><abbr title="<?php echo $t_time; ?>"><?php echo $h_time; ?></abbr></td>
+			</tr>
+			<?php endforeach; ?>
+			</table>
+		<?php endif;
+	}
+
 	/**
 	 * Locks a user
 	 *
@@ -379,6 +410,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 		add_action( 'authenticate', array( &$this, 'authenticate' ), 100, 3 );
+		add_action( 'show_user_profile', array( &$this, 'show_user_profile' ) );
+		add_action( 'edit_user_profile', array( &$this, 'show_user_profile' ) );
 
 		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
 	}
