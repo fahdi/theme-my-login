@@ -196,9 +196,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @return string The filtered link
 	 */
 	function site_url( $url, $path, $orig_scheme = '' ) {
-		global $theme_my_login;
+		global $theme_my_login, $current_user;
 
 		if ( strpos( $url, 'profile.php' ) !== false ) {
+			$user_role = reset( $current_user->roles );
+
+			if ( $user_role && !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
+				return $url;
+					
 			$parsed_url = parse_url( $url );
 			$url = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
 			if ( isset( $parsed_url['query'] ) ) {
