@@ -196,9 +196,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @return string The filtered link
 	 */
 	function site_url( $url, $path, $orig_scheme = '' ) {
-		global $theme_my_login, $current_user;
+		global $theme_my_login, $current_user, $pagenow;
 
-		if ( strpos( $url, 'profile.php' ) !== false ) {
+		if ( 'profile.php' != $pagenow && strpos( $url, 'profile.php' ) !== false ) {
 			$user_role = reset( $current_user->roles );
 
 			if ( $user_role && !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
