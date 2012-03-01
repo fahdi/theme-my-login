@@ -187,7 +187,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 */
 	function save_settings( $settings ) {
 		$settings['security'] = array(
-			'private_site' => isset( $settings['security']['private_site'] ),
+			'private_site' => isset( $_POST['theme_my_login']['security']['private_site'] ),
 			'failed_login' => array(
 				'threshold' => absint( $settings['security']['failed_login']['threshold'] ),
 				'threshold_duration' => absint( $settings['security']['failed_login']['threshold_duration'] ),
