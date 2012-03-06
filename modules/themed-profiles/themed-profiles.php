@@ -25,7 +25,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		global $theme_my_login, $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-        	$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
+        	$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
 			$user_role = reset( $current_user->roles );
 			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
                 if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
@@ -76,7 +76,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			if ( 'profile' == $theme_my_login->request_action ) {
 				if ( !is_user_logged_in() ) {
 					// Redirect to login page if not logged in
-					$redirect_to = add_query_arg( 'reauth', 1, $theme_my_login->get_login_page_link() );
+					$redirect_to = $theme_my_login->get_login_page_link( array( 'reauth' => 1 ) );
 					wp_redirect( $redirect_to );
 					exit();
 				} elseif ( $theme_my_login->request_instance ) {
@@ -87,7 +87,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				}
 			} elseif ( is_user_logged_in() && 'logout' != $theme_my_login->request_action ) {
 				// Redirect to profile if trying to access login page while logged in
-				$redirect_to = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
+				$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
 				wp_redirect( $redirect_to );
 				exit();
 			}
@@ -211,7 +211,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				return $url;
 					
 			$parsed_url = parse_url( $url );
-			$url = add_query_arg( 'action', 'profile', $theme_my_login->get_login_page_link() );
+			$url = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
 			if ( isset( $parsed_url['query'] ) ) {
 				wp_parse_str( $parsed_url['query'], $r );
 				foreach ( $r as $k => $v ) {

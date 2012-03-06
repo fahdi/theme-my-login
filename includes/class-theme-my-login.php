@@ -125,6 +125,7 @@ class Theme_My_Login {
 			'enable_css' => 1,
 			'email_login' => 1,
 			'active_modules' => array(),
+			'permalinks' => array(),
 			'initial_nag' => 1
 		) ) );
 	}

@@ -59,6 +59,17 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 </table><?php
 	}
 
+	function display_permalink_settings() {
+		global $theme_my_login;
+		?>
+	<tr valign="top">
+		<th scope="row"><label for="theme_my_login_permalinks_profile"><?php _e( 'Profile', 'theme-my-login' ); ?></label></th>
+		<td>
+			<input name="theme_my_login[permalinks][profile]" type="text" id="theme_my_login_permalinks_profile" value="<?php echo $theme_my_login->options->get_option( array( 'permalinks', 'profile' ) ); ?>" class="regular-text" />
+		</td>
+	</tr><?php
+	}
+
 	/**
 	 * Sanitizes settings
 	 *
@@ -112,6 +123,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 		add_action( 'tml_activate_themed-profiles/themed-profiles.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
+
+		add_action( 'tml_settings_permalinks', array( &$this, 'display_permalink_settings' ) );
 	}
 }
 
