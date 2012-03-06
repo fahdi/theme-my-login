@@ -83,6 +83,25 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	}
 
 	/**
+	 * Applies all password reset mail filters
+	 *
+	 * Callback for "password_reset" hook in Theme_My_Login::reset_password()
+	 *
+	 * @see Theme_My_Login::reset_password()
+	 * @since 6.2
+	 * @access public
+	 */
+	function apply_password_reset_filters() {
+		global $theme_my_login;
+		$options =& $theme_my_login->options->get_option( array( 'email', 'reset_pass' ) );
+		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
+		add_filter( 'password_change_notification_mail_to', array( &$this, 'password_change_notification_mail_to_filter' ) );
+		add_filter( 'password_change_notification_title', array( &$this, 'password_change_notification_title_filter' ), 10, 2 );
+		add_filter( 'password_change_notification_message', array( &$this, 'password_change_notification_message_filter' ), 10, 2 );
+		add_filter( 'send_password_change_notification', array( &$this, 'send_password_change_notification_filter' ) );
+	}
+
+	/**
 	 * Applies all new user mail filters
 	 *
 	 * Callback for "register_post" hook in method Theme_My_Login::register_new_user()
@@ -838,6 +857,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		add_filter( 'wp_mail_content_type', array( &$this, 'mail_content_type_filter') );
 
 		add_action( 'retrieve_password', array( &$this, 'apply_retrieve_pass_filters' ) );
+		add_action( 'password_reset', array( &$this, 'apply_password_reset_filters' ) );
 		add_action( 'tml_new_user_notification', array( &$this, 'apply_new_user_filters' ) );
 
 		remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
