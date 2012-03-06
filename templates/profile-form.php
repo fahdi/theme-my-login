@@ -4,6 +4,8 @@ If you would like to edit this file, copy it to your current theme's directory a
 Theme My Login will always look in your theme's directory first, before using this default template.
 */
 
+$user_role = reset( $profileuser->roles );
+
 $user_can_edit = false;
 foreach ( array( 'posts', 'pages' ) as $post_cap )
 	$user_can_edit |= current_user_can( "edit_$post_cap" );
@@ -41,16 +43,18 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( !empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e( 'Enable keyboard shortcuts for comment moderation.', 'theme-my-login' ); ?></label> <?php _e( '<a href="http://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>', 'theme-my-login' ); ?></td>
 		</tr>
 		<?php endif; ?>
+
+		<?php if ( !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) : ?>
 		<?php if ( function_exists( '_get_admin_bar_pref' ) ) : ?>
 		<tr class="show-admin-bar">
 			<?php if ( version_compare( $wp_version, '3.3', '>=' ) ) : ?>
-			<th scope="row"><?php _e('Toolbar')?></th>
+			<th scope="row"><?php _e( 'Toolbar', 'theme-my-login' )?></th>
 			<td>
 				<fieldset>
-					<legend class="screen-reader-text"><span><?php _e('Toolbar') ?></span></legend>
+					<legend class="screen-reader-text"><span><?php _e( 'Toolbar', 'theme-my-login' ) ?></span></legend>
 					<label for="admin_bar_front">
 						<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
-						<?php _e( 'Show Toolbar when viewing site' ); ?>
+						<?php _e( 'Show Toolbar when viewing site', 'theme-my-login' ); ?>
 					</label>
 					<br />
 				</fieldset>
@@ -74,6 +78,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<?php endif; ?>
 		</tr>
 		<?php endif; // function exists ?>
+		<?php endif; // restrict admin ?>
 		<?php do_action( 'personal_options', $profileuser ); ?>
 		</table>
 		<?php do_action( 'profile_personal_options', $profileuser ); ?>
