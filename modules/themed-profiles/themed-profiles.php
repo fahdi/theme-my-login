@@ -171,10 +171,16 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		$current_user = wp_get_current_user();
 		$profileuser = get_user_to_edit( $current_user->ID );
 
+		$role = reset( $profileuser->roles );
+
 		$_template = array();
 		// Allow template override via shortcode or template tag args
 		if ( !empty( $template->options['profile_template'] ) )
 			$_template[] = $template->options['profile_template'];
+		// Role template
+		if ( !empty( $template->options["profile_template_$role"] ) )
+			$_template[] = $template->options["profile_template_$role"];
+		$_template[] = "profile-form-$role.php";
 		// Default template
 		$_template[] = 'profile-form.php';
 		// Load template
