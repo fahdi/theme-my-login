@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
-Tested up to: 3.2.1
+Tested up to: 3.4
 Stable tag: 6.1.4
 
 Themes the WordPress login pages according to your theme.
@@ -11,7 +11,9 @@ Themes the WordPress login pages according to your theme.
 
 == Description ==
 
-This plugin themes the WordPress login, registration and forgot password pages according to your current theme. It replaces the wp-login.php file by using a page template from your theme. Also includes a widget for sidebar login.
+This plugin themes the WordPress login, registration and forgot password pages according to your current theme.
+It creates a page to use in place of wp-login.php, using a page template from your theme.
+Also includes a widget for sidebar login.
 
 
 = Features =
@@ -41,12 +43,25 @@ Please visit http://www.jfarthing.com/docs/category/theme-my-login first and the
 == Changelog ==
 
 = 6.2 =
-* Require WP 3.1+
-* Add custom permalinks for default actions
-* Add option to Security module to require login to view site
-* Add option to Themed Profiles module to theme profiles per user role
-* Add option to Themed Profiles module to restrict admin access per user role
+* Fix FORCE_SSL_ADMIN logic
+* Add tabindex to password fields
+* Fix removal of actions from "tml_new_user_registered" action in User Moderation module
+* Add %username% variable to Custom User Links module
+* Add custom permalinks to core
 * Add option to disable e-mail login
+* Fix potential XSS attack vulnerability
+* Update admin bar settings for 3.3 in Themed Profiles module
+* Update multisite templates for 3.3
+* Fix autofocus scripts to only load on login page
+* Require 3.1+
+* Fix broken login redirect logic
+* Add option to require login to view site in Security module
+* Don't change profile URL for non-themed roles in Themed Profiles module
+* Display failed login attempts to administrators on user profiles in Security module
+* Fix capability check for non-standard table prefix in User Moderation module
+* Add separate profile templates per user role in Themed Profiles module
+* Fix password recovery admin e-mail in Custom E-mail module
+* Don't show admin options when admin is blocked in Themed Profiles module
 
 = 6.1.4 =
 * Don't hijack non-related form posts
