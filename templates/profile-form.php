@@ -21,6 +21,8 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<input type="hidden" name="checkuser_id" value="<?php echo $current_user->ID; ?>" />
 		</p>
 
+		<?php if ( !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) && !has_action( 'personal_options' ) ): ?>
+
 		<h3><?php _e( 'Personal Options', 'theme-my-login' ); ?></h3>
 
 		<table class="form-table">
@@ -43,8 +45,6 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( !empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e( 'Enable keyboard shortcuts for comment moderation.', 'theme-my-login' ); ?></label> <?php _e( '<a href="http://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>', 'theme-my-login' ); ?></td>
 		</tr>
 		<?php endif; ?>
-
-		<?php if ( !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) : ?>
 		<?php if ( function_exists( '_get_admin_bar_pref' ) ) : ?>
 		<tr class="show-admin-bar">
 			<?php if ( version_compare( $wp_version, '3.3', '>=' ) ) : ?>
@@ -78,9 +78,10 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<?php endif; ?>
 		</tr>
 		<?php endif; // function exists ?>
-		<?php endif; // restrict admin ?>
 		<?php do_action( 'personal_options', $profileuser ); ?>
 		</table>
+		<?php endif; // restrict admin ?>
+
 		<?php do_action( 'profile_personal_options', $profileuser ); ?>
 
 		<h3><?php _e( 'Name', 'theme-my-login' ) ?></h3>
