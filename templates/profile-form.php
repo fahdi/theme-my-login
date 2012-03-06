@@ -30,7 +30,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<td><label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php checked( 'false', $profileuser->rich_editing ); ?> /> <?php _e( 'Disable the visual editor when writing', 'theme-my-login' ); ?></label></td>
 		</tr>
 		<?php endif; ?>
-		<?php if ( count( $wp_admin_css_colors ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
+		<?php if ( count( $_wp_admin_css_colors ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
 		<tr>
 			<th scope="row"><?php _e( 'Admin Color Scheme', 'theme-my-login' )?></th>
 			<td><?php do_action( 'admin_color_scheme_picker' ); ?></td>
