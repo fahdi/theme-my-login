@@ -95,8 +95,8 @@ class Theme_My_Login_Template {
 						break;
 					case 'resetpass':
 					case 'rp':
-						if ( !empty( $template->options['resetpass_template'] ) )
-							$template[] = $template->options['resetpass_template'];
+						if ( !empty( $this->options['resetpass_template'] ) )
+							$template[] = $this->options['resetpass_template'];
 						$template[] = 'resetpass-form.php';
 						break;
 					case 'register':
