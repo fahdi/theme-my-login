@@ -1562,7 +1562,7 @@ msgid "Confirm new password"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.jfarthing.com/wordpress-plugins/theme-my-login/"
+msgid "http://www.jfarthing.com/extend/wordpress-plugins/theme-my-login/"
 msgstr ""
 
 #. Description of the plugin/theme
