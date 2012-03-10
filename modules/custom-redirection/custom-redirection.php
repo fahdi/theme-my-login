@@ -56,6 +56,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
+			if ( is_multisite() && empty( $user->roles ) ) {
+				$user->roles = array( 'subscriber' );
+			}
 			$redirection = array( 'login_type' => 'default' );
 			foreach ( (array) $user->roles as $role ) {
 				if ( $theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
@@ -112,6 +115,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 
 		// Make sure $user object exists and is a WP_User instance
 		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
+			if ( is_multisite() && empty( $user->roles ) ) {
+				$user->roles = array( 'subscriber' );
+			}
 			$redirection = array();
 			foreach ( (array) $user->roles as $role ) {
 				if ( $theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
