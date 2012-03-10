@@ -32,6 +32,9 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 			return $links;
 
 		$current_user = wp_get_current_user();
+		if ( is_multisite() && empty( $current_user->roles ) ) {
+			$current_user->roles = array( 'subscriber' );
+		}
 
 		foreach( (array) $current_user->roles as $role ) {
 			if ( false !== $theme_my_login->options->get_option( array( 'user_links', $role ) ) ) {
