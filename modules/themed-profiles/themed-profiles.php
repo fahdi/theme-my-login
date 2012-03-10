@@ -27,6 +27,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
         if ( is_user_logged_in() && is_admin() ) {
         	$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
 			$user_role = reset( $current_user->roles );
+			if ( is_multisite() && empty( $user_role ) ) {
+				$user_role = 'subscriber';
+			}
 			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
                 if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
                 	if ( !empty( $_GET ) )
@@ -55,6 +58,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		global $theme_my_login, $current_user;
 
 		$user_role = reset( $current_user->roles );
+		if ( is_multisite() && empty( $user_role ) ) {
+			$user_role = 'subscriber';
+		}
+
 		if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
 			return false;
 
@@ -206,6 +213,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 
 		if ( 'profile.php' != $pagenow && strpos( $url, 'profile.php' ) !== false ) {
 			$user_role = reset( $current_user->roles );
+			if ( is_multisite() && empty( $user_role ) ) {
+				$user_role = 'subscriber';
+			}
 
 			if ( $user_role && !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
 				return $url;
