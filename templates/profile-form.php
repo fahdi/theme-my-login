@@ -5,6 +5,9 @@ Theme My Login will always look in your theme's directory first, before using th
 */
 
 $user_role = reset( $profileuser->roles );
+if ( is_multisite() && empty( $user_role ) ) {
+	$user_role = 'subscriber';
+}
 
 $user_can_edit = false;
 foreach ( array( 'posts', 'pages' ) as $post_cap )
