@@ -1,6 +1,5 @@
 === Theme My Login ===
 Contributors: jfarthing84
-Donate link: http://www.jfarthing.com/donate
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.4
@@ -62,6 +61,8 @@ Please visit http://www.jfarthing.com/docs/category/theme-my-login first and the
 * Add separate profile templates per user role in Themed Profiles module
 * Fix password recovery admin e-mail in Custom E-mail module
 * Don't show admin options when admin is blocked in Themed Profiles module
+* Treat multisite users with no role as subscribers in all modules
+* Fix multisite registration bug in Themed Profiles module
 
 = 6.1.4 =
 * Don't hijack non-related form posts
