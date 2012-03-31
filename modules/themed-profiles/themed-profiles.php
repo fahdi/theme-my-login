@@ -80,21 +80,34 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 		global $theme_my_login;
 
 		if ( $theme_my_login->is_login_page() ) {
-			if ( 'profile' == $theme_my_login->request_action ) {
-				if ( !is_user_logged_in() ) {
+			switch ( $theme_my_login->request_action ) {
+				case 'profile' :
 					// Redirect to login page if not logged in
-					$redirect_to = $theme_my_login->get_login_page_link( array( 'reauth' => 1 ) );
-					wp_redirect( $redirect_to );
-					exit();
-				} elseif ( $theme_my_login->request_instance ) {
-					// Remove instance if instance requested
-					$redirect_to = remove_query_arg( array( 'instance' ) );
-					wp_redirect( $redirect_to );
-					exit();
-				}
-			} elseif ( is_user_logged_in() && 'logout' != $theme_my_login->request_action ) {
-				// Redirect to profile if trying to access login page while logged in
-				$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
+					if ( !is_user_logged_in() ) {
+						$redirect_to = $theme_my_login->get_login_page_link( array( 'reauth' => 1 ) );
+						wp_redirect( $redirect_to );
+						exit();
+					}
+					break;
+				case 'logout' :
+					// Allow logout action
+					break;
+				case 'register' :
+					// Allow register action if multisite
+					if ( is_multisite() )
+						break;
+				default :
+					// Redirect to profile for any other action if logged in
+					if ( is_user_logged_in() ) {
+						$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
+						wp_redirect( $redirect_to );
+						exit();
+					}
+			}
+
+			// Remove instance if instance requested
+			if ( $theme_my_login->request_instance ) {
+				$redirect_to = remove_query_arg( array( 'instance' ) );
 				wp_redirect( $redirect_to );
 				exit();
 			}
