@@ -644,10 +644,6 @@ class Theme_My_Login {
 	 * - logged_in_widget - True to display the widget when logged in, false to hide. Defaults to true.
 	 * - show_gravatar - True to display the user's gravatar, false to hide. Defaults to true.
 	 * - gravatar_size - The size of the user's gravatar. Defaults to "50".
-	 * - before_widget - Content to display before widget. Defaults to "<li>".
-	 * - after_widget - Content to display after widget. Defaults to "</li>".
-	 * - before_title - Content to display before the title (if displayed). Defaults to "<h2>".
-	 * - after_title - Content to display after the title (if displayed). Defaults to "</h2>".
 	 *
 	 * @since 6.0
 	 * @access public
@@ -660,8 +656,6 @@ class Theme_My_Login {
 		if ( $this->is_login_page() && in_the_loop() ) {
 			$atts['instance'] = '';
 			$atts['show_title'] = false;
-			$atts['before_widget'] = '';
-			$atts['after_widget'] = '';
 		} else {
 			$atts['instance'] = $this->get_new_instance();
 		}

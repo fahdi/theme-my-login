@@ -541,10 +541,10 @@ class Theme_My_Login_Template {
 			'logged_in_widget' => true,
 			'show_gravatar' => true,
 			'gravatar_size' => 50,
-			'before_widget' => '<li>',
-			'after_widget' => '</li>',
-			'before_title' => '<h2>',
-			'after_title' => '</h2>'
+			'before_widget' => '',
+			'after_widget' => '',
+			'before_title' => '',
+			'after_title' => ''
 		) );
 	}
 
