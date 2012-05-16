@@ -657,7 +657,8 @@ class Theme_My_Login {
 			$atts['instance'] = '';
 			$atts['show_title'] = false;
 		} else {
-			$atts['instance'] = $this->get_new_instance();
+			if ( !isset( $atts['instance'] ) )
+				$atts['instance'] = $this->get_new_instance();
 		}
 
 		$template =& new Theme_My_Login_Template( $atts );
