@@ -293,7 +293,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				continue;
 			$options['themed_profiles'][$role] = array(
 				'theme_profile' => 1,
-				'resrict_admin' => 0
+				'restrict_admin' => 0
 			);
 		}
 		return $options;
