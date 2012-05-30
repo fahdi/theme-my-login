@@ -85,6 +85,9 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	function save_settings( $settings ) {
 		global $wp_roles;
 
+		if ( did_action( 'tml_activate_themed-profiles/themed-profiles.php' ) )
+			return $settings;
+
 		foreach( $wp_roles->get_names() as $role => $label ) {
 			if ( 'pending' == $role )
 				continue;

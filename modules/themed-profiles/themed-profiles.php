@@ -321,6 +321,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	function load() {
 		// Load
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
+		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
 
 		add_action( 'init', array( &$this, 'init' ) );
