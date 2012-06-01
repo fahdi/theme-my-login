@@ -115,7 +115,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 $theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links;
 
 if ( is_admin() )
-	include_once( TML_ABSPATH. '/modules/custom-user-links/admin/custom-user-links-admin.php' );
+	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-user-links/admin/custom-user-links-admin.php' );
 
 endif; // Class exists
 

@@ -42,8 +42,8 @@ class Theme_My_Login_Admin {
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 
-		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
-		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
+		register_activation_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
+		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
 
 	/**
@@ -274,7 +274,7 @@ class Theme_My_Login_Admin {
 	public function display_module_settings() {
 		global $theme_my_login;
 
-		$all_modules = get_plugins( '/' . TML_DIRNAME . '/modules' );
+		$all_modules = get_plugins( '/theme-my-login/modules' );
 		$active_modules = (array) $theme_my_login->get_option( 'active_modules' );
 	?>
 <table class="form-table">
@@ -402,7 +402,7 @@ class Theme_My_Login_Admin {
 		$current = (array) $theme_my_login->get_option( 'active_modules' );
 		if ( !$theme_my_login->is_module_active( $module ) ) {
 			//ob_start();
-			@include ( TML_ABSPATH . '/modules/' . $module );
+			@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 			$current[] = $module;
 			sort( $current );
 			do_action( 'tml_activate_module', trim( $module ) );
@@ -492,10 +492,10 @@ class Theme_My_Login_Admin {
 	public function validate_module( $module ) {
 		if ( validate_file( $module ) )
 			return new WP_Error( 'module_invalid', __( 'Invalid module path.', 'theme-my-login' ) );
-		if ( !file_exists( TML_ABSPATH. '/modules/' . $module ) )
+		if ( !file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
 			return new WP_Error( 'module_not_found', __( 'Module file does not exist.', 'theme-my-login' ) );
 
-		$installed_modules = get_plugins( '/' . TML_DIRNAME . '/modules' );
+		$installed_modules = get_plugins( '/theme-my-login/modules' );
 		if ( !isset( $installed_modules[$module] ) )
 			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
 		return 0;
@@ -634,7 +634,7 @@ class Theme_My_Login_Admin {
 			$page_id = wp_insert_post( $insert );
 		}
 
-		$plugin_data = get_plugin_data( TML_ABSPATH . '/theme-my-login.php' );
+		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
 		$theme_my_login->set_option( 'version', $plugin_data['Version'] );
 		$theme_my_login->set_option( 'page_id', (int) $page_id );
 		$theme_my_login->save();
@@ -677,7 +677,7 @@ class Theme_My_Login_Admin {
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 		// Run module uninstall hooks
-		$modules = get_plugins( '/' . TML_DIRNAME . '/modules' );
+		$modules = get_plugins( '/theme-my-login/modules' );
 		foreach ( array_keys( $modules ) as $module ) {
 			$module = plugin_basename( trim( $module ) );
 
@@ -685,7 +685,7 @@ class Theme_My_Login_Admin {
 			if ( is_wp_error( $valid ) )
 				continue;
 
-			@include ( TML_ABSPATH . '/modules/' . $module );
+			@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 			do_action( 'uninstall_' . trim( $module ) );
 		}
 

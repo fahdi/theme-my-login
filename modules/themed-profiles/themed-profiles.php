@@ -347,7 +347,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 $theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles;
 
 if ( is_admin() )
-	include_once( TML_ABSPATH . '/modules/themed-profiles/admin/themed-profiles-admin.php' );
+	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/themed-profiles/admin/themed-profiles-admin.php' );
 
 endif; // Class exists
 

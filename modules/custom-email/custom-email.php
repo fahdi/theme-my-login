@@ -878,7 +878,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 $theme_my_login_custom_email = new Theme_My_Login_Custom_Email;
 
 if ( is_admin() )
-	include_once( TML_ABSPATH . '/modules/custom-email/admin/custom-email-admin.php' );
+	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-email/admin/custom-email-admin.php' );
 
 endif; // Class exists
 

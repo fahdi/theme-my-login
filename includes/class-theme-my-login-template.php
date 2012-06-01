@@ -433,7 +433,7 @@ class Theme_My_Login_Template {
 		$current_user = wp_get_current_user();
 
 		if ( empty( $template_path ) )
-			$template_path = TML_ABSPATH . '/templates';
+			$template_path = WP_PLUGIN_DIR . '/theme-my-login/templates';
 
 		extract( apply_filters_ref_array( 'tml_template_args', array( $args, &$this ) ) );
 

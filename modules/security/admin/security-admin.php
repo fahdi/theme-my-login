@@ -25,7 +25,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	public function load_users_page() {
 		global $theme_my_login_security;
 
-		wp_enqueue_script( 'tml-security-admin', plugins_url( TML_DIRNAME . '/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
+		wp_enqueue_script( 'tml-security-admin', plugins_url( 'theme-my-login/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
 
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );

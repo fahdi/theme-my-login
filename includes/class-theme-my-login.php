@@ -120,7 +120,7 @@ class Theme_My_Login {
 	public function init() {
 		global $wp;
 
-		load_plugin_textdomain( 'theme-my-login', '', TML_DIRNAME . '/language' );
+		load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
 
 		$this->errors = new WP_Error();
 
@@ -844,9 +844,9 @@ if(typeof wpOnload=='function')wpOnload()
 			// Validate plugin filename	
 			if ( !validate_file( $module ) // $module must validate as file
 				|| '.php' == substr( $module, -4 ) // $module must end with '.php'
-				|| file_exists( TML_ABSPATH . '/modules/' . $module )	// $module must exist
+				|| file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module )	// $module must exist
 				)
-			$modules[] = TML_ABSPATH . '/modules/' . $module;
+			$modules[] = WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module;
 		}
 		return $modules;
 	}

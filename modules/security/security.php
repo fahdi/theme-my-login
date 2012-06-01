@@ -439,6 +439,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 $theme_my_login_security = new Theme_My_Login_Security;
 
 if ( is_admin() )
-	include_once( TML_ABSPATH . '/modules/security/admin/security-admin.php' );
+	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/security/admin/security-admin.php' );
 	
 endif; // Class exists

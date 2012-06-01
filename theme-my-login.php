@@ -13,27 +13,11 @@ Text Domain: theme-my-login
 if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login-custom.php' );
 
-/**
- * Holds the absolute location of Theme My Login
- *
- * @since 6.0
- */
-if ( !defined( 'TML_ABSPATH' ) )
-	define( 'TML_ABSPATH', dirname( __FILE__ ) );
-
-/**
- * Holds the name of the Theme My Login directory
- *
- * @since 6.0
- */
-if ( !defined( 'TML_DIRNAME' ) )
-	define( 'TML_DIRNAME', basename( TML_ABSPATH ) );
-
 // Require a few needed files
-require_once( TML_ABSPATH . '/includes/class-theme-my-login.php' );
-require_once( TML_ABSPATH . '/includes/class-theme-my-login-template.php' );
-require_once( TML_ABSPATH . '/includes/class-theme-my-login-module.php' );
-require_once( TML_ABSPATH . '/includes/class-theme-my-login-widget.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-module.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-widget.php' );
 
 /**
  * Theme My Login object
@@ -50,7 +34,7 @@ unset( $module );
 do_action( 'tml_modules_loaded' );
 
 if ( is_admin() ) {
-	require_once( TML_ABSPATH . '/admin/class-theme-my-login-admin.php' );
+	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
 	/**
 	 * Theme My Login Admin object
 	 * @global object $theme_my_login_admin
@@ -60,7 +44,7 @@ if ( is_admin() ) {
 }
 
 if ( is_multisite() ) {
-	require_once( TML_ABSPATH . '/includes/class-theme-my-login-ms-signup.php' );
+	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-ms-signup.php' );
 	/**
 	 * Theme My Login MS Signup object
 	 * @global object $theme_my_login_ms_signup
