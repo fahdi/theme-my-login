@@ -109,28 +109,6 @@ class Theme_My_Login_Admin {
 	}
 
 	/**
-	 * Outputs a random TML usage tip
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function did_you_know() {
-		$tips = apply_filters( 'tml_tips', array(
-			__( 'You can now login with your e-mail address or username! Try it out!', 'theme-my-login' ),
-			__( 'Theme My Login now utilizes a module system. Modules are similar to WordPress plugins. Each module extends the default functionality of Theme My Login. <a rel="tml-options" href="#tml-options-modules">Click here</a> to get started with modules now.', 'theme-my-login' ),
-			__( 'Theme My Login now allows custom forms. You can create your own form template(s) by copying the default version(s) from "theme-my-login/templates" to your current theme directory. Try it out!', 'theme-my-login' ),
-			__( 'You can maintain your stylesheet changes between upgrades. Just simply copy the file "theme-my-login/theme-my-login.css" to your current theme directory and edit it as you please!', 'theme-my-login' ),
-			__( 'Theme My Login provides a shortcode that you can use within your posts with multiple parameters to customize the form. Visit the <a href="http://www.jfarthing.com/docs/theme-my-login/shortcode" target="_blank">Theme My Login Documentation</a> for usage instructions.', 'theme-my-login' ),
-			__( 'Jeff is <a href="http://www.jfarthing.com/hire-me" target="_blank">available for hire</a>!', 'theme-my-login' )
-		) );
-		$key = array_rand( $tips );
-		echo '<div id="tml-tips" class="updated">';
-		echo '<p><strong>' . __( 'Did You Know?', 'theme-my-login' ) . '</strong></p>';
-		echo '<p>' . $tips[$key] . '</p>';
-		echo '</div>';
-	}
-
-	/**
 	 * Loads admin styles and scripts
 	 *
 	 * @since 6.0
@@ -145,8 +123,6 @@ class Theme_My_Login_Admin {
 				$theme_my_login->options->set_option( 'initial_nag', 0 );
 				$theme_my_login->options->save();
 			}
-			// Show "Did You Know" box
-			add_action( 'admin_notices', array( &$this, 'did_you_know' ) );
 		}
 
 		// Flush rewrite rules if slugs have been updated
@@ -155,8 +131,7 @@ class Theme_My_Login_Admin {
 
 		// Enqueue neccessary scripts and styles
 		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
-		wp_enqueue_script( 'jquery-shake', plugins_url( '/theme-my-login/admin/js/jquery.shake.js' ), array( 'jquery' ) );
-		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs', 'jquery-shake' ) );
+		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs' ) );
 
 		// Set the correct admin style according to user setting (Only supports default admin schemes)
 		$admin_color = get_user_meta( $user_ID, 'admin_color', true );
