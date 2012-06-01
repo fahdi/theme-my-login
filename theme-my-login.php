@@ -29,15 +29,6 @@ if ( !defined( 'TML_ABSPATH' ) )
 if ( !defined( 'TML_DIRNAME' ) )
 	define( 'TML_DIRNAME', basename( TML_ABSPATH ) );
 
-/**
- * For developers, setting this to true will output useful debug information
- * such as memory usage at specific hooks.
- *
- * @since 6.0
- */
-if ( !defined( 'TML_DEBUG' ) )
-	define( 'TML_DEBUG', false );
-
 // Require a few needed files
 require_once( TML_ABSPATH . '/includes/class-theme-my-login.php' );
 require_once( TML_ABSPATH . '/includes/class-theme-my-login-template.php' );
@@ -77,9 +68,6 @@ if ( is_multisite() ) {
 	 */
 	$GLOBALS['theme_my_login_ms_signup'] =& new Theme_My_Login_MS_Signup();
 }
-
-if ( defined( 'TML_DEBUG' ) && TML_DEBUG )
-	include_once( TML_ABSPATH . '/includes/class-theme-my-login-debug.php' );
 
 if ( !function_exists( 'theme_my_login' ) ) :
 /**
