@@ -1,12 +1,18 @@
 <?php
-/*
-Plugin Name: Themed Profiles
-Description: Enabling this module will initialize and enable themed profiles. You will then have to configure the settings via the "Themed Profiles" tab.
-*/
+/**
+ * Plugin Name: Themed Profiles
+ * Description: Enabling this module will initialize and enable themed profiles. You will then have to configure the settings via the "Themed Profiles" tab.
+ *
+ * Holds Theme My Login Themed Profiles class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Themed_Profiles
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
 /**
- * Theme My Login Themed Profiles module class
+ * Theme My Login Themed Profiles class
  *
  * Allows users to edit profile on the front-end.
  *
@@ -21,7 +27,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function init() {
+	public function init() {
 		global $theme_my_login, $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
@@ -54,7 +60,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @since 6.2
 	 * @access public
 	 */
-	function show_admin_bar( $show_admin_bar ) {
+	public function show_admin_bar( $show_admin_bar ) {
 		global $theme_my_login, $current_user;
 
 		$user_role = reset( $current_user->roles );
@@ -76,7 +82,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function template_redirect() {
+	public function template_redirect() {
 		global $theme_my_login;
 
 		if ( $theme_my_login->is_login_page() ) {
@@ -123,7 +129,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function profile_action() {
+	public function profile_action() {
 		global $theme_my_login;
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
@@ -185,7 +191,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 *
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
-	function get_profile_form( &$template ) {
+	public function get_profile_form( &$template ) {
 		global $current_user, $profileuser, $_wp_admin_css_colors, $wp_version;
 
 		$current_user = wp_get_current_user();
@@ -221,7 +227,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @param string $orig_scheme The original connection scheme
 	 * @return string The filtered link
 	 */
-	function site_url( $url, $path, $orig_scheme = '' ) {
+	public function site_url( $url, $path, $orig_scheme = '' ) {
 		global $theme_my_login, $current_user, $pagenow;
 
 		if ( 'profile.php' != $pagenow && strpos( $url, 'profile.php' ) !== false ) {
@@ -260,7 +266,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @param string $action The requested action
 	 * @return string The filtered title
 	 */
-	function tml_title( $title, $action ) {
+	public function tml_title( $title, $action ) {
 		global $theme_my_login;
 		if ( 'profile' == $action && is_user_logged_in() && '' == $theme_my_login->request_instance )
 			$title = __( 'Your Profile', 'theme-my-login' );
@@ -279,7 +285,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @param array $options Options passed in from filter
 	 * @return array Original $options array with module options appended
 	 */
-	function init_options( $options = array() ) {
+	public function init_options( $options = array() ) {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -307,7 +313,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function modules_loaded() {
+	public function modules_loaded() {
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
 		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
 	}
@@ -316,9 +322,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		// Load
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
@@ -338,11 +344,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
  * @global object $theme_my_login_themed_profiles
  * @since 6.0
  */
-$theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles();
+$theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles;
 
 if ( is_admin() )
 	include_once( TML_ABSPATH . '/modules/themed-profiles/admin/themed-profiles-admin.php' );
 
 endif; // Class exists
 
-?>

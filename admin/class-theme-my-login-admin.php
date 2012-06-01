@@ -2,7 +2,7 @@
 /**
  * Holds the Theme My Login class
  *
- * @package Theme My Login
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login_Admin' ) ) :
@@ -16,19 +16,35 @@ class Theme_My_Login_Admin {
 	 * Holds TML menu array
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var array
 	 */
-	var $menu;
+	protected $menu;
 
 	/**
 	 * Holds TML submenu array
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var array
 	 */
-	var $submenu;
+	protected $submenu;
+
+	/**
+	 * Constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function __construct() {
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
+		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
+
+		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
+		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
+	}
 
 	/**
 	 * Adds "Theme My Login" to the WordPress "Settings" menu
@@ -36,7 +52,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function admin_menu() {
+	public function admin_menu() {
 		// Create our settings link in the default WP "Settings" menu
 		add_options_page(
 			__( 'Theme My Login', 'theme-my-login' ),
@@ -55,7 +71,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function admin_init() {
+	public function admin_init() {
 		// Register our settings in the global "whitelist_settings"
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
 
@@ -69,7 +85,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function module_errors() {
+	public function module_errors() {
 		global $theme_my_login;
 
 		$module_errors = $theme_my_login->get_option( 'module_errors' );
@@ -94,7 +110,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function load_settings_page() {
+	public function load_settings_page() {
 		global $theme_my_login, $user_ID;
 
 		// Flush rewrite rules if slugs have been updated
@@ -117,7 +133,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_settings_page() {
+	public function display_settings_page() {
 		global $wp_rewrite;
 
 		// Default menu
@@ -211,7 +227,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_basic_settings() {
+	public function display_basic_settings() {
 		global $theme_my_login; ?>
 <table class="form-table">
     <tr valign="top">
@@ -255,7 +271,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_module_settings() {
+	public function display_module_settings() {
 		global $theme_my_login;
 
 		$all_modules = get_plugins( '/' . TML_DIRNAME . '/modules' );
@@ -283,7 +299,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.2
 	 * @access public
 	 */
-	function display_permalink_settings() {
+	public function display_permalink_settings() {
 		global $theme_my_login;
 
 		$actions = array(
@@ -315,7 +331,7 @@ class Theme_My_Login_Admin {
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
 	 */
-	function save_settings( $settings ) {
+	public function save_settings( $settings ) {
 		global $theme_my_login;
 
 		// Sanitize new settings
@@ -375,7 +391,7 @@ class Theme_My_Login_Admin {
 	 * @param string $module Module to activate
 	 * @return null|WP_Error True on success, WP_Error on error
 	 */
-	function activate_module( $module ) {
+	public function activate_module( $module ) {
 		global $theme_my_login;
 
 		$module = plugin_basename( trim( $module ) );
@@ -407,7 +423,7 @@ class Theme_My_Login_Admin {
 	 * @param string|array $modules Module(s) to activate
 	 * @return bool|WP_Error True on succes, WP_Error on error
 	 */
-	function activate_modules( $modules ) {
+	public function activate_modules( $modules ) {
 		if ( !is_array( $modules ) )
 			$modules = array( $modules );
 
@@ -433,7 +449,7 @@ class Theme_My_Login_Admin {
 	 * @param string|array $plugins Module(s) to deactivate
 	 * @param bool $silent If true, prevents calling deactivate hook
 	 */
-	function deactivate_modules( $modules, $silent = false ) {
+	public function deactivate_modules( $modules, $silent = false ) {
 		global $theme_my_login;
 
 		$current = (array) $theme_my_login->get_option( 'active_modules' );
@@ -473,7 +489,7 @@ class Theme_My_Login_Admin {
 	 * @param string $module Module path
 	 * @return int|WP_Error 0 on success, WP_Error on failure.
 	 */
-	function validate_module( $module ) {
+	public function validate_module( $module ) {
 		if ( validate_file( $module ) )
 			return new WP_Error( 'module_invalid', __( 'Invalid module path.', 'theme-my-login' ) );
 		if ( !file_exists( TML_ABSPATH. '/modules/' . $module ) )
@@ -497,7 +513,7 @@ class Theme_My_Login_Admin {
 	 * @param array $function_args Arguments to pass in to callback function
 	 * @param int $position The position in the menu order this one should appear
 	 */
-	function add_menu_page( $menu_title, $menu_slug, $function = '', $function_args = array(), $position = NULL ) {
+	public function add_menu_page( $menu_title, $menu_slug, $function = '', $function_args = array(), $position = NULL ) {
 		$menu_slug = plugin_basename( $menu_slug );
 
 		$hookname = get_plugin_page_hookname( $menu_slug, '' );
@@ -527,7 +543,7 @@ class Theme_My_Login_Admin {
 	 * @param callback $function The function to be called to output the content for this page.
 	 * @param array $function_args Arguments to pass in to callback function
 	 */
-	function add_submenu_page( $parent_slug, $menu_title, $menu_slug, $function = '', $function_args = array() ) {
+	public function add_submenu_page( $parent_slug, $menu_title, $menu_slug, $function = '', $function_args = array() ) {
 		$menu_slug = plugin_basename( $menu_slug );
 		$parent = plugin_basename( $parent_slug );
 
@@ -549,7 +565,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.1
 	 * @access public
 	 */
-	function install() {
+	public function install() {
 		global $wpdb;
 
 		if ( is_multisite() ) {
@@ -570,9 +586,9 @@ class Theme_My_Login_Admin {
 	 * Installs TML
 	 *
 	 * @since 6.0
-	 * @access private
+	 * @access protected
 	 */
-	function _install() {
+	protected function _install() {
 		global $theme_my_login;
 
 		// Declare page_id to avoid notices
@@ -632,7 +648,7 @@ class Theme_My_Login_Admin {
 	 * @since 6.1
 	 * @access public
 	 */
-	function uninstall() {
+	public function uninstall() {
 		global $wpdb;
 
 		if ( is_multisite() ) {
@@ -653,9 +669,9 @@ class Theme_My_Login_Admin {
 	 * Uninstalls TML
 	 *
 	 * @since 6.0
-	 * @access private
+	 * @access protected
 	 */
-	function _uninstall() {
+	protected function _uninstall() {
 		global $theme_my_login;
 
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -680,34 +696,6 @@ class Theme_My_Login_Admin {
 		delete_option( 'theme_my_login' );
 		delete_option( 'widget_theme-my-login' );
 	}
-
-	/**
-	 * PHP4 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function Theme_My_Login_Admin() {
-		$this->__construct();
-	}
-
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
-		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
-
-		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
-		register_uninstall_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
-	}
 }
-
 endif; // Class exists
 
-?>

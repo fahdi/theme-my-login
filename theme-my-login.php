@@ -40,7 +40,7 @@ require_once( TML_ABSPATH . '/includes/class-theme-my-login-widget.php' );
  * @global object $theme_my_login_object
  * @since 6.0
  */
-$GLOBALS['theme_my_login'] =& new Theme_My_Login();
+$GLOBALS['theme_my_login'] = new Theme_My_Login;
 
 // Load active modules
 foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
@@ -56,7 +56,7 @@ if ( is_admin() ) {
 	 * @global object $theme_my_login_admin
 	 * @since 6.0
 	 */
-	$GLOBALS['theme_my_login_admin'] =& new Theme_My_Login_Admin();
+	$GLOBALS['theme_my_login_admin'] = new Theme_My_Login_Admin;
 }
 
 if ( is_multisite() ) {
@@ -66,7 +66,7 @@ if ( is_multisite() ) {
 	 * @global object $theme_my_login_ms_signup
 	 * @since 6.1
 	 */
-	$GLOBALS['theme_my_login_ms_signup'] =& new Theme_My_Login_MS_Signup();
+	$GLOBALS['theme_my_login_ms_signup'] = new Theme_My_Login_MS_Signup;
 }
 
 if ( !function_exists( 'theme_my_login' ) ) :

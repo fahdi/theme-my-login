@@ -1,8 +1,14 @@
 <?php
-/*
-Plugin Name: Custom Passwords
-Description: Enabling this module will initialize and enable custom passwords. There are no other settings for this module.
-*/
+/**
+ * Plugin Name: Custom Passwords
+ * Description: Enabling this module will initialize and enable custom passwords. There are no other settings for this module.
+ *
+ * Holds the Theme My Login Custom Passwords class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_Passwords
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Custom_Passwords' ) ) :
 /**
@@ -24,7 +30,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 *
 	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
-	function password_fields( &$template ) {
+	public function password_fields( &$template ) {
 	?>
 	<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
 	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" tabindex="30" /></p>
@@ -44,7 +50,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 *
 	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
-	function ms_password_fields( &$template ) {
+	public function ms_password_fields( &$template ) {
 		global $theme_my_login;
 
 		$errors = array();
@@ -77,7 +83,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 *
 	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
-	function ms_hidden_password_field() {
+	public function ms_hidden_password_field() {
 		if ( isset( $_POST['user_pass'] ) )
 			echo '<input type="hidden" name="user_pass" value="' . $_POST['user_pass'] . '" />' . "\n";
 	}
@@ -94,7 +100,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param WP_Error $errors WP_Error object
 	 * @return WP_Error WP_Error object
 	 */
-	function password_errors( $errors = '' ) {
+	public function password_errors( $errors = '' ) {
 		// Make sure $errors is a WP_Error object
 		if ( empty( $errors ) )
 			$errors = new WP_Error();
@@ -126,7 +132,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param WP_Error $errors WP_Error object
 	 * @return WP_Error WP_Error object
 	 */
-	function ms_password_errors( $result ) {
+	public function ms_password_errors( $result ) {
 		if ( isset( $_POST['stage'] ) && 'validate-user-signup' == $_POST['stage'] ) {
 			$errors =& $result['errors'];
 			$errors = $this->password_errors( $errors );
@@ -146,7 +152,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param array $meta Signup meta
 	 * @return array $meta Signup meta
 	 */
-	function ms_save_password( $meta ) {
+	public function ms_save_password( $meta ) {
 		if ( isset( $_POST['user_pass'] ) )
 			$meta['user_pass'] = $_POST['user_pass'];
 		return $meta;
@@ -164,7 +170,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @param string $password Auto-generated password passed in from filter
 	 * @return string Password chosen by user
 	 */
-	function set_password( $password ) {
+	public function set_password( $password ) {
 		global $wpdb;
 
 		if ( is_multisite() && isset( $_REQUEST['key'] ) ) {
@@ -199,7 +205,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 *
 	 * @param int $user_id The user's ID
 	 */
-	function remove_default_password_nag( $user_id ) {
+	public function remove_default_password_nag( $user_id ) {
 		update_user_meta( $user_id, 'default_password_nag', false );
 	}
 
@@ -213,18 +219,21 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 *
 	 * @return string The new register message
 	 */
-	function register_passmail_template_message() {
+	public function register_passmail_template_message() {
 		return;
 	}
+
 	/**
 	 * Handles display of various action/status messages
+	 *
+	 * Callback for "tml_request" hook in Theme_My_Login::the_request()
 	 *
 	 * @since 6.0
 	 * @access public
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function action_messages( &$theme_my_login ) {
+	public function action_messages( &$theme_my_login ) {
 		// Change "Registration complete. Please check your e-mail." to reflect the fact that they already set a password
 		if ( isset( $_GET['registration'] ) && 'complete' == $_GET['registration'] )
 			$theme_my_login->errors->add( 'registration_complete', __( 'Registration complete. You may now log in.', 'theme-my-login' ), 'message' );
@@ -242,7 +251,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * @return string $redirect_to Default redirect
 	 * @return string URL to redirect to
 	 */
-	function register_redirect( $redirect_to ) {
+	public function register_redirect( $redirect_to ) {
 		// Redirect to login page with "registration=complete" added to the query
 		$redirect_to = site_url( 'wp-login.php?registration=complete' );
 		// Add instance to the query if specified
@@ -255,9 +264,9 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		// Register password
 		add_action( 'tml_register_form', array( &$this, 'password_fields' ) );
 		add_action( 'tml_signup_extra_fields', array( &$this, 'ms_password_fields' ) );
@@ -284,5 +293,3 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 $theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords();
 
 endif; // Class exists
-
-?>

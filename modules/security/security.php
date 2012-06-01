@@ -1,8 +1,14 @@
 <?php
-/*
-Plugin Name: Security
-Description: Enabling this module will initialize security. You will then have to configure the settings via the "Security" tab.
-*/
+/**
+ * Plugin Name: Security
+ * Description: Enabling this module will initialize security. You will then have to configure the settings via the "Security" tab.
+ *
+ * Holds Theme My Login Security class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Security
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Security' ) ) :
 /**
@@ -21,7 +27,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @since 6.2
 	 * @access public
 	 */
-	function template_redirect() {
+	public function template_redirect() {
 		global $theme_my_login;
 
 		if ( $theme_my_login->get_option( array( 'security', 'private_site' ) ) ) {
@@ -47,7 +53,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param string $password Password posted
 	 * @return WP_User|WP_Error WP_User if the user can login, WP_Error otherwise
 	 */
-	function authenticate( $user, $username, $password ) {
+	public function authenticate( $user, $username, $password ) {
 		global $theme_my_login;
 
 		if ( !$userdata = get_user_by( 'login', $username ) )
@@ -112,13 +118,21 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int $user_id User ID
 	 * @return bool Whether to allow password reset or not
 	 */
-	function allow_password_reset( $allow, $user_id ) {
+	public function allow_password_reset( $allow, $user_id ) {
 		if ( $this->is_user_locked( $user_id ) && !$this->get_user_lock_expiration( $user_id ) )
 			$allow = false;
 		return $allow;
 	}
 
-	function show_user_profile( $profileuser ) {
+	/**
+	 * Displays failed login attempts on users profile for administrators
+	 *
+	 * @since 6.2
+	 * @access public
+	 *
+	 * @param object $profileuser User object
+	 */
+	public function show_user_profile( $profileuser ) {
 		if ( !current_user_can( 'manage_users' ) )
 			return;
 
@@ -158,7 +172,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int|WP_User $user User ID ir WP_User object
 	 * @param int $expires When the lock expires, in seconds from current time
 	 */
-	function lock_user( $user, $expires = 0 ) {
+	public function lock_user( $user, $expires = 0 ) {
 		if ( is_object( $user ) )
 			$user = $user->ID;
 
@@ -183,7 +197,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 *
 	 * @param int|WP_User $user User ID or WP_User object
 	 */
-	function unlock_user( $user ) {
+	public function unlock_user( $user ) {
 		if ( is_object( $user ) )
 			$user = $user->ID;
 
@@ -210,7 +224,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int|WP_User $user User ID or WP_User object
 	 * @return bool True if user is locked, false if not
 	 */
-	function is_user_locked( $user ) {
+	public function is_user_locked( $user ) {
 		if ( is_object( $user ) )
 			$user = $user->ID;
 
@@ -240,12 +254,12 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * Get a user's security meta
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param int $user_id User ID
 	 * @return array User's security meta
 	 */
-	function get_security_meta( $user_id ) {
+	protected function get_security_meta( $user_id ) {
 		$defaults = array(
 			'is_locked' => false,
 			'failed_login_attempts' => array()
@@ -266,7 +280,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int $user_id User ID
 	 * @return array User's failed login attempts
 	 */
-	function get_failed_login_attempts( $user_id ) {
+	public function get_failed_login_attempts( $user_id ) {
 		$security_meta = $this->get_security_meta( $user_id );
 		if ( !is_array( $security_meta['failed_login_attempts'] ) )
 			$security_meta['failed_login_attempts'] = array();
@@ -281,7 +295,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 *
 	 * @param int $user_id User ID
 	 */
-	function reset_failed_login_attempts( $user_id ) {
+	public function reset_failed_login_attempts( $user_id ) {
 		$security_meta = $this->get_security_meta( $user_id );
 		$security_meta['failed_login_attempts'] = array();
 		return update_user_meta( $user_id, 'theme_my_login_security', $security_meta );
@@ -296,7 +310,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int $user_id User ID
 	 * @return int Number of user's failed login attempts
 	 */
-	function get_failed_login_attempt_count( $user_id ) {
+	public function get_failed_login_attempt_count( $user_id ) {
 		return count( $this->get_failed_login_attempts( $user_id ) );
 	}
 
@@ -310,7 +324,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int $time Time of attempt, in seconds
 	 * @param string $ip IP address of attempt
 	 */
-	function add_failed_login_attempt( $user_id, $time = '', $ip = '' ) {
+	public function add_failed_login_attempt( $user_id, $time = '', $ip = '' ) {
 		$security_meta = $this->get_security_meta( $user_id );
 		if ( !is_array( $security_meta['failed_login_attempts'] ) )
 			$security_meta['failed_login_attempts'] = array();
@@ -337,7 +351,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param int $user_id User ID
 	 * @return int User's lock expiration time
 	 */
-	function get_user_lock_expiration( $user_id ) {
+	public function get_user_lock_expiration( $user_id ) {
 		$expiration = false;
 		$security_meta = $this->get_security_meta( $user_id );
 		if ( isset( $security_meta['lock_expiration'] ) )
@@ -355,7 +369,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param string $unit Can be either "day", "hour" or "minute"
 	 * @return int Number of seconds
 	 */
-	function get_seconds_from_unit( $value, $unit = 'minute' ) {
+	public function get_seconds_from_unit( $value, $unit = 'minute' ) {
 		switch ( $unit ) {
 			case 'day' :
 				$value = $value * 24 * 60 * 60;
@@ -382,7 +396,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * @param array $options Options passed in from filter
 	 * @return array Original $options array with module options appended
 	 */
-	function init_options( $options = array() ) {
+	public function init_options( $options = array() ) {
 		// Make sure it's an array
 		$options = (array) $options;
 		// Assign our options
@@ -403,9 +417,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
@@ -422,11 +436,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
  * @global object $theme_my_login_security
  * @since 6.0
  */
-$theme_my_login_security = new Theme_My_Login_Security();
+$theme_my_login_security = new Theme_My_Login_Security;
 
 if ( is_admin() )
 	include_once( TML_ABSPATH . '/modules/security/admin/security-admin.php' );
 	
 endif; // Class exists
-
-?>

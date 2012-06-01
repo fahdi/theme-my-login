@@ -1,12 +1,18 @@
 <?php
-/*
-Plugin Name: Custom Redirection
-Description: Enabling this module will initialize custom redirection. You will then have to configure the settings via the "Redirection" tab.
-*/
+/**
+ * Plugin Name: Custom Redirection
+ * Description: Enabling this module will initialize custom redirection. You will then have to configure the settings via the "Redirection" tab.
+ *
+ * Holds Theme My Login Custom Redirection class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_Redirection
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
 /**
- * Theme My Login Custom Redirection module class
+ * Theme My Login Custom Redirection class
  *
  * Adds the ability to redirect users when logging in/out based upon their "user role".
  *
@@ -24,7 +30,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 *
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
-	function login_form( &$template ) {
+	public function login_form( &$template ) {
 		$jump_back_to = empty( $template->instance ) ? 'previous' : 'current';
 		wp_original_referer_field( true, $jump_back_to );
 		echo "\n";
@@ -44,7 +50,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @param WP_User|WP_Error WP_User if user logged in, WP_Error otherwise
 	 * @return string New redirect
 	 */
-	function login_redirect( $redirect_to, $request, $user ) {
+	public function login_redirect( $redirect_to, $request, $user ) {
 		global $theme_my_login;
 
 		// Determine the correct referer
@@ -103,7 +109,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @param WP_User|WP_Error WP_User if user logged in, WP_Error otherwise
 	 * @return string New redirect
 	 */
-	function logout_redirect( $redirect_to, $request, $user ) {
+	public function logout_redirect( $redirect_to, $request, $user ) {
 		global $theme_my_login;
 
 		// Determine the correct referer
@@ -156,7 +162,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 *
 	 * @param object Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		global $wp_roles;
 		// Add menu tab
 		$admin->add_menu_page( __( 'Redirection', 'theme-my-login' ), 'tml-options-redirection' );
@@ -181,7 +187,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 *
 	 * @param string $role Name of user role
 	 */
-	function display_redirection_settings( $role ) {
+	public function display_redirection_settings( $role ) {
 		global $theme_my_login;
 
 		$redirection =& $theme_my_login->get_option( array( 'redirection', $role ) );
@@ -227,7 +233,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * @param array $options Options passed in from filter
 	 * @return array Original $options array with module options appended
 	 */
-	function init_options( $options = array() ) {
+	public function init_options( $options = array() ) {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -255,7 +261,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = $this->init_options();
 		$theme_my_login->set_option( 'redirection', $options['redirection'] );
 	}
@@ -264,9 +270,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
@@ -281,8 +287,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_redirection
  * @since 6.0
  */
-$theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection();
+$theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection;
 
 endif; // Class exists
 
-?>

@@ -2,8 +2,7 @@
 /**
  * Holds the Theme My Login template class
  *
- * @package Theme My Login
- * @subpackage Template
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login_Template' ) ) :
@@ -19,46 +18,67 @@ class Theme_My_Login_Template {
 	 * Holds this instance
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var int
 	 */
-	var $instance;
+	protected $instance;
 
 	/**
 	 * Holds this instance action
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	var $action;
+	protected $action;
 
 	/**
 	 * Set if current instance is active
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var bool
 	 */
-	var $is_active = false;
+	protected $is_active = false;
 
 	/**
 	 * Holds instance specific template options
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var array
 	 */
-	var $options = array();
+	protected $options = array();
 
 	/**
 	 * Holds instance specific template errors
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var object
 	 */
-	var $errors;
+	protected $errors;
+
+	/**
+	 * Constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param array $options Instance options
+	 */
+	function __construct( $options = '' ) {
+		global $theme_my_login;
+
+		$this->load_options( $options );
+		
+		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : '';
+		$this->instance = $this->options['instance'];
+		if ( $theme_my_login->request_instance == $this->instance ) {
+			$this->is_active = true;
+			$this->action = $theme_my_login->request_action;
+		}
+	}
 
 	/**
 	 * Displays output according to current action
@@ -68,7 +88,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @return string HTML output
 	 */
-	function display( $action = '' ) {
+	public function display( $action = '' ) {
 		if ( empty( $action ) )
 			$action = $this->action;
 
@@ -128,7 +148,7 @@ class Theme_My_Login_Template {
 	 * @param string $action The action to retrieve. Defaults to current action.
 	 * @return string Title of $action
 	 */
-	function get_title( $action = '' ) {
+	public function get_title( $action = '' ) {
 		if ( empty( $action ) )
 			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
 
@@ -162,7 +182,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @param string $action The action to retieve. Defaults to current action.
 	 */
-	function the_title( $action = '' ) {
+	public function the_title( $action = '' ) {
 		echo $this->get_title( $action );
 	}
 
@@ -172,7 +192,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function get_errors() {
+	public function get_errors() {
 		global $theme_my_login, $error;
 
 		$wp_error =& $theme_my_login->errors;
@@ -215,7 +235,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_errors() {
+	public function the_errors() {
 		echo $this->get_errors();
 	}
 
@@ -229,7 +249,7 @@ class Theme_My_Login_Template {
 	 * @param int|string $instance Optionally add an instance to the URL
 	 * @return string The requested action URL
 	 */
-	function get_action_url( $action = 'login', $instance = '' ) {
+	public function get_action_url( $action = 'login', $instance = '' ) {
 		global $theme_my_login;
 
 		if ( empty( $instance ) )
@@ -260,7 +280,7 @@ class Theme_My_Login_Template {
 	 * @param string $action Action to retrieve
 	 * @param int|string $instance Optionally add an instance to the URL
 	 */
-	function the_action_url( $action = 'login', $instance = '' ) {
+	public function the_action_url( $action = 'login', $instance = '' ) {
 		echo esc_url( $this->get_action_url( $action, $instance ) );
 	}
 
@@ -272,7 +292,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @param array $args Optionally specify which actions to include/exclude. By default, all are included.
 	 */
-	function get_action_links( $args = '' ) {
+	public function get_action_links( $args = '' ) {
 		$args = wp_parse_args( $args, array( 'login' => true, 'register' => true, 'lostpassword' => true ) );
 		$action_links = array();
 		if ( $args['login'] && $this->options['show_log_link'] )
@@ -292,7 +312,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @param array $args Optionally specify which actions to include/exclude. By default, all are included.
 	 */
-	function the_action_links( $args = '' ) {
+	public function the_action_links( $args = '' ) {
 		if ( $action_links = $this->get_action_links( $args ) ) {
 			echo '<ul class="tml-action-links">' . "\n";
 			foreach ( (array) $action_links as $link ) {
@@ -310,7 +330,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @return array Logged-in user links
 	 */
-	function get_user_links() {
+	public function get_user_links() {
 		$user_links = array(
 			array( 'title' => __( 'Dashboard', 'theme-my-login' ), 'url' => admin_url() ),
 			array( 'title' => __( 'Profile', 'theme-my-login' ), 'url' => admin_url( 'profile.php' ) )
@@ -324,7 +344,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_user_links() {
+	public function the_user_links() {
 		echo '<ul class="tml-user-links">';
 		if ( $user_links = $this->get_user_links() ) {
 			foreach ( (array) $user_links as $link ) {
@@ -341,7 +361,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_user_avatar( $size = '' ) {
+	public function the_user_avatar( $size = '' ) {
 		global $current_user;
 		if ( empty( $size ) )
 			$size = $this->options['gravatar_size'];
@@ -357,7 +377,7 @@ class Theme_My_Login_Template {
 	 * @param string $action Action to retrieve
 	 * @return string The requested template message
 	 */
-	function get_action_template_message( $action = '' ) {
+	public function get_action_template_message( $action = '' ) {
 		switch ( $action ) {
 			case 'register':
 				$message = __( 'Register For This Site', 'theme-my-login' );
@@ -386,7 +406,7 @@ class Theme_My_Login_Template {
 	 * @param string $before_message Text/HTML to add before the message
 	 * @param string $after_message Text/HTML to add after the message
 	 */
-	function the_action_template_message( $action = 'login', $before_message = '<p class="message">', $after_message = '</p>' ) {
+	public function the_action_template_message( $action = 'login', $before_message = '<p class="message">', $after_message = '</p>' ) {
 		if ( $message = $this->get_action_template_message( $action ) )
 			echo $before_message . $message . $after_message;
 	}
@@ -403,7 +423,7 @@ class Theme_My_Login_Template {
 	 * @param array $args Array of extra variables to make available to template
 	 * @return string|bool Template path if found, false if not
 	 */
-	function get_template( $template_names, $template_path = '', $load = true, $args = array() ) {
+	public function get_template( $template_names, $template_path = '', $load = true, $args = array() ) {
 		global $theme_my_login;
 
 		// Shothand reference to this
@@ -447,7 +467,7 @@ class Theme_My_Login_Template {
 	 * @param string $action The action
 	 * @return string The redirect URL
 	 */
-	function get_redirect_url( $action = '' ) {
+	public function get_redirect_url( $action = '' ) {
 		if ( empty( $action ) )
 			$action = $this->action;
 
@@ -474,7 +494,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_redirect_url() {
+	public function the_redirect_url() {
 		echo esc_attr( $this->get_redirect_url() );
 	}
 
@@ -484,7 +504,7 @@ class Theme_My_Login_Template {
 	 * @since 6.0
 	 * @access public
 	 */
-	function the_instance() {
+	public function the_instance() {
 		echo esc_attr( $this->instance );
 	}
 
@@ -497,7 +517,7 @@ class Theme_My_Login_Template {
 	 * @param string $value The value to retrieve
 	 * @return string|bool The value if it exists, false if not
 	 */
-	function get_posted_value( $value ) {
+	public function get_posted_value( $value ) {
 		if ( $this->is_active && isset( $_REQUEST[$value] ) )
 			return stripslashes( $_REQUEST[$value] );
 		return false;
@@ -511,7 +531,7 @@ class Theme_My_Login_Template {
 	 *
 	 * @param string $value The value to retrieve
 	 */
-	function the_posted_value( $value ) {
+	public function the_posted_value( $value ) {
 		echo esc_attr( $this->get_posted_value( $value ) );
 	}
 
@@ -519,11 +539,11 @@ class Theme_My_Login_Template {
 	 * Merges default template options with instance template options
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param array $options Instance options
 	 */
-	function load_options( $options = array() ) {
+	protected function load_options( $options = array() ) {
 		$this->options = wp_parse_args( $options, array(
 			'instance' => '',
 			'default_action' => '',
@@ -546,39 +566,6 @@ class Theme_My_Login_Template {
 			'before_title' => '',
 			'after_title' => ''
 		) );
-	}
-
-	/**
-	 * PHP4 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param array $options Instance options
-	 */
-	function Theme_My_Login_Template( $options = '' ) {
-		$this->__construct( $options );
-	}
-
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param array $options Instance options
-	 */
-	function __construct( $options = '' ) {
-		global $theme_my_login;
-
-		$this->load_options( $options );
-		
-		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : '';
-		$this->instance = $this->options['instance'];
-		if ( $theme_my_login->request_instance == $this->instance ) {
-			$this->is_active = true;
-			$this->action = $theme_my_login->request_action;
-		}
 	}
 }
 

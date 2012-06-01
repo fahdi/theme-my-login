@@ -2,7 +2,7 @@
 /**
  * Holds the Theme My Login class
  *
- * @package Theme My Login
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login' ) ) :
@@ -18,19 +18,19 @@ class Theme_My_Login {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access public
+	 * @access protected
 	 * @var string
 	 */
-	var $options_key = 'theme_my_login';
+	protected $options_key = 'theme_my_login';
 
 	/**
 	 * Holds options array
 	 *
 	 * @since 6.1
-	 * @access public
+	 * @access protected
 	 * @var object
 	 */
-	var $options = array();
+	protected $options = array();
 
 	/**
 	 * Holds errors object
@@ -39,16 +39,16 @@ class Theme_My_Login {
 	 * @access public
 	 * @var object
 	 */
-	var $errors;
+	public $errors;
 
 	/**
 	 * Holds total instances of TML
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 * @var int
 	 */
-	var $count = 0;
+	protected $count = 0;
 
 	/**
 	 * Holds current instance being requested
@@ -57,7 +57,7 @@ class Theme_My_Login {
 	 * @access public
 	 * @var int
 	 */
-	var $request_instance;
+	public $request_instance;
 
 	/**
 	 * Holds current action being requested
@@ -66,25 +66,15 @@ class Theme_My_Login {
 	 * @access public
 	 * @var string
 	 */
-	var $request_action;
+	public $request_action;
 
 	/**
-	 * PHP4 style constructor
+	 * Constructor
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	function Theme_My_Login() {
-		$this->__construct();
-	}
-
-	/**
-	 * PHP5 constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function __construct() {
+	public function __construct() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
 
@@ -127,7 +117,7 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function init() {
+	public function init() {
 		global $wp;
 
 		load_plugin_textdomain( 'theme-my-login', '', TML_DIRNAME . '/language' );
@@ -153,7 +143,7 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function widgets_init() {
+	public function widgets_init() {
 		if ( class_exists( 'Theme_My_Login_Widget' ) )
 			register_widget( 'Theme_My_Login_Widget' );
 	}
@@ -166,7 +156,7 @@ class Theme_My_Login {
 	 *
 	 * @param int $page_id Optional. The page ID (Defaults to current page)
 	 */
-	function is_login_page( $page_id = '' ) {
+	public function is_login_page( $page_id = '' ) {
 		if ( empty( $page_id ) ) {
 			global $wp_query;
 			if ( $wp_query->is_page )
@@ -187,7 +177,7 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function parse_request( &$wp ) {
+	public function parse_request( &$wp ) {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
 		if ( isset( $wp->query_vars['action'] ) )
@@ -387,7 +377,7 @@ class Theme_My_Login {
 	 * @since 6.1.1
 	 * @access public
 	 */
-	function wp() {
+	public function wp() {
 		global $wp_version;
 
 		if ( $this->is_login_page() ) {
@@ -429,7 +419,7 @@ class Theme_My_Login {
 	 * @param string|array $query Optional. Query arguments to add to link
 	 * @return string Login page link with optional $query arguments appended
 	 */
-	function get_login_page_link( $query = '' ) {
+	public function get_login_page_link( $query = '' ) {
 		global $wp_rewrite;
 
 		$q = wp_parse_args( $query );
@@ -469,7 +459,7 @@ class Theme_My_Login {
 	 * @param int $id Page ID
 	 * @return string Page link
 	 */
-	function page_link( $link, $id ) {
+	public function page_link( $link, $id ) {
 		if ( $this->is_login_page( $id ) )
 			return $this->get_login_page_link();
 		return $link;
@@ -487,7 +477,7 @@ class Theme_My_Login {
 	 * @param string $action Requested action
 	 * @return string Redirect URL
 	 */
-	function tml_redirect_url( $url, $action ) {
+	public function tml_redirect_url( $url, $action ) {
 		global $wp_rewrite;
 
 		if ( $wp_rewrite->using_permalinks() && $this->is_login_page() && $this->request_action == $action ) {
@@ -522,7 +512,7 @@ class Theme_My_Login {
 	 * @param int $post_id The current post ID
 	 * @return string The modified post title
 	 */
-	function the_title( $title, $post_id = 0 ) {
+	public function the_title( $title, $post_id = 0 ) {
 		if ( is_admin() )
 			return $title;
 
@@ -549,7 +539,7 @@ class Theme_My_Login {
 	 * @param string $title The current post title
 	 * @return string The modified post title
 	 */
-	function single_post_title( $title ) {
+	public function single_post_title( $title ) {
 		if ( $this->is_login_page() ) {
 			$action = empty( $this->request_instance ) ? $this->request_action : 'login';
 			$title = Theme_My_Login_Template::get_title( $action );
@@ -569,7 +559,7 @@ class Theme_My_Login {
 	 * @param array $exclude_array Array of excluded pages
 	 * @return array Modified array of excluded pages
 	 */
-	function wp_list_pages_excludes( $exclude_array ) {
+	public function wp_list_pages_excludes( $exclude_array ) {
 		$exclude_array = (array) $exclude_array;
 		if ( !$this->get_option( 'show_page' ) )
 			$exclude_array[] = $this->get_option( 'page_id' );
@@ -588,7 +578,7 @@ class Theme_My_Login {
 	 * @param string $output The output
 	 * @return string The filtered output
 	 */
-	function wp_list_pages( $output ) {
+	public function wp_list_pages( $output ) {
 		if ( is_user_logged_in() )
 			$output = str_replace( '"' . $this->get_login_page_link() . '"', '"' . wp_logout_url() . '"', $output );
 		return $output;
@@ -606,7 +596,7 @@ class Theme_My_Login {
 	 * @param object $menu_item The menu item
 	 * @return object The (possibly) modified menu item
 	 */
-	function wp_setup_nav_menu_item( $menu_item ) {
+	public function wp_setup_nav_menu_item( $menu_item ) {
 		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->object_id ) ) {
 			$menu_item->title = $this->the_title( $menu_item->title, $menu_item->object_id );
 			$menu_item->url = is_user_logged_in() ? wp_logout_url() : $this->get_login_page_link();
@@ -642,7 +632,7 @@ class Theme_My_Login {
 	 * @param string|array $atts Attributes passed from the shortcode
 	 * @return string HTML output from Theme_My_Login_Template->display()
 	 */
-	function shortcode( $atts = '' ) {
+	public function shortcode( $atts = '' ) {
 
 		if ( $this->is_login_page() && in_the_loop() ) {
 			$atts['instance'] = '';
@@ -661,11 +651,11 @@ class Theme_My_Login {
 	 * Incremenets $this->count and returns it
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @return int New value of $this->count
 	 */
-	function get_new_instance() {
+	protected function get_new_instance() {
 		$this->count++;
 		return $this->count;
 	}
@@ -679,7 +669,7 @@ class Theme_My_Login {
 	 * @param string $query Optionally append query to the current URL
 	 * @return string URL with optional path appended
 	 */
-	function get_current_url( $query = '' ) {
+	public function get_current_url( $query = '' ) {
 		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
 		if ( !empty( $query ) ) {
 			$r = wp_parse_args( $query );
@@ -703,7 +693,7 @@ class Theme_My_Login {
 	 * @param string $orig_scheme The current connection scheme (HTTP/HTTPS)
 	 * @return string The modified URL
 	 */
-	function site_url( $url, $path, $orig_scheme ) {
+	public function site_url( $url, $path, $orig_scheme ) {
 		global $pagenow;
 		if ( 'wp-login.php' != $pagenow && strpos( $url, 'wp-login.php' ) !== false && !isset( $_REQUEST['interim-login'] ) ) {
 			$parsed_url = parse_url( $url );
@@ -733,7 +723,7 @@ class Theme_My_Login {
 	 * @param string $file Filename of stylesheet to load
 	 * @return string Path to stylesheet
 	 */
-	function get_stylesheet( $file = 'theme-my-login.css' ) {
+	public function get_stylesheet( $file = 'theme-my-login.css' ) {
 		if ( file_exists( get_stylesheet_directory() . '/' . $file ) )
 			$stylesheet = get_stylesheet_directory_uri() . '/' . $file;
 		elseif ( file_exists( get_template_directory() . '/' . $file ) )
@@ -749,7 +739,7 @@ class Theme_My_Login {
 	 * @since 6.0
 	 * @access public
 	 */
-	function print_footer_scripts() {
+	public function print_footer_scripts() {
 		if ( !$this->is_login_page() )
 			return;
 
@@ -800,7 +790,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.0
 	 * @access public
 	 */
-	function login_head() {
+	public function login_head() {
 		if ( $this->is_login_page() ) {
 			do_action( 'login_enqueue_scripts' );
 			do_action( 'login_head' );
@@ -813,7 +803,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.0
 	 * @access public
 	 */
-	function array_merge_recursive() {
+	public function array_merge_recursive() {
 		$args = func_get_args();
 
 		$result = array_shift( $args );
@@ -846,7 +836,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.0
 	 * @access public
 	 */
-	function get_active_and_valid_modules() {
+	public function get_active_and_valid_modules() {
 		$modules = array();
 		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		foreach ( (array) $active_modules as $module ) {
@@ -870,7 +860,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $module Filename of module to check
 	 * @return bool True if $module is active, false if not
 	 */
-	function is_module_active( $module ) {
+	public function is_module_active( $module ) {
 		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
 	}
@@ -884,7 +874,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $username Username or email
 	 * @param string $password User's password
 	 */
-	function wp_authenticate( &$user_login ) {
+	public function wp_authenticate( &$user_login ) {
 		global $wpdb;
 		if ( is_email( $user_login ) && $this->get_option( 'email_login' ) ) {
 			if ( $found = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email = %s", $user_login ) ) )
@@ -902,7 +892,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @return bool|WP_Error True: when finish. WP_Error on error
 	 */
-	function retrieve_password() {
+	public function retrieve_password() {
 		global $wpdb, $current_site;
 
 		$errors = new WP_Error();
@@ -988,7 +978,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @return object|WP_Error
 	 */
-	function check_password_reset_key( $key, $login ) {
+	public function check_password_reset_key( $key, $login ) {
 		global $wpdb;
 
 		$key = preg_replace( '/[^a-z0-9]/i', '', $key );
@@ -1016,7 +1006,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @param string $key Hash to validate sending user's password
 	 */
-	function reset_password( $user, $new_pass ) {
+	public function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
 
 		wp_set_password( $new_pass, $user->ID );
@@ -1034,7 +1024,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $user_email User's email address to send password and add
 	 * @return int|WP_Error Either user's ID or error on failure.
 	 */
-	function register_new_user( $user_login, $user_email ) {
+	public function register_new_user( $user_login, $user_email ) {
 		$errors = new WP_Error();
 
 		$sanitized_user_login = sanitize_user( $user_login );
@@ -1089,7 +1079,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @param array|string
 	 */
-	function load_options() {
+	public function load_options() {
 		$defaults = array(
 			'page_id' => 0,
 			'show_page' => 1,
@@ -1111,7 +1101,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.3
 	 * @access public
 	 */
-	function save_options() {
+	public function save_options() {
 		update_option( $this->options_key, $this->options );
 	}
 
@@ -1125,7 +1115,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param mixed $default Default value to return if $option is not set
 	 * @return mixed Value of requested option or $default if option is not set
 	 */
-	function get_option( $option, $default = false ) {
+	public function get_option( $option, $default = false ) {
 		$options = $this->options;
 		$value = false;
 		if ( is_array( $option ) ) {
@@ -1151,7 +1141,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $option Name of option to set or an array of hierarchy for multidimensional options
 	 * @param mixed $value Value of new option
 	 */
-	function set_option( $option, $value = '' ) {
+	public function set_option( $option, $value = '' ) {
 		if ( is_array( $option ) ) {
 			$options = $this->options;
 			$last = array_pop( $option );
@@ -1175,7 +1165,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @param string $option Name of option to delete
 	 */
-	function delete_option( $option ) {
+	public function delete_option( $option ) {
 		if ( isset( $this->options[$option] ) )
 			unset( $this->options[$option] );
 	}

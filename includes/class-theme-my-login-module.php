@@ -2,8 +2,7 @@
 /**
  * Holds the Theme My Login Module class
  *
- * @package Theme My Login
- * @subpackage Modules
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login_Module' ) ) :
@@ -14,42 +13,24 @@ if ( !class_exists( 'Theme_My_Login_Module' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Module {
+abstract class Theme_My_Login_Module {
+	/**
+	 * Constructor
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function __construct() {
+		$this->load();
+	}
+
 	/**
 	 * Called when object is constructed
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
-		// This function should be overridden by the module extend class
-	}
-
-	/**
-	 * PHP4 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function Theme_My_Login_Module() {
-		$this->__construct();
-	}
-
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	function __construct() {
-		$this->load();
-	}
+	abstract protected function load();
 }
+endif;
 
-endif; // Class exists
-
-?>

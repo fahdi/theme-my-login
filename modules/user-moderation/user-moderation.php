@@ -1,14 +1,20 @@
 <?php
-/*
-Plugin Name: User Moderation
-Description: Enabling this module will initialize user moderation. You will then have to configure the settings via the "Moderation" tab.
-*/
+/**
+ * Plugin Name: User Moderation
+ * Description: Enabling this module will initialize user moderation. You will then have to configure the settings via the "Moderation" tab.
+ *
+ * Holds Theme My Login User Moderation class
+ *
+ * @packagae Theme_My_Login
+ * @subpackage Theme_My_Login_User_Moderation
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_User_Moderation' ) ) :
 /**
- * Theme My Login Custom User Links module class
+ * Theme My Login User Moderation class
  *
- * Adds the ability to define custom links to display to a user when logged in based upon their "user role".
+ * Adds the ability to require users to confirm their e-mail address or be activated by an administrator before becoming active on the site.
  *
  * @since 6.0
  */
@@ -19,7 +25,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function register_post() {
+	public function register_post() {
 		global $theme_my_login, $theme_my_login_custom_email;
 
 		// Remove default new user notification
@@ -48,7 +54,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param int $user_id The user's ID
 	 * @param string $user_pass The user's password
 	 */
-	function moderate_user( $user_id, $user_pass ) {
+	public function moderate_user( $user_id, $user_pass ) {
 		global $theme_my_login, $wpdb;
 
 		// Set user role to "pending"
@@ -82,7 +88,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function user_activation() {
+	public function user_activation() {
 		global $theme_my_login;
 
 		// Attempt to activate the user
@@ -112,7 +118,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function send_activation() {
+	public function send_activation() {
 		global $theme_my_login, $wpdb;
 
 		$login = isset( $_GET['login'] ) ? trim( $_GET['login'] ) : '';
@@ -151,7 +157,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param string $password Password posted
 	 * @return WP_User|WP_Error WP_User if the user can login, WP_Error otherwise
 	 */
-	function authenticate( $user, $username, $password ) {
+	public function authenticate( $user, $username, $password ) {
 		global $theme_my_login, $wpdb;
 
 		$cap_key = $wpdb->prefix . 'capabilities';
@@ -183,7 +189,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param int $user_id User ID
 	 * @return bool Whether to allow password reset or not
 	 */
-	function allow_password_reset( $allow, $user_id ) {
+	public function allow_password_reset( $allow, $user_id ) {
 		$user = new WP_User( $user_id );
 		if ( in_array( 'pending', (array) $user->roles ) )
 			$allow = false;
@@ -202,7 +208,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param string $redirect_to Default redirect
 	 * @return string URL to redirect to
 	 */
-	function register_redirect( $redirect_to ) {
+	public function register_redirect( $redirect_to ) {
 		global $theme_my_login;
 
 		// TML page link
@@ -229,7 +235,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param string $login User's username for logging in
 	 * @return bool|WP_Error True if successful, WP_Error otherwise
 	 */
-	function activate_new_user( $key, $login ) {
+	public function activate_new_user( $key, $login ) {
 		global $wpdb;
 
 		$key = preg_replace('/[^a-z0-9]/i', '', $key);
@@ -286,7 +292,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param int $user_id The user's ID
 	 * @param string $user_pass The user's password
 	 */
-	function new_user_activated( $user_id, $user_pass ) {
+	public function new_user_activated( $user_id, $user_pass ) {
 		do_action( 'tml_new_user_registered', $user_id, $user_pass );
 	}
 
@@ -299,7 +305,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param int $user_id The user's ID
 	 * @param string $key The unique activation key
 	 */
-	function new_user_activation_notification( $user_id, $key = '' ) {
+	public function new_user_activation_notification( $user_id, $key = '' ) {
 		global $wpdb, $current_site;
 
 		$user = new WP_User( $user_id );
@@ -343,7 +349,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 *
 	 * @param int $user_id The user's ID
 	 */
-	function new_user_approval_admin_notification( $user_id ) {
+	public function new_user_approval_admin_notification( $user_id ) {
 		global $current_site;
 
 		$user = new WP_User( $user_id );
@@ -383,7 +389,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function action_messages( &$theme_my_login ) {
+	public function action_messages( &$theme_my_login ) {
 		if ( isset( $_GET['pending'] ) && 'activation' == $_GET['pending'] ) {
 			$theme_my_login->errors->add( 'pending_activation', __( 'Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
 		} elseif ( isset( $_GET['pending'] ) && 'approval' == $_GET['pending'] ) {
@@ -414,7 +420,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function deactivate( &$theme_my_login ) {
+	public function deactivate( &$theme_my_login ) {
 		remove_role( 'pending' );
 	}
 
@@ -430,7 +436,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @param array $options Options passd in from filter
 	 * @return array Original $options array with module options appended
 	 */
-	function init_options( $options = array() ) {
+	public function init_options( $options = array() ) {
 		$options = (array) $options;
 
 		$options['moderation'] = array(
@@ -483,7 +489,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function modules_loaded() {
+	public function modules_loaded() {
 		global $theme_my_login;
 
 		// Moderation is enabled
@@ -514,9 +520,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		if ( is_multisite() )
 			return;
 
@@ -535,11 +541,10 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
  * @global object $theme_my_login_user_moderation
  * @since 6.0
  */
-$theme_my_login_user_moderation = new Theme_My_Login_User_Moderation();
+$theme_my_login_user_moderation = new Theme_My_Login_User_Moderation;
 
 if ( is_admin() )
-	include_once( TML_ABSPATH. '/modules/user-moderation/admin/user-moderation-admin.php' );
+	include_once( TML_ABSPATH . '/modules/user-moderation/admin/user-moderation-admin.php' );
 
 endif; // Class exists
 
-?>

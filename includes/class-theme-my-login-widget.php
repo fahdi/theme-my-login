@@ -2,8 +2,7 @@
 /**
  * Holds the Theme My Login widget class
  *
- * @package Theme My Login
- * @subpackage Widget
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login_Widget' ) ) :
@@ -14,12 +13,12 @@ if ( !class_exists( 'Theme_My_Login_Widget' ) ) :
  */
 class Theme_My_Login_Widget extends WP_Widget {
 	/**
-	 * PHP4 style constructor
+	 * Constructor
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-    function Theme_My_Login_Widget() {
+    public function __construct() {
         $widget_options = array( 'classname' => 'widget_theme_my_login', 'description' => __( 'A login form for your blog.', 'theme-my-login' ) );
         $this->WP_Widget( 'theme-my-login', __( 'Theme My Login', 'theme-my-login' ), $widget_options );
     }
@@ -33,7 +32,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @param array $args Display arguments including before_title, after_title, before_widget, and after_widget.
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
-	function widget( $args, $instance ) {
+	public function widget( $args, $instance ) {
 		global $theme_my_login;
 
 		if ( is_user_logged_in() && !$instance['logged_in_widget'] )
@@ -48,7 +47,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @since 6.0
 	 * @access public
 	 */
-    function update( $new_instance, $old_instance ) {
+    public function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
         $instance['default_action']     = in_array( $new_instance['default_action'], array( 'login', 'register', 'lostpassword' ) ) ? $new_instance['default_action'] : 'login';
         $instance['logged_in_widget']   = empty( $new_instance['logged_in_widget'] ) ? false : true;
@@ -69,7 +68,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @since 6.0
 	 * @access public
 	 */
-    function form( $instance ) {
+    public function form( $instance ) {
         $defaults = array(
             'default_action' => 'login',
             'logged_in_widget' => 1,
@@ -110,7 +109,5 @@ class Theme_My_Login_Widget extends WP_Widget {
         echo '<p><input name="' . $this->get_field_name( 'lostpassword_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpassword_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpassword_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
     }
 }
-
 endif; // Class exists
 
-?>

@@ -1,8 +1,15 @@
 <?php
+/**
+ * Holds Theme My Login User Moderation Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_User_Moderation
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_User_Moderation_Admin' ) ) :
 /**
- * Theme My Login User Moderation module admin class
+ * Theme My Login User Moderation Admin class
  *
  * @since 6.0
  */
@@ -15,7 +22,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function load_users_page() {
+	public function load_users_page() {
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_action( 'delete_user', array( &$this, 'deny_user' ) );
@@ -40,7 +47,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 				if ( 'approve' == $_GET['action'] ) {
 					check_admin_referer( 'approve-user' );
 
-					if ( !Theme_My_Login_User_Moderation_Admin::approve_user( $user ) )
+					if ( !$this->approve_user( $user ) )
 						wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
 					$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
@@ -68,7 +75,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function admin_notices() {
+	public function admin_notices() {
 		if ( isset( $_GET['update'] ) && in_array( $_GET['update'], array( 'approve', 'sendactivation' ) ) ) {
 			echo '<div id="message" class="updated fade"><p>';
 			if ( 'approve' == $_GET['update'] )
@@ -91,7 +98,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @param WP_User $user_object The current user object
 	 * @return array The filtered user actions
 	 */
-	function user_row_actions( $actions, $user_object ) {
+	public function user_row_actions( $actions, $user_object ) {
 		global $theme_my_login;
 
 		$current_user = wp_get_current_user();
@@ -118,10 +125,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	/**
 	 * Handles activating a new user by admin approval
 	 *
-	 * @param string $user_id User's ID
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param int $user_id User's ID
 	 * @return bool Returns false if not a valid user
 	 */
-	function approve_user( $user_id ) {
+	public function approve_user( $user_id ) {
 		global $wpdb, $current_site;
 
 		$user_id = (int) $user_id;
@@ -179,9 +189,12 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	/**
 	 * Called upon deletion of a user in the "Pending" role
 	 *
-	 * @param string $user_id User's ID
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param int $user_id User's ID
 	 */
-	function deny_user( $user_id ) {
+	public function deny_user( $user_id ) {
 		global $current_site;
 
 		$user_id = (int) $user_id;
@@ -222,7 +235,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		$admin->add_menu_page( __( 'Moderation', 'theme-my-login' ), 'tml-options-moderation', array( &$this, 'display_settings' ) );
 	}
 
@@ -235,7 +248,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_settings() {
+	public function display_settings() {
 		global $theme_my_login; ?>
 <table class="form-table">
 	<tr valign="top">
@@ -255,7 +268,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 </table><?php
 	}
 
-	function admin_init() {
+	public function admin_init() {
 		global $theme_my_login, $theme_my_login_admin;
 
 		// Disable moderation if using multisite
@@ -283,7 +296,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_User_Moderation::init_options();
 		$theme_my_login->set_option( 'moderation', $options['moderation'] );
 
@@ -295,9 +308,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_user-moderaiton/user-moderation.php', array( &$this, 'activate' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		if ( is_multisite() )
@@ -313,8 +326,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_user_moderation_admin
  * @since 6.0
  */
-$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin();
+$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin;
 
 endif; // Class exists
 
-?>

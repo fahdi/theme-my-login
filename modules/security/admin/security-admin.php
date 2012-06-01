@@ -1,8 +1,15 @@
 <?php
+/**
+ * Holds Theme My Login Security Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Security
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Security_Admin' ) ) :
 /**
- * Theme My Login Security module admin class
+ * Theme My Login Security Admin class
  *
  * @since 6.0
  */
@@ -15,7 +22,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function load_users_page() {
+	public function load_users_page() {
 		global $theme_my_login_security;
 
 		wp_enqueue_script( 'tml-security-admin', plugins_url( TML_DIRNAME . '/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
@@ -61,7 +68,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function admin_notices() {
+	public function admin_notices() {
 		if ( isset( $_GET['update'] ) ) {
 			if ( 'lock' == $_GET['update'] )
 				echo '<div id="message" class="updated fade"><p>' . __( 'User locked.', 'theme-my-login' ) . '</p></div>';
@@ -82,7 +89,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @param WP_User $user_object The current user object
 	 * @return array The filtered user actions
 	 */
-	function user_row_actions( $actions, $user_object ) {
+	public function user_row_actions( $actions, $user_object ) {
 		$current_user = wp_get_current_user();
 
 		$security_meta = isset( $user_object->theme_my_login_security ) ? (array) $user_object->theme_my_login_security : array();
@@ -109,7 +116,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		$admin->add_menu_page( __( 'Security', 'theme-my-login' ), 'tml-options-security', array( &$this, 'display_settings' ) );
 	}
 
@@ -122,7 +129,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_settings() {
+	public function display_settings() {
 		global $theme_my_login;
 		?>
 <table class="form-table">
@@ -183,7 +190,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
 	 */
-	function save_settings( $settings ) {
+	public function save_settings( $settings ) {
 		$settings['security'] = array(
 			'private_site' => isset( $_POST['theme_my_login']['security']['private_site'] ),
 			'failed_login' => array(
@@ -208,7 +215,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Security::init_options();
 		$theme_my_login->set_option( 'security', $options['security'] );
 	}
@@ -217,9 +224,9 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_security/security.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
@@ -232,8 +239,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_security_admin
  * @since 6.0
  */
-$theme_my_login_security_admin = new Theme_My_Login_Security_Admin();
+$theme_my_login_security_admin = new Theme_My_Login_Security_Admin;
 
 endif; // Class exists
-
-?>

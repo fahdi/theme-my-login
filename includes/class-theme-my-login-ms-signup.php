@@ -2,7 +2,7 @@
 /**
  * Holds the Theme My Login multisite signup class
  *
- * @package Theme My Login
+ * @package Theme_My_Login
  */
 
 if ( !class_exists( 'Theme_My_Login_MS_Signup' ) ) :
@@ -18,28 +18,18 @@ class Theme_My_Login_MS_Signup {
 	 * Holds reference to global $theme_my_login_template object
 	 *
 	 * @since 6.1
-	 * @access public
+	 * @access protected
 	 * @var object
 	 */
-	var $theme_my_login_template;
+	protected $theme_my_login_template;
 
 	/**
-	 * PHP4 style constructor
+	 * Constructor
 	 *
 	 * @since 6.1
 	 * @access public
 	 */
-	function Theme_My_Login_MS_Signup() {
-		$this->__construct();
-	}
-
-	/**
-	 * PHP5 style constructor
-	 *
-	 * @since 6.1
-	 * @access public
-	 */
-	function __construct() {
+	public function __construct() {
 		global $theme_my_login;
 
 		add_action( 'tml_request_register', array( &$this, 'tml_request_register' ) );
@@ -65,7 +55,7 @@ class Theme_My_Login_MS_Signup {
 	 *
 	 * @param object $theme_my_login Theme_My_Login object
 	 */
-	function tml_request_register( &$theme_my_login ) {
+	public function tml_request_register( &$theme_my_login ) {
 		global $current_site, $wp_version;
 
 		if ( version_compare( $wp_version, '3.3', '<' ) ) {
@@ -98,7 +88,7 @@ class Theme_My_Login_MS_Signup {
 	 *
 	 * @param object $template Theme_My_Login_Template object
 	 */
-	function tml_display_register( &$template ) {
+	public function tml_display_register( &$template ) {
 		global $theme_my_login, $wpdb, $blogname, $blog_title, $domain, $path, $active_signup;
 
 		$this->theme_my_login_template =& $template;
@@ -275,7 +265,7 @@ class Theme_My_Login_MS_Signup {
 	 * @since 6.1
 	 * @access public
 	 */
-	function signup_header() {
+	public function signup_header() {
 		do_action( 'signup_header' );
 	}
 
@@ -288,7 +278,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $user_name The posted username
 	 * @param string $user_email The posted user e-mail
 	 */
-	function signup_user( $user_name = '', $user_email = '' ) {
+	public function signup_user( $user_name = '', $user_email = '' ) {
 		global $theme_my_login, $current_site, $active_signup;
 
 		$template =& $this->theme_my_login_template;
@@ -317,7 +307,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blogname The posted blog name
 	 * @param string $blog_title The posted blog title
 	 */
-	function signup_blog( $user_name = '', $user_email = '', $blogname = '', $blog_title = '' ) {
+	public function signup_blog( $user_name = '', $user_email = '', $blogname = '', $blog_title = '' ) {
 		global $theme_my_login, $current_site;
 
 		$template =& $this->theme_my_login_template;
@@ -349,7 +339,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blogname The posted blog name
 	 * @param string $blog_title The posted blog title
 	 */
-	function signup_another_blog( $blogname = '', $blog_title = '' ) {
+	public function signup_another_blog( $blogname = '', $blog_title = '' ) {
 		global $theme_my_login, $current_site;
 
 		$template =& $this->theme_my_login_template;
@@ -375,7 +365,7 @@ class Theme_My_Login_MS_Signup {
 	 *
 	 * @param object $theme_my_login Theme_My_Login object
 	 */
-	function tml_request_activate( &$theme_my_login ) {
+	public function tml_request_activate( &$theme_my_login ) {
 		global $current_site, $wp_object_cache;
 
 		if ( is_object( $wp_object_cache ) )
@@ -392,7 +382,7 @@ class Theme_My_Login_MS_Signup {
 	 *
 	 * @param object $template Theme_My_Login_Template object
 	 */
-	function tml_display_activate( &$template ) {
+	public function tml_display_activate( &$template ) {
 		global $blog_id;
 
 		echo '<div class="login" id="theme-my-login' . esc_attr( $template->instance ) . '">';
@@ -461,7 +451,7 @@ class Theme_My_Login_MS_Signup {
 	 * @since 6.1
 	 * @access public
 	 */
-	function activate_header() {
+	public function activate_header() {
 		do_action( 'activate_header' );
 		do_action( 'activate_wp_head' );
 	}
@@ -476,7 +466,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $action The requested action
 	 * @return string The filtered title
 	 */
-	function tml_title( $title, $action ) {
+	public function tml_title( $title, $action ) {
 		if ( 'activate' == $action )
 			$title = __( 'Activate', 'theme-my-login' );
 		return $title;
@@ -491,7 +481,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param int $blog_id ID of new blog
 	 * @param int $user_id ID of blog owner
 	 */
-	function wpmu_new_blog( $blog_id, $user_id ) {
+	public function wpmu_new_blog( $blog_id, $user_id ) {
 		global $wpdb;
 		require_once ( ABSPATH . '/wp-admin/includes/plugin.php' );
 		if ( is_plugin_active_for_network( 'theme-my-login/theme-my-login.php' ) ) {
@@ -515,7 +505,7 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $orig_scheme The current connection scheme (HTTP/HTTPS)
 	 * @return string The modified URL
 	 */
-	function site_url( $url, $path, $orig_scheme ) {
+	public function site_url( $url, $path, $orig_scheme ) {
 		global $theme_my_login, $pagenow;
 
 		$actions = array( 'wp-signup.php' => 'register', 'wp-activate.php' => 'activate', 'wp-login.php' => '' );
@@ -560,12 +550,10 @@ class Theme_My_Login_MS_Signup {
 	 * @since 6.1
 	 * @access public
 	 */
-	function clean_url( $url, $original_url, $context ) {
+	public function clean_url( $url, $original_url, $context ) {
 		if ( strpos( $original_url, 'action=activate' ) !== false )
 			return $original_url;
 		return $url;
 	}
 }
-endif;
-
-?>
+endif; // Class exists

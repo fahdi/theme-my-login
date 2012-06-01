@@ -1,8 +1,14 @@
 <?php
-/*
-Plugin Name: Custom User Links
-Description: Enabling this module will initialize custom user links. You will then have to configure the settings via the "User Links" tab.
-*/
+/**
+ * Plugin Name: Custom User Links
+ * Description: Enabling this module will initialize custom user links. You will then have to configure the settings via the "User Links" tab.
+ *
+ * Holds Theme My Login Custom User Links class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_User_Links
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Custom_User_Links' ) ) :
 /**
@@ -25,7 +31,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 * @param array $links Default user links
 	 * @return array New user links
 	 */
-	function get_user_links( $links = array() ) {
+	public function get_user_links( $links = array() ) {
 		global $theme_my_login;
 
 		if ( !is_user_logged_in() )
@@ -69,7 +75,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 * @param array $options Options passd in from filter
 	 * @return array Original $options array with module options appended
 	 */
-	function init_options( $options = array() ) {
+	public function init_options( $options = array() ) {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -93,9 +99,9 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
 		add_filter( 'tml_user_links', array( &$this, 'get_user_links' ) );
 	}
@@ -106,11 +112,10 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_user_links
  * @since 6.0
  */
-$theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links();
+$theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links;
 
 if ( is_admin() )
 	include_once( TML_ABSPATH. '/modules/custom-user-links/admin/custom-user-links-admin.php' );
 
 endif; // Class exists
 
-?>

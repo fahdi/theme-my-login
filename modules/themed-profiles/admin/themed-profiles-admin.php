@@ -1,8 +1,15 @@
 <?php
+/**
+ * Holds Theme My Login Themed Profiles Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Themed_Profiles
+ * @since 6.2
+ */
 
 if ( !class_exists( 'Theme_My_Login_Themed_Profiles_Admin' ) ) :
 /**
- * Theme My Login Themed Profiles module admin class
+ * Theme My Login Themed Profiles Admin class
  *
  * @since 6.2
  */
@@ -19,7 +26,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		$admin->add_menu_page( __( 'Themed Profiles', 'theme-my-login' ), 'tml-options-themed-profiles', array( &$this, 'display_settings' ) );
 	}
 
@@ -32,7 +39,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 * @since 6.2
 	 * @access public
 	 */
-	function display_settings() {
+	public function display_settings() {
 		global $theme_my_login, $wp_roles;
 
 		$options = $theme_my_login->get_option( array( 'themed_profiles' ), array() );
@@ -59,7 +66,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 </table><?php
 	}
 
-	function display_permalink_settings() {
+	public function display_permalink_settings() {
 		global $theme_my_login;
 		?>
 	<tr valign="top">
@@ -82,7 +89,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
 	 */
-	function save_settings( $settings ) {
+	public function save_settings( $settings ) {
 		global $wp_roles;
 
 		if ( did_action( 'tml_activate_themed-profiles/themed-profiles.php' ) )
@@ -111,7 +118,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Themed_Profiles::init_options();
 		$theme_my_login->set_option( 'themed_profiles', $options['themed_profiles'] );
 	}
@@ -120,9 +127,9 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.2
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_themed-profiles/themed-profiles.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
@@ -136,8 +143,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_themed_profiles_admin
  * @since 6.2
  */
-$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin();
+$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin;
 
 endif; // Class exists
 
-?>

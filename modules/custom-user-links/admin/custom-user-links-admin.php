@@ -1,8 +1,15 @@
 <?php
+/**
+ * Holds Theme My Login Custom User Links Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_User_Links
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Custom_User_Links_Admin' ) ) :
 /**
- * Theme My Login Custom User Links module admin class
+ * Theme My Login Custom User Links Admin class
  *
  * @since 6.0
  */
@@ -15,7 +22,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function add_user_link_ajax() {
+	public function add_user_link_ajax() {
 		global $theme_my_login;
 
 		if ( !current_user_can( 'manage_options' ) )
@@ -101,7 +108,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function delete_user_link_ajax() {
+	public function delete_user_link_ajax() {
 		global $theme_my_login, $id;
 
 		$user_role = isset( $_POST['user_role'] ) ? $_POST['user_role'] : '';
@@ -134,7 +141,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		global $wp_roles;
 		// Add menu tab
 		$admin->add_menu_page( __( 'User Links', 'theme-my-login' ), 'tml-options-user-links' );
@@ -160,7 +167,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
 	 */
-	function save_settings( $settings ) {
+	public function save_settings( $settings ) {
 		// Bail-out if doing AJAX because it has it's own saving routine
 		if ( defined('DOING_AJAX') && DOING_AJAX )
 			return $settings;
@@ -201,7 +208,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function load_settings_page() {
+	public function load_settings_page() {
 		wp_enqueue_style( 'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/css/custom-user-links-admin.css' ) );
 		wp_enqueue_script( 'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/js/custom-user-links-admin.js' ), array( 'wp-lists', 'jquery-ui-sortable' ) );
 	}
@@ -217,7 +224,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param string $role Name of user role
 	 */
-	function display_settings( $role ) {
+	public function display_settings( $role ) {
 		global $theme_my_login;
 
 		$links =& $theme_my_login->get_option( array( 'user_links', $role ) );
@@ -276,14 +283,14 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * Outputs a link row to the table
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param array $link Link data
 	 * @param string $role Name of user role
 	 * @param int $count Reference to counter variable
 	 * @return sring Link row
 	 */
-	function get_link_row( $link, $role, &$count ) {
+	protected function get_link_row( $link, $role, &$count ) {
 		$r = '';
 		++ $count;
 		if ( $count % 2 )
@@ -319,7 +326,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Custom_User_Links::init_options();
 		$theme_my_login->set_option( 'user_links', $options['user_links'] );
 	}
@@ -328,9 +335,9 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_custom-user-links/custom-user-links.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
@@ -347,8 +354,6 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_user_links_admin
  * @since 6.0
  */
-$theme_my_login_custom_user_links_admin = new Theme_My_Login_Custom_User_Links_Admin();
+$theme_my_login_custom_user_links_admin = new Theme_My_Login_Custom_User_Links_Admin;
 
 endif; // Class exists
-
-?>

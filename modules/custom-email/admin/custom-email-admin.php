@@ -1,8 +1,15 @@
 <?php
+/**
+ * Holds Theme My Login Custom E-mail Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_Email
+ * @since 6.0
+ */
 
 if ( !class_exists( 'Theme_My_Login_Custom_Email_Admin' ) ) :
 /**
- * Theme My Login Custom Email module admin class
+ * Theme My Login Custom E-mail Admin class
  *
  * @since 6.0
  */
@@ -19,7 +26,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
 	 */
-	function save_settings( $settings ) {
+	public function save_settings( $settings ) {
 		global $theme_my_login;
 		// Checkboxes
 		$settings['email']['new_user']['admin_disable'] = isset( $_POST['theme_my_login']['email']['new_user']['admin_disable'] );
@@ -38,7 +45,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_new_user_settings() {
+	public function display_new_user_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
     <tr>
@@ -119,7 +126,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_retrieve_pass_settings() {
+	public function display_retrieve_pass_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
 	<tr>
@@ -163,7 +170,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_reset_pass_settings() {
+	public function display_reset_pass_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
 	<tr>
@@ -213,7 +220,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_user_activation_settings() {
+	public function display_user_activation_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
     <tr>
@@ -257,7 +264,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_user_approval_settings() {
+	public function display_user_approval_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
     <tr>
@@ -338,7 +345,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	function display_user_denial_settings() {
+	public function display_user_denial_settings() {
 		global $theme_my_login;
 ?><table class="form-table">
     <tr>
@@ -384,7 +391,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $admin Reference to global $theme_my_login_admin object
 	 */
-	function admin_menu( &$admin ) {
+	public function admin_menu( &$admin ) {
 		global $theme_my_login;
 
 		$admin->add_menu_page( __( 'E-mail', 'theme-my-login' ), 'tml-options-email' );
@@ -409,7 +416,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
-	function activate( &$theme_my_login ) {
+	public function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Custom_Email::init_options();
 		$theme_my_login->set_option( 'email', $options['email'] );
 	}
@@ -418,9 +425,9 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 * Loads the module
 	 *
 	 * @since 6.0
-	 * @access public
+	 * @access protected
 	 */
-	function load() {
+	protected function load() {
 		add_action( 'tml_activate_custom-email/custom-email.php', array( &$this, 'activate' ) );
 		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
 		add_filter( 'tml_save_settings', array( &$this, 'save_settings' ) );
@@ -432,8 +439,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_email_admin
  * @since 6.0
  */
-$theme_my_login_custom_email_admin = new Theme_My_Login_Custom_Email_Admin();
+$theme_my_login_custom_email_admin = new Theme_My_Login_Custom_Email_Admin;
 
 endif; // Class exists
 
-?>
