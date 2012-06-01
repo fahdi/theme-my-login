@@ -89,26 +89,6 @@ class Theme_My_Login_Admin {
 	}
 
 	/**
-	 * Outputs message to admin to visit settings page after initial plugin activation
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	function initial_nag() {
-		global $theme_my_login;
-
-		if ( $theme_my_login->options->get_option( 'initial_nag' ) && current_user_can( 'manage_options' ) ) {
-			echo '<div id="tml-initial-nag" class="updated">';
-			echo '<p>';
-			echo '<strong>' . __( 'NOTICE:', 'theme-my-login' ) . '</strong> ';
-			printf( __( 'Now that you have activated Theme My Login, please <a href="%s">visit the settings page</a> and familiarize yourself with all of the available options.', 'theme-my-login' ), admin_url( 'options-general.php?page=theme-my-login' ) );
-			echo '</p><p>';
-			printf( '<a href="%s">' . __( 'Take me to the settings page', 'theme-my-login' ) . '</a>', admin_url( 'options-general.php?page=theme-my-login' ) );
-			echo '</p></div>';
-		}
-	}
-
-	/**
 	 * Loads admin styles and scripts
 	 *
 	 * @since 6.0
@@ -116,14 +96,6 @@ class Theme_My_Login_Admin {
 	 */
 	function load_settings_page() {
 		global $theme_my_login, $user_ID;
-
-		if ( current_user_can( 'manage_options' ) ) {
-			// Remove initial nag now that the settings page has been visited
-			if ( $theme_my_login->options->get_option( 'initial_nag' ) ) {
-				$theme_my_login->options->set_option( 'initial_nag', 0 );
-				$theme_my_login->options->save();
-			}
-		}
 
 		// Flush rewrite rules if slugs have been updated
 		if ( $theme_my_login->options->get_option( 'flush_rules' ) )
@@ -617,6 +589,10 @@ class Theme_My_Login_Admin {
 		if ( version_compare( $version, '6.0', '<' ) ) {
 
 		}
+		// 6.3 upgrade
+		if ( version_compare( $version, '6.3', '<' ) ) {
+			$theme_my_login->options->delete_option( 'initial_nag' );
+		}
 
 		// Get existing page ID
 		$page_id = $theme_my_login->options->get_option( 'page_id' );
@@ -725,7 +701,6 @@ class Theme_My_Login_Admin {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
-		add_action( 'admin_notices', array( &$this, 'initial_nag' ) );
 		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 
 		register_activation_hook( TML_ABSPATH . '/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
