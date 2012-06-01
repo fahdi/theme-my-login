@@ -24,7 +24,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 	function template_redirect() {
 		global $theme_my_login;
 
-		if ( $theme_my_login->options->get_option( array( 'security', 'private_site' ) ) ) {
+		if ( $theme_my_login->get_option( array( 'security', 'private_site' ) ) ) {
 			if ( !( is_user_logged_in() || $theme_my_login->is_login_page() ) ) {
 				$redirect_to = apply_filters( 'tml_security_private_site_redirect', wp_login_url( $_SERVER['REQUEST_URI'], true ) );
 				wp_safe_redirect( $redirect_to );
@@ -67,7 +67,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Module {
 			}
 		} elseif ( is_wp_error( $user ) && 'incorrect_password' == $user->get_error_code() ) {
 			// Get the options
-			$options = $theme_my_login->options->get_option( array( 'security', 'failed_login' ), array() );
+			$options = $theme_my_login->get_option( array( 'security', 'failed_login' ), array() );
 
 			// Get the attempts
 			$attempts = $this->get_failed_login_attempts( $userdata->ID );

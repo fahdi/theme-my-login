@@ -35,7 +35,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	function display_settings() {
 		global $theme_my_login, $wp_roles;
 
-		$options = $theme_my_login->options->get_option( array( 'themed_profiles' ), array() );
+		$options = $theme_my_login->get_option( array( 'themed_profiles' ), array() );
 		?>
 <table class="form-table">
     <tr valign="top">
@@ -65,7 +65,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	<tr valign="top">
 		<th scope="row"><label for="theme_my_login_permalinks_profile"><?php _e( 'Profile', 'theme-my-login' ); ?></label></th>
 		<td>
-			<input name="theme_my_login[permalinks][profile]" type="text" id="theme_my_login_permalinks_profile" value="<?php echo $theme_my_login->options->get_option( array( 'permalinks', 'profile' ) ); ?>" class="regular-text" />
+			<input name="theme_my_login[permalinks][profile]" type="text" id="theme_my_login_permalinks_profile" value="<?php echo $theme_my_login->get_option( array( 'permalinks', 'profile' ) ); ?>" class="regular-text" />
 		</td>
 	</tr><?php
 	}
@@ -113,7 +113,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Themed_Profiles::init_options();
-		$theme_my_login->options->set_option( 'themed_profiles', $options['themed_profiles'] );
+		$theme_my_login->set_option( 'themed_profiles', $options['themed_profiles'] );
 	}
 
 	/**

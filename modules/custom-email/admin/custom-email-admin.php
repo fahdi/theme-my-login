@@ -52,22 +52,22 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_new_user_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][mail_from_name]" type="text" id="theme_my_login_new_user_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][new_user][mail_from_name]" type="text" id="theme_my_login_new_user_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_new_user_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][mail_from]" type="text" id="theme_my_login_new_user_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][new_user][mail_from]" type="text" id="theme_my_login_new_user_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_new_user_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][new_user][mail_content_type]" id="theme_my_login_new_user_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'new_user', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'new_user', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'new_user', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'new_user', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_new_user_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][title]" type="text" id="theme_my_login_new_user_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][new_user][title]" type="text" id="theme_my_login_new_user_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_new_user_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][new_user][message]" id="theme_my_login_new_user_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][new_user][message]" id="theme_my_login_new_user_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%, %user_pass%, %user_ip%</p>
 		</td>
@@ -82,29 +82,29 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_new_user_admin_mail_to"><?php _e( 'To', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_to]" type="text" id="theme_my_login_new_user_admin_mail_to" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_to]" type="text" id="theme_my_login_new_user_admin_mail_to" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_new_user_admin_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_from_name]" type="text" id="theme_my_login_new_user_admin_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_from_name]" type="text" id="theme_my_login_new_user_admin_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_new_user_admin_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_mail_from]" type="text" id="theme_my_login_new_user_admin_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_mail_from]" type="text" id="theme_my_login_new_user_admin_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_new_user_admin_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][new_user][admin_mail_content_type]" id="theme_my_login_new_user_admin_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_new_user_admin_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][new_user][admin_title]" type="text" id="theme_my_login_new_user_admin_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][new_user][admin_title]" type="text" id="theme_my_login_new_user_admin_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'admin_title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_new_user_admin_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][new_user][admin_message]" id="theme_my_login_new_user_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][new_user][admin_message]" id="theme_my_login_new_user_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'new_user', 'admin_message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%, %user_ip%</p>
 
-			<p><label for="theme_my_login_new_user_admin_disable"><input name="theme_my_login[email][new_user][admin_disable]" type="checkbox" id="theme_my_login_new_user_admin_disable" value="1"<?php checked( 1, $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_disable' ) ) ); ?> /> Disable Admin Notification</label></p>
+			<p><label for="theme_my_login_new_user_admin_disable"><input name="theme_my_login[email][new_user][admin_disable]" type="checkbox" id="theme_my_login_new_user_admin_disable" value="1"<?php checked( 1, $theme_my_login->get_option( array( 'email', 'new_user', 'admin_disable' ) ) ); ?> /> Disable Admin Notification</label></p>
 		</td>
 	</tr>
 </table><?php
@@ -131,22 +131,22 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_retrieve_pass_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][retrieve_pass][mail_from_name]" type="text" id="theme_my_login_retrieve_pass_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][retrieve_pass][mail_from_name]" type="text" id="theme_my_login_retrieve_pass_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_retrieve_pass_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][retrieve_pass][mail_from]" type="text" id="theme_my_login_retrieve_pass_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][retrieve_pass][mail_from]" type="text" id="theme_my_login_retrieve_pass_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_retrieve_pass_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][retrieve_pass][mail_content_type]" id="theme_my_login_retrieve_pass_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text',' theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text',' theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_retrieve_pass_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][retrieve_pass][title]" type="text" id="theme_my_login_retrieve_pass_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][retrieve_pass][title]" type="text" id="theme_my_login_retrieve_pass_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_retrieve_pass_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][retrieve_pass][message]" id="theme_my_login_retrieve_pass_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][retrieve_pass][message]" id="theme_my_login_retrieve_pass_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %reseturl%, %user_login%, %user_email%, %user_ip%</p>
 		</td>
@@ -176,29 +176,29 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_reset_pass_admin_mail_to"><?php _e( 'To', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_to]" type="text" id="theme_my_login_reset_pass_admin_mail_to" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_to]" type="text" id="theme_my_login_reset_pass_admin_mail_to" value="<?php echo $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_reset_pass_admin_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_from_name]" type="text" id="theme_my_login_reset_pass_admin_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_from_name]" type="text" id="theme_my_login_reset_pass_admin_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_reset_pass_admin_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_mail_from]" type="text" id="theme_my_login_reset_pass_admin_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_mail_from]" type="text" id="theme_my_login_reset_pass_admin_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_reset_pass_admin_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][reset_pass][admin_mail_content_type]" id="theme_my_login_reset_pass_admin_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_reset_pass_admin_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][reset_pass][admin_title]" type="text" id="theme_my_login_reset_pass_admin_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][reset_pass][admin_title]" type="text" id="theme_my_login_reset_pass_admin_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_reset_pass_admin_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][reset_pass][admin_message]" id="theme_my_login_reset_pass_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][reset_pass][admin_message]" id="theme_my_login_reset_pass_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%, %user_ip%</p>
 
-			<p><label for="theme_my_login_reset_pass_admin_disable"><input name="theme_my_login[email][reset_pass][admin_disable]" type="checkbox" id="theme_my_login_reset_pass_admin_disable" value="1"<?php checked( 1, $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_disable' ) ) ); ?> /> <?php _e( 'Disable Admin Notification', 'theme-my-login' ); ?></label></p>
+			<p><label for="theme_my_login_reset_pass_admin_disable"><input name="theme_my_login[email][reset_pass][admin_disable]" type="checkbox" id="theme_my_login_reset_pass_admin_disable" value="1"<?php checked( 1, $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_disable' ) ) ); ?> /> <?php _e( 'Disable Admin Notification', 'theme-my-login' ); ?></label></p>
 		</td>
 	</tr>
 </table><?php
@@ -225,22 +225,22 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_user_activation_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_activation][mail_from_name]" type="text" id="theme_my_login_user_activation_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_activation', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_activation][mail_from_name]" type="text" id="theme_my_login_user_activation_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_activation', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_user_activation_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_activation][mail_from]" type="text" id="theme_my_login_user_activation_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_activation', 'mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_activation][mail_from]" type="text" id="theme_my_login_user_activation_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_activation', 'mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_user_activation_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][user_activation][mail_content_type]" id="theme_my_login_user_activation_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'user_activation', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'user_activation', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'user_activation', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'user_activation', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_user_activation_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_activation][title]" type="text" id="theme_my_login_user_activation_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_activation', 'title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][user_activation][title]" type="text" id="theme_my_login_user_activation_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_activation', 'title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_user_activation_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][user_activation][message]" id="theme_my_login_user_activation_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'user_activation', 'message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][user_activation][message]" id="theme_my_login_user_activation_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'user_activation', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %activateurl%, %user_login%, %user_email%, %user_ip%</p>
 		</td>
@@ -271,22 +271,22 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_user_approval_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][mail_from_name]" type="text" id="theme_my_login_user_approval_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_approval][mail_from_name]" type="text" id="theme_my_login_user_approval_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_user_approval_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][mail_from]" type="text" id="theme_my_login_user_approval_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_approval][mail_from]" type="text" id="theme_my_login_user_approval_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_user_approval_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][user_approval][mail_content_type]" id="theme_my_login_user_approval_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'user_approval', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'user_approval', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'user_approval', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'user_approval', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_user_approval_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][title]" type="text" id="theme_my_login_user_approval_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][user_approval][title]" type="text" id="theme_my_login_user_approval_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_user_approval_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][user_approval][message]" id="theme_my_login_user_approval_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][user_approval][message]" id="theme_my_login_user_approval_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %loginurl%, %user_login%, %user_email%, %user_pass%</p>
 		</td>
@@ -301,29 +301,29 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_user_approval_admin_mail_to"><?php _e( 'To', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][admin_mail_to]" type="text" id="theme_my_login_user_approval_admin_mail_to" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_approval][admin_mail_to]" type="text" id="theme_my_login_user_approval_admin_mail_to" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_user_approval_admin_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][admin_mail_from_name]" type="text" id="theme_my_login_user_approval_admin_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_approval][admin_mail_from_name]" type="text" id="theme_my_login_user_approval_admin_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_user_approval_admin_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][admin_mail_from]" type="text" id="theme_my_login_user_approval_admin_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_approval][admin_mail_from]" type="text" id="theme_my_login_user_approval_admin_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_user_approval_admin_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][user_approval][admin_mail_content_type]" id="theme_my_login_user_approval_admin_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_user_approval_admin_title"><?php _e( 'Subject', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_approval][admin_title]" type="text" id="theme_my_login_user_approval_admin_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][user_approval][admin_title]" type="text" id="theme_my_login_user_approval_admin_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_user_approval_admin_message"><?php _e( 'Message', 'theme-my-login' ); ?></label><br />
-			<textarea name="theme_my_login[email][user_approval][admin_message]" id="theme_my_login_user_approval_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][user_approval][admin_message]" id="theme_my_login_user_approval_admin_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %pendingurl%, %user_login%, %user_email%, %user_ip%</p>
 
-			<p><label for="theme_my_login_user_approval_admin_disable"><input name="theme_my_login[email][user_approval][admin_disable]" type="checkbox" id="theme_my_login_user_approval_admin_disable" value="1"<?php checked( 1, $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_disable' ) ) ); ?> /> <?php _e( 'Disable Admin Notification', 'theme-my-login' ); ?></label></p>
+			<p><label for="theme_my_login_user_approval_admin_disable"><input name="theme_my_login[email][user_approval][admin_disable]" type="checkbox" id="theme_my_login_user_approval_admin_disable" value="1"<?php checked( 1, $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_disable' ) ) ); ?> /> <?php _e( 'Disable Admin Notification', 'theme-my-login' ); ?></label></p>
 		</td>
 	</tr>
 </table><?php
@@ -349,22 +349,22 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 			</p>
 
 			<p><label for="theme_my_login_user_denial_mail_from_name"><?php _e( 'From Name', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_denial][mail_from_name]" type="text" id="theme_my_login_user_denial_mail_from_name" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_denial', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_denial][mail_from_name]" type="text" id="theme_my_login_user_denial_mail_from_name" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_denial', 'mail_from_name' ) ); ?>" class="extended-text" /></p>
 
 			<p><label for="theme_my_login_user_denial_mail_from"><?php _e( 'From E-mail', 'theme-my-login' ); ?></label><br />
-			<input name="theme_my_login[email][user_denial][mail_from]" type="text" id="theme_my_login_user_denial_mail_from" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_denial', 'mail_from' ) ); ?>" class="extended-text" /></p>
+			<input name="theme_my_login[email][user_denial][mail_from]" type="text" id="theme_my_login_user_denial_mail_from" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_denial', 'mail_from' ) ); ?>" class="extended-text" /></p>
 
             <p><label for="theme_my_login_user_denial_mail_content_type"><?php _e( 'E-mail Format', 'theme-my-login' ); ?></label><br />
             <select name="theme_my_login[email][user_denial][mail_content_type]" id="theme_my_login_user_denial_mail_content_type">
-            <option value="plain"<?php if ( 'plain' == $theme_my_login->options->get_option( array( 'email', 'user_denial', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
-            <option value="html"<?php if ( 'html' == $theme_my_login->options->get_option( array( 'email', 'user_denial', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
+            <option value="plain"<?php if ( 'plain' == $theme_my_login->get_option( array( 'email', 'user_denial', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'Plain Text', 'theme-my-login' ); ?></option>
+            <option value="html"<?php if ( 'html' == $theme_my_login->get_option( array( 'email', 'user_denial', 'mail_content_type' ) ) ) echo ' selected="selected"'; ?>><?php _e( 'HTML', 'theme-my-login' ); ?></option>
             </select></p>
 
 			<p><label for="theme_my_login_user_denial_title"><?php _e('Subject', 'theme-my-login'); ?></label><br />
-			<input name="theme_my_login[email][user_denial][title]" type="text" id="theme_my_login_user_denial_title" value="<?php echo $theme_my_login->options->get_option( array( 'email', 'user_denial', 'title' ) ); ?>" class="full-text" /></p>
+			<input name="theme_my_login[email][user_denial][title]" type="text" id="theme_my_login_user_denial_title" value="<?php echo $theme_my_login->get_option( array( 'email', 'user_denial', 'title' ) ); ?>" class="full-text" /></p>
 
 			<p><label for="theme_my_login_user_denial_message"><?php _e('Message', 'theme-my-login'); ?></label><br />
-			<textarea name="theme_my_login[email][user_denial][message]" id="theme_my_login_user_denial_message" class="large-text" rows="10"><?php echo $theme_my_login->options->get_option( array( 'email', 'user_denial', 'message' ) ); ?></textarea></p>
+			<textarea name="theme_my_login[email][user_denial][message]" id="theme_my_login_user_denial_message" class="large-text" rows="10"><?php echo $theme_my_login->get_option( array( 'email', 'user_denial', 'message' ) ); ?></textarea></p>
 
 			<p class="description"><?php _e( 'Available Variables', 'theme-my-login' ); ?>: %blogname%, %siteurl%, %user_login%, %user_email%</p>
 		</td>
@@ -411,7 +411,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Custom_Email::init_options();
-		$theme_my_login->options->set_option( 'email', $options['email'] );
+		$theme_my_login->set_option( 'email', $options['email'] );
 	}
 
 	/**

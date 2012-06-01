@@ -24,7 +24,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap )
 			<input type="hidden" name="checkuser_id" value="<?php echo $current_user->ID; ?>" />
 		</p>
 
-		<?php if ( !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) && !has_action( 'personal_options' ) ): ?>
+		<?php if ( !$theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) && !has_action( 'personal_options' ) ): ?>
 
 		<h3><?php _e( 'Personal Options', 'theme-my-login' ); ?></h3>
 

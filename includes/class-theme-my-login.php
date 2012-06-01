@@ -15,13 +15,22 @@ if ( !class_exists( 'Theme_My_Login' ) ) :
  */
 class Theme_My_Login {
 	/**
-	 * Holds options object
+	 * Holds options key
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @var string
+	 */
+	var $options_key = 'theme_my_login';
+
+	/**
+	 * Holds options array
 	 *
 	 * @since 6.1
 	 * @access public
 	 * @var object
 	 */
-	var $options;
+	var $options = array();
 
 	/**
 	 * Holds errors object
@@ -79,10 +88,10 @@ class Theme_My_Login {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
 
-		$this->init_options();
+		$this->load_options();
 
 		// Load options again to allow modules to tap in
-		add_action( 'tml_modules_loaded', array( &$this, 'init_options' ), 0 );
+		add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 0 );
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
@@ -113,24 +122,6 @@ class Theme_My_Login {
 	}
 
 	/**
-	 * Initializes plugin options object
-	 *
-	 * @since 6.1
-	 * @access public
-	 */
-	function init_options() {
-		$this->options = new WDBJ_Plugin_Options( 'theme_my_login', apply_filters( 'tml_init_options', array(
-			'page_id' => 0,
-			'show_page' => 1,
-			'enable_css' => 1,
-			'email_login' => 1,
-			'active_modules' => array(),
-			'permalinks' => array(),
-			'initial_nag' => 1
-		) ) );
-	}
-
-	/**
 	 * Initializes the plugin
 	 *
 	 * @since 6.0
@@ -143,14 +134,14 @@ class Theme_My_Login {
 
 		$this->errors = new WP_Error();
 
-		if ( $this->options->get_option( 'enable_css' ) )
-			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->options->get_option( 'version' ) );
+		if ( $this->get_option( 'enable_css' ) )
+			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->get_option( 'version' ) );
 
 		$wp->add_query_var( 'action' );
 		
-		$page_id = $this->options->get_option( 'page_id' );
+		$page_id = $this->get_option( 'page_id' );
 
-		foreach ( $this->options->get_option( 'permalinks', array() ) as $action => $slug ) {
+		foreach ( $this->get_option( 'permalinks', array() ) as $action => $slug ) {
 			if ( !empty( $slug ) )
 				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
 		}
@@ -182,7 +173,7 @@ class Theme_My_Login {
 				$page_id = $wp_query->get_queried_object_id();
 		}
 
-		$is_login_page = ( $page_id == $this->options->get_option( 'page_id' ) );
+		$is_login_page = ( $page_id == $this->get_option( 'page_id' ) );
 
 		return apply_filters( 'tml_is_login_page', $is_login_page, $page_id );
 	}
@@ -443,12 +434,12 @@ class Theme_My_Login {
 
 		$q = wp_parse_args( $query );
 
-		$page = get_page( $this->options->get_option( 'page_id' ) );
+		$page = get_page( $this->get_option( 'page_id' ) );
 
 		$link = $wp_rewrite->get_page_permastruct();
 		if ( !empty( $link ) ) {
 			$action = isset( $q['action'] ) ? $q['action'] : 'login';
-			if ( $slug = $this->options->get_option( array( 'permalinks', $action ) ) )
+			if ( $slug = $this->get_option( array( 'permalinks', $action ) ) )
 				unset( $q['action'] );
 			else
 				$slug = $page->post_name;
@@ -500,7 +491,7 @@ class Theme_My_Login {
 		global $wp_rewrite;
 
 		if ( $wp_rewrite->using_permalinks() && $this->is_login_page() && $this->request_action == $action ) {
-			if ( $slug = $this->options->get_option( 'permalinks', $action ) ) {
+			if ( $slug = $this->get_option( 'permalinks', $action ) ) {
 				switch ( $action ) {
 					case 'lostpassword' :
 					case 'retrievepassword' :
@@ -580,8 +571,8 @@ class Theme_My_Login {
 	 */
 	function wp_list_pages_excludes( $exclude_array ) {
 		$exclude_array = (array) $exclude_array;
-		if ( !$this->options->get_option( 'show_page' ) )
-			$exclude_array[] = $this->options->get_option( 'page_id' );
+		if ( !$this->get_option( 'show_page' ) )
+			$exclude_array[] = $this->get_option( 'page_id' );
 		return $exclude_array;
 	}
 
@@ -857,7 +848,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function get_active_and_valid_modules() {
 		$modules = array();
-		$active_modules = apply_filters( 'tml_active_modules', $this->options->get_option( 'active_modules' ) );
+		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		foreach ( (array) $active_modules as $module ) {
 			// check the $plugin filename
 			// Validate plugin filename	
@@ -880,7 +871,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return bool True if $module is active, false if not
 	 */
 	function is_module_active( $module ) {
-		$active_modules = apply_filters( 'tml_active_modules', $this->options->get_option( 'active_modules' ) );
+		$active_modules = apply_filters( 'tml_active_modules', $this->get_option( 'active_modules' ) );
 		return in_array( $module, (array) $active_modules );
 	}
 
@@ -895,7 +886,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function wp_authenticate( &$user_login ) {
 		global $wpdb;
-		if ( is_email( $user_login ) && $this->options->get_option( 'email_login' ) ) {
+		if ( is_email( $user_login ) && $this->get_option( 'email_login' ) ) {
 			if ( $found = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email = %s", $user_login ) ) )
 				$user_login = $found;
 		}
@@ -1088,6 +1079,105 @@ if(typeof wpOnload=='function')wpOnload()
 		do_action( 'tml_new_user_registered', $user_id, $user_pass );
 
 		return $user_id;
+	}
+
+	/**
+	 * Loads options from DB
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array|string
+	 */
+	function load_options() {
+		$defaults = array(
+			'page_id' => 0,
+			'show_page' => 1,
+			'enable_css' => 1,
+			'email_login' => 1,
+			'active_modules' => array(),
+			'permalinks' => array()
+		);
+		$options = get_option( $this->options_key );
+		$options = wp_parse_args( $options, $defaults );
+
+		$this->options = apply_filters( 'tml_init_options', $options );
+
+	}
+
+	/**
+	 * Saves options to DB
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	function save_options() {
+		update_option( $this->options_key, $this->options );
+	}
+
+	/**
+	 * Retrieves an option
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string|array $option Name of option to retrieve or an array of hierarchy for multidimensional options
+	 * @param mixed $default Default value to return if $option is not set
+	 * @return mixed Value of requested option or $default if option is not set
+	 */
+	function get_option( $option, $default = false ) {
+		$options = $this->options;
+		$value = false;
+		if ( is_array( $option ) ) {
+			foreach ( $option as $_option ) {
+				if ( !isset( $options[$_option] ) ) {
+					$value = $default;
+					break;
+				}
+				$options = $value = $options[$_option];
+			}
+		} else {
+			$value = isset( $options[$option] ) ? $options[$option] : $default;
+		}
+		return apply_filters( $this->options_key . '_get_option', $value, $option, $default );
+	}
+
+	/**
+	 * Sets an option
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $option Name of option to set or an array of hierarchy for multidimensional options
+	 * @param mixed $value Value of new option
+	 */
+	function set_option( $option, $value = '' ) {
+		if ( is_array( $option ) ) {
+			$options = $this->options;
+			$last = array_pop( $option );
+			foreach ( $option as $_option ) {
+				if ( !isset( $options[$_option] ) )
+					$options[$_option] = array();
+				$options = $options[$_option];
+			}
+			$options[$last] = $value;
+			$this->options = array_merge( $this->options, $options );
+		} else {
+			$this->options[$option] = apply_filters( $this->options_key . '_set_option', $value, $option );
+		}
+	}
+
+	/**
+	 * Deletes an option
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $option Name of option to delete
+	 */
+	function delete_option( $option ) {
+		if ( isset( $this->options[$option] ) )
+			unset( $this->options[$option] );
 	}
 }
 

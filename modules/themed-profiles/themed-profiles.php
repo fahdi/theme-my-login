@@ -31,14 +31,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				$user_role = 'subscriber';
 			}
 			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
-                if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
+                if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
                 	if ( !empty( $_GET ) )
                 		$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
 					wp_redirect( $redirect_to );
                     exit;
                 }
             } else {
-            	if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
+            	if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
                 	wp_redirect( $redirect_to );
                 	exit();
                 }
@@ -62,7 +62,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			$user_role = 'subscriber';
 		}
 
-		if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
+		if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
 			return false;
 
 		return $show_admin_bar;
@@ -230,7 +230,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 				$user_role = 'subscriber';
 			}
 
-			if ( $user_role && !$theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
+			if ( $user_role && !$theme_my_login->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
 				return $url;
 					
 			$parsed_url = parse_url( $url );

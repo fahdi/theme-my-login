@@ -60,14 +60,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			update_user_meta( $user_id, 'user_pass', $_POST['user_pass'] );
 
 		// Send appropriate e-mail depending on moderation type
-		if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) { // User activation
+		if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) { // User activation
 			// Generate an activation key
 			$key = wp_generate_password( 20, false );
 			// Set the activation key for the user
 			$wpdb->update( $wpdb->users, array( 'user_activation_key' => $key ), array( 'user_login' => $user->user_login ) );
 			// Send activation e-mail
 			$this->new_user_activation_notification( $user_id, $key );
-		} elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) { // Admin approval
+		} elseif ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) { // Admin approval
 			// Send approval e-mail
 			$this->new_user_approval_admin_notification( $user_id );
 		}
@@ -158,7 +158,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 
 		if ( $userdata = get_user_by( 'login', $username ) ) {
 			if ( array_key_exists( 'pending', (array) $userdata->$cap_key ) ) {
-				if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
+				if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
 						$theme_my_login->get_login_page_link( 'action=sendactivation&login=' . $username ) ) );
@@ -211,9 +211,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		if ( !empty( $theme_my_login->request_instance ) )
 			$redirect_to = $theme_my_login->get_current_url( 'instance=' . $theme_my_login->request_instance );
 
-		if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) )
+		if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
-		elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) )
+		elseif ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'approval', $redirect_to );
 
 		return $redirect_to;
@@ -487,7 +487,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 		global $theme_my_login;
 
 		// Moderation is enabled
-		if ( in_array( $theme_my_login->options->get_option( array( 'moderation', 'type' ) ), array( 'admin', 'email' ) ) ) {
+		if ( in_array( $theme_my_login->get_option( array( 'moderation', 'type' ) ), array( 'admin', 'email' ) ) ) {
 			// Remove all other registration filters
 			add_action( 'register_post', array( &$this, 'register_post' ) );
 
@@ -503,7 +503,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
 			add_action( 'tml_new_user_activated', array( &$this, 'new_user_activated' ), 10, 2 );
 
 			// Add activation action
-			if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
+			if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
 				add_action( 'tml_request_activate', array( &$this, 'user_activation' ) );
 				add_action( 'tml_request_sendactivation', array( &$this, 'send_activation' ) );
 			}

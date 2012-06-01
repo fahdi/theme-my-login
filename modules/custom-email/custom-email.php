@@ -14,15 +14,6 @@ if ( !class_exists( 'Theme_My_Login_Custom_Email' ) ) :
  */
 class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	/**
-	 * Holds reference to module specific options in $theme_my_login object options
-	 *
-	 * @since 6.0
-	 * @access public
-	 * @var array
-	 */
-	var $options;
-
-	/**
 	 * Mail from
 	 *
 	 * @since 6.0
@@ -76,7 +67,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function apply_retrieve_pass_filters() {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'retrieve_pass' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'retrieve_pass' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		add_filter( 'retrieve_password_title', array( &$this, 'retrieve_pass_title_filter' ), 10, 2 );
 		add_filter( 'retrieve_password_message', array( &$this, 'retrieve_pass_message_filter' ), 10, 3 );
@@ -93,7 +84,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function apply_password_reset_filters() {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'reset_pass' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'reset_pass' ) );
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 		add_filter( 'password_change_notification_mail_to', array( &$this, 'password_change_notification_mail_to_filter' ) );
 		add_filter( 'password_change_notification_title', array( &$this, 'password_change_notification_title_filter' ), 10, 2 );
@@ -183,7 +174,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function retrieve_pass_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -208,7 +199,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			'%loginurl%' => site_url( 'wp-login.php', 'login' ),
 			'%reseturl%' => site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' )
 			);
-		$_message = $theme_my_login->options->get_option( array( 'email', 'retrieve_pass', 'message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'retrieve_pass', 'message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id, $replacements );
 	}
 
@@ -226,7 +217,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function password_change_notification_mail_to_filter( $to ) {
 		global $theme_my_login;
-		$_to = $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_mail_to' ) );
+		$_to = $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
 
@@ -245,7 +236,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function password_change_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -264,7 +255,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function password_change_notification_message_filter( $message, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'reset_pass', 'admin_message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'reset_pass', 'admin_message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id );
 	}
 
@@ -282,7 +273,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function send_password_change_notification_filter( $enable ) {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'reset_pass' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'reset_pass' ) );
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 		if ( $options['admin_disable'] )
 			return false;
@@ -304,7 +295,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function new_user_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'new_user', 'title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'new_user', 'title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -328,7 +319,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 			'%loginurl%' => site_url( 'wp-login.php', 'login' ),
 			'%user_pass%' => $new_pass
 			);
-		$_message = $theme_my_login->options->get_option( array( 'email', 'new_user', 'message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'new_user', 'message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id, $replacements );
 	}
 
@@ -346,7 +337,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function send_new_user_notification_filter( $enable ) {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'new_user' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'new_user' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		return $enable;
 	}
@@ -365,7 +356,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function new_user_admin_notification_mail_to_filter( $to ) {
 		global $theme_my_login;
-		$_to = $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_mail_to' ) );
+		$_to = $theme_my_login->get_option( array( 'email', 'new_user', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
 
@@ -384,7 +375,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function new_user_admin_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'new_user', 'admin_title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -403,7 +394,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function new_user_admin_notification_message_filter( $message, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'new_user', 'admin_message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'new_user', 'admin_message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id );
 	}
 
@@ -421,7 +412,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function send_new_user_admin_notification_filter( $enable ) {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'new_user' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'new_user' ) );
 		$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 		if ( $options['admin_disable'] )
 			return false;
@@ -440,13 +431,13 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 		if ( !$theme_my_login->is_module_active( 'user-moderation/user-moderation.php' ) )
 			return;
 
-		if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
-			$options =& $theme_my_login->options->get_option( array( 'email', 'user_activation' ) );
+		if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
+			$options =& $theme_my_login->get_option( array( 'email', 'user_activation' ) );
 			$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 			add_filter( 'user_activation_notification_title', array( &$this, 'user_activation_notification_title_filter' ), 10, 2 );
 			add_filter( 'user_activation_notification_message', array( &$this, 'user_activation_notification_message_filter' ), 10, 3 );
-		} elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
-			$options =& $theme_my_login->options->get_option( array( 'email', 'user_approval' ) );
+		} elseif ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
+			$options =& $theme_my_login->get_option( array( 'email', 'user_approval' ) );
 			$this->set_mail_headers( $options['admin_mail_from'], $options['admin_mail_from_name'], $options['admin_mail_content_type'] );
 			add_filter( 'user_approval_admin_notifcation_mail_to', array( &$this, 'user_approval_admin_notifcation_mail_to_filter' ) );
 			add_filter( 'user_approval_admin_notification_title', array( &$this, 'user_approval_admin_notification_title_filter' ), 10, 2 );
@@ -465,7 +456,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function apply_user_approval_notification_filters() {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'user_approval' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'user_approval' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		add_filter( 'user_approval_notification_title', array( &$this, 'user_approval_notification_title_filter' ), 10, 2 );
 		add_filter( 'user_approval_notification_message', array( &$this, 'user_approval_notification_message_filter' ), 10, 3 );
@@ -482,7 +473,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function apply_user_denial_notification_filters() {
 		global $theme_my_login;
-		$options =& $theme_my_login->options->get_option( array( 'email', 'user_denial' ) );
+		$options =& $theme_my_login->get_option( array( 'email', 'user_denial' ) );
 		$this->set_mail_headers( $options['mail_from'], $options['mail_from_name'], $options['mail_content_type'] );
 		add_filter( 'user_denial_notification_title', array( &$this, 'user_denial_notification_title_filter' ), 10, 2 );
 		add_filter( 'user_denial_notification_message', array( &$this, 'user_denial_notification_message_filter' ), 10, 2 );
@@ -503,7 +494,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_activation_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'user_activation', 'title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'user_activation', 'title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -523,7 +514,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_activation_notification_message_filter( $message, $activation_url, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'user_activation', 'message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'user_activation', 'message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id, array( '%activateurl%' => $activation_url ) );
 	}
 
@@ -542,7 +533,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_approval_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'user_approval', 'title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'user_approval', 'title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -562,7 +553,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_approval_notification_message_filter( $message, $new_pass, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'user_approval', 'message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'user_approval', 'message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id, array( '%loginurl%' => $theme_my_login->get_login_page_link(), '%user_pass%' => $new_pass ) );
 	}
 
@@ -580,7 +571,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_approval_admin_notifcation_mail_to_filter( $to ) {
 		global $theme_my_login;
-		$_to = $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) );
+		$_to = $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
 
@@ -599,7 +590,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_approval_admin_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -618,7 +609,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_approval_admin_notification_message_filter( $message, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'user_approval', 'admin_message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'user_approval', 'admin_message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id, array( '%pendingurl%' => admin_url( 'users.php?role=pending' ) ) );
 	}
 
@@ -637,7 +628,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_denial_notification_title_filter( $title, $user_id ) {
 		global $theme_my_login;
-		$_title = $theme_my_login->options->get_option( array( 'email', 'user_denial', 'title' ) );
+		$_title = $theme_my_login->get_option( array( 'email', 'user_denial', 'title' ) );
 		return empty( $_title ) ? $title : Theme_My_Login_Custom_Email::replace_vars( $_title, $user_id );
 	}
 
@@ -656,7 +647,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Module {
 	 */
 	function user_denial_notification_message_filter( $message, $user_id ) {
 		global $theme_my_login;
-		$_message = $theme_my_login->options->get_option( array( 'email', 'user_denial', 'message' ) );
+		$_message = $theme_my_login->get_option( array( 'email', 'user_denial', 'message' ) );
 		return empty( $_message ) ? $message : Theme_My_Login_Custom_Email::replace_vars( $_message, $user_id );
 	}
 

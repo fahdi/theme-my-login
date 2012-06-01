@@ -124,14 +124,12 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 */
 	function display_settings() {
 		global $theme_my_login;
-
-		$options =& $theme_my_login->options;
 		?>
 <table class="form-table">
 	<tr valign="top">
 		<th scope="row"><?php _e( 'Private Site', 'theme-my-login' ); ?></th>
 		<td>
-			<input type="checkbox" name="theme_my_login[security][private_site]" id="theme_my_login_security_private_site" value="1"<?php checked( $options->get_option( array( 'security', 'private_site' ) ) ); ?> />
+			<input type="checkbox" name="theme_my_login[security][private_site]" id="theme_my_login_security_private_site" value="1"<?php checked( $theme_my_login->get_option( array( 'security', 'private_site' ) ) ); ?> />
 			<?php _e( 'Require users to be logged in to view site', 'theme-my-login' ); ?>
 		</td>
 	</tr>
@@ -146,22 +144,22 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 				'day' => __( 'day(s)', 'theme-my-login' )
 				);
 			// Threshold
-			$threshold = '<input type="text" name="theme_my_login[security][failed_login][threshold]" id="theme_my_login_security_failed_login_threshold" value="' . $options->get_option( array( 'security', 'failed_login', 'threshold' ) ) . '" size="1" />';
+			$threshold = '<input type="text" name="theme_my_login[security][failed_login][threshold]" id="theme_my_login_security_failed_login_threshold" value="' . $theme_my_login->get_option( array( 'security', 'failed_login', 'threshold' ) ) . '" size="1" />';
 			// Threshold duration
-			$threshold_duration = '<input type="text" name="theme_my_login[security][failed_login][threshold_duration]" id="theme_my_login_security_failed_login_threshold_duration" value="' . $options->get_option( array( 'security', 'failed_login', 'threshold_duration' ) ) . '" size="1" />';
+			$threshold_duration = '<input type="text" name="theme_my_login[security][failed_login][threshold_duration]" id="theme_my_login_security_failed_login_threshold_duration" value="' . $theme_my_login->get_option( array( 'security', 'failed_login', 'threshold_duration' ) ) . '" size="1" />';
 			// Threshold duration unit
 			$threshold_duration_unit = '<select name="theme_my_login[security][failed_login][threshold_duration_unit]" id="theme_my_login_security_failed_login_threshold_duration_unit">';
 			foreach ( $units as $unit => $label ) {
-				$selected = ( $options->get_option( array( 'security', 'failed_login', 'threshold_duration_unit' ) ) == $unit ) ? ' selected="selected"' : '';
+				$selected = ( $theme_my_login->get_option( array( 'security', 'failed_login', 'threshold_duration_unit' ) ) == $unit ) ? ' selected="selected"' : '';
 				$threshold_duration_unit .= '<option value="' . $unit . '"' . $selected . '>' . $label . '</option>';
 			}
 			$threshold_duration_unit .= '</select>';
 			// Lockout duration
-			$lockout_duration = '<input type="text" name="theme_my_login[security][failed_login][lockout_duration]" id="theme_my_login_security_failed_login_lockout_duration" value="' . $options->get_option( array( 'security', 'failed_login', 'lockout_duration' ) ) . '" size="1" />';
+			$lockout_duration = '<input type="text" name="theme_my_login[security][failed_login][lockout_duration]" id="theme_my_login_security_failed_login_lockout_duration" value="' . $theme_my_login->get_option( array( 'security', 'failed_login', 'lockout_duration' ) ) . '" size="1" />';
 			// Lockout duration unit
 			$lockout_duration_unit = '<select name="theme_my_login[security][failed_login][lockout_duration_unit]" id="theme_my_login_security_failed_login_lockout_duration_unit">';
 			foreach ( $units as $unit => $label ) {
-				$selected = ( $options->get_option( array( 'security', 'failed_login', 'lockout_duration_unit' ) ) == $unit ) ? ' selected="selected"' : '';
+				$selected = ( $theme_my_login->get_option( array( 'security', 'failed_login', 'lockout_duration_unit' ) ) == $unit ) ? ' selected="selected"' : '';
 				$lockout_duration_unit .= '<option value="' . $unit . '"' . $selected . '>' . $label . '</option>';
 			}
 			$lockout_duration_unit .= '</select>';
@@ -212,7 +210,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_Security::init_options();
-		$theme_my_login->options->set_option( 'security', $options['security'] );
+		$theme_my_login->set_option( 'security', $options['security'] );
 	}
 
 	/**

@@ -99,11 +99,11 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 			if ( in_array( 'pending', (array) $user_object->roles ) ) {
 				$_actions = array();
 				// If moderation type is e-mail activation, add "Resend Activation" link
-				if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
+				if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
 					$_actions['resend-activation'] = '<a href="' . add_query_arg( 'wp_http_referer',
 						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
 						wp_nonce_url( "users.php?action=resendactivation&amp;user=$user_object->ID", 'resend-activation' ) ) . '">' . __( 'Resend Activation', 'theme-my-login' ) . '</a>';
-				} elseif ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) {
+				} elseif ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
 					// Add "Approve" link
 					$_actions['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer',
 						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
@@ -241,13 +241,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	<tr valign="top">
 		<th scope="row"><?php _e( 'User Moderation', 'theme-my-login' ); ?></th>
 		<td>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_none"><?php _e( 'None', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require no moderation.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_email"><?php _e( 'E-mail Confirmation', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require new users to confirm their e-mail address before they may log in.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->options->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
+			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
 			<label for="theme_my_login_moderation_type_admin"><?php _e( 'Admin Approval', 'theme-my-login' ); ?></label>
 			<p class="description"><?php _e( 'Check this option to require new users to be approved by an administrator before they may log in.', 'theme-my-login' ); ?></p>
 		</td>
@@ -265,9 +265,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 				$theme_my_login_admin->deactivate_modules( 'user-moderation/user-moderation.php' );
 
 				// Set an error so the administrator will know
-				$module_errors = $theme_my_login->options->get_option( 'module_errors', array() );
+				$module_errors = $theme_my_login->get_option( 'module_errors', array() );
 				$module_errors['user-moderation/user-moderation.php'] = __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' );
-				$theme_my_login->options->set_option( 'module_errors', $module_errors );
+				$theme_my_login->set_option( 'module_errors', $module_errors );
 			}
 		}
 	}
@@ -285,10 +285,10 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = Theme_My_Login_User_Moderation::init_options();
-		$theme_my_login->options->set_option( 'moderation', $options['moderation'] );
+		$theme_my_login->set_option( 'moderation', $options['moderation'] );
 
 		$email = array_merge( (array) $theme_my_login->get_option( 'email' ), $options['email'] );
-		$theme_my_login->options->set_option( 'email', $email );
+		$theme_my_login->set_option( 'email', $email );
 	}
 
 	/**

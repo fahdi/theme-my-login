@@ -37,8 +37,8 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
 		}
 
 		foreach( (array) $current_user->roles as $role ) {
-			if ( false !== $theme_my_login->options->get_option( array( 'user_links', $role ) ) ) {
-				$links = $theme_my_login->options->get_option( array( 'user_links', $role ) );
+			if ( false !== $theme_my_login->get_option( array( 'user_links', $role ) ) ) {
+				$links = $theme_my_login->get_option( array( 'user_links', $role ) );
 				break;
 			}
 		}

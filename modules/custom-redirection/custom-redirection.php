@@ -61,8 +61,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 			}
 			$redirection = array( 'login_type' => 'default' );
 			foreach ( (array) $user->roles as $role ) {
-				if ( $theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
-					$redirection = $theme_my_login->options->get_option( array( 'redirection', $role ) );
+				if ( $theme_my_login->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $theme_my_login->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -120,8 +120,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 			}
 			$redirection = array();
 			foreach ( (array) $user->roles as $role ) {
-				if ( $theme_my_login->options->get_option( array( 'redirection', $role ) ) ) {
-					$redirection = $theme_my_login->options->get_option( array( 'redirection', $role ) );
+				if ( $theme_my_login->get_option( array( 'redirection', $role ) ) ) {
+					$redirection = $theme_my_login->get_option( array( 'redirection', $role ) );
 					break;
 				}
 			}
@@ -184,7 +184,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	function display_redirection_settings( $role ) {
 		global $theme_my_login;
 
-		$redirection =& $theme_my_login->options->get_option( array( 'redirection', $role ) );
+		$redirection =& $theme_my_login->get_option( array( 'redirection', $role ) );
 		?>
 <table class="form-table">
 	<tr valign="top">
@@ -257,7 +257,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
 	 */
 	function activate( &$theme_my_login ) {
 		$options = $this->init_options();
-		$theme_my_login->options->set_option( 'redirection', $options['redirection'] );
+		$theme_my_login->set_option( 'redirection', $options['redirection'] );
 	}
 
 	/**
