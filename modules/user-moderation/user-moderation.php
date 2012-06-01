@@ -541,7 +541,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Module {
  * @global object $theme_my_login_user_moderation
  * @since 6.0
  */
-$theme_my_login_user_moderation = new Theme_My_Login_User_Moderation;
+$theme_my_login_user_moderation = new Theme_My_Login_User_Moderation( 'theme_my_login_user_moderation' );
 
 if ( is_admin() )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/user-moderation/admin/user-moderation-admin.php' );

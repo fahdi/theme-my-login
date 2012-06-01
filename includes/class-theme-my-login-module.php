@@ -38,7 +38,8 @@ abstract class Theme_My_Login_Module {
 	 * @since 6.0
 	 * @access public
 	 */
-	public function __construct( $options = '' ) {
+	public function __construct( $options_key, $options = '' ) {
+		$this->options_key = $options_key;
 		$this->load_options( $options );
 		$this->load();
 	}

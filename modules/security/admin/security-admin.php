@@ -239,6 +239,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_security_admin
  * @since 6.0
  */
-$theme_my_login_security_admin = new Theme_My_Login_Security_Admin;
+$theme_my_login_security_admin = new Theme_My_Login_Security_Admin( 'theme_my_login_security' );
 
 endif; // Class exists

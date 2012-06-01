@@ -287,7 +287,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_redirection
  * @since 6.0
  */
-$theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection;
+$theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection( 'theme_my_login_custom_redirection' );
 
 endif; // Class exists
 

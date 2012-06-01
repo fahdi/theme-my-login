@@ -326,7 +326,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_user_moderation_admin
  * @since 6.0
  */
-$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin;
+$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin( 'theme_my_login_user_moderation' );
 
 endif; // Class exists
 

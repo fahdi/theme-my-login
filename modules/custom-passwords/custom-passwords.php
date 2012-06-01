@@ -290,6 +290,6 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_passwords
  * @since 6.0
  */
-$theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords();
+$theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords( 'theme_my_login_custom_passwords' );
 
 endif; // Class exists

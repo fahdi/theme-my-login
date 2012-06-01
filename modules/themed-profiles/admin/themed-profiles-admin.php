@@ -143,7 +143,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_themed_profiles_admin
  * @since 6.2
  */
-$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin;
+$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin( 'theme_my_login_themed_profiles' );
 
 endif; // Class exists
 

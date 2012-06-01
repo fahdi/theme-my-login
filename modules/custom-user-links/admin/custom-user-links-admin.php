@@ -354,6 +354,6 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Module {
  * @global object $theme_my_login_custom_user_links_admin
  * @since 6.0
  */
-$theme_my_login_custom_user_links_admin = new Theme_My_Login_Custom_User_Links_Admin;
+$theme_my_login_custom_user_links_admin = new Theme_My_Login_Custom_User_Links_Admin( 'theme_my_login_custom_user_links' );
 
 endif; // Class exists
