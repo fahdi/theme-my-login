@@ -13,7 +13,7 @@ if ( !class_exists( 'Theme_My_Login_Template' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Template {
+class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	/**
 	 * Holds this instance
 	 *
@@ -42,15 +42,6 @@ class Theme_My_Login_Template {
 	protected $is_active = false;
 
 	/**
-	 * Holds instance specific template options
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $options = array();
-
-	/**
 	 * Holds instance specific template errors
 	 *
 	 * @since 6.0
@@ -70,14 +61,48 @@ class Theme_My_Login_Template {
 	function __construct( $options = '' ) {
 		global $theme_my_login;
 
-		$this->load_options( $options );
+		$this->set_options( wp_parse_args( $options, $this->default_options() ) );
 		
-		$this->action = isset( $this->options['default_action'] ) ? $this->options['default_action'] : '';
-		$this->instance = $this->options['instance'];
+		$this->action = $this->get_option( 'default_action', '' );
+		$this->instance = $this->get_option( 'instance' );
+
 		if ( $theme_my_login->request_instance == $this->instance ) {
 			$this->is_active = true;
 			$this->action = $theme_my_login->request_action;
 		}
+	}
+
+	/**
+	 * Retrieves default options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Default options
+	 */
+	public function default_options() {
+		return array(
+			'instance' => '',
+			'default_action' => '',
+			'login_template' => '',
+			'register_template' => '',
+			'lostpassword_template' => '',
+			'resetpass_template' => '',
+			'user_template' => '',
+			'show_title' => true,
+			'show_log_link' => true,
+			'show_reg_link' => true,
+			'show_pass_link' => true,
+			'register_widget' => false,
+			'lostpassword_widget' => false,
+			'logged_in_widget' => true,
+			'show_gravatar' => true,
+			'gravatar_size' => 50,
+			'before_widget' => '',
+			'after_widget' => '',
+			'before_title' => '',
+			'after_title' => ''
+		);
 	}
 
 	/**
@@ -93,47 +118,47 @@ class Theme_My_Login_Template {
 			$action = $this->action;
 
 		ob_start();
-		echo $this->options['before_widget'];
-		if ( $this->options['show_title'] )
-			echo $this->options['before_title'] . $this->get_title( $action ) . $this->options['after_title'] . "\n";
+		echo $this->get_option( 'before_widget' );
+		if ( $this->get_option( 'show_title' ) )
+			echo $this->get_option( 'before_title' ) . $this->get_title( $action ) . $this->get_option( 'after_title' ) . "\n";
 		// Is there a specified template?
 		if ( has_action( 'tml_display_' . $action ) ) {
 			do_action_ref_array( 'tml_display_' . $action, array( &$this ) );
 		} else {
 			$template = array();
 			if ( is_user_logged_in() ) {
-				if ( !empty( $this->options['user_template'] ) )
-					$template[] = $this->options['user_template'];
+				if ( $this->get_option( 'user_template' ) )
+					$template[] = $this->get_option( 'user_template' );
 				$template[] = 'user-panel.php';
 			} else {
 				switch ( $action ) {
 					case 'lostpassword':
 					case 'retrievepassword':
-						if ( !empty( $this->options['lostpassword_template'] ) )
-							$template[] = $this->options['lostpassword_template'];
+						if ( $this->get_option( 'lostpassword_template' ) )
+							$template[] = $this->get_option( 'lostpassword_template' );
 						$template[] = 'lostpassword-form.php';
 						break;
 					case 'resetpass':
 					case 'rp':
-						if ( !empty( $this->options['resetpass_template'] ) )
-							$template[] = $this->options['resetpass_template'];
+						if ( $this->get_option( 'resetpass_template' ) )
+							$template[] = $this->get_option( 'resetpass_template' );
 						$template[] = 'resetpass-form.php';
 						break;
 					case 'register':
-						if ( !empty( $this->options['register_template'] ) )
-							$template[] = $this->options['register_template'];
+						if ( $this->get_option( 'register_template' ) )
+							$template[] = $this->get_option( 'register_template' );
 						$template[] = 'register-form.php';
 						break;
 					case 'login':
 					default :
-						if ( !empty( $this->options['login_template'] ) )
-							$template[] = $this->options['login_template'];
+						if ( $this->get_option( 'login_template' ) )
+							$template[] = $this->get_option( 'login_template' );
 						$template[] = 'login-form.php';
 				}
 			}
 			$this->get_template( $template );
 		}
-		echo $this->options['after_widget'] . "\n";
+		echo $this->get_option( 'after_widget' ) . "\n";
 		$output = ob_get_contents();
 		ob_end_clean();
 		return apply_filters_ref_array( 'tml_display', array( $output, $action, &$this ) );
@@ -255,8 +280,8 @@ class Theme_My_Login_Template {
 		if ( empty( $instance ) )
 			$instance = $this->instance;
 
-		if ( ( isset( $this->options[$action . '_widget'] ) && !$this->options[$action . '_widget'] ) || $theme_my_login->is_login_page() ) {
-			$url = $theme_my_login->get_login_page_link( 'action=' . $action );
+		if ( !$this->get_option( "{$action}_widget" ) || $theme_my_login->is_login_page() ) {
+			$url = $theme_my_login->get_login_page_link( array( 'action' => $action ) );
 		} else {
 			if ( empty( $instance ) )
 				$url = Theme_My_Login::get_current_url( array( 'action' => $action ) );
@@ -293,14 +318,20 @@ class Theme_My_Login_Template {
 	 * @param array $args Optionally specify which actions to include/exclude. By default, all are included.
 	 */
 	public function get_action_links( $args = '' ) {
-		$args = wp_parse_args( $args, array( 'login' => true, 'register' => true, 'lostpassword' => true ) );
+		$args = wp_parse_args( $args, array(
+			'login' => true,
+			'register' => true,
+			'lostpassword' => true
+		) );
+		
 		$action_links = array();
-		if ( $args['login'] && $this->options['show_log_link'] )
+		if ( $args['login'] && $this->get_option( 'show_log_link' ) )
 			$action_links[] = array( 'title' => $this->get_title( 'login' ), 'url' => $this->get_action_url( 'login' ) );
-		if ( $args['register'] && $this->options['show_reg_link'] && get_option( 'users_can_register' ) )
+		if ( $args['register'] && $this->get_option( 'show_reg_link' ) && get_option( 'users_can_register' ) )
 			$action_links[] = array( 'title' => $this->get_title( 'register' ), 'url' => $this->get_action_url( 'register' ) );
-		if ( $args['lostpassword'] && $this->options['show_pass_link'] )
+		if ( $args['lostpassword'] && $this->get_option( 'show_pass_link' ) )
 			$action_links[] = array( 'title' => $this->get_title( 'lostpassword' ), 'url' => $this->get_action_url( 'lostpassword' ) );
+
 		return apply_filters( 'tml_action_links', $action_links, $args );
 	}
 
@@ -334,7 +365,7 @@ class Theme_My_Login_Template {
 		$user_links = array(
 			array( 'title' => __( 'Dashboard', 'theme-my-login' ), 'url' => admin_url() ),
 			array( 'title' => __( 'Profile', 'theme-my-login' ), 'url' => admin_url( 'profile.php' ) )
-			);
+		);
 		return apply_filters( 'tml_user_links', $user_links );
 	}
 
@@ -364,7 +395,7 @@ class Theme_My_Login_Template {
 	public function the_user_avatar( $size = '' ) {
 		global $current_user;
 		if ( empty( $size ) )
-			$size = $this->options['gravatar_size'];
+			$size = $this->get_option( 'gravatar_size' );
 		echo get_avatar( $current_user->ID, $size );
 	}
 
@@ -534,41 +565,6 @@ class Theme_My_Login_Template {
 	public function the_posted_value( $value ) {
 		echo esc_attr( $this->get_posted_value( $value ) );
 	}
-
-	/**
-	 * Merges default template options with instance template options
-	 *
-	 * @since 6.0
-	 * @access protected
-	 *
-	 * @param array $options Instance options
-	 */
-	protected function load_options( $options = array() ) {
-		$this->options = wp_parse_args( $options, array(
-			'instance' => '',
-			'default_action' => '',
-			'login_template' => '',
-			'register_template' => '',
-			'lostpassword_template' => '',
-			'resetpass_template' => '',
-			'user_template' => '',
-			'show_title' => true,
-			'show_log_link' => true,
-			'show_reg_link' => true,
-			'show_pass_link' => true,
-			'register_widget' => false,
-			'lostpassword_widget' => false,
-			'logged_in_widget' => true,
-			'show_gravatar' => true,
-			'gravatar_size' => 50,
-			'before_widget' => '',
-			'after_widget' => '',
-			'before_title' => '',
-			'after_title' => ''
-		) );
-	}
 }
-
 endif; // Class exists
 
-?>
