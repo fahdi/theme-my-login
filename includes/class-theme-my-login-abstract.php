@@ -115,6 +115,18 @@ abstract class Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Retrieves all options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Options
+	 */
+	public function get_options() {
+		return $this->options;
+	}
+
+	/**
 	 * Sets an option
 	 *
 	 * @since 6.3
@@ -137,6 +149,18 @@ abstract class Theme_My_Login_Abstract {
 		} else {
 			$this->options[$option] = $value;
 		}
+	}
+
+	/**
+	 * Sets all options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $options Options array
+	 */
+	public function set_options( $options ) {
+		$this->options = (array) $options;
 	}
 
 	/**
