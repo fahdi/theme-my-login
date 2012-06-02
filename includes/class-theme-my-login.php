@@ -13,7 +13,7 @@ if ( !class_exists( 'Theme_My_Login' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login {
+class Theme_My_Login extends Theme_My_Login_Abstract {
 	/**
 	 * Holds options key
 	 *
@@ -22,15 +22,6 @@ class Theme_My_Login {
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login';
-
-	/**
-	 * Holds options array
-	 *
-	 * @since 6.1
-	 * @access protected
-	 * @var object
-	 */
-	protected $options = array();
 
 	/**
 	 * Holds errors object
@@ -69,19 +60,35 @@ class Theme_My_Login {
 	public $request_action;
 
 	/**
-	 * Constructor
+	 * Returns default options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Default options
+	 */
+	public function default_options() {
+		return array(
+			'page_id' => 0,
+			'show_page' => true,
+			'enable_css' => true,
+			'email_login' => true,
+			'active_modules' => array(),
+			'permalinks' => array()
+		);
+	}
+
+	/**
+	 * Loads the plugin
+	 *
+	 * Called by Theme_My_Login_Abstract::__construct()
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	public function __construct() {
+	public function load() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
-
-		$this->load_options();
-
-		// Load options again to allow modules to tap in
-		add_action( 'tml_modules_loaded', array( &$this, 'load_options' ), 0 );
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
@@ -1070,107 +1077,6 @@ if(typeof wpOnload=='function')wpOnload()
 
 		return $user_id;
 	}
-
-	/**
-	 * Loads options from DB
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param array|string
-	 */
-	public function load_options() {
-		$defaults = array(
-			'page_id' => 0,
-			'show_page' => 1,
-			'enable_css' => 1,
-			'email_login' => 1,
-			'active_modules' => array(),
-			'permalinks' => array()
-		);
-		$options = get_option( $this->options_key );
-		$options = wp_parse_args( $options, $defaults );
-
-		$this->options = apply_filters( 'tml_init_options', $options );
-
-	}
-
-	/**
-	 * Saves options to DB
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public function save_options() {
-		update_option( $this->options_key, $this->options );
-	}
-
-	/**
-	 * Retrieves an option
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string|array $option Name of option to retrieve or an array of hierarchy for multidimensional options
-	 * @param mixed $default Default value to return if $option is not set
-	 * @return mixed Value of requested option or $default if option is not set
-	 */
-	public function get_option( $option, $default = false ) {
-		$options = $this->options;
-		$value = false;
-		if ( is_array( $option ) ) {
-			foreach ( $option as $_option ) {
-				if ( !isset( $options[$_option] ) ) {
-					$value = $default;
-					break;
-				}
-				$options = $value = $options[$_option];
-			}
-		} else {
-			$value = isset( $options[$option] ) ? $options[$option] : $default;
-		}
-		return apply_filters( $this->options_key . '_get_option', $value, $option, $default );
-	}
-
-	/**
-	 * Sets an option
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $option Name of option to set or an array of hierarchy for multidimensional options
-	 * @param mixed $value Value of new option
-	 */
-	public function set_option( $option, $value = '' ) {
-		if ( is_array( $option ) ) {
-			$options = $this->options;
-			$last = array_pop( $option );
-			foreach ( $option as $_option ) {
-				if ( !isset( $options[$_option] ) )
-					$options[$_option] = array();
-				$options = $options[$_option];
-			}
-			$options[$last] = $value;
-			$this->options = array_merge( $this->options, $options );
-		} else {
-			$this->options[$option] = apply_filters( $this->options_key . '_set_option', $value, $option );
-		}
-	}
-
-	/**
-	 * Deletes an option
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $option Name of option to delete
-	 */
-	public function delete_option( $option ) {
-		if ( isset( $this->options[$option] ) )
-			unset( $this->options[$option] );
-	}
 }
-
 endif; // Class exists
 
-?>
