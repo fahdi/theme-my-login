@@ -13,7 +13,7 @@ if ( !class_exists( 'Theme_My_Login_Themed_Profiles_Admin' ) ) :
  *
  * @since 6.2
  */
-class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Module {
+class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Adds "Themed Profiles" tab to Theme My Login menu
 	 *

@@ -13,7 +13,7 @@ if ( !class_exists( 'Theme_My_Login_Security_Admin' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Security_Admin extends Theme_My_Login_Module {
+class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Attaches actions/filters explicitly to "users.php"
 	 *

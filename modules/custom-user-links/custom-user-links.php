@@ -18,7 +18,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_User_Links' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Module {
+class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	/**
 	 * Gets the user links for the current user's role
 	 *

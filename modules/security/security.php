@@ -18,7 +18,7 @@ if ( !class_exists( 'Theme_My_Login_Security' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Security extends Theme_My_Login_Module {
+class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	/**
 	 * Blocks entire site if user is not logged in and private site is enabled
 	 *

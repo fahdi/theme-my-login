@@ -18,7 +18,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Module {
+class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	/**
 	 * Adds "_wp_original_referer" field to login form
 	 *

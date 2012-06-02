@@ -18,7 +18,7 @@ if ( !class_exists( 'Theme_My_Login_Custom_Passwords' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
+class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Outputs password fields to registration form
 	 *
