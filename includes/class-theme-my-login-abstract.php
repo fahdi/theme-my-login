@@ -53,7 +53,9 @@ abstract class Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access protected
 	 */
-	abstract protected function load();
+	protected function load() {
+		// This should be overridden by a child class
+	}
 
 	/**
 	 * Loads options from DB
