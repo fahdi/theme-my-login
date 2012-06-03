@@ -192,10 +192,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		$settings['show_page'] = isset( $settings['show_page'] );
 		$settings['enable_css'] = isset( $settings['enable_css'] );
 		$settings['email_login'] = isset( $settings['email_login'] );
-
-		// Merge current settings
-		$settings = Theme_My_Login_Common::array_merge_recursive( $this->options, $settings );
-
 		return $settings;
 	}
 
