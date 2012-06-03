@@ -22,7 +22,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var int
 	 */
-	protected $instance;
+	public $instance;
 
 	/**
 	 * Holds this instance action
@@ -31,7 +31,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $action;
+	public $action;
 
 	/**
 	 * Set if current instance is active
@@ -40,7 +40,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var bool
 	 */
-	protected $is_active = false;
+	public $is_active = false;
 
 	/**
 	 * Holds instance specific template errors
@@ -49,7 +49,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var object
 	 */
-	protected $errors;
+	public $errors;
 
 	/**
 	 * Constructor
@@ -59,7 +59,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 *
 	 * @param array $options Instance options
 	 */
-	function __construct( $options = '' ) {
+	public function __construct( $options = '' ) {
 		global $theme_my_login;
 
 		$this->set_options( wp_parse_args( $options, $this->default_options() ) );
@@ -530,6 +530,9 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		echo esc_attr( $this->get_redirect_url() );
 	}
 
+	/**
+	 * Returns current template instance ID
+	 *
 	/**
 	 * Outputs current template instance ID
 	 *
