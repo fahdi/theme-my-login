@@ -205,7 +205,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					if ( $http_post ) {
 						$errors = $this->retrieve_password();
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login::get_current_url( 'checkemail=confirm' );
+							$redirect_to = !empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' );
 							if ( !empty( $instance ) )
 								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							wp_safe_redirect( $redirect_to );
@@ -223,7 +223,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					$user = $this->check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error( $user ) ) {
-						wp_redirect( Theme_My_Login::get_current_url( 'action=lostpassword&error=invalidkey' ) );
+						wp_redirect( Theme_My_Login_Common::get_current_url( 'action=lostpassword&error=invalidkey' ) );
 						exit;
 					}
 
@@ -234,7 +234,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					} elseif ( isset( $_POST['pass1'] ) && !empty( $_POST['pass1'] ) ) {
 						$this->reset_password( $user, $_POST['pass1'] );
 
-						$redirect_to = Theme_My_Login::get_current_url( 'resetpass=complete' );
+						$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
 						if ( isset( $_REQUEST['instance'] ) & !empty( $_REQUEST['instance'] ) )
 							$redirect_to = add_query_arg( 'instance', $_REQUEST['instance'], $redirect_to );
 						wp_safe_redirect( $redirect_to );
@@ -246,7 +246,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					break;
 				case 'register' :
 					if ( !get_option( 'users_can_register' ) ) {
-						wp_redirect( Theme_My_Login::get_current_url( 'registration=disabled' ) );
+						wp_redirect( Theme_My_Login_Common::get_current_url( 'registration=disabled' ) );
 						exit();
 					}
 
@@ -258,7 +258,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 						$errors = Theme_My_Login::register_new_user( $user_login, $user_email );
 						if ( !is_wp_error( $errors ) ) {
-							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login::get_current_url( 'checkemail=registered' );
+							$redirect_to = !empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=registered' );
 							if ( !empty( $instance ) )
 								$redirect_to = add_query_arg( 'instance', $instance, $redirect_to );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
@@ -581,28 +581,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Returns current URL
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $query Optionally append query to the current URL
-	 * @return string URL with optional path appended
-	 */
-	public function get_current_url( $query = '' ) {
-		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
-		if ( !empty( $query ) ) {
-			$r = wp_parse_args( $query );
-			foreach ( $r as $k => $v ) {
-				if ( strpos( $v, ' ' ) !== false )
-					$r[$k] = rawurlencode( $v );
-			}
-			$url = add_query_arg( $r, $url );
-		}
-		return $url;
-	}
-
-	/**
 	 * Rewrites URL's containing wp-login.php created by site_url()
 	 *
 	 * @since 6.0
@@ -715,37 +693,6 @@ if(typeof wpOnload=='function')wpOnload()
 			do_action( 'login_enqueue_scripts' );
 			do_action( 'login_head' );
 		}
-	}
-
-	/**
-	 * Merges arrays recursively, replacing duplicate string keys
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function array_merge_recursive() {
-		$args = func_get_args();
-
-		$result = array_shift( $args );
-
-		foreach ( $args as $arg ) {
-			foreach ( $arg as $key => $value ) {
-				// Renumber numeric keys as array_merge() does.
-				if ( is_numeric( $key ) ) {
-					if ( !in_array( $value, $result ) )
-						$result[] = $value;
-				}
-				// Recurse only when both values are arrays.
-				elseif ( array_key_exists( $key, $result ) && is_array( $result[$key] ) && is_array( $value ) ) {
-					$result[$key] = Theme_My_Login::array_merge_recursive( $result[$key], $value );
-				}
-				// Otherwise, use the latter value.
-				else {
-					$result[$key] = $value;
-				}
-			}
-		}
-		return $result;
 	}
 
 	/**

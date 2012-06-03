@@ -3,6 +3,7 @@
  * Holds the Theme My Login template class
  *
  * @package Theme_My_Login
+ * @since 6.0
  */
 
 if ( !class_exists( 'Theme_My_Login_Template' ) ) :
@@ -284,9 +285,9 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			$url = $theme_my_login->get_login_page_link( array( 'action' => $action ) );
 		} else {
 			if ( empty( $instance ) )
-				$url = Theme_My_Login::get_current_url( array( 'action' => $action ) );
+				$url = Theme_My_Login_Common::get_current_url( array( 'action' => $action ) );
 			else
-				$url = Theme_My_Login::get_current_url( array( 'action' => $action, 'instance' => $instance ) );
+				$url = Theme_My_Login_Common::get_current_url( array( 'action' => $action, 'instance' => $instance ) );
 		}
 
 		// Respect FORCE_SSL_LOGIN
@@ -507,10 +508,10 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
-				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_current_url( 'checkemail=confirm' ) );
+				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_current_url( 'checkemail=registered' ) );
+				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :

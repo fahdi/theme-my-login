@@ -14,6 +14,7 @@ if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login-custom.php' );
 
 // Require a few needed files
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-common.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-abstract.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );

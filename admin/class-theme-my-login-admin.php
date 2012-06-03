@@ -271,7 +271,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// Merge current settings
-		$settings = Theme_My_Login::array_merge_recursive( $this->options, $settings );
+		$settings = Theme_My_Login_Common::array_merge_recursive( $this->options, $settings );
 
 		return $settings;
 	}

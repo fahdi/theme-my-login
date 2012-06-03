@@ -3,6 +3,7 @@
  * Holds the Theme My Login multisite signup class
  *
  * @package Theme_My_Login
+ * @since 6.1
  */
 
 if ( !class_exists( 'Theme_My_Login_MS_Signup' ) ) :
@@ -118,7 +119,7 @@ class Theme_My_Login_MS_Signup {
 		if ( $active_signup == "none" ) {
 			_e( 'Registration has been disabled.', 'theme-my-login' );
 		} elseif ( $active_signup == 'blog' && !is_user_logged_in() ) {
-			printf( __( 'You must first <a href="%s">log in</a>, and then you can create a new site.', 'theme-my-login' ), wp_login_url( Theme_My_Login::get_current_url() ) );
+			printf( __( 'You must first <a href="%s">log in</a>, and then you can create a new site.', 'theme-my-login' ), wp_login_url( Theme_My_Login_Common::get_current_url() ) );
 		} else {
 			$stage = isset( $_POST['stage'] ) ?  $_POST['stage'] : 'default';
 			switch ( $stage ) {

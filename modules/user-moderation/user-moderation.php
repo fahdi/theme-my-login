@@ -95,14 +95,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		$errors = $this->activate_new_user( $_GET['key'], $_GET['login'] );
 		// Make sure there are no errors
 		if ( !is_wp_error( $errors ) ) {
-			$redirect_to = Theme_My_Login::get_current_url( 'activation=complete' );
+			$redirect_to = Theme_My_Login_Common::get_current_url( 'activation=complete' );
 			if ( !empty( $theme_my_login->request_instance ) )
 				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 			wp_redirect( $redirect_to );
 			exit();
 		}
 		// If we make it here, the user failed activation, so it must be an invalid key
-		$redirect_to = Theme_My_Login::get_current_url( 'activation=invalidkey' );
+		$redirect_to = Theme_My_Login_Common::get_current_url( 'activation=invalidkey' );
 		if ( !empty( $theme_my_login->request_instance ) )
 			$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 		wp_redirect( $redirect_to );
@@ -124,7 +124,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		$login = isset( $_GET['login'] ) ? trim( $_GET['login'] ) : '';
 
 		if ( !$user_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login = %s", $login ) ) ) {
-			$redirect_to = Theme_My_Login::get_current_url( 'sendactivation=failed' );
+			$redirect_to = Theme_My_Login_Common::get_current_url( 'sendactivation=failed' );
 			if ( !empty( $theme_my_login->request_instance ) )
 				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 			wp_redirect( $redirect_to );
@@ -137,7 +137,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 			// Send activation e-mail
 			$this->new_user_activation_notification( $user->ID );
 			// Now redirect them
-			$redirect_to = Theme_My_Login::get_current_url( 'sendactivation=sent' );
+			$redirect_to = Theme_My_Login_Common::get_current_url( 'sendactivation=sent' );
 			wp_redirect( $redirect_to );
 			exit();
 		}
@@ -215,7 +215,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		$redirect_to = $theme_my_login->get_login_page_link();
 
 		if ( !empty( $theme_my_login->request_instance ) )
-			$redirect_to = $theme_my_login->get_current_url( 'instance=' . $theme_my_login->request_instance );
+			$redirect_to = Theme_My_Login_Common::get_current_url( 'instance=' . $theme_my_login->request_instance );
 
 		if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) )
 			$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
