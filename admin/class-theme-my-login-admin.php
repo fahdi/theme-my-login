@@ -1,8 +1,9 @@
 <?php
 /**
- * Holds the Theme My Login class
+ * Holds the Theme My Login Admin class
  *
  * @package Theme_My_Login
+ * @since 6.0
  */
 
 if ( !class_exists( 'Theme_My_Login_Admin' ) ) :
@@ -37,7 +38,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function load() {
+	protected function load() {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
@@ -102,7 +103,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_init() {
-		// Register our settings in the global "whitelist_settings"
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
 	}
 

@@ -3,6 +3,7 @@
  * Holds the Theme My Login class
  *
  * @package Theme_My_Login
+ * @since 6.0
  */
 
 if ( !class_exists( 'Theme_My_Login' ) ) :
@@ -81,12 +82,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	/**
 	 * Loads the plugin
 	 *
-	 * Called by Theme_My_Login_Abstract::__construct()
-	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	public function load() {
+	protected function load() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
 
@@ -104,8 +103,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' ) );
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
-		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
-		add_filter( 'tml_redirect_url', array( &$this, 'tml_redirect_url' ), 10, 2 );
 
 		add_filter( 'wp_list_pages_excludes', array( &$this, 'wp_list_pages_excludes' ) );
 		add_filter( 'wp_list_pages', array( &$this, 'wp_list_pages' ) );
@@ -125,23 +122,12 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function init() {
-		global $wp;
-
 		load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
 
 		$this->errors = new WP_Error();
 
 		if ( $this->get_option( 'enable_css' ) )
 			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->get_option( 'version' ) );
-
-		$wp->add_query_var( 'action' );
-		
-		$page_id = $this->get_option( 'page_id' );
-
-		foreach ( $this->get_option( 'permalinks', array() ) as $action => $slug ) {
-			if ( !empty( $slug ) )
-				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
-		}
 	}
 
 	/**
@@ -187,8 +173,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function parse_request( &$wp ) {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
-		if ( isset( $wp->query_vars['action'] ) )
-			$action = $wp->query_vars['action'];
 		$instance =& $this->request_instance;
 
 		if ( is_admin() )
@@ -426,84 +410,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @param string|array $query Optional. Query arguments to add to link
 	 * @return string Login page link with optional $query arguments appended
 	 */
-	public function get_login_page_link( $query = '' ) {
-		global $wp_rewrite;
-
-		$q = wp_parse_args( $query );
-
-		$page = get_page( $this->get_option( 'page_id' ) );
-
-		$link = $wp_rewrite->get_page_permastruct();
-		if ( !empty( $link ) ) {
-			$action = isset( $q['action'] ) ? $q['action'] : 'login';
-			if ( $slug = $this->get_option( array( 'permalinks', $action ) ) )
-				unset( $q['action'] );
-			else
-				$slug = $page->post_name;
-			$link = str_replace( '%pagename%', $slug, $link );
-			$link = home_url( $link );
-			$link = user_trailingslashit( $link, 'page' );
-		} else {
-			$link = home_url( "?page_id={$page->ID}" );
-		}
-
-		if ( !empty( $q ) )
+	function get_login_page_link( $query = '' ) {
+		$link = get_page_link( $this->get_option( 'page_id' ) );
+		if ( !empty( $query ) ) {
+			$q = wp_parse_args( $query );
 			$link = add_query_arg( $q, $link );
-
-		return apply_filters( 'tml_page_link', $link, $query );
-	}
-
-	/**
-	 * Changes login page link to custom permalink
-	 *
-	 * Callback for "page_link" filter in get_page_link()
-	 *
-	 * @see get_page_link()
-	 * @since 6.2
-	 * @access public
-	 *
-	 * @param string $link Page link
-	 * @param int $id Page ID
-	 * @return string Page link
-	 */
-	public function page_link( $link, $id ) {
-		if ( $this->is_login_page( $id ) )
-			return $this->get_login_page_link();
-		return $link;
-	}
-
-	/**
-	 * Changes redirect URL to login page permalink for specific actions
-	 *
-	 * Callback for "tml_redirect_url" filter in Theme_My_Login_Template::get_redirect_url()
-	 *
-	 * @since 6.2
-	 * @access public
-	 *
-	 * @param string $url Redirect URL
-	 * @param string $action Requested action
-	 * @return string Redirect URL
-	 */
-	public function tml_redirect_url( $url, $action ) {
-		global $wp_rewrite;
-
-		if ( $wp_rewrite->using_permalinks() && $this->is_login_page() && $this->request_action == $action ) {
-			if ( $slug = $this->get_option( 'permalinks', $action ) ) {
-				switch ( $action ) {
-					case 'lostpassword' :
-					case 'retrievepassword' :
-					case 'register' :
-						$permalink = $this->get_login_page_link();
-
-						$parsed_permalink = parse_url( $permalink );
-						$parsed_url = parse_url( $url );
-
-						$url = str_replace( $parsed_url['path'], $parsed_permalink['path'], $url );
-						break;
-				}
-			}
 		}
-		return $url;
+		return apply_filters( 'tml_page_link', $link, $query );
 	}
 
 	/**
