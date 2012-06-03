@@ -26,13 +26,6 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-wid
  */
 $GLOBALS['theme_my_login'] = new Theme_My_Login;
 
-// Load active modules
-foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
-	include_once( $module );
-unset( $module );
-
-do_action( 'tml_modules_loaded' );
-
 if ( is_admin() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
 	/**
@@ -42,6 +35,13 @@ if ( is_admin() ) {
 	 */
 	$GLOBALS['theme_my_login_admin'] = new Theme_My_Login_Admin;
 }
+
+// Load active modules
+foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
+	include_once( $module );
+unset( $module );
+
+do_action( 'tml_modules_loaded' );
 
 if ( is_multisite() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-ms-signup.php' );
