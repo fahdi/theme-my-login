@@ -116,11 +116,11 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $settings ) {
-		// Get selected modules
-		$modules = isset( $_POST['theme_my_login_modules'] ) ? $_POST['theme_my_login_modules'] : array();
+		if ( empty( $settings ) )
+			$settings = array();
 
 		// If we have modules to activate
-		if ( $activate = array_diff( (array) $modules, (array) $this->get_options() ) ) {
+		if ( $activate = array_diff( (array) $settings, (array) $this->get_options() ) ) {
 			// Attempt to activate them
 			$result = $this->activate_modules( $activate );
 			// Check for WP_Error
@@ -135,12 +135,12 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// If we have modules to deactivate
-		if ( $deactivate = array_diff( (array) $this->get_options(), $modules ) ) {
+		if ( $deactivate = array_diff( (array) $this->get_options(), $settings ) ) {
 			// Deactive them
 			$this->deactivate_modules( $deactivate );
 		}
 
-		return $this->options;
+		return $this->get_options();
 	}
 
 	/**
