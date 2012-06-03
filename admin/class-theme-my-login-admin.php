@@ -229,11 +229,14 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function _install() {
+		// Get plugin data
+		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
+
 		// Declare page_id to avoid notices
 		$page_id = 0;
 
 		// Current version
-		$version = $this->get_option( 'version' );
+		$version = $this->get_option( 'version', $plugin_data['Version'] );
 
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
@@ -278,7 +281,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			$page_id = wp_insert_post( $insert );
 		}
 
-		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
 		$this->set_option( 'version', $plugin_data['Version'] );
 		$this->set_option( 'page_id', (int) $page_id );
 		$this->save_options();
@@ -300,13 +302,13 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				$blogids = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs" ) );
 				foreach ( $blogids as $blog_id ) {
 					switch_to_blog( $blog_id );
-					$this->_uninstall();
+					self::_uninstall();
 				}
 				restore_current_blog();
 				return;
 			}	
 		}
-		$this->_uninstall();
+		self::_uninstall();
 	}
 
 	/**
@@ -330,7 +332,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				continue;
 
 			@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
-			do_action( 'uninstall_' . trim( $module ) );
+			do_action( 'tml_uninstall_' . trim( $module ) );
 		}
 
 		// Delete the page
