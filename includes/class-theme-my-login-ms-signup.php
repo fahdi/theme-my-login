@@ -39,7 +39,7 @@ class Theme_My_Login_MS_Signup {
 		add_action( 'tml_display_activate', array( &$this, 'tml_display_activate' ) );
 		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
 
-		add_action( 'switch_blog', array( &$theme_my_login, 'init_options' ) );
+		add_action( 'switch_blog', array( &$theme_my_login, 'load_options' ) );
 		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 10, 2 );
 
 		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
@@ -290,8 +290,7 @@ class Theme_My_Login_MS_Signup {
 		$user_email = $filtered_results['user_email'];
 		$errors = $filtered_results['errors'];
 
-		if ( !empty( $this->theme_my_login_template->options['ms_signup_user_template'] ) )
-			$templates[] = $this->theme_my_login_template->options['ms_signup_user_template'];
+		$templates   = (array) $template->get_option( 'ms_signup_user_template', array() );
 		$templates[] = 'ms-signup-user-form.php';
 
 		$template->get_template( $templates, '', true, compact( 'current_site', 'active_signup', 'user_name', 'user_email', 'errors' ) );
@@ -324,8 +323,7 @@ class Theme_My_Login_MS_Signup {
 		if ( empty( $blogname ) )
 			$blogname = $user_name;
 
-		if ( !empty( $this->theme_my_login_template->options['ms_signup_blog_template'] ) )
-			$templates[] = $this->theme_my_login_template->options['ms_signup_blog_template'];
+		$templates   = (array) $template->get_option( 'ms_signup_blog_template', array() );
 		$templates[] = 'ms-signup-blog-form.php';
 
 		$template->get_template( $templates, '', true, compact( 'current_site', 'user_name', 'user_email', 'blogname', 'blog_title', 'errors' ) );
@@ -351,8 +349,7 @@ class Theme_My_Login_MS_Signup {
 		$blog_title = $filtered_results['blog_title'];
 		$errors = $filtered_results['errors'];
 
-		if ( !empty( $this->theme_my_login_template->options['ms_signup_another_blog_template'] ) )
-			$templates[] = $this->theme_my_login_template->options['ms_signup_another_blog_template'];
+		$templates   = (array) $template->get_option( 'ms_signup_another_blog_template', array() );
 		$templates[] = 'ms-signup-another-blog-form.php';
 
 		$template->get_template( $templates, '', true, compact( 'current_site', 'blogname', 'blog_title', 'errors' ) );
