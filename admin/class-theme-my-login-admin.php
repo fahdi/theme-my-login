@@ -22,24 +22,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login';
 
 	/**
-	 * Holds TML menu array
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $menu;
-
-	/**
-	 * Holds TML submenu array
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $submenu;
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -59,27 +41,56 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_notices', array( &$this, 'module_errors' ) );
-		add_action( 'load-settings_page_theme-my-login', array( &$this, 'load_settings_page' ) );
 
 		register_activation_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'install' ) );
 		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
 
 	/**
-	 * Adds "Theme My Login" to the WordPress "Settings" menu
+	 * Builds plugin admin menu and pages
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
 	public function admin_menu() {
-		// Create our settings link in the default WP "Settings" menu
-		add_options_page(
-			__( 'Theme My Login', 'theme-my-login' ),
-			__( 'Theme My Login', 'theme-my-login' ),
+		global $wp_rewrite;
+
+		add_menu_page(
+			__( 'Theme My Login Settings', 'theme-my-login' ),
+			__( 'TML', 'theme-my-login' ),
 			'manage_options',
-			'theme-my-login',
+			'theme_my_login',
 			array( &$this, 'display_settings_page' )
-			);
+		);
+		add_submenu_page(
+			'theme_my_login',
+			__( 'General', 'theme-my-login' ),
+			__( 'General', 'theme-my-login' ),
+			'manage_options',
+			'theme_my_login',
+			array( &$this, 'display_settings_page' )
+		);
+
+		// General section
+		add_settings_section( 'general', __( 'General', 'theme-my-login' ), '__return_false',  'theme_my_login' );
+
+		// General fields
+		add_settings_field( 'page_id',     __( 'Page ID', 'theme-my-login' ),      array( &$this, 'settings_field_page_id' ),     'theme_my_login', 'general' );
+		add_settings_field( 'show_page',   __( 'Pagelist', 'theme-my-login' ),     array( &$this, 'settings_field_show_page' ),   'theme_my_login', 'general' );
+		add_settings_field( 'enable_css',  __( 'Stylesheet', 'theme-my-login' ),   array( &$this, 'settings_field_enable_css' ),  'theme_my_login', 'general' );
+		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), 'theme_my_login', 'general' );
+
+		// Modules section
+		add_settings_section( 'modules', __( 'Modules', 'theme-my-login' ), '__return_false', 'theme_my_login' );
+
+		// Modules fields
+		foreach ( get_plugins( '/theme-my-login/modules' ) as $path => $details ) {
+			add_settings_field( sanitize_title( $details['Name'] ), $details['Name'], array( &$this, 'settings_field_module' ), 'theme_my_login', 'modules', array(
+				'name'        => $details['Name'],
+				'description' => $details['Description'],
+				'path'        => $path
+			) );
+		}
 	}
 
 	/**
@@ -93,9 +104,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	public function admin_init() {
 		// Register our settings in the global "whitelist_settings"
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
-
-		// Create a hook for modules to use
-		do_action_ref_array( 'tml_admin_init', array( &$this ) );
 	}
 
 	/**
@@ -122,215 +130,103 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads admin styles and scripts
+	 * Renders the settings page
 	 *
 	 * @since 6.0
 	 * @access public
 	 */
-	public function load_settings_page() {
-		global $user_ID;
-
-		// Flush rewrite rules if slugs have been updated
-		if ( $this->get_option( 'flush_rules' ) )
-			flush_rewrite_rules();
-
-		// Enqueue neccessary scripts and styles
-		wp_enqueue_style( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/css/theme-my-login-admin.css' ) );
-		wp_enqueue_script( 'theme-my-login-admin', plugins_url( '/theme-my-login/admin/js/theme-my-login-admin.js' ), array( 'jquery-ui-tabs' ) );
-
-		// Set the correct admin style according to user setting (Only supports default admin schemes)
-		$admin_color = get_user_meta( $user_ID, 'admin_color', true );
-		$stylesheet = ( 'classic' == $admin_color ) ? 'colors-classic.css' : 'colors-fresh.css';
-		wp_enqueue_style( 'theme-my-login-colors-fresh', plugins_url( '/theme-my-login/admin/css/' . $stylesheet ) );
-	}
-
-	/**
-	 * Outputs the main TML admin
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function display_settings_page() {
-		global $wp_rewrite;
-
-		// Default menu
-		$this->add_menu_page( __('General', 'theme-my-login' ), 'tml-options' );
-		$this->add_submenu_page( 'tml-options', __( 'Basic', 'theme-my-login' ), 'tml-options-basic', array( &$this, 'display_basic_settings' ) );
-		$this->add_submenu_page( 'tml-options', __( 'Modules', 'theme-my-login' ), 'tml-options-modules', array( &$this, 'display_module_settings' ) );
-		if ( $wp_rewrite->using_permalinks() )
-			$this->add_submenu_page( 'tml-options', __( 'Permalinks', 'theme-my-login' ), 'tml-options-permalinks', array( &$this, 'display_permalink_settings' ) );
-
-		// Allow plugins to add to menu
-		do_action_ref_array( 'tml_admin_menu', array( &$this ) );
+	public function display_settings_page( $args = '' ) {
+		extract( wp_parse_args( $args, array(
+			'title'        => __( 'Theme My Login Settings', 'theme-my-login' ),
+			'options_group' => 'theme_my_login',
+			'options_page'  => 'theme_my_login'
+		) ) );
 		?>
-<div class="wrap">
-    <?php screen_icon( 'options-general' ); ?>
-    <h2><?php esc_html_e( 'Theme My Login Settings', 'theme-my-login' ); ?></h2>
+		<div class="wrap">
+			<?php screen_icon( 'options-general' ); ?>
+			<h2><?php echo esc_html( $title ); ?></h2>
+			<?php settings_errors(); ?>
 
-    <form action="options.php" method="post">
-    <?php settings_fields( 'theme_my_login' ); ?>
-
-	<div style="display:none;">
-		<p><input type="submit" name="submit" value="<?php esc_attr_e( 'Save Changes', 'theme-my-login' ) ?>" /></p>
-	</div>
-
-    <div id="tml-container">
-
-        <ul>
-            <?php foreach ( $this->menu as $menu ) {
-                echo '<li><a href="#' . $menu[1] . '">' . $menu[0] . '</a></li>' . "\n";
-            } ?>
-        </ul>
-
-        <?php foreach ( $this->menu as $menu ) {
-            echo '<div id="' . $menu[1] . '" class="' . $menu[1] . '">' . "\n";
-            if ( isset( $this->submenu[$menu[1]] ) ) {
-                echo '<ul>' . "\n";
-                foreach ( $this->submenu[$menu[1]] as $submenu ) {
-                    echo '<li><a href="#' . $submenu[1] . '">' . $submenu[0] . '</a></li>' . "\n";
-
-
-
-                }
-                echo '</ul>' . "\n";
-
-                foreach ( $this->submenu[$menu[1]] as $submenu ) {
-                    echo '<div id="' . $submenu[1] . '" class="' . $menu[1] . '">' . "\n";
-					if ( has_action( $submenu[2] ) ) {
-						do_action( 'load-' . $submenu[2] );
-						call_user_func_array( 'do_action', array_merge( (array) $submenu[2], (array) $submenu[3] ) );
-					} else {
-						if ( validate_file( $submenu[1] ) )
-							return false;
-
-						if ( ! ( file_exists( WP_PLUGIN_DIR . '/' . $submenu[1] ) && is_file( WP_PLUGIN_DIR . '/' . $submenu[1] ) ) )
-							return false;
-
-						do_action( 'load-' . $submenu[1] );
-						include ( WP_PLUGIN_DIR . '/' . $submenu[1] );
-					}
-                    echo '</div>' . "\n";
-                }
-            } else {
-				if ( has_action( $menu[2] ) ) {
-					do_action( 'load-' . $menu[2] );
-					call_user_func_array( 'do_action', array_merge( (array) $menu[2], (array) $menu[3] ) );
-				} else {
-					if ( validate_file( $menu[1] ) )
-						return false;
-
-					if ( ! ( file_exists( WP_PLUGIN_DIR . '/' . $menu[1] ) && is_file( WP_PLUGIN_DIR . '/' . $menu[1] ) ) )
-						return false;
-
-					do_action( 'load-' . $menu[1] );
-					include ( WP_PLUGIN_DIR . '/' . $menu[1] );
-				}
-            }
-            echo '</div>' . "\n";
-        } ?>
-
-    </div>
-	
-    <p><input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'theme-my-login' ) ?>" /></p>
-    </form>
-
-</div>
-<?php
+			<form method="post" action="options.php">
+				<?php
+					settings_fields( $options_group );
+					do_settings_sections( $options_page );
+					submit_button();
+				?>
+			</form>
+		</div>
+		<?php
 	}
 
 	/**
-	 * Outputs HTML for "Basic" settings tab
+	 * Renders Page ID settings field
 	 *
-	 * @since 6.0
+	 * @since 6.3
 	 * @access public
 	 */
-	public function display_basic_settings() {
+	public function settings_field_page_id() {
 		?>
-<table class="form-table">
-    <tr valign="top">
-        <th scope="row"><label for="theme_my_login_page_id"><?php _e( 'Page ID', 'theme-my-login' ); ?></label></th>
-        <td>
-            <input name="theme_my_login[page_id]" type="text" id="theme_my_login_page_id" value="<?php echo (int) $this->get_option( 'page_id' ); ?>" class="small-text" />
-            <p class="description"><?php _e( 'This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', 'theme-my-login' ); ?></p>
-        </td>
-    </tr>
-    <tr valign="top">
-        <th scope="row"><?php _e( 'Pagelist', 'theme-my-login' ); ?></th>
-        <td>
-            <input name="theme_my_login[show_page]" type="checkbox" id="theme_my_login_show_page" value="1"<?php checked( 1, $this->get_option( 'show_page' ) ); ?> />
-            <label for="theme_my_login_show_page"><?php _e( 'Show Page In Pagelist', 'theme-my-login' ); ?></label>
-            <p class="description"><?php _e( 'Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu().', 'theme-my-login' ); ?></p>
-        </td>
-    </tr>
-    <tr valign="top">
-        <th scope="row"><?php _e( 'Stylesheet', 'theme-my-login' ); ?></th>
-        <td>
-            <input name="theme_my_login[enable_css]" type="checkbox" id="theme_my_login_enable_css" value="1"<?php checked( 1, $this->get_option( 'enable_css' ) ); ?> />
-            <label for="theme_my_login_enable_css"><?php _e( 'Enable "theme-my-login.css"', 'theme-my-login' ); ?></label>
-            <p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login' ); ?></p>
-        </td>
-    </tr>
-    <tr valign="top">
-    	<th scope="row"><?php _e( 'E-mail Login', 'theme-my-login' ); ?></th>
-    	<td>
-    		<input name="theme_my_login[email_login]" type="checkbox" id="theme_my_login_email_login" value="1"<?php checked( 1, $this->get_option( 'email_login' ) ); ?> />
-    		<label for="theme_my_login_email_login"><?php _e( 'Enable e-mail address login', 'theme-my-login' ); ?></label>
-    		<p class="description"><?php _e( 'Allows users to login using their e-mail address in place of their username.', 'theme-my-login' ); ?></p>
-    	</td>
-    </tr>
-    <?php do_action( 'tml_settings_basic' ); ?>
-</table><?php
+		<input name="theme_my_login[page_id]" type="text" id="theme_my_login_page_id" value="<?php echo (int) $this->get_option( 'page_id' ); ?>" class="small-text" />
+		<p class="description"><?php _e( 'This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', 'theme-my-login' ); ?></p>
+        <?php
 	}
 
 	/**
-	 * Outputs HTML for "Module" settings tab
+	 * Renders Pagelist settings field
 	 *
-	 * @since 6.0
+	 * @since 6.3
 	 * @access public
 	 */
-	public function display_module_settings() {
-		$all_modules = get_plugins( '/theme-my-login/modules' );
-		$active_modules = (array) $this->get_option( 'active_modules' );
-	?>
-<table class="form-table">
-    <tr valign="top">
-        <th scope="row"><?php _e( 'Modules', 'theme-my-login' ); ?></th>
-        <td>
-            <?php if ( !empty( $all_modules ) ) : foreach ( $all_modules as $module_file => $module_data ) : ?>
-            <input name="theme_my_login_modules[]" type="checkbox" id="theme_my_login_modules_<?php echo $module_file; ?>" value="<?php echo $module_file; ?>"<?php checked( 1, in_array( $module_file, (array) $active_modules ) ); ?> />
-            <label for="theme_my_login_modules_<?php echo $module_file; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $module_data['Name'] ); ?></label><br />
-            <?php if ( $module_data['Description'] ) echo '<p class="description">' . $module_data['Description'] . '</p>'; ?>
-            <?php endforeach; else : _e( 'No modules found.', 'theme-my-login' ); endif; ?>
-        </td>
-    </tr>
-    <?php do_action( 'tml_settings_modules' ); ?>
-</table>
-<?php
+	public function settings_field_show_page() {
+		?>
+		<input name="theme_my_login[show_page]" type="checkbox" id="theme_my_login_show_page" value="1"<?php checked( 1, $this->get_option( 'show_page' ) ); ?> />
+		<label for="theme_my_login_show_page"><?php _e( 'Show Page In Pagelist', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'Enable this setting to add login/logout links to the pagelist generated by functions like wp_list_pages() and wp_page_menu().', 'theme-my-login' ); ?></p>
+		<?php
 	}
 
 	/**
-	 * Outputs HTML for "Permalinks" settings tab
+	 * Renders Stylesheet settings field
 	 *
-	 * @since 6.2
+	 * @since 6.3
 	 * @access public
 	 */
-	public function display_permalink_settings() {
-		$actions = array(
-			'login' => __( 'Login', 'theme-my-login' ),
-			'register' => __( 'Register', 'theme-my-login' ),
-			'lostpassword' => __( 'Lost Password', 'theme-my-login' )
-		); ?>
-<table class="form-table">
-	<?php foreach ( $actions as $action => $label ) : ?>
-	<tr valign="top">
-		<th scope="row"><label for="theme_my_login_permalinks_<?php echo $action; ?>"><?php echo $label; ?></label></th>
-		<td>
-			<input name="theme_my_login[permalinks][<?php echo $action; ?>]" type="text" id="theme_my_login_permalinks_<?php echo $action; ?>" value="<?php echo $this->get_option( array( 'permalinks', $action ) ); ?>" class="regular-text" />
-		</td>
-	</tr>
-	<?php endforeach;
-	do_action( 'tml_settings_permalinks' ); ?>
-</table><?php
+	public function settings_field_enable_css() {
+		?>
+		<input name="theme_my_login[enable_css]" type="checkbox" id="theme_my_login_enable_css" value="1"<?php checked( 1, $this->get_option( 'enable_css' ) ); ?> />
+		<label for="theme_my_login_enable_css"><?php _e( 'Enable "theme-my-login.css"', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login' ); ?></p>
+        <?php
+	}
+
+	/**
+	 * Renders E-mail Login settings field
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_field_email_login() {
+		?>
+		<input name="theme_my_login[email_login]" type="checkbox" id="theme_my_login_email_login" value="1"<?php checked( 1, $this->get_option( 'email_login' ) ); ?> />
+		<label for="theme_my_login_email_login"><?php _e( 'Enable e-mail address login', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'Allows users to login using their e-mail address in place of their username.', 'theme-my-login' ); ?></p>
+    	<?php
+	}
+
+	/**
+	 * Renders Module settings fields
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_field_module( $args ) {
+		$id = sanitize_title( $args['name'] );
+		?>
+		<input name="theme_my_login_modules[]" type="checkbox" id="theme_my_login_modules_<?php echo $id; ?>" value="<?php echo $args['path']; ?>"<?php checked( 1, in_array( $args['path'], (array) $this->get_option( 'active_modules', array() ) ) ); ?> />
+		<label for="theme_my_login_modules_<?php echo $id; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $args['name'] ); ?></label><br />
+		<?php if ( $args['description'] ) : ?>
+		<p class="description"><?php echo $args['description']; ?></p>
+		<?php endif;
 	}
 
 	/**
@@ -374,21 +270,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			$this->deactivate_modules( $deactivate );
 		}
 
-		// Flush permalinks if they have changed
-		if ( isset( $settings['permalinks'] ) ) {
-			foreach ( $settings['permalinks'] as $action => $slug ) {
-				if ( $slug !== $this->get_option( array( 'permalinks', $action ) ) ) {
-					$settings['flush_rules'] = true;
-					break;
-				}
-			}
-		}
-
 		// Merge current settings
 		$settings = Theme_My_Login::array_merge_recursive( $this->options, $settings );
-
-		// Allow plugins/modules to add/modify settings
-		$settings = apply_filters( 'tml_save_settings', $settings );
 
 		return $settings;
 	}
@@ -412,7 +295,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 		$current = (array) $this->get_option( 'active_modules' );
 		if ( !$theme_my_login->is_module_active( $module ) ) {
-			//ob_start();
+			ob_start();
 			@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 			$current[] = $module;
 			sort( $current );
@@ -420,7 +303,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			$this->set_option( 'active_modules', $current );
 			do_action_ref_array( 'tml_activate_' . trim( $module ), array( &$theme_my_login ) );
 			do_action( 'tml_activated_module', trim( $module ) );
-			//ob_end_clean();
+			ob_end_clean();
 		}
 		return null;
 	}
@@ -509,64 +392,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		if ( !isset( $installed_modules[$module] ) )
 			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
 		return 0;
-	}
-
-	/**
-	 * Adds a tab in the TML admin menu
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $menu_title The text to be used for the menu
-	 * @param string $menu_slug The slug name to refer to this menu by (should be unique for this menu)
-	 * @param callback $function The function to be called to output the content for this page.
-	 * @param array $function_args Arguments to pass in to callback function
-	 * @param int $position The position in the menu order this one should appear
-	 */
-	public function add_menu_page( $menu_title, $menu_slug, $function = '', $function_args = array(), $position = NULL ) {
-		$menu_slug = plugin_basename( $menu_slug );
-
-		$hookname = get_plugin_page_hookname( $menu_slug, '' );
-		$hookname = preg_replace( '|[^a-zA-Z0-9_:.]|', '-', $hookname );
-		if ( !empty( $function ) && !empty( $hookname ) )
-			add_action( $hookname, $function );
-
-		$new_menu = array( $menu_title, $menu_slug, $hookname, $function_args );
-
-		if ( NULL === $position )
-			$this->menu[] = $new_menu;
-		else
-			$this->menu[$position] = $new_menu;
-
-		return $hookname;
-	}
-
-	/**
-	 * Adds a subtab to a tab in the TML admin menu
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $parent_slug The slug name for the parent menu (or the file name of a standard WordPress admin page)
-	 * @param string $menu_title The text to be used for the menu
-	 * @param string $menu_slug The slug name to refer to this menu by (should be unique for this menu)
-	 * @param callback $function The function to be called to output the content for this page.
-	 * @param array $function_args Arguments to pass in to callback function
-	 */
-	public function add_submenu_page( $parent_slug, $menu_title, $menu_slug, $function = '', $function_args = array() ) {
-		$menu_slug = plugin_basename( $menu_slug );
-		$parent = plugin_basename( $parent_slug );
-
-		$count = ( isset( $this->submenu[$parent_slug] ) && is_array( $this->submenu[$parent_slug] ) ) ? count( $this->submenu[$parent_slug] ) + 1 : 1;
-
-		$hookname = get_plugin_page_hookname( $parent_slug . '-' . $count, '' );
-		$hookname = preg_replace( '|[^a-zA-Z0-9_:.]|', '-', $hookname );
-		if ( !empty( $function ) && !empty( $hookname ) )
-			add_action( $hookname, $function, 10, count( $function_args ) );
-
-		$this->submenu[$parent_slug][] = array( $menu_title, $menu_slug, $hookname, $function_args );
-
-		return $hookname;
 	}
 
 	/**
