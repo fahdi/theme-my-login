@@ -20,7 +20,7 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $options_key = 'theme_my_login_modules';
+	protected $options_key = 'theme_my_login_active_modules';
 
 	/**
 	 * Loads object
