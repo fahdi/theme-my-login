@@ -19,6 +19,7 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-abs
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-widget.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-modules.php' );
 
 /**
  * Theme My Login object
@@ -26,6 +27,13 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-wid
  * @since 6.0
  */
 $GLOBALS['theme_my_login'] = new Theme_My_Login;
+
+/**
+ * Theme My Login Modules object
+ * @global object $theme_my_login_modules
+ * @since 6.3
+ */
+$GLOBALS['theme_my_login_modules'] = new Theme_My_Login_Modules;
 
 if ( is_admin() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
@@ -35,10 +43,18 @@ if ( is_admin() ) {
 	 * @since 6.0
 	 */
 	$GLOBALS['theme_my_login_admin'] = new Theme_My_Login_Admin;
+
+	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-modules-admin.php' );
+	/**
+	 * Theme My Login Modules Admin object
+	 * @global object $theme_my_login_modules_admin
+	 * @since 6.3
+	 */
+	$GLOBALS['theme_my_login_modules_admin'] = new Theme_My_Login_Modules_Admin;
 }
 
 // Load active modules
-foreach ( $GLOBALS['theme_my_login']->get_active_and_valid_modules() as $module )
+foreach ( $GLOBALS['theme_my_login_modules']->get_active_and_valid_modules() as $module )
 	include_once( $module );
 unset( $module );
 

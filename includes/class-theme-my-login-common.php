@@ -14,7 +14,7 @@ if ( !class_exists( 'Theme_My_Login_Common' ) ) :
  *
  * @since 6.3
  */
-class Theme_My_Login_Helper {
+class Theme_My_Login_Common {
 	/**
 	 * Returns current URL
 	 *
