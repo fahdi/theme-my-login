@@ -103,7 +103,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 
 		foreach ( $wp_roles->get_names() as $role => $role_name ) {
 			if ( 'pending' != $role )
-				add_meta_box( $role, translate_user_role( $role_name ), array( &$this, 'user_links_meta_box' ), 'tml_page_' . $this->options_key, 'normal', 'default' );
+				add_meta_box( $role, translate_user_role( $role_name ), array( &$this, 'user_links_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
 		}
 	}
 

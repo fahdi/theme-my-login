@@ -35,6 +35,8 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+
+		add_action( 'load-tml_page_theme_my_login_redirection', array( &$this, 'load_settings_page' ) );
 	}
 
 	/**
@@ -93,7 +95,7 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 
 		foreach ( $wp_roles->get_names() as $role => $role_name ) {
 			if ( 'pending' != $role )
-				add_settings_section( $role, translate_user_role( $role_name ), array( &$this, 'settings_section_role' ), $this->options_key );
+				add_meta_box( $role, translate_user_role( $role_name ), array( &$this, 'redirection_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
 		}
 	}
 
@@ -116,10 +118,38 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_page() {
-		Theme_My_Login_Admin::settings_page( array(
-			'title'       => __( 'Theme My Login Custom Redirection Settings', 'theme-my-login' ),
-			'options_key' => $this->options_key
-		) );
+		global $current_screen;
+		?>
+		<div class="wrap">
+			<?php screen_icon( 'options-general' ); ?>
+			<h2><?php echo esc_html_e( 'Theme My Login Custom Redirection Settings', 'theme-my-login' ); ?></h2>
+			<?php settings_errors(); ?>
+
+			<form method="post" action="options.php">
+				<?php
+				settings_fields( $this->options_key );
+				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+				wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+				?>
+				<div id="<?php echo $this->options_key; ?>" class="metabox-holder">
+					<?php do_meta_boxes( $current_screen->id, 'normal', null ); ?>
+				</div>
+				<?php submit_button(); ?>
+			</form>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Loads admin styles and scripts
+	 *
+	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function load_settings_page() {
+		wp_enqueue_script( 'tml-custom-redirection-admin', plugins_url( 'theme-my-login/modules/custom-redirection/admin/js/custom-redirection-admin.js' ), array( 'postbox' ) );
 	}
 
 	/**
@@ -132,8 +162,8 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @param array $args Arguments passed in from add_submenu_page()
 	 */
-	public function settings_section_role( $args ) {
-		$role = $args['id'];
+	public function redirection_meta_box( $object, $box ) {
+		$role = $box['id'];
 		?>
 		<table class="form-table">
 			<tr valign="top">
