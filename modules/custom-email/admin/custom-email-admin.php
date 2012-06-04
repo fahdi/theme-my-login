@@ -21,7 +21,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $options_key = 'theme_my_login_custom_email';
+	protected $options_key = 'theme_my_login_email';
 
 	/**
 	 * Returns default options
@@ -129,10 +129,9 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_page() {
-		return Theme_My_Login_Admin::display_settings_page( array(
-			'title'         => __( 'Theme My Login Custom E-mail Settings', 'theme-my-login' ),
-			'options_group' => $this->options_key,
-			'options_page'  => $this->options_key
+		return Theme_My_Login_Admin::settings_page( array(
+			'title'       => __( 'Theme My Login Custom E-mail Settings', 'theme-my-login' ),
+			'options_key' => $this->options_key
 		) );
 	}
 

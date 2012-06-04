@@ -24,7 +24,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $options_key = 'theme_my_login_custom_email';
+	protected $options_key = 'theme_my_login_email';
 
 	/**
 	 * Mail from
