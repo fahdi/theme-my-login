@@ -55,7 +55,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * Callback for "tml_activate_custom-email/custom-email.php" hook in method Theme_My_Login_Modules_Admin::activate_module()
 	 *
-	 * @see Theme_My_Login_Admin::activate_module()
+	 * @see Theme_My_Login_Modules_Admin::activate_module()
 	 * @since 6.0
 	 * @access public
 	 */
@@ -129,7 +129,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_page() {
-		return Theme_My_Login_Admin::settings_page( array(
+		Theme_My_Login_Admin::settings_page( array(
 			'title'       => __( 'Theme My Login Custom E-mail Settings', 'theme-my-login' ),
 			'options_key' => $this->options_key
 		) );
