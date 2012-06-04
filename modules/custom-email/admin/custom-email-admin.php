@@ -24,6 +24,23 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_email';
 
 	/**
+	 * Loads the module
+	 *
+	 * Called by Theme_My_Login_Abstract::__construct()
+	 *
+	 * @see Theme_My_Login_Abstract::__construct()
+	 * @since 6.0
+	 * @access protected
+	 */
+	protected function load() {
+		add_action( 'tml_activate_custom-email/custom-email.php',  array( &$this, 'activate' ) );
+		add_action( 'tml_uninstall_custom-email/custom-email.php', array( &$this, 'uninstall' ) );
+
+		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -60,24 +77,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
-	 *
-	 * Called by Theme_My_Login_Abstract::__construct()
-	 *
-	 * @see Theme_My_Login_Abstract::__construct()
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_activate_custom-email/custom-email.php',  array( &$this, 'activate' ) );
-		add_action( 'tml_uninstall_custom-email/custom-email.php', array( &$this, 'uninstall' ) );
-
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-	}
-
-	/**
-	 * Adds "E-mail" tab to Theme My Login menu
+	 * Adds "E-mail" to the Theme My Login menu
 	 *
 	 * Callback for "admin_menu" hook
 	 *
@@ -109,7 +109,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Registers settings
+	 * Registers options group
 	 *
 	 * Callback for "admin_init" hook
 	 *
@@ -123,7 +123,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders settings page
 	 *
-	 * This is the callback for add_submenu_page()
+	 * Callback for add_submenu_page()
 	 *
 	 * @since 6.3
 	 * @access public
@@ -138,7 +138,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Sanitizes settings
 	 *
-	 * This is the callback for register_setting()
+	 * Callback for register_setting()
 	 *
 	 * @since 6.0
 	 * @access public
