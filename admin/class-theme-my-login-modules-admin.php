@@ -46,7 +46,7 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 			__( 'Modules', 'theme-my-login' ),
 			'manage_options',
 			$this->options_key,
-			array( &$this, 'display_settings_page' )
+			array( &$this, 'settings_page' )
 		);
 
 		// Modules section
@@ -80,11 +80,10 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function display_settings_page() {
-		Theme_My_Login_Admin::display_settings_page( array(
-			'title'         => __( 'Theme My Login Modules', 'theme-my-login' ),
-			'options_group' => $this->options_key,
-			'options_page'  => $this->options_key
+	public function settings_page() {
+		Theme_My_Login_Admin::settings_page( array(
+			'title'       => __( 'Theme My Login Modules', 'theme-my-login' ),
+			'options_key' => $this->options_key
 		) );
 	}
 
