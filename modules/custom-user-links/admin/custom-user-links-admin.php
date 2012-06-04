@@ -210,7 +210,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		?>
 	<div id="ajax-response-<?php echo $role; ?>" class="ajax-response"></div>
 
-	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?> class="sortable">
+	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?> class="sortable user-links">
 		<thead>
 		<tr>
 			<th class="left"><?php _e( 'Title', 'theme-my-login' ); ?></th>
@@ -231,17 +231,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		</tbody>
 	</table>
 
-	<p><strong><?php _e( 'Add New link:' , 'theme-my-login' ) ?></strong></p>
-
-	<table id="new-<?php echo $role; ?>-link">
-	<thead>
-	<tr>
-		<th class="left"><label for="new_user_link[<?php echo $role; ?>][title]"><?php _e( 'Title', 'theme-my-login' ) ?></label></th>
-		<th><label for="new_user_link[<?php echo $role; ?>][url]"><?php _e( 'URL', 'theme-my-login' ) ?></label></th>
-		<th></th>
-	</tr>
-	</thead>
-
+	<table id="new-<?php echo $role; ?>-link" class="new-link">
 	<tbody>
 	<tr>
 		<td class="left"><input id="new_user_link[<?php echo $role; ?>][title]" name="new_user_link[<?php echo $role; ?>][title]" type="text" tabindex="8" size="20" /></td>

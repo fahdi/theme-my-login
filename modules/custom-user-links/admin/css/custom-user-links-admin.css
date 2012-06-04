@@ -64,12 +64,23 @@
 	background-color: #f9f9f9;
 }
 
+#theme_my_login_user_links table.user-links {
+	border-bottom-width: 0;
+	-moz-border-radius-bottomright: 0;
+	-moz-border-radius-bottomleft: 0;
+}
+
+#theme_my_login_user_links table.new-link {
+	border-top-width: 0;
+	-moz-border-radius-topright: 0;
+	-moz-border-radius-topleft: 0;
+}
+
 .admin-color-classic #theme_my_login_user_links table {
 	border-color: #d0dfe9;
 }
 
-#theme_my_login_user_links table input,
-#theme_my_login_user_links table select {
+#theme_my_login_user_links table input[type="text"] {
 	width: 95%;
 	margin: 8px 0 8px 8px;
 	border-color: #dfdfdf;
