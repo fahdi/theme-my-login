@@ -73,9 +73,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			'page_id' => 0,
 			'show_page' => true,
 			'enable_css' => true,
-			'email_login' => true,
-			'active_modules' => array(),
-			'permalinks' => array()
+			'email_login' => true
 		);
 	}
 
