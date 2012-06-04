@@ -37,4 +37,6 @@ jQuery(document).ready( function($) {
 		helper: fixHelper,
 		items: 'tr'
 	});
+
+	postboxes.add_postbox_toggles(pagenow);
 } );

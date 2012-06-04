@@ -20,7 +20,6 @@
 	box-sizing: content-box;
 }
 
-#theme_my_login_user_links table,
 #theme_my_login_user_links input,
 #theme_my_login_user_links textarea {
 	border-width: 1px;
@@ -36,53 +35,22 @@
 	margin: auto;
 }
 
-#theme_my_login_user_links thead th {
-	padding: 5px 8px 8px;
-	background-color: #ececec;
-	border-bottom: 1px solid #cfcfcf;
-}
-
-.admin-color-classic #theme_my_login_user_links thead th {
-	background-color: #eaf3fa;
-	border-bottom: 1px solid #d0dfe9;
-}
-
 #theme_my_login_user_links .submit {
 	border: 0 none;
-	float: none;
-	padding: 5px 8px;
+	float: none !important;
+	padding: 5px 8px !important;
 	width: 25%;
 }
 
 #theme_my_login_user_links table {
-	margin: 0;
 	width: 100%;
-	border-width: 1px;
-	border-style: solid;
+	margin: 0;
 	border-spacing: 0;
-	border-color: #cfcfcf;
-	background-color: #f9f9f9;
-}
-
-#theme_my_login_user_links table.user-links {
-	border-bottom-width: 0;
-	-moz-border-radius-bottomright: 0;
-	-moz-border-radius-bottomleft: 0;
-}
-
-#theme_my_login_user_links table.new-link {
-	border-top-width: 0;
-	-moz-border-radius-topright: 0;
-	-moz-border-radius-topleft: 0;
-}
-
-.admin-color-classic #theme_my_login_user_links table {
-	border-color: #d0dfe9;
 }
 
 #theme_my_login_user_links table input[type="text"] {
 	width: 95%;
-	margin: 8px 0 8px 8px;
+	margin: 4px 0 4px 8px;
 	border-color: #dfdfdf;
 	background-color: #fff;
 }
@@ -96,6 +64,9 @@
 	text-align: center;
 }
 
-#theme_my_login_user_links .submit input {
-	width: auto;
+#theme_my_login_user_links td.submit input {
+	width: 50px;
 }
+
+#theme_my_login_user_links .alternate {
+	background-color: transparent;
