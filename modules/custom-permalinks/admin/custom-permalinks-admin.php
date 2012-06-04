@@ -34,6 +34,7 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	protected function load() {
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'load-tml_page_theme_my_login_custom_permalinks', array( &$this, 'load_settings_page' ) );
 	}
 
 	/**
@@ -43,30 +44,26 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
-		global $wp_rewrite;
+		add_submenu_page(
+			'theme_my_login',
+			__( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),
+			__( 'Permalinks', 'theme-my-login' ),
+			'manage_options',
+			$this->options_key,
+			array( &$this, 'settings_page' )
+		);
 
-		if ( $wp_rewrite->using_permalinks() ) {
-			add_submenu_page(
-				'theme_my_login',
-				__( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),
-				__( 'Permalinks', 'theme-my-login' ),
-				'manage_options',
-				$this->options_key,
-				array( &$this, 'settings_page' )
-			);
+		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-			add_settings_section( 'general', null, '__return_false', 'theme_my_login_custom_permalinks' );
-
-			$actions = array(
-				'login'        => __( 'Login', 'theme-my-login' ),
-				'register'     => __( 'Register', 'theme-my-login' ),
-				'lostpassword' => __( 'Lost Password', 'theme-my-login' )
-			);
-			foreach ( $actions as $action => $name ) {
-				add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(
-					'action' => $action
-				) );
-			}
+		$actions = array(
+			'login'        => __( 'Login', 'theme-my-login' ),
+			'register'     => __( 'Register', 'theme-my-login' ),
+			'lostpassword' => __( 'Lost Password', 'theme-my-login' )
+		);
+		foreach ( $actions as $action => $name ) {
+			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(
+				'action' => $action
+			) );
 		}
 	}
 
@@ -90,6 +87,14 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 			// Update the options in the DB
 			$this->save_options();
 		}
+	}
+
+	public function load_settings_page() {
+		global $wp_rewrite;
+
+		if ( ! $wp_rewrite->using_permalinks() )
+			add_settings_error( $this->options_key, 'permalinks_disabled', sprintf( __( '<strong>ERROR</strong>: You must <a href="%s">enable permalinks</a> in order for these settings to be applied.', 'theme-my-login' ), admin_url( 'options-permalink.php' ) ) );
+
 	}
 
 	/**
