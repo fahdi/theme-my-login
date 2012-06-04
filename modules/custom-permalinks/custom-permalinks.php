@@ -26,7 +26,7 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $options_key = 'theme_my_login_custom_permalinks';
+	protected $options_key = 'theme_my_login_permalinks';
 
 	/**
 	 * Loads the module

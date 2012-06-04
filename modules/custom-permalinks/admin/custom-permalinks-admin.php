@@ -23,22 +23,42 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 * @var string
 	 */
-	protected $options_key = 'theme_my_login_custom_permalinks';
+	protected $options_key = 'theme_my_login_permalinks';
 
 	/**
 	 * Loads the module
 	 *
-	 * @since 6.3
+	 * Called by Theme_My_Login_Abstract::__construct()
+	 *
+	 * @see Theme_My_Login_Abstract::__construct()
+	 * @since 6.0
 	 * @access protected
 	 */
 	protected function load() {
+		add_action( 'tml_uninstall_custom-permalinks/custom-permalinks.php', array( &$this, 'uninstall' ) );
+
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'load-tml_page_theme_my_login_custom_permalinks', array( &$this, 'load_settings_page' ) );
 	}
 
 	/**
+	 * Uninstalls the module
+	 *
+	 * Callback for "tml_uninstall_custom-permalinks/custom-permalinks.php" hook in method Theme_My_Login_Admin::uninstall()
+	 *
+	 * @see Theme_My_Login_Admin::uninstall()
+	 * @since 6.3
+	 * @access public
+	 */
+	public function uninstall() {
+		delete_option( $this->options_key );
+	}
+
+	/**
 	 * Adds "Permalinks" to the Theme My Login menu
+	 *
+	 * Callback for "admin_menu" hook
 	 *
 	 * @since 6.3
 	 * @access public
@@ -70,7 +90,7 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Registers options group
 	 *
-	 * This is used because register_setting() isn't available until the "admin_init" hook.
+	 * Callback for "admin_init" hook
 	 *
 	 * @since 6.3
 	 * @access public
@@ -89,32 +109,38 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		}
 	}
 
+	/**
+	 * Adds notice to settings page if permalinks are disabled
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
 	public function load_settings_page() {
 		global $wp_rewrite;
 
 		if ( ! $wp_rewrite->using_permalinks() )
 			add_settings_error( $this->options_key, 'permalinks_disabled', sprintf( __( '<strong>ERROR</strong>: You must <a href="%s">enable permalinks</a> in order for these settings to be applied.', 'theme-my-login' ), admin_url( 'options-permalink.php' ) ) );
-
 	}
 
 	/**
 	 * Renders the settings page
 	 *
-	 * @since 6.0
+	 * Callback for add_submenu_page()
+	 *
+	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_page( $args = '' ) {
-		Theme_My_Login_Admin::display_settings_page( array(
-			'title'         => __( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),
-			'options_group' => $this->options_key,
-			'options_page'  => $this->options_key
+	public function settings_page() {
+		Theme_My_Login_Admin::settings_page( array(
+			'title'       => __( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),
+			'options_key' => $this->options_key
 		) );
 	}
 
 	/**
 	 * Sanitizes module settings
 	 *
-	 * This is the callback for register_setting()
+	 * Callback for register_setting()
 	 *
 	 * @since 6.3
 	 * @access public
