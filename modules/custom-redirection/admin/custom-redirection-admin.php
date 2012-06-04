@@ -1,0 +1,179 @@
+<?php
+/**
+ * Holds Theme My Login Custom Redirection Admin class
+ *
+ * @package Theme_My_Login
+ * @subpackage Theme_My_Login_Custom_Redirection
+ * @since 6.0
+ */
+
+if ( !class_exists( 'Theme_My_Login_Custom_Redirection_Admin' ) ) :
+/**
+ * Theme My Login Custom Redirection Admin class
+ *
+ * @since 6.3
+ */
+class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
+	/**
+	 * Holds options key
+	 *
+	 * @since 6.3
+	 * @access protected
+	 * @var string
+	 */
+	protected $options_key = 'theme_my_login_redirection';
+
+	/**
+	 * Called on Theme_My_Login_Abstract::__construct
+	 *
+	 * @since 6.3
+	 * @access protected
+	 */
+	protected function load() {
+		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
+		add_action( 'tml_uninstall_custom-redirection/custom-redirection.php', array( &$this, 'uninstall' ) );
+
+		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+	}
+
+	/**
+	 * Returns default options
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function default_options() {
+		return Theme_My_Login_Custom_Redirection::default_options();
+	}
+
+	/**
+	 * Activates the module
+	 *
+	 * Callback for "tml_activate_custom-redirection/custom-redirection.php" hook in method Theme_My_Login_Modules_Admin::activate_module()
+	 *
+	 * @see Theme_My_Login_Modules_Admin::activate_module()
+	 * @since 6.0
+	 * @access public
+	 */
+	public function activate() {
+		$this->save_options();
+	}
+
+	/**
+	 * Uninstalls the module
+	 *
+	 * Callback for "tml_uninstall_custom-email/custom-email.php" hook in method Theme_My_Login_Admin::uninstall()
+	 *
+	 * @see Theme_My_Login_Admin::uninstall()
+	 * @since 6.3
+	 * @access public
+	 */
+	public function uninstall() {
+		delete_option( $this->options_key );
+	}
+
+	/**
+	 * Adds "Redirection" tab to Theme My Login menu
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function admin_menu() {
+		global $wp_roles;
+
+		add_submenu_page(
+			'theme_my_login',
+			__( 'Theme My Login Custom Redirection Settings', 'theme-my-login' ),
+			__( 'Redirection', 'theme-my-login' ),
+			'manage_options',
+			$this->options_key,
+			array( &$this, 'settings_page' )
+		);
+
+		foreach ( $wp_roles->get_names() as $role => $role_name ) {
+			if ( 'pending' != $role )
+				add_settings_section( $role, translate_user_role( $role_name ), array( &$this, 'settings_section_role' ), $this->options_key );
+		}
+	}
+
+	/**
+	 * Registers options group
+	 *
+	 * Callback for "admin_init" hook
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function admin_init() {
+		register_setting( $this->options_key, $this->options_key );
+	}
+
+	/**
+	 * Renders settings page
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_page() {
+		Theme_My_Login_Admin::settings_page( array(
+			'title'       => __( 'Theme My Login Custom Redirection Settings', 'theme-my-login' ),
+			'options_key' => $this->options_key
+		) );
+	}
+
+	/**
+	 * Outputs redirection admin menu for specified role
+	 *
+	 * Callback for add_submenu_page()
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $args Arguments passed in from add_submenu_page()
+	 */
+	public function settings_section_role( $args ) {
+		$role = $args['id'];
+		?>
+		<table class="form-table">
+			<tr valign="top">
+			<th scope="row"><?php _e( 'Log in', 'theme-my-login' ); ?></th>
+				<td>
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][login_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_default" value="default"<?php checked( 'default', $this->get_option( array( $role, 'login_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_default"><?php _e( 'Default', 'theme-my-login' ); ?></label>
+					<p class="description"><?php _e( 'Check this option to send the user to their WordPress Dashboard/Profile.', 'theme-my-login' ); ?></p>
+
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][login_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_referer" value="referer"<?php checked( 'referer', $this->get_option( array( $role, 'login_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_referer"><?php _e( 'Referer', 'theme-my-login' ); ?></label>
+					<p class="description"><?php _e( 'Check this option to send the user back to the page they were visiting before logging in.', 'theme-my-login' ); ?></p>
+
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][login_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_custom" value="custom"<?php checked( 'custom', $this->get_option( array( $role, 'login_type' ) ) ); ?> />
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][login_url]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_url" value="<?php echo $this->get_option( array( $role, 'login_url' ) ); ?>" class="regular-text" />
+					<p class="description"><?php _e( 'Check this option to send the user to a custom location, specified by the textbox above.', 'theme-my-login' ); ?></p>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e( 'Log out', 'theme-my-login' ); ?></th>
+				<td>
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][logout_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_default" value="default"<?php checked( 'default', $this->get_option( array( $role, 'logout_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_default"><?php _e( 'Default', 'theme-my-login' ); ?></label><br />
+					<p class="description"><?php _e( 'Check this option to send the user to the log in page, displaying a message that they have successfully logged out.', 'theme-my-login' ); ?></p>
+
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][logout_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_referer" value="referer"<?php checked( 'referer', $this->get_option( array( $role, 'logout_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_referer"><?php _e( 'Referer', 'theme-my-login' ); ?></label><br />
+					<p class="description"><?php _e( 'Check this option to send the user back to the page they were visiting before logging out. (Note: If the previous page being visited was an admin page, this can have unexpected results.)', 'theme-my-login' ); ?></p>
+
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][logout_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_custom" value="custom"<?php checked( 'custom', $this->get_option( array( $role, 'logout_type' ) ) ); ?> />
+					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][logout_url]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_url" value="<?php echo $this->get_option( array( $role, 'logout_url' ) ); ?>" class="regular-text" />
+					<p class="description"><?php _e( 'Check this option to send the user to a custom location, specified by the textbox above.', 'theme-my-login' ); ?></p>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+}
+
+/**
+ * Holds the reference to Theme_My_Login_Custom_Redirection_Admin object
+ * @global object $theme_my_login_custom_redirection_admin
+ * @since 6.3
+ */
+$theme_my_login_custom_redirection_admin = new Theme_My_Login_Custom_Redirection_Admin;
+
+endif; // Class exists
