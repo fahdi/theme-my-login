@@ -39,7 +39,6 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		add_action( 'parse_request', array( &$this, 'parse_request' ), 0 );
 		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
 		add_filter( 'tml_page_link', array( &$this, 'tml_page_link' ), 10, 2 );
-		add_filter( 'tml_redirect_url', array( &$this, 'tml_redirect_url' ), 10, 2 );
 	}
 
 	/**
