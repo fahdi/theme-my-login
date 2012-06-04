@@ -58,7 +58,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			__( 'TML', 'theme-my-login' ),
 			'manage_options',
 			'theme_my_login',
-			array( 'Theme_My_Login_Admin', 'display_settings_page' )
+			array( 'Theme_My_Login_Admin', 'settings_page' )
 		);
 
 		add_submenu_page(
@@ -67,7 +67,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			__( 'General', 'theme-my-login' ),
 			'manage_options',
 			'theme_my_login',
-			array( 'Theme_My_Login_Admin', 'display_settings_page' )
+			array( 'Theme_My_Login_Admin', 'settings_page' )
 		);
 
 		// General section
@@ -98,11 +98,10 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.0
 	 * @access public
 	 */
-	public static function display_settings_page( $args = '' ) {
+	public static function settings_page( $args = '' ) {
 		extract( wp_parse_args( $args, array(
-			'title'        => __( 'Theme My Login Settings', 'theme-my-login' ),
-			'options_group' => 'theme_my_login',
-			'options_page'  => 'theme_my_login'
+			'title'       => __( 'Theme My Login Settings', 'theme-my-login' ),
+			'options_key' => 'theme_my_login'
 		) ) );
 		?>
 		<div class="wrap">
@@ -112,8 +111,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 			<form method="post" action="options.php">
 				<?php
-					settings_fields( $options_group );
-					do_settings_sections( $options_page );
+					settings_fields( $options_key );
+					do_settings_sections( $options_key );
 					submit_button();
 				?>
 			</form>
