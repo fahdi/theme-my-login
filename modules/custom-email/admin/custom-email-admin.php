@@ -38,6 +38,8 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+
+		add_action( 'load-tml_page_theme_my_login_email', array( &$this, 'load_settings_page' ) );
 	}
 
 	/**
@@ -96,15 +98,15 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 			array( &$this, 'settings_page' )
 		);
 
-		add_settings_section( 'new_user',       __( 'New User', 'theme-my-login' ),          array( &$this, 'settings_section_new_user' ),       $this->options_key );
-		add_settings_section( 'new_user_admin', __( 'New User Admin', 'theme-my-login' ),    array( &$this, 'settings_section_new_user_admin' ), $this->options_key );
-		add_settings_section( 'retrieve_pass',  __( 'Retrieve Password', 'theme-my-login' ), array( &$this, 'settings_section_retrieve_pass' ),  $this->options_key );
-		add_settings_section( 'reset_pass',     __( 'Reset Password', 'theme-my-login' ),    array( &$this, 'settings_section_reset_pass' ),     $this->options_key );
+		add_meta_box( 'new_user',       __( 'New User', 'theme-my-login' ),          array( &$this, 'new_user_meta_box' ),       'tml_page_' . $this->options_key, 'normal' );
+		add_meta_box( 'new_user_admin', __( 'New User Admin', 'theme-my-login' ),    array( &$this, 'new_user_admin_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
+		add_meta_box( 'retrieve_pass',  __( 'Retrieve Password', 'theme-my-login' ), array( &$this, 'retrieve_pass_meta_box' ),  'tml_page_' . $this->options_key, 'normal' );
+		add_meta_box( 'reset_pass',     __( 'Reset Password', 'theme-my-login' ),    array( &$this, 'reset_pass_meta_box' ),     'tml_page_' . $this->options_key, 'normal' );
 		if ( $theme_my_login_modules->is_module_active( 'user-moderation/user-moderation.php' ) ) {
-			add_settings_section( 'user_activation',     __( 'User Activation', 'theme-my-login' ),    array( &$this, 'settings_section_user_activation' ),     $this->options_key );
-			add_settings_section( 'user_approval',       __( 'User Approval', 'theme-my-login' ),      array( &$this, 'settings_section_user_approval' ),       $this->options_key );
-			add_settings_section( 'user_approval_admin', __( 'User Approval Admin', 'theme-my-login'), array( &$this, 'settings_section_user_approval_admin' ), $this->options_key );
-			add_settings_section( 'user_denial',         __( 'User Denial', 'theme-my-login' ),        array( &$this, 'settings_section_user_denial' ),         $this->options_key );
+			add_meta_box( 'user_activation',     __( 'User Activation', 'theme-my-login' ),    array( &$this, 'user_activation_meta_box' ),     'tml_page_' . $this->options_key, 'normal' );
+			add_meta_box( 'user_approval',       __( 'User Approval', 'theme-my-login' ),      array( &$this, 'user_approval_meta_box' ),       'tml_page_' . $this->options_key, 'normal' );
+			add_meta_box( 'user_approval_admin', __( 'User Approval Admin', 'theme-my-login'), array( &$this, 'user_approval_admin_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
+			add_meta_box( 'user_denial',         __( 'User Denial', 'theme-my-login' ),        array( &$this, 'user_denial_meta_box' ),         'tml_page_' . $this->options_key, 'normal' );
 		}
 	}
 
@@ -121,6 +123,18 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Loads admin styles and scripts
+	 *
+	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function load_settings_page() {
+		wp_enqueue_script( 'tml-custom-email-admin', plugins_url( 'theme-my-login/modules/custom-email/admin/js/custom-email-admin.js' ), array( 'postbox' ) );
+	}
+
+	/**
 	 * Renders settings page
 	 *
 	 * Callback for add_submenu_page()
@@ -129,46 +143,37 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_page() {
-		Theme_My_Login_Admin::settings_page( array(
-			'title'       => __( 'Theme My Login Custom E-mail Settings', 'theme-my-login' ),
-			'options_key' => $this->options_key
-		) );
-	}
+		global $current_screen;
+		?>
+		<div class="wrap">
+			<?php screen_icon( 'options-general' ); ?>
+			<h2><?php echo esc_html_e( 'Theme My Login Custom E-mail Settings', 'theme-my-login' ); ?></h2>
+			<?php settings_errors(); ?>
 
-	/**
-	 * Sanitizes settings
-	 *
-	 * Callback for register_setting()
-	 *
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string|array $settings Settings passed in from filter
-	 * @return string|array Sanitized settings
-	 */
-	public function save_settings( $settings ) {
-		global $theme_my_login_modules;
-
-		$settings['new_user']['admin_disable']   = isset( $settings['new_user']['admin_disable'] );
-		$settings['reset_pass']['admin_disable'] = isset( $settings['reset_pass']['admin_disable'] );
-
-		if ( $theme_my_login_modules->is_module_active( 'user-moderation/user-moderation.php' ) )
-			$settings['user_approval']['admin_disable'] = isset( $settings['user_approval']['admin_disable'] );
-
-		$settings = Theme_My_Login_Common::array_merge_recursive( $this->get_options(), $settings );
-
-		return $settings;
+			<form method="post" action="options.php">
+				<?php
+				settings_fields( $this->options_key );
+				wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+				wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+				?>
+				<div id="<?php echo $this->options_key; ?>" class="metabox-holder">
+					<?php do_meta_boxes( $current_screen->id, 'normal', null ); ?>
+				</div>
+				<?php submit_button(); ?>
+			</form>
+		</div>
+		<?php
 	}
 
 	/**
 	 * Renders New User Notification settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_new_user() {
+	public function new_user_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to a new user upon registration.', 'theme-my-login' ); ?>
@@ -211,12 +216,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders New User Admin Notification settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_new_user_admin() {
+	public function new_user_admin_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon new user registration.', 'theme-my-login' ); ?>
@@ -268,12 +273,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders Retrieve Password settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_retrieve_pass() {
+	public function retrieve_pass_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to a user when they attempt to recover their password.', 'theme-my-login' ); ?>
@@ -316,12 +321,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders Reset Password settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_reset_pass() {
+	public function reset_pass_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below, upon user password change.', 'theme-my-login' ); ?>
@@ -374,12 +379,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders User Activation settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_user_activation() {
+	public function user_activation_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to a new user upon registration when "E-mail Confirmation" is checked for "User Moderation".', 'theme-my-login' ); ?>
@@ -422,12 +427,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders User Approval settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_user_approval() {
+	public function user_approval_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to a new user upon admin approval when "Admin Approval" is checked for "User Moderation".', 'theme-my-login' ); ?>
@@ -470,12 +475,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders User Approval Admin settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_user_approval_admin() {
+	public function user_approval_admin_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to the e-mail address or addresses (multiple addresses may be separated by commas) specified below upon user registration when "Admin Approval" is checked for "User Moderation".', 'theme-my-login' ); ?>
@@ -528,12 +533,12 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	/**
 	 * Renders User Denial settings section
 	 *
-	 * This is the callback for add_settings_section()
+	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_section_user_denial() {
+	public function user_denial_meta_box() {
 		?>
 		<p class="description">
 			<?php _e( 'This e-mail will be sent to a user who is deleted/denied when "Admin Approval" is checked for "User Moderation" and the user\'s role is "Pending".', 'theme-my-login' ); ?>
@@ -570,6 +575,31 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 			</tr>
 		</table>
 		<?php
+	}
+
+	/**
+	 * Sanitizes settings
+	 *
+	 * Callback for register_setting()
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string|array $settings Settings passed in from filter
+	 * @return string|array Sanitized settings
+	 */
+	public function save_settings( $settings ) {
+		global $theme_my_login_modules;
+
+		$settings['new_user']['admin_disable']   = isset( $settings['new_user']['admin_disable'] );
+		$settings['reset_pass']['admin_disable'] = isset( $settings['reset_pass']['admin_disable'] );
+
+		if ( $theme_my_login_modules->is_module_active( 'user-moderation/user-moderation.php' ) )
+			$settings['user_approval']['admin_disable'] = isset( $settings['user_approval']['admin_disable'] );
+
+		$settings = Theme_My_Login_Common::array_merge_recursive( $this->get_options(), $settings );
+
+		return $settings;
 	}
 }
 

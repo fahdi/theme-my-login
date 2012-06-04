@@ -138,6 +138,19 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Outputs HTML for "Permalinks" settings tab
+	 *
+	 * @since 6.2
+	 * @access public
+	 */
+	public function settings_field_permalink( $args = '' ) {
+		extract( $args );
+		?>
+		<input name="<?php echo $this->options_key; ?>[<?php echo $action; ?>]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $action; ?>" value="<?php echo $this->get_option( $action ); ?>" class="regular-text" />
+		<?php
+	}
+
+	/**
 	 * Sanitizes module settings
 	 *
 	 * Callback for register_setting()
@@ -159,19 +172,6 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 		return $settings;
-	}
-
-	/**
-	 * Outputs HTML for "Permalinks" settings tab
-	 *
-	 * @since 6.2
-	 * @access public
-	 */
-	public function settings_field_permalink( $args = '' ) {
-		extract( $args );
-		?>
-		<input name="<?php echo $this->options_key; ?>[<?php echo $action; ?>]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $action; ?>" value="<?php echo $this->get_option( $action ); ?>" class="regular-text" />
-		<?php
 	}
 }
 

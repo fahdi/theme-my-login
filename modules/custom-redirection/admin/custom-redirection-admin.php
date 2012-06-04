@@ -112,6 +112,18 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Loads admin styles and scripts
+	 *
+	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function load_settings_page() {
+		wp_enqueue_script( 'tml-custom-redirection-admin', plugins_url( 'theme-my-login/modules/custom-redirection/admin/js/custom-redirection-admin.js' ), array( 'postbox' ) );
+	}
+
+	/**
 	 * Renders settings page
 	 *
 	 * @since 6.3
@@ -138,18 +150,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 			</form>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Loads admin styles and scripts
-	 *
-	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function load_settings_page() {
-		wp_enqueue_script( 'tml-custom-redirection-admin', plugins_url( 'theme-my-login/modules/custom-redirection/admin/js/custom-redirection-admin.js' ), array( 'postbox' ) );
 	}
 
 	/**

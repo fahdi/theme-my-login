@@ -120,47 +120,16 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Sanitizes settings
+	 * Loads admin styles and scripts
 	 *
-	 * Callback for register_setting()
+	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
 	 *
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param string|array $settings Settings passed in from filter
-	 * @return string|array Sanitized settings
 	 */
-	public function save_settings( $settings ) {
-		// Bail-out if doing AJAX because it has it's own saving routine
-		if ( defined('DOING_AJAX') && DOING_AJAX )
-			return $settings;
-		// Handle updating/deleting of links
-		if ( isset( $_POST['user_links'] ) && is_array( $_POST['user_links'] ) && !empty( $_POST['user_links'] ) ) {
-			foreach ( $_POST['user_links'] as $role => $links ) {
-				foreach ( $links as $key => $link ) {
-					$clean_title = wp_kses( $link['title'], null );
-					$clean_url = wp_kses( $link['url'], null );
-					$links[$key] = array( 'title' => $clean_title, 'url' => $clean_url );
-					if ( ( empty( $clean_title ) && empty( $clean_url ) ) || ( isset( $_POST['delete_user_link'][$role][$key] ) ) )
-						unset( $links[$key] );
-				}
-				$settings[$role] = array_values( $links );
-			}
-		}
-		// Handle new links
-		if ( isset( $_POST['new_user_link'] ) && is_array( $_POST['new_user_link'] ) && !empty( $_POST['new_user_link'] ) ) {
-			foreach ( $_POST['new_user_link'] as $role => $link ) {
-				$clean_title = wp_kses( $link['title'], null );
-				$clean_url = wp_kses( $link['url'], null );
-				if ( !empty( $clean_title ) && !empty( $clean_url ) )
-					$settings[$role][] = array( 'title' => $clean_title, 'url' => $clean_url );
-			}
-		}
-		// Reset link keys
-		foreach ( $settings as $role => $links ) {
-			$settings[$role] = array_values( $links );
-		}
-		return $settings;
+	public function load_settings_page() {
+		wp_enqueue_style(  'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/css/custom-user-links-admin.css' ) );
+		wp_enqueue_script( 'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/js/custom-user-links-admin.js' ), array( 'wp-lists', 'postbox', 'jquery-ui-sortable' ) );
 	}
 
 	/**
@@ -192,19 +161,6 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 			</form>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Loads admin styles and scripts
-	 *
-	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function load_settings_page() {
-		wp_enqueue_style(  'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/css/custom-user-links-admin.css' ) );
-		wp_enqueue_script( 'tml-custom-user-links-admin', plugins_url( 'theme-my-login/modules/custom-user-links/admin/js/custom-user-links-admin.js' ), array( 'wp-lists', 'postbox', 'jquery-ui-sortable' ) );
 	}
 
 	/**
@@ -296,6 +252,50 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		$r .= "\n\t\t<td class='submit'><input name='delete_user_link[$role][$link->id]' type='submit' class='delete:$role-link-list:$role-link-$link->id::_ajax_nonce=$delete_nonce deletelink' tabindex='6' value='". esc_attr__( 'Delete' ) ."' />";
 		$r .= "\n\t\t<input name='updatelink' type='submit' class='add:$role-link-list:$role-link-$link->id::_ajax_nonce=$update_nonce updatelink' tabindex='6' value='". esc_attr__( 'Update' ) ."' /></td>\n\t</tr>";
 		return $r;
+	}
+
+	/**
+	 * Sanitizes settings
+	 *
+	 * Callback for register_setting()
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string|array $settings Settings passed in from filter
+	 * @return string|array Sanitized settings
+	 */
+	public function save_settings( $settings ) {
+		// Bail-out if doing AJAX because it has it's own saving routine
+		if ( defined('DOING_AJAX') && DOING_AJAX )
+			return $settings;
+		// Handle updating/deleting of links
+		if ( isset( $_POST['user_links'] ) && is_array( $_POST['user_links'] ) && !empty( $_POST['user_links'] ) ) {
+			foreach ( $_POST['user_links'] as $role => $links ) {
+				foreach ( $links as $key => $link ) {
+					$clean_title = wp_kses( $link['title'], null );
+					$clean_url = wp_kses( $link['url'], null );
+					$links[$key] = array( 'title' => $clean_title, 'url' => $clean_url );
+					if ( ( empty( $clean_title ) && empty( $clean_url ) ) || ( isset( $_POST['delete_user_link'][$role][$key] ) ) )
+						unset( $links[$key] );
+				}
+				$settings[$role] = array_values( $links );
+			}
+		}
+		// Handle new links
+		if ( isset( $_POST['new_user_link'] ) && is_array( $_POST['new_user_link'] ) && !empty( $_POST['new_user_link'] ) ) {
+			foreach ( $_POST['new_user_link'] as $role => $link ) {
+				$clean_title = wp_kses( $link['title'], null );
+				$clean_url = wp_kses( $link['url'], null );
+				if ( !empty( $clean_title ) && !empty( $clean_url ) )
+					$settings[$role][] = array( 'title' => $clean_title, 'url' => $clean_url );
+			}
+		}
+		// Reset link keys
+		foreach ( $settings as $role => $links ) {
+			$settings[$role] = array_values( $links );
+		}
+		return $settings;
 	}
 
 	/**
