@@ -10,7 +10,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Security' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Security' ) ) :
 /**
  * Theme My Login Security module class
  *
@@ -19,6 +19,52 @@ if ( !class_exists( 'Theme_My_Login_Security' ) ) :
  * @since 6.0
  */
 class Theme_My_Login_Security extends Theme_My_Login_Abstract {
+	/**
+	 * Holds options key
+	 *
+	 * @since 6.3
+	 * @access protected
+	 * @var string
+	 */
+	protected $options_key = 'theme_my_login_security';
+
+	/**
+	 * Returns default options
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @return array Default options
+	 */
+	public function default_options() {
+		return array(
+			'private_site' => 0,
+			'failed_login' => array(
+				'threshold'               => 5,
+				'threshold_duration'      => 1,
+				'threshold_duration_unit' => 'hour',
+				'lockout_duration'        => 24,
+				'lockout_duration_unit'   => 'hour'
+			)
+		);
+	}
+
+	/**
+	 * Loads the module
+	 *
+	 * @since 6.0
+	 * @access protected
+	 */
+	protected function load() {
+		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
+
+		add_action( 'authenticate',         array( &$this, 'authenticate' ), 100, 3 );
+		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
+
+		add_action( 'show_user_profile', array( &$this, 'show_user_profile' ) );
+		add_action( 'edit_user_profile', array( &$this, 'show_user_profile' ) );
+	}
+
 	/**
 	 * Blocks entire site if user is not logged in and private site is enabled
 	 *
@@ -30,8 +76,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	public function template_redirect() {
 		global $theme_my_login;
 
-		if ( $theme_my_login->get_option( array( 'security', 'private_site' ) ) ) {
-			if ( !( is_user_logged_in() || $theme_my_login->is_login_page() ) ) {
+		if ( $this->get_option( 'private_site' ) ) {
+			if ( ! ( is_user_logged_in() || $theme_my_login->is_login_page() ) ) {
 				$redirect_to = apply_filters( 'tml_security_private_site_redirect', wp_login_url( $_SERVER['REQUEST_URI'], true ) );
 				wp_safe_redirect( $redirect_to );
 				exit;
@@ -54,9 +100,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @return WP_User|WP_Error WP_User if the user can login, WP_Error otherwise
 	 */
 	public function authenticate( $user, $username, $password ) {
-		global $theme_my_login;
-
-		if ( !$userdata = get_user_by( 'login', $username ) )
+		// Make sure user exists
+		if ( ! $userdata = get_user_by( 'login', $username ) )
 			return $user;
 
 		// Current time
@@ -72,9 +117,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 				return new WP_Error( 'locked_account', __( '<strong>ERROR</strong>: This account has been locked.', 'theme-my-login' ) );
 			}
 		} elseif ( is_wp_error( $user ) && 'incorrect_password' == $user->get_error_code() ) {
-			// Get the options
-			$options = $theme_my_login->get_option( array( 'security', 'failed_login' ), array() );
-
 			// Get the attempts
 			$attempts = $this->get_failed_login_attempts( $userdata->ID );
 
@@ -82,16 +124,16 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 			$first_attempt = reset( $attempts );
 
 			// Get the relative duration
-			$duration = $first_attempt['time'] + $this->get_seconds_from_unit( $options['threshold_duration'], $options['threshold_duration_unit'] );
+			$duration = $first_attempt['time'] + $this->get_seconds_from_unit( $this->get_option( array( 'failed_login', 'threshold_duration' ) ), $this->get_option( array( 'failed_login', 'threshold_duration_unit' ) ) );
 
 			// If current time is less than relative duration time, we're still within the defensive zone
 			if ( $time < $duration ) {
 				// Log this attempt
 				$this->add_failed_login_attempt( $userdata->ID, $time );
 				// If failed attempts reach treshold, lock the account
-				if ( $this->get_failed_login_attempt_count( $userdata->ID ) >= $options['threshold'] ) {
+				if ( $this->get_failed_login_attempt_count( $userdata->ID ) >= $this->get_option( array( 'failed_login', 'threshold' ) ) ) {
 					// Create new expiration
-					$expiration = $time + $this->get_seconds_from_unit( $options['lockout_duration'], $options['lockout_duration_unit'] );
+					$expiration = $time + $this->get_seconds_from_unit( $this->get_option( array( 'failed_login', 'lockout_duration' ) ), $this->get_option( array( 'failed_login', 'lockout_duration_unit' ) ) );
 					$this->lock_user( $userdata->ID, $expiration );
 					return new WP_Error( 'locked_account', sprintf( __( '<strong>ERROR</strong>: This account has been locked because of too many failed login attempts. You may try again in %s.', 'theme-my-login' ), human_time_diff( $time, $expiration ) ) );
 				}
@@ -119,7 +161,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @return bool Whether to allow password reset or not
 	 */
 	public function allow_password_reset( $allow, $user_id ) {
-		if ( $this->is_user_locked( $user_id ) && !$this->get_user_lock_expiration( $user_id ) )
+		if ( $this->is_user_locked( $user_id ) && ! $this->get_user_lock_expiration( $user_id ) )
 			$allow = false;
 		return $allow;
 	}
@@ -133,7 +175,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @param object $profileuser User object
 	 */
 	public function show_user_profile( $profileuser ) {
-		if ( !current_user_can( 'manage_users' ) )
+		if ( ! current_user_can( 'manage_users' ) )
 			return;
 
 		if ( $failed_login_attempts = $this->get_failed_login_attempts( $profileuser->ID ) ) : ?>
@@ -233,11 +275,11 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 		$security = $this->get_security_meta( $user );
 
 		// If "is_locked" is not set, there is no lock
-		if ( !$security['is_locked'] )
+		if ( ! $security['is_locked'] )
 			return false;
 
 		// If "lock_expires" is not set, there is a lock but no expiry
-		if ( !$expires = $this->get_user_lock_expiration( $user ) )
+		if ( ! $expires = $this->get_user_lock_expiration( $user ) )
 			return true;
 
 		// We have a lock with an expiry
@@ -265,7 +307,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 			'failed_login_attempts' => array()
 			);
 		$meta = get_user_meta( $user_id, 'theme_my_login_security', true );
-		if ( !is_array( $meta ) )
+		if ( ! is_array( $meta ) )
 			$meta = array();
 
 		return array_merge( $defaults, $meta );
@@ -282,7 +324,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 */
 	public function get_failed_login_attempts( $user_id ) {
 		$security_meta = $this->get_security_meta( $user_id );
-		if ( !is_array( $security_meta['failed_login_attempts'] ) )
+		if ( ! is_array( $security_meta['failed_login_attempts'] ) )
 			$security_meta['failed_login_attempts'] = array();
 		return $security_meta['failed_login_attempts'];
 	}
@@ -326,7 +368,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 */
 	public function add_failed_login_attempt( $user_id, $time = '', $ip = '' ) {
 		$security_meta = $this->get_security_meta( $user_id );
-		if ( !is_array( $security_meta['failed_login_attempts'] ) )
+		if ( ! is_array( $security_meta['failed_login_attempts'] ) )
 			$security_meta['failed_login_attempts'] = array();
 
 		$time = absint( $time );
@@ -383,52 +425,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 		}
 		return $value;
 	}
-
-	/**
-	 * Initializes options for this module
-	 *
-	 * Callback for "tml_init_options" hook in method Theme_My_Login::init_options()
-	 *
-	 * @see Theme_My_Login::init_options()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param array $options Options passed in from filter
-	 * @return array Original $options array with module options appended
-	 */
-	public function init_options( $options = array() ) {
-		// Make sure it's an array
-		$options = (array) $options;
-		// Assign our options
-		$options['security'] = array(
-			'private_site' => 0,
-			'failed_login' => array(
-				'threshold' => 5,
-				'threshold_duration' => 1,
-				'threshold_duration_unit' => 'hour',
-				'lockout_duration' => 24,
-				'lockout_duration_unit' => 'hour'
-			)
-		);
-		return $options;
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-
-		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
-		add_action( 'authenticate', array( &$this, 'authenticate' ), 100, 3 );
-		add_action( 'show_user_profile', array( &$this, 'show_user_profile' ) );
-		add_action( 'edit_user_profile', array( &$this, 'show_user_profile' ) );
-
-		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
-	}
 }
 
 /**
@@ -436,7 +432,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
  * @global object $theme_my_login_security
  * @since 6.0
  */
-$theme_my_login_security = new Theme_My_Login_Security( 'theme_my_login_security' );
+$theme_my_login_security = new Theme_My_Login_Security;
 
 if ( is_admin() )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/security/admin/security-admin.php' );
