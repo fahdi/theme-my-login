@@ -57,7 +57,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 		global $theme_my_login;
 
 		if ( !$userdata = get_user_by( 'login', $username ) )
-			return;
+			return $user;
 
 		// Current time
 		$time = time();
