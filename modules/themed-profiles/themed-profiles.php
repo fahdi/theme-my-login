@@ -10,7 +10,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
 /**
  * Theme My Login Themed Profiles class
  *
@@ -19,6 +19,72 @@ if ( !class_exists( 'Theme_My_Login_Themed_Profiles' ) ) :
  * @since 6.0
  */
 class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
+	/**
+	 * Holds options key
+	 *
+	 * @since 6.3
+	 * @access protected
+	 * @var string
+	 */
+	protected $options_key = 'theme_my_login_themed_profiles';
+
+	/**
+	 * Returns default options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Default options
+	 */
+	public function default_options() {
+		global $wp_roles;
+
+		if ( empty( $wp_roles ) )
+			$wp_roles = new WP_Roles;
+
+		$options = array();
+		foreach ( $wp_roles->get_names() as $role => $label ) {
+			if ( 'pending' != $role ) {
+				$options[$role] = array(
+					'theme_profile'  => true,
+					'restrict_admin' => false
+				);
+			}
+		}
+		return $options;
+	}
+
+	/**
+	 * Loads the module
+	 *
+	 * @since 6.0
+	 * @access protected
+	 */
+	protected function load() {
+		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
+
+		add_action( 'init',              array( &$this, 'init' ) );
+		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
+		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar' ) );
+
+		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' ) );
+		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' ) );
+		add_filter( 'tml_title',           array( &$this, 'tml_title' ), 10, 2 );
+	}
+
+	/**
+	 * Adds filters to site_url() and admin_url()
+	 *
+	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function modules_loaded() {
+		add_filter( 'site_url',  array( &$this, 'site_url' ), 10, 3 );
+		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
+	}
+
 	/**
 	 * Redirects "profile.php" to themed profile page
 	 *
@@ -31,47 +97,26 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		global $theme_my_login, $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-        	$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
+			$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
+
 			$user_role = reset( $current_user->roles );
-			if ( is_multisite() && empty( $user_role ) ) {
+			if ( is_multisite() && empty( $user_role ) )
 				$user_role = 'subscriber';
-			}
-			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
-                if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
-                	if ( !empty( $_GET ) )
-                		$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
+
+			if ( 'profile.php' == $pagenow && ! isset( $_REQUEST['page'] ) ) {
+				if ( $this->get_option( array( $user_role, 'theme_profile' ) ) ) {
+					if ( ! empty( $_GET ) )
+						$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
 					wp_redirect( $redirect_to );
-                    exit;
-                }
-            } else {
-            	if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
-                	wp_redirect( $redirect_to );
-                	exit();
-                }
-            }
+					exit;
+				}
+			} else {
+				if ( $this->get_option( array( $user_role, 'restrict_admin' ) ) ) {
+					wp_redirect( $redirect_to );
+					exit;
+				}
+			}
         }
-	}
-
-	/**
-	 * Hides admin bar is admin is restricted
-	 *
-	 * Callback for "show_admin_bar" hook
-	 *
-	 * @since 6.2
-	 * @access public
-	 */
-	public function show_admin_bar( $show_admin_bar ) {
-		global $theme_my_login, $current_user;
-
-		$user_role = reset( $current_user->roles );
-		if ( is_multisite() && empty( $user_role ) ) {
-			$user_role = 'subscriber';
-		}
-
-		if ( $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) )
-			return false;
-
-		return $show_admin_bar;
 	}
 
 	/**
@@ -89,7 +134,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			switch ( $theme_my_login->request_action ) {
 				case 'profile' :
 					// Redirect to login page if not logged in
-					if ( !is_user_logged_in() ) {
+					if ( ! is_user_logged_in() ) {
 						$redirect_to = $theme_my_login->get_login_page_link( array( 'reauth' => 1 ) );
 						wp_redirect( $redirect_to );
 						exit();
@@ -121,6 +166,27 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Hides admin bar is admin is restricted
+	 *
+	 * Callback for "show_admin_bar" hook
+	 *
+	 * @since 6.2
+	 * @access public
+	 */
+	public function show_admin_bar( $show_admin_bar ) {
+		global $current_user;
+
+		$user_role = reset( $current_user->roles );
+		if ( is_multisite() && empty( $user_role ) )
+			$user_role = 'subscriber';
+
+		if ( $this->get_option( array( $user_role, 'restrict_admin' ) ) )
+			return false;
+
+		return $show_admin_bar;
+	}
+
+	/**
 	 * Handles profile action
 	 *
 	 * Callback for "tml_request_profile" in method Theme_My_Login::the_request()
@@ -129,7 +195,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @since 6.0
 	 * @access public
 	 */
-	public function profile_action() {
+	public function tml_request_profile() {
 		global $theme_my_login;
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
@@ -143,7 +209,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		wp_enqueue_script( 'user-profile', admin_url( "js/user-profile$suffix.js" ), array( 'jquery' ), '', true );
+		wp_enqueue_script( 'user-profile',            admin_url( "js/user-profile$suffix.js" ), array( 'jquery' ), '', true );
 		wp_enqueue_script( 'password-strength-meter', admin_url( "js/password-strength-meter$suffix.js" ), array( 'jquery' ), '', true );
 		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
 			'empty' => __( 'Strength indicator', 'theme-my-login' ),
@@ -160,20 +226,18 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			check_admin_referer( 'update-user_' . $current_user->ID );
 
-			if ( !current_user_can( 'edit_user', $current_user->ID ) )
+			if ( ! current_user_can( 'edit_user', $current_user->ID ) )
 				wp_die( __( 'You do not have permission to edit this user.', 'theme-my-login' ) );
 
 			do_action( 'personal_options_update', $current_user->ID );
 
-			$errors = edit_user( $current_user->ID );
+			$theme_my_login->errors = edit_user( $current_user->ID );
 
-			if ( !is_wp_error( $errors ) ) {
+			if ( ! is_wp_error( $errors ) ) {
 				$redirect = add_query_arg( array( 'updated' => 'true' ) );
 				wp_redirect( $redirect );
 				exit();
 			}
-
-			$theme_my_login->errors = $errors;
 		}
 
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
@@ -183,7 +247,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	/**
 	 * Outputs profile form HTML
 	 *
-	 * Callback for "tml_template_profile" hook in method Theme_My_login_Template::display()
+	 * Callback for "tml_display_profile" hook in method Theme_My_login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
@@ -191,20 +255,20 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 *
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
-	public function get_profile_form( &$template ) {
+	public function tml_display_profile( &$template ) {
 		global $current_user, $profileuser, $_wp_admin_css_colors, $wp_version;
 
 		$current_user = wp_get_current_user();
-		$profileuser = get_user_to_edit( $current_user->ID );
+		$profileuser  = get_user_to_edit( $current_user->ID );
 
 		$role = reset( $profileuser->roles );
 
 		$_template = array();
 		// Allow template override via shortcode or template tag args
-		if ( !empty( $template->options['profile_template'] ) )
+		if ( ! empty( $template->options['profile_template'] ) )
 			$_template[] = $template->options['profile_template'];
 		// Role template
-		if ( !empty( $template->options["profile_template_$role"] ) )
+		if ( ! empty( $template->options["profile_template_$role"] ) )
 			$_template[] = $template->options["profile_template_$role"];
 		$_template[] = "profile-form-$role.php";
 		// Default template
@@ -232,11 +296,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		if ( 'profile.php' != $pagenow && strpos( $url, 'profile.php' ) !== false ) {
 			$user_role = reset( $current_user->roles );
-			if ( is_multisite() && empty( $user_role ) ) {
+			if ( is_multisite() && empty( $user_role ) )
 				$user_role = 'subscriber';
-			}
 
-			if ( $user_role && !$theme_my_login->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) )
+			if ( $user_role && ! $this->get_option( array( $user_role, 'theme_profile' ) ) )
 				return $url;
 					
 			$parsed_url = parse_url( $url );
@@ -272,71 +335,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			$title = __( 'Your Profile', 'theme-my-login' );
 		return $title;
 	}
-
-	/**
-	 * Initializes options for this module
-	 *
-	 * Callback for "tml_init_options" hook in method Theme_My_Login::init_options()
-	 *
-	 * @see Theme_My_Login::init_options()
-	 * @since 6.2
-	 * @access public
-	 *
-	 * @param array $options Options passed in from filter
-	 * @return array Original $options array with module options appended
-	 */
-	public function init_options( $options = array() ) {
-		global $wp_roles;
-
-		if ( empty( $wp_roles ) )
-			$wp_roles =& new WP_Roles();
-
-		$options = (array) $options;
-
-		$options['themed_profiles'] = array();
-		foreach ( $wp_roles->get_names() as $role => $label ) {
-			if ( 'pending' == $role )
-				continue;
-			$options['themed_profiles'][$role] = array(
-				'theme_profile' => 1,
-				'restrict_admin' => 0
-			);
-		}
-		return $options;
-	}
-
-	/**
-	 * Adds filters to site_url() and admin_url()
-	 *
-	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function modules_loaded() {
-		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
-		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		// Load
-		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
-		add_filter( 'tml_init_options', array( &$this, 'init_options' ) );
-		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
-
-		add_action( 'init', array( &$this, 'init' ) );
-		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
-		add_filter( 'show_admin_bar', array( &$this, 'show_admin_bar' ) );
-
-		add_action( 'tml_request_profile', array( &$this, 'profile_action' ) );
-		add_action( 'tml_display_profile', array( &$this, 'get_profile_form' ) );
-	}
 }
 
 /**
@@ -344,7 +342,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
  * @global object $theme_my_login_themed_profiles
  * @since 6.0
  */
-$theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles( 'theme_my_login_themed_profiles' );
+$theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles;
 
 if ( is_admin() )
 	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/themed-profiles/admin/themed-profiles-admin.php' );
