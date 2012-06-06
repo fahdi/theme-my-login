@@ -246,7 +246,7 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 *
 	 * @param string $module Module path
-	 * @return int|WP_Error 0 on success, WP_Error on failure.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public static function validate_module( $module ) {
 		if ( validate_file( $module ) )
@@ -257,7 +257,12 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 		$installed_modules = get_plugins( '/theme-my-login/modules' );
 		if ( !isset( $installed_modules[$module] ) )
 			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
-		return apply_filters( 'tml_validate_module', 0, $module );
+
+		$valid = true;
+		$valid = apply_filters( 'tml_validate_module', $valid, $module );
+		$valid = apply_filters( 'tml_validate_' . trim( $module ), $valid );
+
+		return $valid;
 	}
 }
 endif; // Class exists
