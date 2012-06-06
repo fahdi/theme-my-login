@@ -30,9 +30,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_validate_user-moderaiton/user-moderation.php',   array( &$this, 'validate' ) );
-		add_action( 'tml_activate_user-moderaiton/user-moderation.php',   array( &$this, 'activate' ) );
-		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
+		add_action( 'tml_activate_user-moderation/user-moderation.php',   array( &$this, 'activate' ) );
+		add_action( 'tml_uninstall_user-moderation/user-moderation.php',  array( &$this, 'uninstall' ) );
+
+		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
+
+		if ( is_multisite() )
+			return;
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
@@ -56,23 +60,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Validates this module
-	 *
-	 * Callback for "tml_validate_user-moderaiton/user-moderation.php" hook in method Theme_My_Login_Modules_Admin::validate_module()
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param bool|WP_Error True if module is valid, WP Error otherwise
-	 * @return bool|WP_Error True if module is valid, WP Error otherwise
-	 */
-	public function validate( $valid ) {
-		if ( is_multisite() )
-			$valid = new WP_Error( 'invalid_module', __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' ) );
-		return $valid;
-	}
-
-	/**
 	 * Activates the module
 	 *
 	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
@@ -84,6 +71,10 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
 	public function activate() {
+		if ( is_multisite() ) {
+			add_settings_error( $this->options_key, 'invalid_module', __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' ) );
+			return;
+		}
 		$this->save_options();
 		add_role( 'pending', 'Pending', array() );
 	}
@@ -100,6 +91,21 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	public function uninstall() {
 		delete_option( $this->options_key );
 		remove_role( 'pending' );
+	}
+
+	/**
+	 * Disables the module if multisite
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function modules_loaded() {
+		if ( is_multisite() ) {
+			global $theme_my_login_modules_admin;
+			$theme_my_login_modules_admin->deactivate_modules( 'user-moderation/user-moderation.php' );
+			$theme_my_login_modules_admin->save_options();
+			return;
+		}
 	}
 
 	/**
