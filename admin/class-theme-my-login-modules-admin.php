@@ -257,7 +257,7 @@ class Theme_My_Login_Modules_Admin extends Theme_My_Login_Abstract {
 		$installed_modules = get_plugins( '/theme-my-login/modules' );
 		if ( !isset( $installed_modules[$module] ) )
 			return new WP_Error( 'no_module_header', __( 'The module does not have a valid header.', 'theme-my-login' ) );
-		return 0;
+		return apply_filters( 'tml_validate_module', 0, $module );
 	}
 }
 endif; // Class exists
