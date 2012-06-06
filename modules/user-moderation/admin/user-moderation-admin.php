@@ -7,13 +7,186 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_User_Moderation_Admin' ) ) :
+if ( ! class_exists( 'Theme_My_Login_User_Moderation_Admin' ) ) :
 /**
  * Theme My Login User Moderation Admin class
  *
  * @since 6.0
  */
 class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
+	/**
+	 * Holds options key
+	 *
+	 * @since 6.3
+	 * @access protected
+	 * @var string
+	 */
+	protected $options_key = 'theme_my_login_moderation';
+
+	/**
+	 * Loads the module
+	 *
+	 * @since 6.0
+	 * @access protected
+	 */
+	protected function load() {
+		add_action( 'tml_validate_user-moderaiton/user-moderation.php',   array( &$this, 'validate' ) );
+		add_action( 'tml_activate_user-moderaiton/user-moderation.php',   array( &$this, 'activate' ) );
+		add_action( 'tml_deactivate_user-moderation/user-moderation.php', array( &$this, 'deactivate' ) );
+
+		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+
+		add_action( 'load-users.php',   array( &$this, 'load_users_page' ) );
+		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
+
+		add_action( 'delete_user', array( &$this, 'deny_user' ) );
+	}
+
+	/**
+	 * Returns default options
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Default options
+	 */
+	public function default_options() {
+		return Theme_My_Login_User_Moderation::default_options();
+	}
+
+	/**
+	 * Validates this module
+	 *
+	 * Callback for "tml_validate_user-moderaiton/user-moderation.php" hook in method Theme_My_Login_Modules_Admin::validate_module()
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param bool|WP_Error True if module is valid, WP Error otherwise
+	 * @return bool|WP_Error True if module is valid, WP Error otherwise
+	 */
+	public function validate( $valid ) {
+		if ( is_multisite() )
+			$valid = new WP_Error( 'invalid_module', __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' ) );
+		return $valid;
+	}
+
+	/**
+	 * Activates the module
+	 *
+	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
+	 *
+	 * @see Theme_My_Login_Admin::activate_module()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
+	 */
+	public function activate() {
+		$this->save_options();
+		add_role( 'pending', 'Pending', array() );
+	}
+
+	/**
+	 * Uninstalls the module
+	 *
+	 * Callback for "tml_uninstall_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::uninstall()
+	 *
+	 * @see Theme_My_Login_Admin::uninstall()
+	 * @since 6.3
+	 * @access public
+	 */
+	public function uninstall() {
+		delete_option( $this->options_key );
+		remove_role( 'pending' );
+	}
+
+	/**
+	 * Adds "Moderation" to Theme My Login menu
+	 *
+	 * Callback for "admin_menu" hook
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function admin_menu() {
+		add_submenu_page(
+			'theme_my_login',
+			__( 'Theme My Login User Moderation Settings', 'theme-my-login' ),
+			__( 'Moderation', 'theme-my-login' ),
+			'manage_options',
+			$this->options_key,
+			array( &$this, 'settings_page' )
+		);
+
+		add_settings_section( 'general', null, '__return_false', $this->options_key );
+
+		add_settings_field( 'type', __( 'Moderation Type', 'theme-my-login' ), array( &$this, 'settings_field_moderation_type' ), $this->options_key, 'general' );
+	}
+
+	/**
+	 * Registers options group
+	 *
+	 * Callback for "admin_init" hook
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function admin_init() {
+		register_setting( $this->options_key, $this->options_key, array( &$this, 'save_settings' ) );
+	}
+
+	/**
+	 * Renders settings page
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_page() {
+		Theme_My_Login_Admin::settings_page( array(
+			'title'       => __( 'Theme My Login User Moderation Settings', 'theme-my-login' ),
+			'options_key' => $this->options_key
+		) );
+	}
+
+	/**
+	 * Renders Moderation Type settings field
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_field_moderation_type() {
+		?>
+		<input name="<?php echo $this->options_key; ?>[type]" type="radio" id="<?php echo $this->options_key; ?>_type_none" value="none"<?php checked( $this->get_option( 'type' ), 'none' ); ?> />
+		<label for="<?php echo $this->options_key; ?>_type_none"><?php _e( 'None', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'Check this option to require no moderation.', 'theme-my-login' ); ?></p>
+
+		<input name="<?php echo $this->options_key; ?>[type]" type="radio" id="<?php echo $this->options_key; ?>_type_email" value="email" <?php checked( $this->get_option( 'type' ), 'email' ); ?> />
+		<label for="<?php echo $this->options_key; ?>_type_email"><?php _e( 'E-mail Confirmation', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'Check this option to require new users to confirm their e-mail address before they may log in.', 'theme-my-login' ); ?></p>
+
+		<input name="<?php echo $this->options_key; ?>[type]" type="radio" id="<?php echo $this->options_key; ?>_type_admin" value="admin" <?php checked( $this->get_option( 'type' ), 'admin' ); ?> />
+		<label for="<?php echo $this->options_key; ?>_type_admin"><?php _e( 'Admin Approval', 'theme-my-login' ); ?></label>
+		<p class="description"><?php _e( 'Check this option to require new users to be approved by an administrator before they may log in.', 'theme-my-login' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Sanitizes settings
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $settings Posted settings
+	 * @return array Sanitized settings
+	 */
+	public function save_settings( $settings ) {
+		return array(
+			'type' => in_array( $settings['type'], array( 'none', 'email', 'admin' ) ) ? $settings['type'] : 'none'
+		);
+	}
+
 	/**
 	 * Attaches actions/filters explicitly to users.php
 	 *
@@ -23,9 +196,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function load_users_page() {
-		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
-		add_action( 'delete_user', array( &$this, 'deny_user' ) );
 
 		// Is there an action?
 		if ( isset( $_GET['action'] ) ) {
@@ -37,29 +208,29 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 				$user = isset( $_GET['user'] ) ? $_GET['user'] : '';
 
 				// No user ID?
-				if ( !$user || !current_user_can( 'edit_user', $user ) )
+				if ( ! $user || ! current_user_can( 'edit_user', $user ) )
 					wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
 				// Where did we come from?
 				$redirect_to = isset( $_REQUEST['wp_http_referer'] ) ? remove_query_arg( array( 'wp_http_referer', 'updated', 'delete_count' ), stripslashes( $_REQUEST['wp_http_referer'] ) ) : 'users.php';
 
-				// Are we approving?
-				if ( 'approve' == $_GET['action'] ) {
-					check_admin_referer( 'approve-user' );
+				switch ( $_GET['action'] ) {
+					case 'approve' :
+						check_admin_referer( 'approve-user' );
 
-					if ( !$this->approve_user( $user ) )
-						wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
+						if ( ! $this->approve_user( $user ) )
+							wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
 
-					$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
-				}
-				// Are we resending an activation e-mail?
-				elseif ( 'resendactivation' == $_GET['action'] ) {
-					check_admin_referer( 'resend-activation' );
+						$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
+						break;
+					case 'resendactivation' :
+						check_admin_referer( 'resend-activation' );
 
-					if ( !Theme_My_Login_User_Moderation::new_user_activation_notification( $user ) )
-						wp_die( __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) );
+						if ( ! Theme_My_Login_User_Moderation::new_user_activation_notification( $user ) )
+							wp_die( __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) );
 
-					$redirect_to = add_query_arg( 'update', 'sendactivation', $redirect_to );
+						$redirect_to = add_query_arg( 'update', 'sendactivation', $redirect_to );
+						break;
 				}
 				wp_redirect( $redirect_to );
 				exit;
@@ -99,24 +270,33 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * @return array The filtered user actions
 	 */
 	public function user_row_actions( $actions, $user_object ) {
-		global $theme_my_login;
 
 		$current_user = wp_get_current_user();
+
 		if ( $current_user->ID != $user_object->ID ) {
 			if ( in_array( 'pending', (array) $user_object->roles ) ) {
-				$_actions = array();
-				// If moderation type is e-mail activation, add "Resend Activation" link
-				if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
-					$_actions['resend-activation'] = '<a href="' . add_query_arg( 'wp_http_referer',
-						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
-						wp_nonce_url( "users.php?action=resendactivation&amp;user=$user_object->ID", 'resend-activation' ) ) . '">' . __( 'Resend Activation', 'theme-my-login' ) . '</a>';
-				} elseif ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) {
-					// Add "Approve" link
-					$_actions['approve-user'] = '<a href="' . add_query_arg( 'wp_http_referer',
-						urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
-						wp_nonce_url( "users.php?action=approve&amp;user=$user_object->ID", 'approve-user' ) ) . '">' . __( 'Approve', 'theme-my-login' ) . '</a>';
+				switch ( $this->get_option( 'type' ) ) {
+					case 'email' :
+						// Add "Resend Activation" link
+						$actions['resend-activation'] = sprintf( '<a href="%1$s">%2$s</a>',
+							add_query_arg( 'wp_http_referer',
+								urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
+								wp_nonce_url( "users.php?action=resendactivation&amp;user=$user_object->ID", 'resend-activation' )
+							),
+							__( 'Resend Activation', 'theme-my-login' )
+						);
+						break;
+					case 'admin' :
+						// Add "Approve" link
+						$actions['approve-user'] = sprintf( '<a href="%1$s">%2$s</a>',
+							add_query_arg( 'wp_http_referer',
+								urlencode( esc_url( stripslashes( $_SERVER['REQUEST_URI'] ) ) ),
+								wp_nonce_url( "users.php?action=approve&amp;user=$user_object->ID", 'approve-user' ) 
+							),
+							__( 'Approve', 'theme-my-login' )
+						);
+						break;
 				}
-				$actions = array_merge( $_actions, $actions );
 			}
 		}
 		return $actions;
@@ -154,7 +334,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		unset( $user_object );
 
 		// Check for plaintext pass
-		if ( !$user_pass = get_user_meta( $user->ID, 'user_pass', true ) ) {
+		if ( ! $user_pass = get_user_meta( $user->ID, 'user_pass', true ) ) {
 			$user_pass = wp_generate_password();
 			wp_set_password( $user_pass, $user->ID );
 		}
@@ -180,7 +360,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		$title = apply_filters( 'user_approval_notification_title', $title, $user->ID );
 		$message = apply_filters( 'user_approval_notification_message', $message, $user_pass, $user->ID );
 
-		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
+		if ( $message && ! wp_mail( $user->user_email, $title, $message ) )
 			  die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
 
 		return true;
@@ -200,7 +380,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		$user_id = (int) $user_id;
 
 		$user = new WP_User( $user_id );
-		if ( !in_array( 'pending', (array) $user->roles ) )
+		if ( ! in_array( 'pending', (array) $user->roles ) )
 			return;
 
 		do_action( 'deny_user', $user->ID );
@@ -219,106 +399,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		$title = apply_filters( 'user_denial_notification_title', $title, $user_id );
 		$message = apply_filters( 'user_denial_notification_message', $message, $user_id );
 
-		if ( $message && !wp_mail( $user->user_email, $title, $message ) )
+		if ( $message && ! wp_mail( $user->user_email, $title, $message ) )
 			  die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
 	}
-
-	/**
-	 * Adds "Moderation" tab to Theme My Login menu
-	 *
-	 * Callback for "tml_admin_menu" hook in method Theme_My_Login_Admin::display_settings_page()
-	 *
-	 * @see Theme_My_Login_Admin::display_settings_page(), Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
-	 * @uses Theme_My_Login_Admin::add_menu_page, Theme_My_Login_Admin::add_submenu_page()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $admin Reference to global $theme_my_login_admin object
-	 */
-	public function admin_menu( &$admin ) {
-		$admin->add_menu_page( __( 'Moderation', 'theme-my-login' ), 'tml-options-moderation', array( &$this, 'display_settings' ) );
-	}
-
-	/**
-	 * Outputs user moderation settings
-	 *
-	 * Callback for "$hookname" hook in method Theme_My_Login_Admin::add_submenu_page()
-	 *
-	 * @see Theme_My_Login_Admin::add_submenu_page()
-	 * @since 6.0
-	 * @access public
-	 */
-	public function display_settings() {
-		global $theme_my_login; ?>
-<table class="form-table">
-	<tr valign="top">
-		<th scope="row"><?php _e( 'User Moderation', 'theme-my-login' ); ?></th>
-		<td>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_none" value="none" <?php if ( 'none' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
-			<label for="theme_my_login_moderation_type_none"><?php _e( 'None', 'theme-my-login' ); ?></label>
-			<p class="description"><?php _e( 'Check this option to require no moderation.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_email" value="email" <?php if ( 'email' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
-			<label for="theme_my_login_moderation_type_email"><?php _e( 'E-mail Confirmation', 'theme-my-login' ); ?></label>
-			<p class="description"><?php _e( 'Check this option to require new users to confirm their e-mail address before they may log in.', 'theme-my-login' ); ?></p>
-			<input name="theme_my_login[moderation][type]" type="radio" id="theme_my_login_moderation_type_admin" value="admin" <?php if ( 'admin' == $theme_my_login->get_option( array( 'moderation', 'type' ) ) ) echo 'checked="checked"'; ?> />
-			<label for="theme_my_login_moderation_type_admin"><?php _e( 'Admin Approval', 'theme-my-login' ); ?></label>
-			<p class="description"><?php _e( 'Check this option to require new users to be approved by an administrator before they may log in.', 'theme-my-login' ); ?></p>
-		</td>
-	</tr>
-</table><?php
-	}
-
-	public function admin_init() {
-		global $theme_my_login, $theme_my_login_admin;
-
-		// Disable moderation if using multisite
-		if ( is_multisite() ) {
-			if ( $theme_my_login->is_module_active( 'user-moderation/user-moderation.php' ) ) {
-				// Deactivate the module
-				$theme_my_login_admin->deactivate_modules( 'user-moderation/user-moderation.php' );
-
-				// Set an error so the administrator will know
-				$module_errors = $theme_my_login->get_option( 'module_errors', array() );
-				$module_errors['user-moderation/user-moderation.php'] = __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' );
-				$theme_my_login->set_option( 'module_errors', $module_errors );
-			}
-		}
-	}
-
-	/**
-	 * Activates this module
-	 *
-	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param object $theme_my_login Reference to global $theme_my_login object
-	 */
-	public function activate( &$theme_my_login ) {
-		$options = Theme_My_Login_User_Moderation::init_options();
-		$theme_my_login->set_option( 'moderation', $options['moderation'] );
-
-		$email = array_merge( (array) $theme_my_login->get_option( 'email' ), $options['email'] );
-		$theme_my_login->set_option( 'email', $email );
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_activate_user-moderaiton/user-moderation.php', array( &$this, 'activate' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-		if ( is_multisite() )
-			return;
-		add_action( 'tml_admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'load-users.php', array( &$this, 'load_users_page' ) );
-	}
-
 }
 
 /**
@@ -326,7 +409,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
  * @global object $theme_my_login_user_moderation_admin
  * @since 6.0
  */
-$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin( 'theme_my_login_user_moderation' );
+$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin;
 
 endif; // Class exists
 
