@@ -30,7 +30,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
 			if ( is_multisite() && empty( $user_role ) ) {
 				$user_role = 'subscriber';
 			}
-			if ( 'profile.php' == $pagenow && !isset( $_REQUEST['page'] ) ) {
+			if ( 'profile.php' == $pagenow && ! isset( $_REQUEST['page'] ) ) {
                 if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'theme_profile' ) ) ) {
                 	if ( !empty( $_GET ) )
                 		$redirect_to = add_query_arg( (array) $_GET, $redirect_to );
@@ -39,8 +39,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Module {
                 }
             } else {
             	if ( $theme_my_login->options->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) ) {
-                	wp_redirect( $redirect_to );
-                	exit();
+            		if ( ! defined( 'DOING_AJAX' ) ) {
+		            	wp_redirect( $redirect_to );
+		            	exit;
+		            }
                 }
             }
         }
