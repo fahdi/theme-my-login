@@ -187,6 +187,22 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		} else {
 			$http_post = ( 'POST' == $_SERVER['REQUEST_METHOD'] );
 			switch ( $action ) {
+				case 'postpass' :
+					global $wp_hasher;
+
+					if ( empty( $wp_hasher ) ) {
+						require_once( ABSPATH . 'wp-includes/class-phpass.php' );
+						// By default, use the portable hash from phpass
+						$wp_hasher = new PasswordHash( 8, true );
+					}
+
+					// 10 days
+					setcookie( 'wp-postpass_' . COOKIEHASH, $wp_hasher->HashPassword( stripslashes( $_POST['post_password'] ) ), time() + 864000, COOKIEPATH );
+
+					wp_safe_redirect( wp_get_referer() );
+					exit;
+
+					break;
 				case 'logout' :
 					check_admin_referer( 'log-out' );
 
