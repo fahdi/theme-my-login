@@ -395,6 +395,8 @@ class Theme_My_Login {
 						$errors->add( 'registered', __( 'Registration complete. Please check your e-mail.', 'theme-my-login' ), 'message' );
 					elseif	( $interim_login )
 						$errors->add( 'expired', __( 'Your session has expired. Please log-in again.', 'theme-my-login' ), 'message' );
+					elseif ( strpos( $redirect_to, 'about.php?updated' ) )
+						$errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to experience the awesomeness.' ), 'message' );
 					elseif	( $reauth )
 						$errors->add( 'reauth', __( 'Please log in to continue.', 'theme-my-login' ), 'message' );
 
