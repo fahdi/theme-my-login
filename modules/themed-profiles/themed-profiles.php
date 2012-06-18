@@ -112,8 +112,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				}
 			} else {
 				if ( $this->get_option( array( $user_role, 'restrict_admin' ) ) ) {
-					wp_redirect( $redirect_to );
-					exit;
+					if ( ! defined( 'DOING_AJAX' ) ) {
+						wp_redirect( $redirect_to );
+						exit;
+					}
 				}
 			}
         }
