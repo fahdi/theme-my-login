@@ -74,22 +74,11 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		add_settings_section( 'general', __( 'General', 'theme-my-login' ), '__return_false', $this->options_key );
 
 		// General fields
-		add_settings_field( 'page_id',     __( 'Page ID', 'theme-my-login' ),      array( &$this, 'settings_field_page_id' ),     $this->options_key, 'general' );
-		add_settings_field( 'show_page',   __( 'Pagelist', 'theme-my-login' ),     array( &$this, 'settings_field_show_page' ),   $this->options_key, 'general' );
-		add_settings_field( 'enable_css',  __( 'Stylesheet', 'theme-my-login' ),   array( &$this, 'settings_field_enable_css' ),  $this->options_key, 'general' );
+		add_settings_field( 'page_id',     __( 'Page ID',      'theme-my-login' ), array( &$this, 'settings_field_page_id'     ), $this->options_key, 'general' );
+		add_settings_field( 'show_page',   __( 'Pagelist',     'theme-my-login' ), array( &$this, 'settings_field_show_page'   ), $this->options_key, 'general' );
+		add_settings_field( 'enable_css',  __( 'Stylesheet',   'theme-my-login' ), array( &$this, 'settings_field_enable_css'  ), $this->options_key, 'general' );
 		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), $this->options_key, 'general' );
-
-		// Modules section
-		add_settings_section( 'modules', __( 'Modules', 'theme-my-login' ), '__return_false', $this->options_key );
-
-		// Modules fields
-		foreach ( get_plugins( '/theme-my-login/modules' ) as $path => $details ) {
-			add_settings_field( sanitize_title( $details['Name'] ), $details['Name'], array( &$this, 'settings_field_module' ), $this->options_key, 'modules', array(
-				'name'        => $details['Name'],
-				'description' => $details['Description'],
-				'path'        => $path
-			) );
-		}
+		add_settings_field( 'modules',     __( 'Modules',      'theme-my-login' ), array( &$this, 'settings_field_modules'     ), $this->options_key, 'general' );
 	}
 
 	/**
@@ -188,19 +177,21 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Renders Module settings fields
+	 * Renders Modules settings field
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function settings_field_module( $args ) {
-		$id = sanitize_title( $args['name'] );
+	public function settings_field_modules() {
+		foreach ( get_plugins( '/theme-my-login/modules' ) as $path => $data ) {
+			$id = sanitize_key( $data['Name'] );
 		?>
-		<input name="theme_my_login[active_modules][]" type="checkbox" id="theme_my_login_active_modules_<?php echo $id; ?>" value="<?php echo $args['path']; ?>"<?php checked( in_array( $args['path'], (array) $this->get_option( 'active_modules' ) ) ); ?> />
-		<label for="theme_my_login_active_modules_<?php echo $id; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $args['name'] ); ?></label><br />
-		<?php if ( $args['description'] ) : ?>
-		<p class="description"><?php echo $args['description']; ?></p>
+		<input name="theme_my_login[active_modules][]" type="checkbox" id="theme_my_login_active_modules_<?php echo $id; ?>" value="<?php echo $path; ?>"<?php checked( in_array( $path, (array) $this->get_option( 'active_modules' ) ) ); ?> />
+		<label for="theme_my_login_active_modules_<?php echo $id; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $data['Name'] ); ?></label><br />
+		<?php if ( $data['Description'] ) : ?>
+		<p class="description"><?php echo $data['Description']; ?></p>
 		<?php endif;
+		}
 	}
 
 	/**
