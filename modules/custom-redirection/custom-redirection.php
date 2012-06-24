@@ -10,7 +10,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Custom_Redirection' ) ) :
 /**
  * Theme My Login Custom Redirection class
  *
@@ -35,8 +35,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_login_form', array( &$this, 'login_form' ) );
-		add_filter( 'login_redirect', array( &$this, 'login_redirect' ), 10, 3 );
+		add_action( 'tml_login_form',  array( &$this, 'login_form'      )        );
+		add_filter( 'login_redirect',  array( &$this, 'login_redirect'  ), 10, 3 );
 		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 	}
 
@@ -101,14 +101,14 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 */
 	public function login_redirect( $redirect_to, $request, $user ) {
 		// Determine the correct referer
-		if ( !$http_referer = wp_get_original_referer() )
+		if ( ! $http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
 
 		// Remove some arguments that may be present and shouldn't be
 		$http_referer = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth' ), $http_referer );
 
 		// Make sure $user object exists and is a WP_User instance
-		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
+		if ( ! is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			if ( is_multisite() && empty( $user->roles ) ) {
 				$user->roles = array( 'subscriber' );
 			}
@@ -132,7 +132,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 		}
 
 		// If a redirect is requested, it takes precedence
-		if ( !empty( $request ) && admin_url() != $request && admin_url( 'profile.php' ) != $request )
+		if ( ! empty( $request ) && admin_url() != $request && admin_url( 'profile.php' ) != $request )
 			$redirect_to = $request;
 
 		// Make sure $redirect_to isn't empty
@@ -160,14 +160,14 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 		global $theme_my_login;
 
 		// Determine the correct referer
-		if ( !$http_referer = wp_get_original_referer() )
+		if ( ! $http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
 
 		// Remove some arguments that may be present and shouldn't be
 		$http_referer = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce' ), $http_referer );
 
 		// Make sure $user object exists and is a WP_User instance
-		if ( !is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
+		if ( ! is_wp_error( $user ) && is_a( $user, 'WP_User' ) ) {
 			if ( is_multisite() && empty( $user->roles ) ) {
 				$user->roles = array( 'subscriber' );
 			}

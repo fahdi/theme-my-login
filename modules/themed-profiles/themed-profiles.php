@@ -211,15 +211,15 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		wp_enqueue_script( 'user-profile',            admin_url( "js/user-profile$suffix.js" ), array( 'jquery' ), '', true );
+		wp_enqueue_script( 'user-profile',            admin_url( "js/user-profile$suffix.js" ),            array( 'jquery' ), '', true );
 		wp_enqueue_script( 'password-strength-meter', admin_url( "js/password-strength-meter$suffix.js" ), array( 'jquery' ), '', true );
+
 		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-			'empty' => __( 'Strength indicator', 'theme-my-login' ),
-			'short' => __( 'Very weak', 'theme-my-login' ),
-			'bad' => __( 'Weak', 'theme-my-login' ),
-			/* translators: password strength */
-			'good' => _x( 'Medium', 'password strength', 'theme-my-login' ),
-			'strong' => __( 'Strong', 'theme-my-login' ),
+			'empty'            => __( 'Strength indicator'          ),
+			'short'            => __( 'Very weak'                   ),
+			'bad'              => __( 'Weak'                        ),
+			'good'             => _x( 'Medium', 'password strength' ),
+			'strong'           => __( 'Strong'                      ),
 			'l10n_print_after' => 'try{convertEntities(pwsL10n);}catch(e){};'
 		) );
 
@@ -229,7 +229,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			check_admin_referer( 'update-user_' . $current_user->ID );
 
 			if ( ! current_user_can( 'edit_user', $current_user->ID ) )
-				wp_die( __( 'You do not have permission to edit this user.', 'theme-my-login' ) );
+				wp_die( __( 'You do not have permission to edit this user.' ) );
 
 			do_action( 'personal_options_update', $current_user->ID );
 
@@ -243,7 +243,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		}
 
 		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
-			$theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.', 'theme-my-login' ), 'message' );
+			$theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.' ), 'message' );
 	}
 
 	/**
@@ -266,15 +266,21 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		$role = reset( $profileuser->roles );
 
 		$_template = array();
+
 		// Allow template override via shortcode or template tag args
 		if ( ! empty( $template->options['profile_template'] ) )
 			$_template[] = $template->options['profile_template'];
-		// Role template
+
+		// Allow role template overrid via shortcode or template tag args
 		if ( ! empty( $template->options["profile_template_$role"] ) )
 			$_template[] = $template->options["profile_template_$role"];
+
+		// Role template
 		$_template[] = "profile-form-$role.php";
+
 		// Default template
 		$_template[] = 'profile-form.php';
+
 		// Load template
 		$template->get_template( $_template, '', true, compact( 'current_user', 'profileuser', '_wp_admin_css_colors', 'wp_version' ) );
 	}
@@ -334,7 +340,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	public function tml_title( $title, $action ) {
 		global $theme_my_login;
 		if ( 'profile' == $action && is_user_logged_in() && '' == $theme_my_login->request_instance )
-			$title = __( 'Your Profile', 'theme-my-login' );
+			$title = __( 'Your Profile' );
 		return $title;
 	}
 }

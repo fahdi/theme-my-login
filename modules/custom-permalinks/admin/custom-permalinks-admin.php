@@ -7,7 +7,7 @@
  * @since 6.3
  */
 
-if ( !class_exists( 'Theme_My_Login_Custom_Permalinks_Admin' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Custom_Permalinks_Admin' ) ) :
 /**
  * Theme My Login Custom Permalinks class
  *
@@ -76,9 +76,9 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
 		$actions = array(
-			'login'        => __( 'Login', 'theme-my-login' ),
-			'register'     => __( 'Register', 'theme-my-login' ),
-			'lostpassword' => __( 'Lost Password', 'theme-my-login' )
+			'login'        => __( 'Login'         ),
+			'register'     => __( 'Register'      ),
+			'lostpassword' => __( 'Lost Password' )
 		);
 		foreach ( $actions as $action => $name ) {
 			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(

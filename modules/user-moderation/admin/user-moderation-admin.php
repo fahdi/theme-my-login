@@ -225,7 +225,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 						check_admin_referer( 'approve-user' );
 
 						if ( ! $this->approve_user( $user ) )
-							wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
+							wp_die( __( 'You can&#8217;t edit that user.' ) );
 
 						$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
 						break;
@@ -233,7 +233,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 						check_admin_referer( 'resend-activation' );
 
 						if ( ! Theme_My_Login_User_Moderation::new_user_activation_notification( $user ) )
-							wp_die( __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) );
+							wp_die( __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) );
 
 						$redirect_to = add_query_arg( 'update', 'sendactivation', $redirect_to );
 						break;
@@ -356,18 +356,18 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
 
-		$message  = sprintf( __( 'You have been approved access to %s', 'theme-my-login' ), $blogname ) . "\r\n\r\n";
-		$message .= sprintf( __( 'Username: %s', 'theme-my-login' ), $user->user_login ) . "\r\n";
-		$message .= sprintf( __( 'Password: %s', 'theme-my-login' ), $user_pass ) . "\r\n\r\n";
+		$message  = sprintf( __( 'You have been approved access to %s', 'theme-my-login' ), $blogname         ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Username: %s',                        'theme-my-login' ), $user->user_login ) . "\r\n";
+		$message .= sprintf( __( 'Password: %s',                        'theme-my-login' ), $user_pass        ) . "\r\n\r\n";
 		$message .= site_url( 'wp-login.php', 'login' ) . "\r\n";	
 
-		$title = sprintf( __( '[%s] Registration Approved', 'theme-my-login' ), $blogname );
+		$title    = sprintf( __( '[%s] Registration Approved', 'theme-my-login' ), $blogname );
 
-		$title = apply_filters( 'user_approval_notification_title', $title, $user->ID );
-		$message = apply_filters( 'user_approval_notification_message', $message, $user_pass, $user->ID );
+		$title    = apply_filters( 'user_approval_notification_title',   $title,   $user->ID             );
+		$message  = apply_filters( 'user_approval_notification_message', $message, $user_pass, $user->ID );
 
 		if ( $message && ! wp_mail( $user->user_email, $title, $message ) )
-			  die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
+			  die( '<p>' . __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) . '</p>' );
 
 		return true;
 	}
@@ -400,13 +400,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		}
 
 		$message = sprintf( __( 'You have been denied access to %s', 'theme-my-login' ), $blogname );
-		$title = sprintf( __( '[%s] Registration Denied', 'theme-my-login' ), $blogname );
+		$title   = sprintf( __( '[%s] Registration Denied',          'theme-my-login' ), $blogname );
 
-		$title = apply_filters( 'user_denial_notification_title', $title, $user_id );
+		$title   = apply_filters( 'user_denial_notification_title',   $title,   $user_id );
 		$message = apply_filters( 'user_denial_notification_message', $message, $user_id );
 
 		if ( $message && ! wp_mail( $user->user_email, $title, $message ) )
-			  die( '<p>' . __( 'The e-mail could not be sent.', 'theme-my-login' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...', 'theme-my-login' ) . '</p>' );
+			  die( '<p>' . __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) . '</p>' );
 	}
 }
 

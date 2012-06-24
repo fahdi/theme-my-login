@@ -93,7 +93,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'themed_profiles', __( 'Themed Profiles', 'theme-my-login' ),       array( &$this, 'settings_field_themed_profiles' ),       $this->options_key, 'general' );
+		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles' ),       $this->options_key, 'general' );
 		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( &$this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
 	}
 
@@ -192,7 +192,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		foreach( $wp_roles->get_names() as $role => $role_name ) {
 			if ( 'pending' != $role ) {
 				$settings[$role] = array(
-					'theme_profile' => isset( $settings[$role]['theme_profile'] ),
+					'theme_profile'  => isset( $settings[$role]['theme_profile']  ),
 					'restrict_admin' => isset( $settings[$role]['restrict_admin'] )
 				);
 			}
@@ -206,7 +206,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
  * @global object $theme_my_login_themed_profiles_admin
  * @since 6.2
  */
-$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin( 'theme_my_login_themed_profiles' );
+$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin;
 
 endif; // Class exists
 

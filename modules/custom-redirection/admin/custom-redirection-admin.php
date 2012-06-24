@@ -7,7 +7,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Custom_Redirection_Admin' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Custom_Redirection_Admin' ) ) :
 /**
  * Theme My Login Custom Redirection Admin class
  *
@@ -167,7 +167,7 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 		?>
 		<table class="form-table">
 			<tr valign="top">
-			<th scope="row"><?php _e( 'Log in', 'theme-my-login' ); ?></th>
+			<th scope="row"><?php _e( 'Log in' ); ?></th>
 				<td>
 					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][login_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_default" value="default"<?php checked( 'default', $this->get_option( array( $role, 'login_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_login_type_default"><?php _e( 'Default', 'theme-my-login' ); ?></label>
 					<p class="description"><?php _e( 'Check this option to send the user to their WordPress Dashboard/Profile.', 'theme-my-login' ); ?></p>
@@ -181,7 +181,7 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e( 'Log out', 'theme-my-login' ); ?></th>
+				<th scope="row"><?php _e( 'Log out' ); ?></th>
 				<td>
 					<input name="<?php echo $this->options_key; ?>[<?php echo $role; ?>][logout_type]" type="radio" id="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_default" value="default"<?php checked( 'default', $this->get_option( array( $role, 'logout_type' ) ) ); ?> /> <label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_logout_type_default"><?php _e( 'Default', 'theme-my-login' ); ?></label><br />
 					<p class="description"><?php _e( 'Check this option to send the user to the log in page, displaying a message that they have successfully logged out.', 'theme-my-login' ); ?></p>

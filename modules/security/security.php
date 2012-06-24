@@ -184,7 +184,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 			<table class="form-table">
 			<tr>
 				<th scope="col"><?php _e( 'IP Address', 'theme-my-login' ); ?></th>
-				<th scope="col"><?php _e( 'Date', 'theme-my-login' ); ?></th>
+				<th scope="col"><?php _e( 'Date' ); ?></th>
 			</tr>
 			<?php foreach ( $failed_login_attempts as $attempt ) :
 				$t_time = date_i18n( __( 'Y/m/d g:i:s A' ), $attempt['time'] );

@@ -184,17 +184,17 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		} else {
 			switch ( $action ) {
 				case 'register':
-					$title = __( 'Register', 'theme-my-login' );
+					$title = __( 'Register' );
 					break;
 				case 'lostpassword':
 				case 'retrievepassword':
 				case 'resetpass':
 				case 'rp':
-					$title = __( 'Lost Password', 'theme-my-login' );
+					$title = __( 'Lost Password' );
 					break;
 				case 'login':
 				default:
-					$title = __( 'Log In', 'theme-my-login' );
+					$title = __( 'Log In' );
 			}
 		}
 		return apply_filters( 'tml_title', $title, $action );
@@ -326,13 +326,24 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		) );
 		
 		$action_links = array();
-		if ( $args['login'] && $this->get_option( 'show_log_link' ) )
-			$action_links[] = array( 'title' => $this->get_title( 'login' ), 'url' => $this->get_action_url( 'login' ) );
-		if ( $args['register'] && $this->get_option( 'show_reg_link' ) && get_option( 'users_can_register' ) )
-			$action_links[] = array( 'title' => $this->get_title( 'register' ), 'url' => $this->get_action_url( 'register' ) );
-		if ( $args['lostpassword'] && $this->get_option( 'show_pass_link' ) )
-			$action_links[] = array( 'title' => $this->get_title( 'lostpassword' ), 'url' => $this->get_action_url( 'lostpassword' ) );
-
+		if ( $args['login'] && $this->get_option( 'show_log_link' ) ) {
+			$action_links[] = array(
+				'title' => $this->get_title( 'login' ),
+				'url'   => $this->get_action_url( 'login' )
+			);
+		}
+		if ( $args['register'] && $this->get_option( 'show_reg_link' ) && get_option( 'users_can_register' ) ) {
+			$action_links[] = array(
+				'title' => $this->get_title( 'register' ),
+				'url'   => $this->get_action_url( 'register' )
+			);
+		}
+		if ( $args['lostpassword'] && $this->get_option( 'show_pass_link' ) ) {
+			$action_links[] = array(
+				'title' => $this->get_title( 'lostpassword' ),
+				'url'   => $this->get_action_url( 'lostpassword' )
+			);
+		}
 		return apply_filters( 'tml_action_links', $action_links, $args );
 	}
 
@@ -364,8 +375,13 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function get_user_links() {
 		$user_links = array(
-			array( 'title' => __( 'Dashboard', 'theme-my-login' ), 'url' => admin_url() ),
-			array( 'title' => __( 'Profile', 'theme-my-login' ), 'url' => admin_url( 'profile.php' ) )
+			array(
+				'title' => __( 'Dashboard' ),
+				'url'   => admin_url() ),
+			array(
+				'title' => __( 'Profile' ),
+				'url'   => admin_url( 'profile.php' )
+			)
 		);
 		return apply_filters( 'tml_user_links', $user_links );
 	}
@@ -383,7 +399,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 				echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
 			}
 		}
-		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out', 'theme-my-login' ) . '</a></li>' . "\n";
+		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out' ) . '</a></li>' . "\n";
 		echo '</ul>';
 	}
 
@@ -412,13 +428,13 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	public function get_action_template_message( $action = '' ) {
 		switch ( $action ) {
 			case 'register':
-				$message = __( 'Register For This Site', 'theme-my-login' );
+				$message = __( 'Register For This Site' );
 				break;
 			case 'lostpassword':
-				$message = __( 'Please enter your username or email address. You will receive a link to create a new password via email.', 'theme-my-login' );
+				$message = __( 'Please enter your username or email address. You will receive a link to create a new password via email.' );
 				break;
 			case 'resetpass':
-				$message = __( 'Enter your new password below.', 'theme-my-login' );
+				$message = __( 'Enter your new password below.' );
 				break;
 			default:
 				$message = '';

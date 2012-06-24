@@ -10,7 +10,7 @@
  * @since 6.3
  */
 
-if ( !class_exists( 'Theme_My_Login_Custom_Permalinks' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Custom_Permalinks' ) ) :
 /**
  * Theme My Login Custom Permalinks class
  *
@@ -35,9 +35,9 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'init', array( &$this, 'init' ) );
-		add_action( 'parse_request', array( &$this, 'parse_request' ), 0 );
-		add_filter( 'page_link', array( &$this, 'page_link' ), 10, 2 );
+		add_action( 'init',          array( &$this, 'init'          )        );
+		add_action( 'parse_request', array( &$this, 'parse_request' ), 0     );
+		add_filter( 'page_link',     array( &$this, 'page_link'     ), 10, 2 );
 		add_filter( 'tml_page_link', array( &$this, 'tml_page_link' ), 10, 2 );
 	}
 
@@ -57,7 +57,7 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		$page_id = $theme_my_login->get_option( 'page_id' );
 
 		foreach ( $this->get_options() as $action => $slug ) {
-			if ( !empty( $slug ) )
+			if ( ! empty( $slug ) )
 				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
 		}
 	}
@@ -108,7 +108,7 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 			$link = home_url( $link );
 			$link = user_trailingslashit( $link, 'page' );
 
-			if ( !empty( $q ) )
+			if ( ! empty( $q ) )
 				$link = add_query_arg( $q, $link );
 		}
 

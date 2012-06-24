@@ -98,7 +98,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'private_site',   __( 'Private Site', 'theme-my-login' ),   array( &$this, 'settings_field_private_site' ),   $this->options_key, 'general' );
+		add_settings_field( 'private_site',   __( 'Private Site',   'theme-my-login' ), array( &$this, 'settings_field_private_site' ),   $this->options_key, 'general' );
 		add_settings_field( 'login_attempts', __( 'Login Attempts', 'theme-my-login' ), array( &$this, 'settings_field_login_attempts' ), $this->options_key, 'general' );
 	}
 
@@ -148,8 +148,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 		// Units
 		$units = array(
 			'minute' => __( 'minute(s)', 'theme-my-login' ),
-			'hour'   => __( 'hour(s)', 'theme-my-login' ),
-			'day'    => __( 'day(s)', 'theme-my-login' )
+			'hour'   => __( 'hour(s)', 'theme-my-login'   ),
+			'day'    => __( 'day(s)', 'theme-my-login'    )
 		);
 
 		// Threshold
@@ -225,10 +225,10 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 			$user = isset( $_GET['user'] ) ? $_GET['user'] : '';
 
 			if ( ! $user || ! current_user_can( 'edit_user', $user ) )
-				wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
+				wp_die( __( 'You can&#8217;t edit that user.' ) );
 
 			if ( ! $user = get_userdata( $user ) )
-				wp_die( __( 'You can&#8217;t edit that user.', 'theme-my-login' ) );
+				wp_die( __( 'You can&#8217;t edit that user.' ) );
 
 			if ( 'lock' == $_GET['action'] ) {
 				check_admin_referer( 'lock-user_' . $user->ID );
@@ -260,7 +260,7 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	public function admin_notices() {
 		if ( isset( $_GET['update'] ) ) {
 			if ( 'lock' == $_GET['update'] )
-				echo '<div id="message" class="updated fade"><p>' . __( 'User locked.', 'theme-my-login' ) . '</p></div>';
+				echo '<div id="message" class="updated fade"><p>' . __( 'User locked.',   'theme-my-login' ) . '</p></div>';
 			elseif ( 'unlock' == $_GET['update'] )
 				echo '<div id="message" class="updated fade"><p>' . __( 'User unlocked.', 'theme-my-login' ) . '</p></div>';
 		}

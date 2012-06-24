@@ -7,7 +7,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Custom_User_Links_Admin' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Custom_User_Links_Admin' ) ) :
 /**
  * Theme My Login Custom User Links Admin class
  *
@@ -185,8 +185,8 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	<table id="<?php echo $role; ?>-link-table"<?php if ( empty( $links ) ) echo ' style="display: none;"'; ?> class="sortable user-links">
 		<thead>
 		<tr>
-			<th class="left"><?php _e( 'Title', 'theme-my-login' ); ?></th>
-			<th><?php _e( 'URL', 'theme-my-login' ); ?></th>
+			<th class="left"><?php _e( 'Title' ); ?></th>
+			<th><?php _e( 'URL' ); ?></th>
 			<th></th>
 		</tr>
 		</thead>
@@ -209,7 +209,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		<td class="left"><input id="new_user_link[<?php echo $role; ?>][title]" name="new_user_link[<?php echo $role; ?>][title]" type="text" tabindex="8" size="20" /></td>
 		<td class="center"><input id="new_user_link[<?php echo $role; ?>][url]" name="new_user_link[<?php echo $role; ?>][url]" type="text" tabindex="8" size="20" /></td>
 		<td class="submit">
-			<input type="submit" id="add_new_user_link_<?php echo $role; ?>" name="add_new_user_link[<?php echo $role; ?>]" class="add:<?php echo $role; ?>-link-list:new-<?php echo $role; ?>-link" tabindex="9" value="<?php esc_attr_e( 'Add link', 'theme-my-login' ) ?>" />
+			<input type="submit" id="add_new_user_link_<?php echo $role; ?>" name="add_new_user_link[<?php echo $role; ?>]" class="add:<?php echo $role; ?>-link-list:new-<?php echo $role; ?>-link" tabindex="9" value="<?php esc_attr_e( 'Add Link' ); ?>" />
 			<?php wp_nonce_field( 'add-user-link', '_ajax_nonce', false ); ?>
 		</td>
 	</tr>
@@ -243,11 +243,11 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		$update_nonce = wp_create_nonce( 'add-user-link' );
 
 		$r .= "\n\t<tr id='$role-link-$link->id' class='$style'>";
-		$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='user_links[$role][$link->id][title]'>" . __( 'Title', 'theme-my-login' ) . "</label><input name='user_links[$role][$link->id][title]' id='user_links[$role][$link->id][title]' tabindex='6' type='text' size='20' value='$link->title' />";
+		$r .= "\n\t\t<td class='left'><label class='screen-reader-text' for='user_links[$role][$link->id][title]'>" . __( 'Title' ) . "</label><input name='user_links[$role][$link->id][title]' id='user_links[$role][$link->id][title]' tabindex='6' type='text' size='20' value='$link->title' />";
 		$r .= wp_nonce_field( 'change-user-link', '_ajax_nonce', false, false );
 		$r .= "</td>";
 
-		$r .= "\n\t\t<td class='center'><label class='screen-reader-text' for='user_links[$role][$link->id][url]'>" . __( 'URL', 'theme-my-login' ) . "</label><input name='user_links[$role][$link->id][url]' id='user_links[$role][$link->id][url]' tabindex='6' type='text' size='20' value='$link->url' /></td>";
+		$r .= "\n\t\t<td class='center'><label class='screen-reader-text' for='user_links[$role][$link->id][url]'>" . __( 'URL' ) . "</label><input name='user_links[$role][$link->id][url]' id='user_links[$role][$link->id][url]' tabindex='6' type='text' size='20' value='$link->url' /></td>";
 
 		$r .= "\n\t\t<td class='submit'><input name='delete_user_link[$role][$link->id]' type='submit' class='delete:$role-link-list:$role-link-$link->id::_ajax_nonce=$delete_nonce deletelink' tabindex='6' value='". esc_attr__( 'Delete' ) ."' />";
 		$r .= "\n\t\t<input name='updatelink' type='submit' class='add:$role-link-list:$role-link-$link->id::_ajax_nonce=$update_nonce updatelink' tabindex='6' value='". esc_attr__( 'Update' ) ."' /></td>\n\t</tr>";
@@ -270,7 +270,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		if ( defined('DOING_AJAX') && DOING_AJAX )
 			return $settings;
 		// Handle updating/deleting of links
-		if ( isset( $_POST['user_links'] ) && is_array( $_POST['user_links'] ) && !empty( $_POST['user_links'] ) ) {
+		if ( isset( $_POST['user_links'] ) && is_array( $_POST['user_links'] ) && ! empty( $_POST['user_links'] ) ) {
 			foreach ( $_POST['user_links'] as $role => $links ) {
 				foreach ( $links as $key => $link ) {
 					$clean_title = wp_kses( $link['title'], null );
@@ -283,11 +283,11 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 		// Handle new links
-		if ( isset( $_POST['new_user_link'] ) && is_array( $_POST['new_user_link'] ) && !empty( $_POST['new_user_link'] ) ) {
+		if ( isset( $_POST['new_user_link'] ) && is_array( $_POST['new_user_link'] ) && ! empty( $_POST['new_user_link'] ) ) {
 			foreach ( $_POST['new_user_link'] as $role => $link ) {
 				$clean_title = wp_kses( $link['title'], null );
 				$clean_url = wp_kses( $link['url'], null );
-				if ( !empty( $clean_title ) && !empty( $clean_url ) )
+				if ( ! empty( $clean_title ) && ! empty( $clean_url ) )
 					$settings[$role][] = array( 'title' => $clean_title, 'url' => $clean_url );
 			}
 		}
@@ -319,7 +319,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 			// Add a new link
 			foreach ( $_POST['new_user_link'] as $role => $link ) {
 				// Make sure input isn't empty
-				if ( is_array( $link ) && !empty( $link ) ) {
+				if ( is_array( $link ) && ! empty( $link ) ) {
 					// Clean the input
 					$clean_title = wp_kses( $link['title'], null );
 					$clean_url = wp_kses( $link['url'], null );

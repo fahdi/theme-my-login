@@ -213,7 +213,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 						$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', 'theme-my-login' ), 'message' );
 					break;
 				case 'invalidkey' :
-					$theme_my_login->errors->add( 'invalid_key', __('<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', 'theme-my-login' ) );
+					$theme_my_login->errors->add( 'invalid_key', __( '<strong>ERROR</strong>: Sorry, that key does not appear to be valid.', 'theme-my-login' ) );
 					break;
 			}
 		}
@@ -224,7 +224,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 					$theme_my_login->errors->add( 'sendactivation_failed', __('<strong>ERROR</strong>: Sorry, the activation e-mail could not be sent.', 'theme-my-login' ) );
 					break;
 				case 'sent' :
-					$theme_my_login->errors->add( 'sendactivation_sent', __('The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
+					$theme_my_login->errors->add( 'sendactivation_sent', __( 'The activation e-mail has been sent to the e-mail address with which you registered. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
 					break;
 			}
 		}
@@ -353,15 +353,15 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		$key = preg_replace('/[^a-z0-9]/i', '', $key);
 
 		if ( empty( $key ) || ! is_string( $key ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
 
 		if ( empty( $login ) || ! is_string( $login ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
 
 		// Validate activation key
 		$user = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->users WHERE user_activation_key = %s AND user_login = %s", $key, $login ) );
 		if ( empty( $user ) )
-			return new WP_Error( 'invalid_key', __( 'Invalid key', 'theme-my-login' ) );
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
 
 		do_action( 'tml_user_activation_post', $user->user_login, $user->user_email );
 
