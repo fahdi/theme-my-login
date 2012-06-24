@@ -200,13 +200,5 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Themed_Profiles_Admin object
- * @global object $theme_my_login_themed_profiles_admin
- * @since 6.2
- */
-$theme_my_login_themed_profiles_admin = new Theme_My_Login_Themed_Profiles_Admin;
-
 endif; // Class exists
 

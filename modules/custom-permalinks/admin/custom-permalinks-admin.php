@@ -174,13 +174,5 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_Permalinks_Admin object
- * @global object $theme_my_login_custom_permalinks_admin
- * @since 6.3
- */
-$theme_my_login_custom_permalinks_admin = new Theme_My_Login_Custom_Permalinks_Admin;
-
 endif; // Class exists
 

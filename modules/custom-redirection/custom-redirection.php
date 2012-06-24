@@ -3,6 +3,9 @@
  * Plugin Name: Custom Redirection
  * Description: Enabling this module will initialize custom redirection. You will then have to configure the settings via the "Redirection" tab.
  *
+ * Class: Theme_My_Login_Custom_Redirection
+ * Admin Class: Theme_My_Login_Custom_Redirection_Admin
+ *
  * Holds Theme My Login Custom Redirection class
  *
  * @package Theme_My_Login
@@ -197,16 +200,5 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 		return $redirect_to;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_Redirection object
- * @global object $theme_my_login_custom_redirection
- * @since 6.0
- */
-$theme_my_login_custom_redirection = new Theme_My_Login_Custom_Redirection;
-
-if ( is_admin() )
-	require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-redirection/admin/custom-redirection-admin.php' );
-
 endif; // Class exists
 

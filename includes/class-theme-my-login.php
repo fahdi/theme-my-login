@@ -61,6 +61,15 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public $request_action;
 
 	/**
+	 * Holds loaded modules
+	 *
+	 * @since 6.3
+	 * @access protected
+	 * @var array
+	 */
+	protected $loaded_modules = array();
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -73,7 +82,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			'page_id' => 0,
 			'show_page' => true,
 			'enable_css' => true,
-			'email_login' => true
+			'email_login' => true,
+			'active_modules' => array()
 		);
 	}
 
@@ -86,6 +96,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	protected function load() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_user( $_REQUEST['action'], true ) : '';
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_user( $_REQUEST['instance'], true ) : '';
+
+		add_action( 'plugins_loaded', array( &$this, 'plugins_loaded' ) );
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
@@ -111,6 +123,19 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
 
 		add_shortcode( 'theme-my-login', array( &$this, 'shortcode' ) );
+	}
+
+	/**
+	 * Loads active modules
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function plugins_loaded() {
+		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
+			$this->load_module( $module );
+		}
+		do_action_ref_array( 'tml_modules_loaded', array( &$this ) );
 	}
 
 	/**
@@ -915,6 +940,83 @@ if(typeof wpOnload=='function')wpOnload()
 		do_action( 'tml_new_user_registered', $user_id, $user_pass );
 
 		return $user_id;
+	}
+
+	/**
+	 * Checks if a module is loaded
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $name Module name
+	 * @return bool True if module is loaded, false otherwise
+	 */
+	public function is_module_loaded( $name ) {
+		$name = sanitize_key( basename( $name, '.php' ) );
+		return isset( $this->loaded_modules[$name] );
+	}
+
+	/**
+	 * Retrieves a loaded module object
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $name Module name
+	 * @return object|bool Module object if loaded, false otherwise
+	 */
+	public function &get_module( $name ) {
+		$name = sanitize_key( basename( $name, '.php' ) );
+		if ( isset( $this->loaded_modules[$name] ) )
+			return $this->loaded_modules[$name];
+
+		return false;
+	}
+
+	/**
+	 * Sets a module object
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $name Module name
+	 * @param object $object Module object
+	 */
+	public function set_module( $name, $object ) {
+		$name = sanitize_key( basename( $name, '.php' ) );
+		$this->loaded_modules[$name] =& $object;
+	}
+
+	/**
+	 * Instantiates module object
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $file Module file path
+	 * @param bool $load_admin True to load module admin class
+	 */
+	public function load_module( $file ) {
+		if ( false === strpos( $file, WP_PLUGIN_DIR ) )
+			$file = WP_PLUGIN_DIR . '/theme-my-login/modules/' . rtrim( $file, '/' );
+
+		$data = get_file_data( $file, array(
+			'name'        => 'Plugin Name',
+			'description' => 'Description',
+			'class'       => 'Class',
+			'admin_class' => 'Admin Class'
+		) );
+
+		$name = sanitize_key( $data['name'] );
+
+		if ( class_exists( $data['class'] ) )
+			$this->loaded_modules[$name] = new $data['class'];
+
+		if ( ! is_admin() )
+			return;
+
+		if ( class_exists( $data['admin_class'] ) )
+			$this->loaded_modules["{$name}-admin"] = new $data['admin_class'];
 	}
 }
 endif; // Class exists

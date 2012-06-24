@@ -3,6 +3,9 @@
  * Plugin Name: Themed Profiles
  * Description: Enabling this module will initialize and enable themed profiles. You will then have to configure the settings via the "Themed Profiles" tab.
  *
+ * Class: Theme_My_Login_Themed_Profiles
+ * Admin Class: Theme_My_Login_Themed_Profiles_Admin
+ *
  * Holds Theme My Login Themed Profiles class
  *
  * @package Theme_My_Login
@@ -344,16 +347,5 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		return $title;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Themed_Profiles object
- * @global object $theme_my_login_themed_profiles
- * @since 6.0
- */
-$theme_my_login_themed_profiles = new Theme_My_Login_Themed_Profiles;
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/themed-profiles/admin/themed-profiles-admin.php' );
-
 endif; // Class exists
 

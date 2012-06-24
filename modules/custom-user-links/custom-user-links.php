@@ -3,6 +3,9 @@
  * Plugin Name: Custom User Links
  * Description: Enabling this module will initialize custom user links. You will then have to configure the settings via the "User Links" tab.
  *
+ * Class: Theme_My_Login_Custom_User_Links
+ * Admin Class: Theme_My_Login_Custom_User_Links_Admin
+ *
  * Holds Theme My Login Custom User Links class
  *
  * @package Theme_My_Login
@@ -109,16 +112,5 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 		return $links;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_User_Links object
- * @global object $theme_my_login_custom_user_links
- * @since 6.0
- */
-$theme_my_login_custom_user_links = new Theme_My_Login_Custom_User_Links( 'theme_my_login_custom_user_links' );
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-user-links/admin/custom-user-links-admin.php' );
-
 endif; // Class exists
 

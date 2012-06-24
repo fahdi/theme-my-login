@@ -71,13 +71,25 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		);
 
 		// General section
-		add_settings_section( 'general', __( 'General', 'theme-my-login' ), '__return_false',  'theme_my_login' );
+		add_settings_section( 'general', __( 'General', 'theme-my-login' ), '__return_false', $this->options_key );
 
 		// General fields
-		add_settings_field( 'page_id',     __( 'Page ID', 'theme-my-login' ),      array( &$this, 'settings_field_page_id' ),     'theme_my_login', 'general' );
-		add_settings_field( 'show_page',   __( 'Pagelist', 'theme-my-login' ),     array( &$this, 'settings_field_show_page' ),   'theme_my_login', 'general' );
-		add_settings_field( 'enable_css',  __( 'Stylesheet', 'theme-my-login' ),   array( &$this, 'settings_field_enable_css' ),  'theme_my_login', 'general' );
-		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), 'theme_my_login', 'general' );
+		add_settings_field( 'page_id',     __( 'Page ID', 'theme-my-login' ),      array( &$this, 'settings_field_page_id' ),     $this->options_key, 'general' );
+		add_settings_field( 'show_page',   __( 'Pagelist', 'theme-my-login' ),     array( &$this, 'settings_field_show_page' ),   $this->options_key, 'general' );
+		add_settings_field( 'enable_css',  __( 'Stylesheet', 'theme-my-login' ),   array( &$this, 'settings_field_enable_css' ),  $this->options_key, 'general' );
+		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), $this->options_key, 'general' );
+
+		// Modules section
+		add_settings_section( 'modules', __( 'Modules', 'theme-my-login' ), '__return_false', $this->options_key );
+
+		// Modules fields
+		foreach ( get_plugins( '/theme-my-login/modules' ) as $path => $details ) {
+			add_settings_field( sanitize_title( $details['Name'] ), $details['Name'], array( &$this, 'settings_field_module' ), $this->options_key, 'modules', array(
+				'name'        => $details['Name'],
+				'description' => $details['Description'],
+				'path'        => $path
+			) );
+		}
 	}
 
 	/**
@@ -176,6 +188,22 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Renders Module settings fields
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_field_module( $args ) {
+		$id = sanitize_title( $args['name'] );
+		?>
+		<input name="theme_my_login[active_modules][]" type="checkbox" id="theme_my_login_active_modules_<?php echo $id; ?>" value="<?php echo $args['path']; ?>"<?php checked( in_array( $args['path'], (array) $this->get_option( 'active_modules' ) ) ); ?> />
+		<label for="theme_my_login_active_modules_<?php echo $id; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $args['name'] ); ?></label><br />
+		<?php if ( $args['description'] ) : ?>
+		<p class="description"><?php echo $args['description']; ?></p>
+		<?php endif;
+	}
+
+	/**
 	 * Sanitizes TML settings
 	 *
 	 * This is the callback for register_setting()
@@ -187,10 +215,12 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $settings ) {
-		$settings['page_id'] = absint( $settings['page_id'] );
-		$settings['show_page'] = isset( $settings['show_page'] );
-		$settings['enable_css'] = isset( $settings['enable_css'] );
-		$settings['email_login'] = isset( $settings['email_login'] );
+		$settings['page_id']        = absint( $settings['page_id'] );
+		$settings['show_page']      = isset( $settings['show_page']      );
+		$settings['enable_css']     = isset( $settings['enable_css']     );
+		$settings['email_login']    = isset( $settings['email_login']    );
+		$settings['active_modules'] = isset( $settings['active_modules'] ) ? (array) $settings['active_modules'] : array();
+
 		return $settings;
 	}
 
@@ -246,9 +276,11 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			$this->delete_option( 'initial_nag' );
 
 			foreach ( $this->get_options() as $key => $value ) {
-				if ( is_array( $value ) ) {
+				if ( in_array( $key, array( 'active_modules' ) ) )
+					continue;
+
+				if ( is_array( $value ) )
 					update_option( "theme_my_login_{$key}", $value );
-				}
 			}
 		}
 

@@ -3,6 +3,9 @@
  * Plugin Name: Custom E-mail
  * Description: Enabling this module will initialize custom e-mails. You will then have to configure the settings via the "E-mail" tab.
  *
+ * Class: Theme_My_Login_Custom_Email
+ * Admin Class: Theme_My_Login_Custom_Email_Admin
+ *
  * Holds Theme My Login Custom E-mail class
  *
  * @package Theme_My_Login
@@ -521,12 +524,12 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function apply_user_moderation_notification_filters() {
-		global $theme_my_login_modules, $theme_my_login_user_moderation;
+		global $theme_my_login;
 
-		if ( ! $theme_my_login_modules->is_module_active( 'user-moderation/user-moderation.php' ) )
+		if ( ! $user_moderation =& $theme_my_login->get_module( 'user-moderation' ) )
 			return;
 
-		$moderation_type = $theme_my_login_user_moderation->get_option( 'type' );
+		$moderation_type = $user_moderation->get_option( 'type' );
 		switch ( $moderation_type ) {
 			case 'email' :
 				$this->set_mail_headers(
@@ -901,16 +904,5 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 		return str_replace( array_keys( $replacements ), array_values( $replacements ), $input );
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_Email object
- * @global object $theme_my_login_custom_email
- * @since 6.0
- */
-$theme_my_login_custom_email = new Theme_My_Login_Custom_Email;
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-email/admin/custom-email-admin.php' );
-
 endif; // Class exists
 

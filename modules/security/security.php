@@ -3,6 +3,9 @@
  * Plugin Name: Security
  * Description: Enabling this module will initialize security. You will then have to configure the settings via the "Security" tab.
  *
+ * Class: Theme_My_Login_Security
+ * Admin Class: Theme_My_Login_Security_Admin
+ *
  * Holds Theme My Login Security class
  *
  * @package Theme_My_Login
@@ -425,16 +428,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 		}
 		return $value;
 	}
-}
-
-/**
- * Holds the reference to Theme_My_Login_Security object
- * @global object $theme_my_login_security
- * @since 6.0
- */
-$theme_my_login_security = new Theme_My_Login_Security;
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/security/admin/security-admin.php' );
-	
+}	
 endif; // Class exists
+

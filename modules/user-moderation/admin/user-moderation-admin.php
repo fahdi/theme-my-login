@@ -409,13 +409,5 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			  die( '<p>' . __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) . '</p>' );
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_User_Moderation_Admin object
- * @global object $theme_my_login_user_moderation_admin
- * @since 6.0
- */
-$theme_my_login_user_moderation_admin = new Theme_My_Login_User_Moderation_Admin;
-
 endif; // Class exists
 

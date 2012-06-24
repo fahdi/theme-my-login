@@ -3,6 +3,8 @@
  * Plugin Name: Custom Passwords
  * Description: Enabling this module will initialize and enable custom passwords. There are no other settings for this module.
  *
+ * Class: Theme_My_Login_Custom_Passwords
+ *
  * Holds the Theme My Login Custom Passwords class
  *
  * @package Theme_My_Login
@@ -291,13 +293,5 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 		return $redirect_to;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_Passwords object
- * @global object $theme_my_login_custom_passwords
- * @since 6.0
- */
-$theme_my_login_custom_passwords = new Theme_My_Login_Custom_Passwords;
-
 endif; // Class exists
 

@@ -3,6 +3,9 @@
  * Plugin Name: Custom Permalinks
  * Description: Enabling this module will initialize custom permalinks. You will then have to configure the settings via the "Permalinks" tab.
  *
+ * Class: Theme_My_Login_Custom_Permalinks
+ * Admin Class: Theme_My_Login_Custom_Permalinks_Admin
+ *
  * Holds Theme My Login Custom Permalinks class
  *
  * @package Theme_My_Login
@@ -136,16 +139,5 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		return $link;
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_Custom_Permalinks object
- * @global object $theme_my_login_custom_permalinks
- * @since 6.3
- */
-$theme_my_login_custom_permalinks = new Theme_My_Login_Custom_Permalinks;
-
 endif; // Class exists
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-permalinks/admin/custom-permalinks-admin.php' );
 

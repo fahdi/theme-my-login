@@ -3,6 +3,9 @@
  * Plugin Name: User Moderation
  * Description: Enabling this module will initialize user moderation. You will then have to configure the settings via the "Moderation" tab.
  *
+ * Class: Theme_My_Login_User_Moderation
+ * Admin Class: Theme_My_Login_User_Moderation_Admin
+ *
  * Holds Theme My Login User Moderation class
  *
  * @packagae Theme_My_Login
@@ -77,17 +80,16 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function register_post() {
-		global $theme_my_login_modules;
+		global $theme_my_login;
 
 		// Remove default new user notification
 		if ( has_action( 'tml_new_user_registered', 'wp_new_user_notification' ) )
 			remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
 
 		// Remove Custom Email new user notification
-		if ( $theme_my_login_modules->is_module_active( 'custom-email/custom-email.php' ) ) {
-			global $theme_my_login_custom_email;
-			if ( has_action( 'tml_new_user_registered', array( &$theme_my_login_custom_email, 'new_user_notification' ) ) )
-				remove_action( 'tml_new_user_registered', array( &$theme_my_login_custom_email, 'new_user_notification' ), 10, 2 );
+		if ( $custom_email =& $theme_my_login->get_module( 'custom-email' ) ) {
+			if ( has_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ) ) )
+				remove_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ), 10, 2 );
 		}
 
 		// Moderate user upon registration
@@ -206,8 +208,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		if ( isset( $_GET['activation'] ) ) {
 			switch ( $_GET['activation'] ) {
 				case 'complete' :
-					global $theme_my_login_modules;
-					if ( $theme_my_login_modules->is_module_active( 'custom-passwords/custom-passwords.php' ) )
+					if ( $theme_my_login->is_module_loaded( 'custom-passwords' ) )
 						$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. You may now log in.', 'theme-my-login' ), 'message' );
 					else
 						$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', 'theme-my-login' ), 'message' );
@@ -493,16 +494,5 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		@wp_mail( $to, $title, $message );
 	}
 }
-
-/**
- * Holds the reference to Theme_My_Login_User_Moderation object
- * @global object $theme_my_login_user_moderation
- * @since 6.0
- */
-$theme_my_login_user_moderation = new Theme_My_Login_User_Moderation;
-
-if ( is_admin() )
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/user-moderation/admin/user-moderation-admin.php' );
-
 endif; // Class exists
 

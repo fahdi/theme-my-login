@@ -19,7 +19,6 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-abs
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-widget.php' );
-require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-modules.php' );
 
 /**
  * Theme My Login object
@@ -29,11 +28,12 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-mod
 $GLOBALS['theme_my_login'] = new Theme_My_Login;
 
 /**
- * Theme My Login Modules object
- * @global object $theme_my_login_modules
- * @since 6.3
+ * Include active module files
  */
-$GLOBALS['theme_my_login_modules'] = new Theme_My_Login_Modules;
+foreach ( $GLOBALS['theme_my_login']->get_option( 'active_modules', array() ) as $module ) {
+	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
+}
+unset( $module );
 
 if ( is_admin() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
@@ -44,21 +44,16 @@ if ( is_admin() ) {
 	 */
 	$GLOBALS['theme_my_login_admin'] = new Theme_My_Login_Admin;
 
-	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-modules-admin.php' );
 	/**
-	 * Theme My Login Modules Admin object
-	 * @global object $theme_my_login_modules_admin
-	 * @since 6.3
+	 * Include active module admin files
 	 */
-	$GLOBALS['theme_my_login_modules_admin'] = new Theme_My_Login_Modules_Admin;
+	foreach ( $GLOBALS['theme_my_login']->get_option( 'active_modules', array() ) as $module ) {
+		$admin_file = dirname( $module ) . '/admin/' . basename( $module, '.php' ) . '-admin.php';
+		if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $admin_file ) )
+			include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $admin_file );
+	}
+	unset( $module );
 }
-
-// Load active modules
-foreach ( $GLOBALS['theme_my_login_modules']->get_active_and_valid_modules() as $module )
-	include_once( $module );
-unset( $module );
-
-do_action( 'tml_modules_loaded' );
 
 if ( is_multisite() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-ms-signup.php' );
