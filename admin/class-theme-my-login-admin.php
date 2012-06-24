@@ -221,6 +221,20 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		$settings['email_login']    = isset( $settings['email_login']    );
 		$settings['active_modules'] = isset( $settings['active_modules'] ) ? (array) $settings['active_modules'] : array();
 
+		// If we have modules to activate
+		if ( $activate = array_diff( $settings['active_modules'], $this->get_option( 'active_modules', array() ) ) ) {
+			foreach ( $activate as $module ) {
+				do_action( 'tml_activate_' . $module );
+			}
+		}
+
+		// If we have modules to deactivate
+		if ( $deactivate = array_diff( $this->get_option( 'active_modules', array() ), $settings['active_modules'] ) ) {
+			foreach ( $deactivate as $module ) {
+				do_action( 'tml_deactivate_' . $module );
+			}
+		}
+
 		return $settings;
 	}
 
@@ -354,12 +368,10 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		foreach ( array_keys( $modules ) as $module ) {
 			$module = plugin_basename( trim( $module ) );
 
-			$valid = Theme_My_Login_Modules_Admin::validate_module( $module );
-			if ( is_wp_error( $valid ) )
-				continue;
+			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+				@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 
-			@include ( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
-			do_action( 'tml_uninstall_' . trim( $module ) );
+			do_action( 'tml_uninstall_' . $module );
 		}
 
 		// Delete the page
