@@ -942,6 +942,9 @@ if(typeof wpOnload=='function')wpOnload()
 	public function &get_instance( $id = 0 ) {
 		if ( isset( $this->loaded_instances[$id] ) )
 			return $this->loaded_instances[$id];
+
+		$null = null;
+		return $null;
 	}
 
 	/**
@@ -1005,6 +1008,9 @@ if(typeof wpOnload=='function')wpOnload()
 		$name = sanitize_key( basename( $name, '.php' ) );
 		if ( isset( $this->loaded_modules[$name] ) )
 			return $this->loaded_modules[$name];
+
+		$null = null;
+		return $null;
 	}
 
 	/**
