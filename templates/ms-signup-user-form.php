@@ -29,10 +29,7 @@ Theme My Login will always look in your theme's directory first, before using th
 		<p class="error"><?php echo $errmsg; ?></p>
 	<?php } ?>
 
-	<?php
-	do_action( 'signup_extra_fields', $errors ); // Wordpress hook
-	do_action_ref_array( 'tml_signup_extra_fields', array( &$template ) ); // TML hook
-	?>
+	<?php do_action( 'signup_extra_fields', $errors ); ?>
 
 	<p>
 	<?php if ( $active_signup == 'blog' ) { ?>

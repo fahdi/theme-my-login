@@ -30,7 +30,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'random_password',     array( &$this, 'set_password' ) );
 
-		add_action( 'tml_signup_extra_fields',   array( &$this, 'ms_password_fields' ) );
+		add_action( 'signup_extra_fields',       array( &$this, 'ms_password_fields' ) );
 		add_action( 'signup_hidden_fields',      array( &$this, 'ms_hidden_password_field' ) );
 		add_filter( 'wpmu_validate_user_signup', array( &$this, 'ms_password_errors' ) );
 		add_filter( 'add_signup_meta',           array( &$this, 'ms_save_password' ) );
@@ -67,16 +67,16 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Outputs password fields to multisite signup user form
 	 *
-	 * Callback for "tml_signup_extra_fields" hook in file "ms-signup-user-form.php", included by Theme_My_Login_Template::display()
+	 * Callback for "signup_extra_fields" hook in file "ms-signup-user-form.php", included by Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login::display()
 	 * @since 6.1
 	 * @access public
-	 *
-	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
-	public function ms_password_fields( &$template ) {
+	public function ms_password_fields() {
 		global $theme_my_login;
+
+		$template =& $theme_my_login->get_active_template();
 
 		$errors = array();
 		foreach ( $theme_my_login->errors->get_error_codes() as $code ) {
