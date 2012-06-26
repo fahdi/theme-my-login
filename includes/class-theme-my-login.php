@@ -324,11 +324,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 					if ( $http_post && isset( $_POST['log'] ) ) {
 
-						// Set a cookie now to see if they are supported by the browser.
-						setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN );
-						if ( SITECOOKIEPATH != COOKIEPATH )
-							setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN );
-
 						$user = wp_signon( '', $secure_cookie );
 
 						$redirect_to = apply_filters( 'login_redirect', $redirect_to, isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
@@ -353,10 +348,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					// Clear errors if loggedout is set.
 					if ( ! empty( $_GET['loggedout'] ) || $reauth )
 						$this->errors = new WP_Error();
-
-					// If cookies are disabled we can't log in even with a valid user+pass
-					if ( isset( $_POST['testcookie'] ) && empty( $_COOKIE[TEST_COOKIE] ) )
-						$this->errors->add( 'test_cookie', __( '<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href="http://www.google.com/cookies.html">enable cookies</a> to use WordPress.' ) );
 
 					// Some parts of this script use the main login form to display a message
 					if		( isset( $_GET['loggedout'] ) && true == $_GET['loggedout'] )
