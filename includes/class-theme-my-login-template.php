@@ -492,9 +492,11 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 *
 	 * @since 6.0
 	 * @access public
+	 *
+	 * @param string $action The action
 	 */
-	public function the_redirect_url() {
-		echo esc_attr( $this->get_redirect_url() );
+	public function the_redirect_url( $action = '' ) {
+		echo esc_attr( $this->get_redirect_url( $action ) );
 	}
 
 	/**
