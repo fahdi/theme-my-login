@@ -38,7 +38,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_login_form',  array( &$this, 'login_form'      )        );
+		add_action( 'login_form',      array( &$this, 'login_form'      )        );
 		add_filter( 'login_redirect',  array( &$this, 'login_redirect'  ), 10, 3 );
 		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
 	}
@@ -74,18 +74,18 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	/**
 	 * Adds "_wp_original_referer" field to login form
 	 *
-	 * Callback for "tml_login_form" hook in file "login-form.php", included by method Theme_My_Login_Template::display()
+	 * Callback for "login_form" hook in file "login-form.php", included by method Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object $template Reference to $theme_my_login_template object
 	 */
-	public function login_form( &$template ) {
-		$jump_back_to = empty( $template->instance ) ? 'previous' : 'current';
-		wp_original_referer_field( true, $jump_back_to );
-		echo "\n";
+	public function login_form() {
+		global $theme_my_login;
+
+		$template =& $theme_my_login->get_active_instance();
+
+		echo wp_original_referer_field( false, $template->get_option( 'instance' ) ? 'current' : 'previous' ) . "\n";
 	}
 
 	/**
@@ -115,21 +115,23 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 			if ( is_multisite() && empty( $user->roles ) ) {
 				$user->roles = array( 'subscriber' );
 			}
-			$redirection = array( 'login_type' => 'default' );
-			foreach ( (array) $user->roles as $role ) {
-				if ( $this->get_option( $role ) ) {
-					$redirection = $this->get_option( $role );
-					break;
-				}
-			}
+
+			$user_role = reset( $user->roles );
+
+			$redirection = $this->get_option( $user_role, array() );
+
 			if ( 'referer' == $redirection['login_type'] ) {
 				// Send 'em back to the referer
 				$redirect_to = $http_referer;
 			} elseif ( 'custom' == $redirection['login_type'] ) {
 				// Send 'em to the specified URL
 				$redirect_to = $redirection['login_url'];
+
 				// Allow a few user specific variables
-				$replace = array( '%user_id%' => $user->ID, '%user_login%' => $user->user_login );
+				$replace = array(
+					'%user_id%'    => $user->ID,
+					'%user_login%' => $user->user_login
+				);
 				$redirect_to = str_replace( array_keys( $replace ), array_values( $replace ), $redirect_to );
 			}
 		}
@@ -160,8 +162,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 * @return string New redirect
 	 */
 	public function logout_redirect( $redirect_to, $request, $user ) {
-		global $theme_my_login;
-
 		// Determine the correct referer
 		if ( ! $http_referer = wp_get_original_referer() )
 			$http_referer = wp_get_referer();
@@ -174,28 +174,30 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 			if ( is_multisite() && empty( $user->roles ) ) {
 				$user->roles = array( 'subscriber' );
 			}
-			$redirection = array();
-			foreach ( (array) $user->roles as $role ) {
-				if ( $this->get_option( $role ) ) {
-					$redirection = $this->get_option( $role );
-					break;
-				}
-			}
+
+			$user_role = reset( $user->roles );
+
+			$redirection = $this->get_option( $user_role, array() );
+
 			if ( 'referer' == $redirection['logout_type'] ) {
 				// Send 'em back to the referer
 				$redirect_to = $http_referer;
 			} elseif ( 'custom' == $redirection['logout_type'] ) {
 				// Send 'em to the specified URL
 				$redirect_to = $redirection['logout_url'];
+
 				// Allow a few user specific variables
-				$replace = array( '%user_id%' => $user->ID, '%user_login%' => $user->user_login );
+				$replace = array(
+					'%user_id%'    => $user->ID,
+					'%user_login%' => $user->user_login
+				);
 				$redirect_to = str_replace( array_keys( $replace ), array_values( $replace ), $redirect_to );
 			}
 		}
 
 		// Make sure $redirect_to isn't empty or pointing to an admin URL (causing an endless loop)
-		if ( empty( $redirect_to ) || strpos( $redirect_to, 'wp-admin' ) !== false )
-			$redirect_to = $theme_my_login->get_login_page_link( 'loggedout=true' );
+		if ( empty( $redirect_to ) || false !== strpos( $redirect_to, 'wp-admin' ) )
+			$redirect_to = add_query_arg( 'loggedout', 'true', wp_login_url() );
 
 		return $redirect_to;
 	}
