@@ -145,7 +145,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		$this->errors = new WP_Error();
 
-		if ( $this->get_option( 'enable_css' ) )
+		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
 			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->get_option( 'version' ) );
 	}
 
@@ -255,10 +255,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						exit;
 					}
 
-					$this->errors = '';
-
 					if ( isset( $_POST['pass1'] ) && $_POST['pass1'] != $_POST['pass2'] ) {
-						$this->errors = new WP_Error( 'password_reset_mismatch', __( 'The passwords do not match.' ) );
+						$this->errors->add( 'password_reset_mismatch', __( 'The passwords do not match.' ) );
 					} elseif ( isset( $_POST['pass1'] ) && ! empty( $_POST['pass1'] ) ) {
 						$this->reset_password( $user, $_POST['pass1'] );
 
