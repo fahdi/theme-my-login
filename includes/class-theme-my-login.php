@@ -927,7 +927,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return object Instance object
 	 */
 	public function &get_active_instance() {
-		return $this->get_instance( $this->request_instance );
+		return $this->get_instance( (int) $this->request_instance );
 	}
 
 	/**
