@@ -666,19 +666,19 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		if ( ! $this->is_login_page() )
 			return;
 
-		$action = empty( $this->request_action ) ? 'login' : $this->request_action;
-		switch ( $action ) {
+		switch ( $this->request_action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
 			case 'register' :
 			?>
 <script type="text/javascript">
-try{document.getElementById('user_login<?php echo $this->request_instance; ?>').focus();}catch(e){}
+try{document.getElementById('user_login').focus();}catch(e){}
 if(typeof wpOnload=='function')wpOnload()
 </script>
 <?php
 				break;
 			case 'login' :
+			default :
 				$user_login = '';
 				if ( isset($_POST['log']) )
 					$user_login = ( 'incorrect_password' == $this->errors->get_error_code() || 'empty_password' == $this->errors->get_error_code() ) ? esc_attr( stripslashes( $_POST['log'] ) ) : '';
@@ -688,9 +688,9 @@ function wp_attempt_focus() {
 setTimeout( function() {
 try {
 <?php if ( $user_login ) { ?>
-d = document.getElementById('user_pass<?php echo $this->request_instance; ?>');
+d = document.getElementById('user_pass');
 <?php } else { ?>
-d = document.getElementById('user_login<?php echo $this->request_instance; ?>');
+d = document.getElementById('user_login');
 <?php } ?>
 d.value = '';
 d.focus();
