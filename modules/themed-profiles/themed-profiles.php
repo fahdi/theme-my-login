@@ -142,7 +142,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 					if ( ! is_user_logged_in() ) {
 						$redirect_to = $theme_my_login->get_login_page_link( array( 'reauth' => 1 ) );
 						wp_redirect( $redirect_to );
-						exit();
+						exit;
 					}
 					break;
 				case 'logout' :
@@ -157,7 +157,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 					if ( is_user_logged_in() ) {
 						$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'profile' ) );
 						wp_redirect( $redirect_to );
-						exit();
+						exit;
 					}
 			}
 
@@ -165,7 +165,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			if ( $theme_my_login->request_instance ) {
 				$redirect_to = remove_query_arg( array( 'instance' ) );
 				wp_redirect( $redirect_to );
-				exit();
+				exit;
 			}
 		}
 	}
@@ -241,7 +241,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			if ( ! is_wp_error( $errors ) ) {
 				$redirect = add_query_arg( array( 'updated' => 'true' ) );
 				wp_redirect( $redirect );
-				exit();
+				exit;
 			}
 		}
 

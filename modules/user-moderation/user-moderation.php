@@ -327,7 +327,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 			// Now redirect them
 			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'sendactivation' => 'sent' ) );
 			wp_redirect( $redirect_to );
-			exit();
+			exit;
 		}
 	}
 

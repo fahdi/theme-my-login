@@ -228,7 +228,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 					$redirect_to = apply_filters( 'logout_redirect', site_url( 'wp-login.php?loggedout=true' ), isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '', $user );
 					wp_safe_redirect( $redirect_to );
-					exit();
+					exit;
 					break;
 				case 'lostpassword' :
 				case 'retrievepassword' :
@@ -237,7 +237,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						if ( ! is_wp_error( $this->errors ) ) {
 							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' );
 							wp_safe_redirect( $redirect_to );
-							exit();
+							exit;
 						}
 					}
 
@@ -262,7 +262,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 						$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
 						wp_safe_redirect( $redirect_to );
-						exit();
+						exit;
 					}
 
 					wp_enqueue_script( 'utils' );
@@ -271,7 +271,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				case 'register' :
 					if ( ! get_option( 'users_can_register' ) ) {
 						wp_redirect( Theme_My_Login_Common::get_current_url( 'registration=disabled' ) );
-						exit();
+						exit;
 					}
 
 					$user_login = '';
@@ -285,7 +285,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=registered' );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
 							wp_safe_redirect( $redirect_to );
-							exit();
+							exit;
 						}
 					}
 					break;
@@ -344,7 +344,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 									$redirect_to = admin_url( 'profile.php' );
 							}
 							wp_safe_redirect( $redirect_to );
-							exit();
+							exit;
 						}
 
 						$this->errors = $user;
