@@ -61,10 +61,7 @@ Theme My Login will always look in your theme's directory first, before using th
 		</p>
 	</div>
 
-	<?php
-	do_action( 'signup_blogform', $errors ); // Wordpress hook
-	do_action_ref_array( 'tml_signup_blogform', array( &$template ) ); // TML hook
-	?>
+	<?php do_action( 'signup_blogform', $errors ); ?>
 
 	<p class="submit"><input type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Signup' ); ?>" /></p>
 </form>

@@ -31,7 +31,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 		add_filter( 'random_password',     array( &$this, 'set_password' ) );
 
 		add_action( 'tml_signup_extra_fields',   array( &$this, 'ms_password_fields' ) );
-		add_action( 'tml_signup_blogform',       array( &$this, 'ms_hidden_password_field' ) );
+		add_action( 'signup_hidden_fields',      array( &$this, 'ms_hidden_password_field' ) );
 		add_filter( 'wpmu_validate_user_signup', array( &$this, 'ms_password_errors' ) );
 		add_filter( 'add_signup_meta',           array( &$this, 'ms_save_password' ) );
 

@@ -77,10 +77,7 @@ if ( ! empty( $blogs ) ) { ?>
 		</p>
 	</div>
 
-	<?php
-	do_action( 'signup_blogform', $errors ); // Wordpress hook
-	do_action_ref_array( 'tml_signup_blogform', array( &$template ) ); // TML hook
-	?>
+	<?php do_action( 'signup_blogform', $errors ); ?>
 
 	<p class="submit"><input type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Create Site' ); ?>" /></p>
 </form>
