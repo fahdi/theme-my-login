@@ -26,7 +26,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_register_form',   array( &$this, 'password_fields' ) );
+		add_action( 'register_form',       array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
 		add_filter( 'random_password',     array( &$this, 'set_password' ) );
 
@@ -47,15 +47,16 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Outputs password fields to registration form
 	 *
-	 * Callback for "tml_register_form" hook in file "register-form.php", included by Theme_My_Login_Template::display()
+	 * Callback for "register_form" hook in file "register-form.php", included by Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login::display()
 	 * @since 6.0
 	 * @access public
-	 *
-	 * @param object $template Reference to Theme_My_Login_Template object
 	 */
-	public function password_fields( &$template ) {
+	public function password_fields() {
+		global $theme_my_login;
+
+		$template =& $theme_my_login->get_active_instance();
 		?>
 		<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password' ); ?></label>
 		<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" tabindex="30" /></p>
@@ -76,7 +77,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	public function ms_password_fields() {
 		global $theme_my_login;
 
-		$template =& $theme_my_login->get_active_template();
+		$template =& $theme_my_login->get_active_instance();
 
 		$errors = array();
 		foreach ( $theme_my_login->errors->get_error_codes() as $code ) {
