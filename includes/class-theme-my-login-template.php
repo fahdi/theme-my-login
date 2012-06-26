@@ -6,7 +6,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Template' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Template' ) ) :
 /*
  * Theme My Login template class
  *
@@ -16,42 +16,6 @@ if ( !class_exists( 'Theme_My_Login_Template' ) ) :
  */
 class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	/**
-	 * Holds this instance
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var int
-	 */
-	public $instance;
-
-	/**
-	 * Holds this instance action
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var string
-	 */
-	public $action;
-
-	/**
-	 * Set if current instance is active
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var bool
-	 */
-	public $is_active = false;
-
-	/**
-	 * Holds instance specific template errors
-	 *
-	 * @since 6.0
-	 * @access protected
-	 * @var object
-	 */
-	public $errors;
-
-	/**
 	 * Constructor
 	 *
 	 * @since 6.0
@@ -60,17 +24,10 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @param array $options Instance options
 	 */
 	public function __construct( $options = '' ) {
-		global $theme_my_login;
+		$options = wp_parse_args( $options );
+		$options = shortcode_atts( $this->default_options(), $options );
 
-		$this->set_options( wp_parse_args( $options, $this->default_options() ) );
-		
-		$this->action = $this->get_option( 'default_action', '' );
-		$this->instance = $this->get_option( 'instance' );
-
-		if ( $theme_my_login->request_instance == $this->instance ) {
-			$this->is_active = true;
-			$this->action = $theme_my_login->request_action;
-		}
+		$this->set_options( $options );
 	}
 
 	/**
@@ -83,26 +40,27 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function default_options() {
 		return array(
-			'instance' => '',
-			'default_action' => '',
-			'login_template' => '',
-			'register_template' => '',
+			'instance'              => 0,
+			'active'                => false,
+			'default_action'        => '',
+			'login_template'        => '',
+			'register_template'     => '',
 			'lostpassword_template' => '',
-			'resetpass_template' => '',
-			'user_template' => '',
-			'show_title' => true,
-			'show_log_link' => true,
-			'show_reg_link' => true,
-			'show_pass_link' => true,
-			'register_widget' => false,
-			'lostpassword_widget' => false,
-			'logged_in_widget' => true,
-			'show_gravatar' => true,
-			'gravatar_size' => 50,
-			'before_widget' => '',
-			'after_widget' => '',
-			'before_title' => '',
-			'after_title' => ''
+			'resetpass_template'    => '',
+			'user_template'         => '',
+			'show_title'            => true,
+			'show_log_link'         => true,
+			'show_reg_link'         => true,
+			'show_pass_link'        => true,
+			'register_widget'       => false,
+			'lostpassword_widget'   => false,
+			'logged_in_widget'      => true,
+			'show_gravatar'         => true,
+			'gravatar_size'         => 50,
+			'before_widget'         => '',
+			'after_widget'          => '',
+			'before_title'          => '',
+			'after_title'           => ''
 		);
 	}
 
@@ -116,7 +74,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function display( $action = '' ) {
 		if ( empty( $action ) )
-			$action = $this->action;
+			$action = $this->get_option( 'default_action' );
 
 		ob_start();
 		echo $this->get_option( 'before_widget' );
@@ -176,7 +134,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function get_title( $action = '' ) {
 		if ( empty( $action ) )
-			$action = isset( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'login';
+			$action = $this->get_option( 'default_action' );
 
 		if ( is_user_logged_in() ) {
 			$user = wp_get_current_user();
@@ -227,13 +185,13 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			$wp_error = new WP_Error();
 
 		// Incase a plugin uses $error rather than the $errors object
-		if ( !empty( $error ) ) {
+		if ( ! empty( $error ) ) {
 			$wp_error->add('error', $error);
 			unset($error);
 		}
 
 		$output = '';
-		if ( $this->is_active ) {
+		if ( $this->get_option( 'active' ) ) {
 			if ( $wp_error->get_error_code() ) {
 				$errors = '';
 				$messages = '';
@@ -246,9 +204,9 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 							$errors .= '    ' . $error . "<br />\n";
 					}
 				}
-				if ( !empty( $errors ) )
+				if ( ! empty( $errors ) )
 					$output .= '<p class="error">' . apply_filters( 'login_errors', $errors ) . "</p>\n";
-				if ( !empty( $messages ) )
+				if ( ! empty( $messages ) )
 					$output .= '<p class="message">' . apply_filters( 'login_messages', $messages ) . "</p>\n";
 			}
 		}
@@ -272,22 +230,20 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access public
 	 *
 	 * @param string $action Action to retrieve
-	 * @param int|string $instance Optionally add an instance to the URL
 	 * @return string The requested action URL
 	 */
-	public function get_action_url( $action = 'login', $instance = '' ) {
+	public function get_action_url( $action = 'login' ) {
 		global $theme_my_login;
 
-		if ( empty( $instance ) )
-			$instance = $this->instance;
+		$instance = $this->get_option( 'instance' );
 
-		if ( !$this->get_option( "{$action}_widget" ) || $theme_my_login->is_login_page() ) {
-			$url = $theme_my_login->get_login_page_link( array( 'action' => $action ) );
+		if ( ! $this->get_option( "{$action}_widget", true ) || $theme_my_login->is_login_page() ) {
+			$url = $theme_my_login->get_login_page_link( compact( 'action' ) );
 		} else {
-			if ( empty( $instance ) )
-				$url = Theme_My_Login_Common::get_current_url( array( 'action' => $action ) );
+			if ( ! $instance )
+				$url = Theme_My_Login_Common::get_current_url( compact( 'action' ) );
 			else
-				$url = Theme_My_Login_Common::get_current_url( array( 'action' => $action, 'instance' => $instance ) );
+				$url = Theme_My_Login_Common::get_current_url( compact( 'action', 'instance' ) );
 		}
 
 		// Respect FORCE_SSL_LOGIN
@@ -304,10 +260,9 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access public
 	 *
 	 * @param string $action Action to retrieve
-	 * @param int|string $instance Optionally add an instance to the URL
 	 */
-	public function the_action_url( $action = 'login', $instance = '' ) {
-		echo esc_url( $this->get_action_url( $action, $instance ) );
+	public function the_action_url( $action = 'login' ) {
+		echo esc_url( $this->get_action_url( $action ) );
 	}
 
 	/**
@@ -320,8 +275,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function get_action_links( $args = '' ) {
 		$args = wp_parse_args( $args, array(
-			'login' => true,
-			'register' => true,
+			'login'        => true,
+			'register'     => true,
 			'lostpassword' => true
 		) );
 		
@@ -394,10 +349,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function the_user_links() {
 		echo '<ul class="tml-user-links">';
-		if ( $user_links = $this->get_user_links() ) {
-			foreach ( (array) $user_links as $link ) {
-				echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
-			}
+		foreach ( (array) $this->get_user_links() as $link ) {
+			echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
 		}
 		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out' ) . '</a></li>' . "\n";
 		echo '</ul>';
@@ -410,9 +363,11 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function the_user_avatar( $size = '' ) {
-		global $current_user;
 		if ( empty( $size ) )
-			$size = $this->get_option( 'gravatar_size' );
+			$size = $this->get_option( 'gravatar_size', 50 );
+
+		$current_user = wp_get_current_user();
+
 		echo get_avatar( $current_user->ID, $size );
 	}
 
@@ -466,38 +421,34 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access public
 	 *
 	 * @param string|array $template_names The template(s) to locate
-	 * @param string $template_path Directory of default template
 	 * @param bool $load If true, the template will be included if found
 	 * @param array $args Array of extra variables to make available to template
 	 * @return string|bool Template path if found, false if not
 	 */
-	public function get_template( $template_names, $template_path = '', $load = true, $args = array() ) {
+	public function get_template( $template_names, $load = true, $args = array() ) {
 		global $theme_my_login;
 
-		// Shothand reference to this
+		// User friendly access to this
 		$template =& $this;
 
 		// Easy access to current user
 		$current_user = wp_get_current_user();
 
-		if ( empty( $template_path ) )
-			$template_path = WP_PLUGIN_DIR . '/theme-my-login/templates';
-
 		extract( apply_filters_ref_array( 'tml_template_args', array( $args, &$this ) ) );
 
-		if ( !is_array( $template_names ) )
+		if ( ! is_array( $template_names ) )
 			$template_names = array( $template_names );
 
-		if ( !$found_template = locate_template( $template_names ) ) {
+		if ( ! $found_template = locate_template( $template_names ) ) {
 			foreach ( $template_names as $template_name ) {
-				if ( file_exists( rtrim( $template_path, '/' ) . '/' . $template_name ) ) {
-					$found_template = rtrim( $template_path, '/' ) . '/' . $template_name;
+				if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/templates/' . $template_name ) ) {
+					$found_template = WP_PLUGIN_DIR . '/theme-my-login/templates/' . $template_name;
 					break;
 				}
 			}
 		}
 
-		$found_template = apply_filters_ref_array( 'tml_template', array( $found_template, $template_names, $template_path, &$this ) );
+		$found_template = apply_filters_ref_array( 'tml_template', array( $found_template, $template_names, &$this ) );
 
 		if ( $load && $found_template ) {
 			include( $found_template );
@@ -517,21 +468,21 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function get_redirect_url( $action = '' ) {
 		if ( empty( $action ) )
-			$action = $this->action;
+			$action = $this->get_option( 'default_action' );
 
 		$redirect_to = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
 
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
-				$url = apply_filters( 'lostpassword_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' ) );
+				$url = apply_filters( 'lostpassword_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'registration_redirect', !empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=registered' ) );
+				$url = apply_filters( 'registration_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :
-				$url = apply_filters( 'login_redirect', !empty( $redirect_to ) ? $redirect_to : admin_url(), $redirect_to, null );
+				$url = apply_filters( 'login_redirect', ! empty( $redirect_to ) ? $redirect_to : admin_url(), $redirect_to, null );
 		}
 		return apply_filters( 'tml_redirect_url', $url, $action );
 	}
@@ -556,7 +507,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function the_instance() {
-		echo esc_attr( $this->instance );
+		if ( $this->get_option( 'instance' ) )
+			echo esc_attr( $this->get_option( 'instance' ) );
 	}
 
 	/**
@@ -569,7 +521,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @return string|bool The value if it exists, false if not
 	 */
 	public function get_posted_value( $value ) {
-		if ( $this->is_active && isset( $_REQUEST[$value] ) )
+		if ( $this->get_option( 'active' ) && isset( $_REQUEST[$value] ) )
 			return stripslashes( $_REQUEST[$value] );
 		return false;
 	}
