@@ -284,8 +284,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function user_activation() {
-		global $theme_my_login;
-
 		// Attempt to activate the user
 		$errors = $this->activate_new_user( $_GET['key'], $_GET['login'] );
 
@@ -296,9 +294,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 			$redirect_to = add_query_arg( 'activation', 'complete',   $redirect_to );
 		else
 			$redirect_to = add_query_arg( 'activation', 'invalidkey', $redirect_to );
-
-		if ( ! empty( $theme_my_login->request_instance ) )
-			$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 
 		wp_redirect( $redirect_to );
 		exit;
@@ -314,14 +309,12 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function send_activation() {
-		global $theme_my_login, $wpdb;
+		global $wpdb;
 
 		$login = isset( $_GET['login'] ) ? trim( $_GET['login'] ) : '';
 
 		if ( ! $user_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_login = %s", $login ) ) ) {
 			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'sendactivation' => 'failed' ) );
-			if ( ! empty( $theme_my_login->request_instance ) )
-				$redirect_to = add_query_arg( 'instance', $theme_my_login->request_instance, $redirect_to );
 			wp_redirect( $redirect_to );
 			exit;
 		}

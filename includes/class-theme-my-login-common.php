@@ -6,7 +6,7 @@
  * @since 6.3
  */
 
-if ( !class_exists( 'Theme_My_Login_Common' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Common' ) ) :
 /*
  * Theme My Login Helper class
  *
@@ -26,7 +26,11 @@ class Theme_My_Login_Common {
 	 */
 	public static function get_current_url( $query = '' ) {
 		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
-		if ( !empty( $query ) ) {
+
+		if ( ! empty( $_REQUEST['instance'] ) )
+			$url = add_query_arg( $_REQUEST['instance'] );
+
+		if ( ! empty( $query ) ) {
 			$r = wp_parse_args( $query );
 			foreach ( $r as $k => $v ) {
 				if ( strpos( $v, ' ' ) !== false )
@@ -52,7 +56,7 @@ class Theme_My_Login_Common {
 			foreach ( $arg as $key => $value ) {
 				// Renumber numeric keys as array_merge() does.
 				if ( is_numeric( $key ) ) {
-					if ( !in_array( $value, $result ) )
+					if ( ! in_array( $value, $result ) )
 						$result[] = $value;
 				}
 				// Recurse only when both values are arrays.

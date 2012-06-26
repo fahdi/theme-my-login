@@ -236,8 +236,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						$this->errors = $this->retrieve_password();
 						if ( ! is_wp_error( $this->errors ) ) {
 							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' );
-							if ( ! empty( $this->request_instance ) )
-								$redirect_to = add_query_arg( 'instance', $this->request_instance, $redirect_to );
 							wp_safe_redirect( $redirect_to );
 							exit();
 						}
@@ -265,8 +263,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						$this->reset_password( $user, $_POST['pass1'] );
 
 						$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
-						if ( isset( $_REQUEST['instance'] ) & ! empty( $_REQUEST['instance'] ) )
-							$redirect_to = add_query_arg( 'instance', $_REQUEST['instance'], $redirect_to );
 						wp_safe_redirect( $redirect_to );
 						exit();
 					}
@@ -289,8 +285,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						$this->errors = Theme_My_Login::register_new_user( $user_login, $user_email );
 						if ( ! is_wp_error( $this->errors ) ) {
 							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=registered' );
-							if ( ! empty( $this->request_instance ) )
-								$redirect_to = add_query_arg( 'instance', $this->request_instance, $redirect_to );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
 							wp_safe_redirect( $redirect_to );
 							exit();
