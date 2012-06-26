@@ -95,7 +95,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	protected function load() {
 		$this->request_action   = isset( $_REQUEST['action']   ) ? sanitize_key( $_REQUEST['action']   ) : '';
-		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : '';
+		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;
 
 		$this->load_instance();
 
@@ -932,7 +932,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.3
 	 * @access public
 	 *
-	 * @return object|bool Instance object if loaded, false otherwise
+	 * @return object Instance object
 	 */
 	public function &get_active_instance() {
 		return $this->get_instance( $this->request_instance );
@@ -945,12 +945,11 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @access public
 	 *
 	 * @param int $id Instance ID
-	 * @return object|bool Instance object if loaded, false otherwise
+	 * @return object Instance object
 	 */
 	public function &get_instance( $id = 0 ) {
 		if ( isset( $this->loaded_instances[$id] ) )
 			return $this->loaded_instances[$id];
-		return false;
 	}
 
 	/**
@@ -1008,14 +1007,12 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @access public
 	 *
 	 * @param string $name Module name
-	 * @return object|bool Module object if loaded, false otherwise
+	 * @return object Module object
 	 */
 	public function &get_module( $name ) {
 		$name = sanitize_key( basename( $name, '.php' ) );
 		if ( isset( $this->loaded_modules[$name] ) )
 			return $this->loaded_modules[$name];
-
-		return false;
 	}
 
 	/**
