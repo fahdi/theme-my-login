@@ -12,16 +12,18 @@ Theme My Login will always look in your theme's directory first, before using th
 			<label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'New password' ); ?></label>
 			<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" autocomplete="off" tabindex="10" />
 		</p>
+
 		<p>
 			<label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm new password' ); ?></label>
 			<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" autocomplete="off" tabindex="20" />
 		</p>
+
 		<div id="pass-strength-result" class="hide-if-no-js"><?php _e( 'Strength indicator' ); ?></div>
+
 		<p class="description indicator-hint"><?php _e( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers and symbols like ! " ? $ % ^ &amp; ).' ); ?></p>
-<?php
-do_action( 'resetpassword_form' ); // Wordpress hook
-do_action_ref_array( 'tml_resetpassword_form', array( $template ) ); // TML hook
-?>
+
+		<?php do_action( 'resetpassword_form' ); ?>
+
 		<p class="submit">
 			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php esc_attr_e( 'Reset Password' ); ?>" tabindex="100" />
 			<input type="hidden" name="key" value="<?php $template->the_posted_value( 'key' ); ?>" />
