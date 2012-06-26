@@ -1007,7 +1007,7 @@ if(typeof wpOnload=='function')wpOnload()
 			'admin_class' => 'Admin Class'
 		) );
 
-		$name = sanitize_key( $data['name'] );
+		$name = sanitize_key( basename( $file, '.php' ) );
 
 		if ( class_exists( $data['class'] ) )
 			$this->loaded_modules[$name] = new $data['class'];
