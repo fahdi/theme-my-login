@@ -285,7 +285,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		$_template[] = 'profile-form.php';
 
 		// Load template
-		$template->get_template( $_template, '', true, compact( 'current_user', 'profileuser', '_wp_admin_css_colors', 'wp_version' ) );
+		$template->get_template( $_template, true, compact( 'current_user', 'profileuser', '_wp_admin_css_colors', 'wp_version' ) );
 	}
 
 	/**

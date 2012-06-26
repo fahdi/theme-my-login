@@ -293,7 +293,7 @@ class Theme_My_Login_MS_Signup {
 		$templates   = (array) $template->get_option( 'ms_signup_user_template', array() );
 		$templates[] = 'ms-signup-user-form.php';
 
-		$template->get_template( $templates, '', true, compact( 'current_site', 'active_signup', 'user_name', 'user_email', 'errors' ) );
+		$template->get_template( $templates, true, compact( 'current_site', 'active_signup', 'user_name', 'user_email', 'errors' ) );
 	}
 
 	/**
@@ -326,7 +326,7 @@ class Theme_My_Login_MS_Signup {
 		$templates   = (array) $template->get_option( 'ms_signup_blog_template', array() );
 		$templates[] = 'ms-signup-blog-form.php';
 
-		$template->get_template( $templates, '', true, compact( 'current_site', 'user_name', 'user_email', 'blogname', 'blog_title', 'errors' ) );
+		$template->get_template( $templates, true, compact( 'current_site', 'user_name', 'user_email', 'blogname', 'blog_title', 'errors' ) );
 	}
 
 	/**
@@ -352,7 +352,7 @@ class Theme_My_Login_MS_Signup {
 		$templates   = (array) $template->get_option( 'ms_signup_another_blog_template', array() );
 		$templates[] = 'ms-signup-another-blog-form.php';
 
-		$template->get_template( $templates, '', true, compact( 'current_site', 'blogname', 'blog_title', 'errors' ) );
+		$template->get_template( $templates, true, compact( 'current_site', 'blogname', 'blog_title', 'errors' ) );
 	}
 
 	/**
