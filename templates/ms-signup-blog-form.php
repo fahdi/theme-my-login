@@ -8,10 +8,7 @@ Theme My Login will always look in your theme's directory first, before using th
 	<input type="hidden" name="stage" value="validate-blog-signup" />
 	<input type="hidden" name="user_name" value="<?php echo esc_attr( $user_name ); ?>" />
 	<input type="hidden" name="user_email" value="<?php echo esc_attr( $user_email ); ?>" />
-	<?php
-	do_action( 'signup_hidden_fields' ); // Wordpress hook
-	do_action_ref_array( 'tml_signup_hidden_fields', array( &$template ) ); // TML hook
-	?>
+	<?php do_action( 'signup_hidden_fields' ); ?>
 
 	<?php if ( ! is_subdomain_install() ) { ?>
 	<label for="blogname<?php $template->the_instance(); ?>"><?php _e( 'Site Name:' ); ?></label>

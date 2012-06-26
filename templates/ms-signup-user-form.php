@@ -8,10 +8,7 @@ Theme My Login will always look in your theme's directory first, before using th
 
 <form id="setupform" method="post" action="<?php $template->the_action_url( 'register' ); ?>">
 	<input type="hidden" name="stage" value="validate-user-signup" />
-	<?php
-	do_action( 'signup_hidden_fields' ); // Wordpress hook
-	do_action_ref_array( 'tml_signup_hidden_fields', array( &$template ) ); // TML hook
-	?>
+	<?php do_action( 'signup_hidden_fields' ); ?>
 
 	<label for="user_name<?php $template->the_instance(); ?>"><?php _e( 'Username:' ); ?></label>
 	<?php if ( $errmsg = $errors->get_error_message( 'user_name' ) ) { ?>

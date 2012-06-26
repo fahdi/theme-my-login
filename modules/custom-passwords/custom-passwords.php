@@ -100,7 +100,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Outputs password field to multisite signup blog form
 	 *
-	 * Callback for "tml_signup_hidden_fields" hook in file "ms-signup-blog-form.php", included by Theme_My_Login_Template::display()
+	 * Callback for "signup_hidden_fields" hook in file "ms-signup-blog-form.php", included by Theme_My_Login_Template::display()
 	 *
 	 * @see Theme_My_Login::display()
 	 * @since 6.1
