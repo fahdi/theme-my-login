@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.4
-Stable tag: 6.2
+Stable tag: 6.2.1
 
 Themes the WordPress login pages according to your theme.
 
@@ -40,6 +40,12 @@ Please visit http://www.jfarthing.com/docs/category/theme-my-login first and the
 
 
 == Changelog ==
+
+= 6.2.1 =
+* Add post password handling
+* Don't block admin when DOING_AJAX
+* Add WordPress updated message
+* Replace deprecated get_userdatabylogin with get_user_by
 
 = 6.2 =
 * Fix FORCE_SSL_ADMIN logic
