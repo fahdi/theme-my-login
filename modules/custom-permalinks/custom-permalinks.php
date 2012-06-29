@@ -38,10 +38,11 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'init',          array( &$this, 'init'          )        );
-		add_action( 'parse_request', array( &$this, 'parse_request' ), 0     );
-		add_filter( 'page_link',     array( &$this, 'page_link'     ), 10, 2 );
-		add_filter( 'tml_page_link', array( &$this, 'tml_page_link' ), 10, 2 );
+		add_action( 'init',                array( &$this, 'init'                )        );
+		add_action( 'parse_request',       array( &$this, 'parse_request'       ), 0     );
+		add_filter( 'page_link',           array( &$this, 'page_link'           ), 10, 2 );
+		add_filter( 'tml_page_link',       array( &$this, 'tml_page_link'       ), 10, 2 );
+		add_filter( 'rewrite_rules_array', array( &$this, 'rewrite_rules_array' )        );
 	}
 
 	/**
@@ -53,16 +54,9 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function init() {
-		global $wp, $theme_my_login;
+		global $wp;
 
 		$wp->add_query_var( 'action' );
-		
-		$page_id = $theme_my_login->get_option( 'page_id' );
-
-		foreach ( $this->get_options() as $action => $slug ) {
-			if ( ! empty( $slug ) )
-				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
-		}
 	}
 
 	/**
@@ -76,8 +70,33 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	public function parse_request( &$wp ) {
 		global $theme_my_login;
 
-		if ( ! empty( $wp->query_vars['action'] ) )
+		if ( ! empty( $wp->query_vars['action'] ) ) {
 			$theme_my_login->request_action = $wp->query_vars['action'];
+
+			$instance =& $theme_my_login->get_instance();
+			$instance->set_option( 'default_action', $wp->query_vars['action'] );
+		}
+	}
+
+	/**
+	 * Changes login page link to custom permalink
+	 *
+	 * Callback for "page_link" filter in get_page_link()
+	 *
+	 * @see get_page_link()
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $link Page link
+	 * @param int $id Page ID
+	 * @return string Page link
+	 */
+	function page_link( $link, $id ) {
+		global $theme_my_login;
+
+		if ( $theme_my_login->is_login_page( $id ) )
+			return $this->tml_page_link( $link );
+		return $link;
 	}
 
 	/**
@@ -104,8 +123,13 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 				unset( $q['action'] );
 			} else {
 				if ( ! $slug = $this->get_option( 'login' ) )
-					$slug = get_post_field( 'post_name', $theme_my_login->get_option( 'page_id' ) );
+					return $link;
 			}
+
+			$page =& get_page( $theme_my_login->get_option( 'page_id' ) );
+
+			$slug = str_replace( $page->post_name, $slug, get_page_uri( $page->ID ) );
+
 			$link = $wp_rewrite->get_page_permastruct();
 			$link = str_replace( '%pagename%', $slug, $link );
 			$link = home_url( $link );
@@ -119,24 +143,29 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Changes login page link to custom permalink
+	 * Handles permalink rewrite rules
 	 *
-	 * Callback for "page_link" filter in get_page_link()
-	 *
-	 * @see get_page_link()
-	 * @since 6.3
+	 * @since 6.2.2
 	 * @access public
 	 *
-	 * @param string $link Page link
-	 * @param int $id Page ID
-	 * @return string Page link
+	 * @param array $rules Rewrite rules
+	 * @return array Rewrite rules
 	 */
-	function page_link( $link, $id ) {
+	function rewrite_rules_array( $rules ) {
 		global $theme_my_login;
 
-		if ( $theme_my_login->is_login_page( $id ) )
-			return $this->tml_page_link( $link );
-		return $link;
+		$page =& get_page( $theme_my_login->get_option( 'page_id' ) );
+
+		$page_uri = get_page_uri( $page->ID );
+
+		$tml_rules = array();
+		foreach ( $this->get_options() as $action => $slug ) {
+			if ( !empty( $slug ) ) {
+				$slug = str_replace( $page->post_name, $slug, $page_uri );
+				$tml_rules["{$slug}/?$"] = "index.php?page_id={$page->ID}&action={$action}";
+			}
+		}
+		return array_merge( $tml_rules, $rules );
 	}
 }
 endif; // Class exists
