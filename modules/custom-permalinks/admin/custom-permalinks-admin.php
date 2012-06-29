@@ -64,6 +64,8 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
+		global $theme_my_login;
+
 		add_submenu_page(
 			'theme_my_login',
 			__( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),
@@ -81,6 +83,10 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 			'lostpassword' => __( 'Lost Password' ),
 			'logout'       => __( 'Log Out'       )
 		);
+
+		if ( $theme_my_login->is_module_loaded( 'themed-profiles' ) )
+			$actions['profile'] = __( 'Profile' );
+
 		foreach ( $actions as $action => $name ) {
 			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(
 				'action' => $action
