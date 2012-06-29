@@ -350,6 +350,7 @@ class Theme_My_Login_Admin {
 		<th scope="row"><label for="theme_my_login_permalinks_<?php echo $action; ?>"><?php echo $label; ?></label></th>
 		<td>
 			<input name="theme_my_login[permalinks][<?php echo $action; ?>]" type="text" id="theme_my_login_permalinks_<?php echo $action; ?>" value="<?php echo $theme_my_login->options->get_option( array( 'permalinks', $action ) ); ?>" class="regular-text" />
+			<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo $theme_my_login->get_login_page_link( compact( 'action' ) ); ?></span></p>
 		</td>
 	</tr>
 	<?php endforeach;
