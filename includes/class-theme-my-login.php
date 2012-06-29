@@ -84,6 +84,8 @@ class Theme_My_Login {
 		// Load options again to allow modules to tap in
 		add_action( 'tml_modules_loaded', array( &$this, 'init_options' ), 0 );
 
+		add_filter( 'rewrite_rules_array', array( &$this, 'rewrite_rules_array' ) );
+
 		add_action( 'init', array( &$this, 'init' ) );
 		add_action( 'widgets_init', array( &$this, 'widgets_init' ) );
 		add_action( 'parse_request', array( &$this, 'parse_request' ) );
@@ -131,6 +133,30 @@ class Theme_My_Login {
 	}
 
 	/**
+	 * Handles permalink rewrite rules
+	 *
+	 * @since 6.2.2
+	 * @access public
+	 *
+	 * @param array $rules Rewrite rules
+	 * @return array Rewrite rules
+	 */
+	function rewrite_rules_array( $rules ) {
+		$page =& get_page( $this->options->get_option( 'page_id' ) );
+
+		$page_uri = get_page_uri( $page->ID );
+
+		$tml_rules = array();
+		foreach ( $this->options->get_option( 'permalinks', array() ) as $action => $slug ) {
+			if ( !empty( $slug ) ) {
+				$slug = str_replace( $page->post_name, $slug, $page_uri );
+				$tml_rules["{$slug}/?$"] = "index.php?page_id={$page->ID}&action={$action}";
+			}
+		}
+		return array_merge( $tml_rules, $rules );
+	}
+
+	/**
 	 * Initializes the plugin
 	 *
 	 * @since 6.0
@@ -147,13 +173,6 @@ class Theme_My_Login {
 			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->options->get_option( 'version' ) );
 
 		$wp->add_query_var( 'action' );
-		
-		$page_id = $this->options->get_option( 'page_id' );
-
-		foreach ( $this->options->get_option( 'permalinks', array() ) as $action => $slug ) {
-			if ( !empty( $slug ) )
-				add_rewrite_rule( "$slug/?$", "index.php?page_id=$page_id&action=$action", 'top' );
-		}
 	}
 
 	/**
@@ -465,12 +484,12 @@ class Theme_My_Login {
 
 		$link = $wp_rewrite->get_page_permastruct();
 		if ( !empty( $link ) ) {
+			$link = str_replace( '%pagename%', get_page_uri( $page->ID ), $link );
 			$action = isset( $q['action'] ) ? $q['action'] : 'login';
-			if ( $slug = $this->options->get_option( array( 'permalinks', $action ) ) )
+			if ( $slug = $this->options->get_option( array( 'permalinks', $action ) ) ) {
+				$link = str_replace( $page->post_name, $slug, $link );
 				unset( $q['action'] );
-			else
-				$slug = $page->post_name;
-			$link = str_replace( '%pagename%', $slug, $link );
+			}
 			$link = home_url( $link );
 			$link = user_trailingslashit( $link, 'page' );
 		} else {
