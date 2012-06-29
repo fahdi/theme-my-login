@@ -76,9 +76,10 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
 		$actions = array(
-			'login'        => __( 'Login'         ),
+			'login'        => __( 'Log In'        ),
 			'register'     => __( 'Register'      ),
-			'lostpassword' => __( 'Lost Password' )
+			'lostpassword' => __( 'Lost Password' ),
+			'logout'       => __( 'Log Out'       )
 		);
 		foreach ( $actions as $action => $name ) {
 			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(

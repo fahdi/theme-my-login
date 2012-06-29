@@ -42,6 +42,7 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		add_action( 'parse_request',       array( &$this, 'parse_request'       ), 0     );
 		add_filter( 'page_link',           array( &$this, 'page_link'           ), 10, 2 );
 		add_filter( 'tml_page_link',       array( &$this, 'tml_page_link'       ), 10, 2 );
+		add_filter( 'logout_url',          array( &$this, 'logout_url'          ), 10, 2 );
 		add_filter( 'rewrite_rules_array', array( &$this, 'rewrite_rules_array' )        );
 	}
 
@@ -140,6 +141,26 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		}
 
 		return $link;
+	}
+
+	/**
+	 * Filters logout URL to allow for logout permalink
+	 *
+	 * This is needed because WP doesn't pass the action parameter to site_url
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $logout_url Logout URL
+	 * @param string $redirect Redirect URL
+	 * @return string Logout URL
+	 */
+	public function logout_url( $logout_url, $redirect ) {
+		$logout_url = site_url( 'wp-login.php?action=logout' );
+		if ( $redirect )
+			$logout = add_query_arg( 'redirect_to', urlencode( $redirect ), $logout_url );
+		$logout_url = wp_nonce_url( $logout_url, 'log-out' );
+		return $logout_url;
 	}
 
 	/**
