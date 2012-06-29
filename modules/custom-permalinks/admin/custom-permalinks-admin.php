@@ -144,9 +144,11 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_field_permalink( $args = '' ) {
+		global $theme_my_login;
 		extract( $args );
 		?>
 		<input name="<?php echo $this->options_key; ?>[<?php echo $action; ?>]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $action; ?>" value="<?php echo $this->get_option( $action ); ?>" class="regular-text" />
+		<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo $theme_my_login->get_login_page_link( compact( 'action' ) ); ?></span></p>
 		<?php
 	}
 
