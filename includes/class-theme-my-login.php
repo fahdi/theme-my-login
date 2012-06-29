@@ -425,10 +425,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	function get_login_page_link( $query = '' ) {
 		$link = get_page_link( $this->get_option( 'page_id' ) );
-		if ( ! empty( $query ) ) {
-			$q = wp_parse_args( $query );
-			$link = add_query_arg( $q, $link );
-		}
+
+		if ( ! empty( $query ) )
+			$link = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $query ) ), $link );
+
 		return apply_filters( 'tml_page_link', $link, $query );
 	}
 
@@ -601,19 +601,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		if ( 'wp-login.php' != $pagenow && false !== strpos( $url, 'wp-login.php' ) && ! isset( $_REQUEST['interim-login'] ) ) {
 			$parsed_url = parse_url( $url );
 
-			$url = $this->get_login_page_link();
+			$url = $this->get_login_page_link( isset( $parsed_url['query'] ) ? $parsed_url['query'] : '' );
 
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
-
-			if ( isset( $parsed_url['query'] ) ) {
-				wp_parse_str( $parsed_url['query'], $r );
-				foreach ( $r as $k => $v ) {
-					if ( strpos($v, ' ') !== false )
-						$r[$k] = rawurlencode( $v );
-				}
-				$url = add_query_arg( $r, $url );
-			}
 		}
 		return $url;
 	}
