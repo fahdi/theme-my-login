@@ -142,6 +142,9 @@ class Theme_My_Login {
 	 * @return array Rewrite rules
 	 */
 	function rewrite_rules_array( $rules ) {
+		if ( defined( 'WP_INSTALLING' ) )
+			return $rules;
+
 		$page =& get_page( $this->options->get_option( 'page_id' ) );
 
 		$page_uri = get_page_uri( $page->ID );
