@@ -175,6 +175,9 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	function rewrite_rules_array( $rules ) {
 		global $theme_my_login;
 
+		if ( defined( 'WP_INSTALLING' ) )
+			return $rules;
+
 		$page =& get_page( $theme_my_login->get_option( 'page_id' ) );
 
 		$page_uri = get_page_uri( $page->ID );
