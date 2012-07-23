@@ -195,7 +195,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
 		// allow plugins to override the default actions, and to add extra actions if they want
-		do_action( 'login_init' );
 		do_action( 'login_form_' . $this->request_action );
 
 		if ( has_action( 'tml_request_' . $this->request_action ) ) {
@@ -385,6 +384,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		global $wp_version;
 
 		if ( $this->is_login_page() ) {
+			do_action( 'login_init' );
+
 			remove_action( 'wp_head', 'feed_links', 2                          );
 			remove_action( 'wp_head', 'feed_links_extra', 3                    );
 			remove_action( 'wp_head', 'rsd_link'                               );
