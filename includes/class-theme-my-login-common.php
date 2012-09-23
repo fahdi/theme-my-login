@@ -28,7 +28,7 @@ class Theme_My_Login_Common {
 		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
 
 		if ( ! empty( $_REQUEST['instance'] ) )
-			$url = add_query_arg( $_REQUEST['instance'] );
+			$url = add_query_arg( 'instance', $_REQUEST['instance'] );
 
 		if ( ! empty( $query ) ) {
 			$r = wp_parse_args( $query );
