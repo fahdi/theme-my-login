@@ -2,8 +2,8 @@
 Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
-Tested up to: 3.4
-Stable tag: 6.2.2
+Tested up to: 3.4.2
+Stable tag: 6.2.3
 
 Themes the WordPress login pages according to your theme.
 
@@ -36,10 +36,14 @@ Also includes a widget for sidebar login.
 
 == Frequently Asked Questions ==
 
-Please visit http://www.jfarthing.com/docs/category/theme-my-login first and then visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
+Please visit http://www.jfarthing.com/development/theme-my-login first and then visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
 
 
 == Changelog ==
+
+= 6.2.3 =
+* Fix static front page bug
+* Remove tab indexes from forms
 
 = 6.2.2 =
 * Fix redirect loop bug
