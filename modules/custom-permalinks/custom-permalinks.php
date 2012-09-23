@@ -76,6 +76,8 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 
 			$instance =& $theme_my_login->get_instance();
 			$instance->set_option( 'default_action', $wp->query_vars['action'] );
+
+			unset( $wp->query_vars['action'] );
 		}
 	}
 
