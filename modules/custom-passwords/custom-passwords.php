@@ -27,9 +27,9 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Module {
 	function password_fields( &$template ) {
 	?>
 	<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password:', 'theme-my-login' );?></label>
-	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" tabindex="30" /></p>
+	<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /></p>
 	<p><label for="pass2<?php $template->the_instance(); ?>"><?php _e( 'Confirm Password:', 'theme-my-login' );?></label>
-	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" tabindex="30" /></p>
+	<input autocomplete="off" name="pass2" id="pass2<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /></p>
 <?php
 	}
 
