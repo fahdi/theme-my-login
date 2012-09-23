@@ -221,8 +221,10 @@ class Theme_My_Login {
 	function parse_request( &$wp ) {
 		$errors =& $this->errors;
 		$action =& $this->request_action;
-		if ( isset( $wp->query_vars['action'] ) )
+		if ( isset( $wp->query_vars['action'] ) ) {
 			$action = $wp->query_vars['action'];
+			unset( $wp->query_vars['action'] );
+		}
 		$instance =& $this->request_instance;
 
 		if ( is_admin() )
