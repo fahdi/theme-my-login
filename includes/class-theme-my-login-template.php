@@ -237,8 +237,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 
 		$instance = $this->get_option( 'instance' );
 
-		if ( ! $this->get_option( "{$action}_widget", true ) || $theme_my_login->is_login_page() ) {
-			$url = $theme_my_login->get_login_page_link( compact( 'action' ) );
+		if ( ! $this->get_option( "{$action}_widget", true ) || ( $theme_my_login->is_login_page() && in_the_loop() ) ) {
+			$url = $theme_my_login->get_page_link( $action );
 		} else {
 			if ( ! $instance )
 				$url = Theme_My_Login_Common::get_current_url( compact( 'action' ) );

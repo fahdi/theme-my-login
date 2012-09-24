@@ -111,7 +111,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	public function register_redirect( $redirect_to ) {
 		global $theme_my_login;
 
-		$redirect_to = $theme_my_login->get_login_page_link();
+		$redirect_to = $theme_my_login->get_page_link();
 
 		if ( ! empty( $theme_my_login->request_instance ) )
 			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'instance' => $theme_my_login->request_instance ) );
@@ -152,8 +152,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 				if ( 'email' == $this->get_option( 'type' ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
-						$theme_my_login->get_login_page_link( array(
-							'action' => 'sendactivation',
+						$theme_my_login->get_page_link( 'sendactivation', array(
 							'login' => $username
 						) )
 					) );

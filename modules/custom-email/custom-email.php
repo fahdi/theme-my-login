@@ -671,7 +671,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 		$_message = $this->get_option( array( 'user_approval', 'message' ) );
 		if ( ! empty( $_message ) ) {
 			$message = $this->replace_vars( $_message, $user_id, array(
-				'%loginurl%' => $theme_my_login->get_login_page_link(),
+				'%loginurl%' => $theme_my_login->get_page_link(),
 				'%user_pass%' => $new_pass
 			) );
 		}

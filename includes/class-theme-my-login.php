@@ -34,13 +34,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public $errors;
 
 	/**
-	 * Holds current instance being requested
+	 * Holds current page being requested
 	 *
-	 * @since 6.0
+	 * @since 6.3
 	 * @access public
-	 * @var int
+	 * @var string
 	 */
-	public $request_instance;
+	public $request_page;
 
 	/**
 	 * Holds current action being requested
@@ -50,6 +50,15 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @var string
 	 */
 	public $request_action;
+
+	/**
+	 * Holds current instance being requested
+	 *
+	 * @since 6.0
+	 * @access public
+	 * @var int
+	 */
+	public $request_instance;
 
 	/**
 	 * Holds loaded instances
@@ -79,12 +88,32 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function default_options() {
 		return array(
-			'page_id' => 0,
 			'show_page' => true,
 			'enable_css' => true,
 			'email_login' => true,
 			'active_modules' => array()
 		);
+	}
+
+	/**
+	 * Returns default actions
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array Default actions
+	 */
+	public function default_actions() {
+		return apply_filters( 'tml_default_actions', array(
+			'login',
+			'logout',
+			'lostpassword',
+			'postpass',
+			'register',
+			'retrievepassword',
+			'resetpass',
+			'rp'
+		) );
 	}
 
 	/**
@@ -94,25 +123,23 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	protected function load() {
-		$this->request_action   = isset( $_REQUEST['action']   ) ? sanitize_key( $_REQUEST['action']   ) : '';
-		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;
 
 		$this->load_instance();
 
 		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'         )        );
 		add_action( 'init',                    array( &$this, 'init'                   )        );
 		add_action( 'widgets_init',            array( &$this, 'widgets_init'           )        );
+		add_filter( 'rewrite_rules_array',     array( &$this, 'rewrite_rules_array'    )        );
 		add_action( 'parse_request',           array( &$this, 'parse_request'          )        );
+		add_filter( 'the_posts',               array( &$this, 'the_posts'              ), 10, 2 );
 		add_action( 'wp',                      array( &$this, 'wp'                     )        );
 		add_action( 'wp_head',                 array( &$this, 'login_head'             )        );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts'   )        );
 		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'        )        );
 
-		add_filter( 'the_title',               array( &$this, 'the_title'              ), 10, 2 );
-		add_filter( 'single_post_title',       array( &$this, 'single_post_title'      )        );
 		add_filter( 'wp_setup_nav_menu_item',  array( &$this, 'wp_setup_nav_menu_item' )        );
 		add_filter( 'site_url',                array( &$this, 'site_url'               ), 10, 3 );
-		add_filter( 'wp_list_pages_excludes',  array( &$this, 'wp_list_pages_excludes' )        );
+		add_filter( 'logout_url',              array( &$this, 'logout_url'             ), 10, 2 );
 		add_filter( 'wp_list_pages',           array( &$this, 'wp_list_pages'          )        );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
@@ -141,6 +168,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function init() {
+		global $wp;
+
 		load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
 
 		$this->errors = new WP_Error();
@@ -161,22 +190,36 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Determine if specified page is the login page
+	 * Determine if specified page is a TML page
 	 *
-	 * @since 6.0
+	 * @since 6.3
 	 * @access public
 	 *
-	 * @param int $page_id Optional. The page ID (Defaults to current page)
+	 * @return bool True if viewing a TML page, false otherwise
 	 */
-	public function is_login_page( $page_id = '' ) {
-		if ( empty( $page_id ) ) {
-			if ( is_page() )
-				$page_id = get_queried_object_id();
+	public function is_login_page() {
+		$is_login_page = in_array( $this->request_page, $this->default_actions() );
+		return apply_filters( 'tml_is_login_page', $is_login_page );
+	}
+
+	/**
+	 * Handles permalink rewrite rules
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $rules Rewrite rules
+	 * @return array Rewrite rules
+	 */
+	function rewrite_rules_array( $rules ) {
+		if ( defined( 'WP_INSTALLING' ) )
+			return $rules;
+
+		$tml_rules = array();
+		foreach ( $this->default_actions() as $action ) {
+			$tml_rules["{$action}/?$"] = "index.php?pagename={$action}";
 		}
-
-		$is_login_page = ( $page_id == $this->get_option( 'page_id' ) );
-
-		return apply_filters( 'tml_is_login_page', $is_login_page, $page_id );
+		return array_merge( $tml_rules, $rules );
 	}
 
 	/**
@@ -191,6 +234,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function parse_request( &$wp ) {
 		if ( is_admin() )
 			return;
+
+		$this->request_page     = isset( $wp->query_vars['pagename'] ) ? $wp->query_vars['pagename']           : '';
+		$this->request_action   = isset( $_REQUEST['action']         ) ? sanitize_key( $_REQUEST['action']   ) : '';
+		$this->request_instance = isset( $_REQUEST['instance']       ) ? sanitize_key( $_REQUEST['instance'] ) : 0;
+
+		if ( $this->request_page && ! $this->request_action )
+			$this->request_action = $this->request_page;
 
 		do_action_ref_array( 'tml_request', array( &$this ) );
 
@@ -375,14 +425,28 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Fill posts array for virtual pages
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $posts Array of posts
+	 * @param object $wp_query Reference to WP_Query object
+	 * @return array Array of posts
+	 */
+	public function the_posts( $posts, &$wp_query ) {
+		if ( $this->is_login_page() && $wp_query->is_main_query() )
+			return array( $this->get_page_object() );
+		return $posts;
+	}
+
+	/**
 	 * Used to add/remove filters from login page
 	 *
 	 * @since 6.1.1
 	 * @access public
 	 */
 	public function wp() {
-		global $wp_version;
-
 		if ( $this->is_login_page() ) {
 			do_action( 'login_init' );
 
@@ -396,12 +460,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			remove_action( 'wp_head', 'rel_canonical'                          );
 
 			// Don't index any of these forms
-			if ( version_compare( $wp_version, '3.3', '<' ) ) {
-				add_filter( 'pre_option_blog_public', '__return_zero' );
-				add_action( 'login_head',             'noindex'       );
-			} else {
-				add_action( 'login_head',             'wp_no_robots'  );
-			}
+			add_action( 'login_head',             'wp_no_robots'  );
 
 			if ( force_ssl_admin() && ! is_ssl() ) {
 				if ( 0 === strpos( $_SERVER['REQUEST_URI'], 'http' ) ) {
@@ -416,88 +475,72 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Returns object for login page
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return object Login page object
+	 */
+	public function get_page_object( $args = '' ) {
+		$defaults = array(
+			'ID'                    => -999999,
+			'post_author'           => 1,
+			'post_date'             => 0,
+			'post_date_gmt'         => 0,
+			'post_content'          => '[theme-my-login]',
+			'post_title'            => Theme_My_Login_Template::get_title( $this->request_page ),
+			'post_excerpt'          => '',
+			'post_status'           => 'publish',
+			'comment_status'        => 'closed',
+			'ping_status'           => 'closed',
+			'post_password'         => '',
+			'post_name'             => $this->request_page,
+			'to_ping'               => '',
+			'pinged'                => '',
+			'post_modified'         => 0,
+			'post_modified_gmt'     => 0,
+			'post_content_filtered' => '',
+			'post_parent'           => 0,
+			'guid'                  => $this->get_page_link(),
+			'menu_order'            => 0,
+			'post_type'             => 'page',
+			'post_mime_type'        => '',
+			'comment_count'         => 0
+		);
+		$page = wp_parse_args( $args, $defaults );
+		$page = apply_filters( 'tml_page_object', $page, $args );
+		return (object) $page;
+	}
+
+	/**
 	 * Returns link for login page
 	 *
 	 * @since 6.0
 	 * @access public
 	 *
+	 * @param string $action The action of which URL to retrieve
 	 * @param string|array $query Optional. Query arguments to add to link
 	 * @return string Login page link with optional $query arguments appended
 	 */
-	function get_login_page_link( $query = '' ) {
-		$link = get_page_link( $this->get_option( 'page_id' ) );
+	function get_page_link( $action = 'login', $query = '' ) {
+		global $wp_rewrite;
+
+		if ( $wp_rewrite->using_permalinks() ) {
+			$slug = apply_filters( 'tml_page_link_slug', $action );
+
+			$link = $wp_rewrite->get_page_permastruct();
+			$link = str_replace( '%pagename%', $slug, $link );
+			$link = home_url( $link );
+			$link = user_trailingslashit( $link, 'page' );
+		} else {
+			$link = home_url( "?pagename=$action" );
+		}
 
 		if ( ! empty( $query ) )
 			$link = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $query ) ), $link );
 
-		return apply_filters( 'tml_page_link', $link, $query );
-	}
-
-	/**
-	 * Changes the_title() to reflect the current action
-	 *
-	 * Callback for "the_title" hook in the_title()
-	 *
-	 * @see the_title()
-	 * @since 6.0
-	 * @acess public
-	 *
-	 * @param string $title The current post title
-	 * @param int $post_id The current post ID
-	 * @return string The modified post title
-	 */
-	public function the_title( $title, $post_id = 0 ) {
-		if ( is_admin() )
-			return $title;
-
-		if ( $this->is_login_page( $post_id ) ) {
-			if ( in_the_loop() ) {
-				$action = empty( $this->request_instance ) ? $this->request_action : 'login';
-				$title = Theme_My_Login_Template::get_title( $action );
-			} else {
-				$title = is_user_logged_in() ? __( 'Log Out' ) : __( 'Log In' );
-			}
-		}
-		return $title;
-	}
-
-	/**
-	 * Changes single_post_title() to reflect the current action
-	 *
-	 * Callback for "single_post_title" hook in single_post_title()
-	 *
-	 * @see single_post_title()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $title The current post title
-	 * @return string The modified post title
-	 */
-	public function single_post_title( $title ) {
-		if ( $this->is_login_page() ) {
-			$action = empty( $this->request_instance ) ? $this->request_action : 'login';
-			$title = Theme_My_Login_Template::get_title( $action );
-		}
-		return $title;
-	}
-
-	/**
-	 * Excludes TML page if set in the admin
-	 *
-	 * Callback for "wp_list_pages_excludes" hook in wp_list_pages()
-	 *
-	 * @see wp_list_pages()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param array $exclude_array Array of excluded pages
-	 * @return array Modified array of excluded pages
-	 */
-	public function wp_list_pages_excludes( $exclude_array ) {
-		$exclude_array = (array) $exclude_array;
-		if ( ! $this->get_option( 'show_page' ) )
-			$exclude_array[] = $this->get_option( 'page_id' );
-		return $exclude_array;
+		return apply_filters( 'tml_page_link', $link, $action, $query );
 	}
 
 	/**
@@ -513,8 +556,16 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @return string The filtered output
 	 */
 	public function wp_list_pages( $output ) {
-		if ( is_user_logged_in() )
-			$output = str_replace( '"' . $this->get_login_page_link() . '"', '"' . wp_logout_url() . '"', $output );
+		if ( $this->get_option( 'show_page' ) ) {
+			if ( is_user_logged_in() ) {
+				$title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
+				$link = wp_logout_url();
+			} else {
+				$title = apply_filters( 'tml_title', __( 'Log In' ), 'login' );
+				$link = wp_login_url();
+			}
+			$output .= '<li' . ( $this->is_login_page() ? ' class="current_page_item"' : '' ) . '><a href="' . $link . '">' . $title . '</a></li>';
+		}
 		return $output;
 	}
 
@@ -533,7 +584,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function wp_setup_nav_menu_item( $menu_item ) {
 		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->object_id ) ) {
 			$menu_item->title = $this->the_title( $menu_item->title, $menu_item->object_id );
-			$menu_item->url = is_user_logged_in() ? wp_logout_url() : $this->get_login_page_link();
+			$menu_item->url = is_user_logged_in() ? wp_logout_url() : $this->get_page_link();
 		}
 		return $menu_item;
 	}
@@ -570,8 +621,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		$atts = wp_parse_args( $atts );
 
-		if ( $this->is_login_page() && in_the_loop() ) {
+		if ( $this->is_login_page() && in_the_loop() && is_main_query() ) {
 			$instance =& $this->get_instance();
+
+			if ( ! empty( $this->request_page ) )
+				$atts['default_action'] = $this->request_page;
 
 			if ( ! isset( $atts['show_title'] ) )
 				$atts['show_title'] = false;
@@ -602,12 +656,42 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		if ( 'wp-login.php' != $pagenow && false !== strpos( $url, 'wp-login.php' ) && ! isset( $_REQUEST['interim-login'] ) ) {
 			$parsed_url = parse_url( $url );
 
-			$url = $this->get_login_page_link( isset( $parsed_url['query'] ) ? $parsed_url['query'] : '' );
+			$q = array();
+			if ( isset( $parsed_url['query'] ) )
+				$q = wp_parse_args( $parsed_url['query'] );
+
+			$action = 'login';
+			if ( isset( $q['action'] ) ) {
+				$action = $q['action'];
+				unset( $q['action'] );
+			}
+
+			$url = $this->get_page_link( $action, $q );
 
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
 		}
 		return $url;
+	}
+
+	/**
+	 * Filters logout URL to allow for logout permalink
+	 *
+	 * This is needed because WP doesn't pass the action parameter to site_url
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $logout_url Logout URL
+	 * @param string $redirect Redirect URL
+	 * @return string Logout URL
+	 */
+	public function logout_url( $logout_url, $redirect ) {
+		$logout_url = $this->get_page_link( 'logout' );
+		if ( $redirect )
+			$logout = add_query_arg( 'redirect_to', urlencode( $redirect ), $logout_url );
+		$logout_url = wp_nonce_url( $logout_url, 'log-out' );
+		return $logout_url;
 	}
 
 	/**

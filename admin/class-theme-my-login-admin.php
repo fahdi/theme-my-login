@@ -71,14 +71,14 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		);
 
 		// General section
-		add_settings_section( 'general', __( 'General', 'theme-my-login' ), '__return_false', $this->options_key );
+		add_settings_section( 'general',    __( 'General', 'theme-my-login'    ), '__return_false', $this->options_key );
+		add_settings_section( 'modules',    __( 'Modules', 'theme-my-login'    ), '__return_false', $this->options_key );
 
 		// General fields
-		add_settings_field( 'page_id',     __( 'Page ID',      'theme-my-login' ), array( &$this, 'settings_field_page_id'     ), $this->options_key, 'general' );
 		add_settings_field( 'show_page',   __( 'Pagelist',     'theme-my-login' ), array( &$this, 'settings_field_show_page'   ), $this->options_key, 'general' );
 		add_settings_field( 'enable_css',  __( 'Stylesheet',   'theme-my-login' ), array( &$this, 'settings_field_enable_css'  ), $this->options_key, 'general' );
 		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), $this->options_key, 'general' );
-		add_settings_field( 'modules',     __( 'Modules',      'theme-my-login' ), array( &$this, 'settings_field_modules'     ), $this->options_key, 'general' );
+		add_settings_field( 'modules',     __( 'Modules',      'theme-my-login' ), array( &$this, 'settings_field_modules'     ), $this->options_key, 'modules' );
 	}
 
 	/**
@@ -119,19 +119,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			</form>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Renders Page ID settings field
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public function settings_field_page_id() {
-		?>
-		<input name="theme_my_login[page_id]" type="text" id="theme_my_login_page_id" value="<?php echo (int) $this->get_option( 'page_id' ); ?>" class="small-text" />
-		<p class="description"><?php _e( 'This should be the ID of the WordPress page that includes the [theme-my-login] shortcode. By default, this page is titled "Login".', 'theme-my-login' ); ?></p>
-        <?php
 	}
 
 	/**
@@ -206,7 +193,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $settings ) {
-		$settings['page_id']        = absint( $settings['page_id'] );
 		$settings['show_page']      = isset( $settings['show_page']      );
 		$settings['enable_css']     = isset( $settings['enable_css']     );
 		$settings['email_login']    = isset( $settings['email_login']    );
@@ -262,9 +248,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// Get plugin data
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
 
-		// Declare page_id to avoid notices
-		$page_id = 0;
-
 		// Current version
 		$version = $this->get_option( 'version', $plugin_data['Version'] );
 
@@ -278,8 +261,14 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 		// 6.3 upgrade
 		if ( version_compare( $version, '6.3', '<' ) ) {
+			// Delete the page
+			wp_delete_post( $this->get_option( 'page_id' ) );
+
+			// Delete obsolete options
+			$this->delete_option( 'page_id'     );
 			$this->delete_option( 'initial_nag' );
 
+			// Move options to their own rows
 			foreach ( $this->get_options() as $key => $value ) {
 				if ( in_array( $key, array( 'active_modules' ) ) )
 					continue;
@@ -289,35 +278,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 
-		// Get existing page ID
-		$page_id = $this->get_option( 'page_id' );
-
-		// Check if page exists
-		$page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
-
-		// Maybe create login page?
-		if ( $page ) {
-			$page_id = $page->ID;
-			// Make sure the page is not in the trash
-			if ( 'trash' == $page->post_status )
-				wp_untrash_post( $page_id );
-		} else {
-			$insert = array(
-				'post_title' => 'Login',
-				'post_status' => 'publish',
-				'post_type' => 'page',
-				'post_content' => '[theme-my-login]',
-				'comment_status' => 'closed',
-				'ping_status' => 'closed'
-				);
-			$page_id = wp_insert_post( $insert );
-		}
-
 		$this->set_option( 'version', $plugin_data['Version'] );
-		$this->set_option( 'page_id', (int) $page_id );
 		$this->save_options();
-
-		return $page_id;
 	}
 
 	/**
@@ -364,9 +326,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 			do_action( 'tml_uninstall_' . $module );
 		}
-
-		// Delete the page
-		wp_delete_post( $theme_my_login->get_option( 'page_id' ) );
 
 		// Delete options
 		delete_option( 'theme_my_login' );

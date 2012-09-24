@@ -74,7 +74,7 @@ class Theme_My_Login_MS_Signup {
 
 		if ( !is_main_site() ) {
 			switch_to_blog( $current_site->blog_id );
-			$redirect_to = $theme_my_login->get_login_page_link( array( 'action' => 'register' ) );
+			$redirect_to = $theme_my_login->get_page_link( 'register' );
 			restore_current_blog();
 			wp_redirect( $redirect_to );
 			exit;
@@ -485,9 +485,9 @@ class Theme_My_Login_MS_Signup {
 		if ( is_plugin_active_for_network( 'theme-my-login/theme-my-login.php' ) ) {
 			require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
 			switch_to_blog( $blog_id );
-			$admin =& new Theme_My_Login_Admin();
-			$page_id = $admin->_install();
-			$wpdb->update( $wpdb->posts, array( 'post_author' => $user_id ), array( 'ID' => $page_id ) );
+			$admin = new Theme_My_Login_Admin();
+			$admin->_install();
+			unset( $admin );
 			restore_current_blog();
 		}
 	}
@@ -513,9 +513,6 @@ class Theme_My_Login_MS_Signup {
 				// Parse the URL
 				$parsed_url = parse_url( $url );
 
-				// Set action
-				$query = array( 'action' => $action );
-
 				// Extract the query string
 				if ( isset( $parsed_url['query'] ) ) {
 					wp_parse_str( $parsed_url['query'], $r );
@@ -530,7 +527,7 @@ class Theme_My_Login_MS_Signup {
 					$query = array_merge( $query, (array) $r );
 
 				// Get the login page link along with the query
-				$url = $theme_my_login->get_login_page_link( $query );
+				$url = $theme_my_login->get_page_link( $action, $query );
 
 				// Check if HTTPS is needed
 				if ( 'https' == strtolower( $orig_scheme ) )
