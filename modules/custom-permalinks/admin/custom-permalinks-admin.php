@@ -84,9 +84,6 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 			'logout'       => __( 'Log Out'       )
 		);
 
-		if ( $theme_my_login->is_module_loaded( 'themed-profiles' ) )
-			$actions['profile'] = __( 'Profile' );
-
 		foreach ( $actions as $action => $name ) {
 			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(
 				'action' => $action
@@ -155,7 +152,7 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		extract( $args );
 		?>
 		<input name="<?php echo $this->options_key; ?>[<?php echo $action; ?>]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $action; ?>" value="<?php echo $this->get_option( $action ); ?>" class="regular-text" />
-		<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo $theme_my_login->get_login_page_link( compact( 'action' ) ); ?></span></p>
+		<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo $theme_my_login->get_page_link( $action ); ?></span></p>
 		<?php
 	}
 
@@ -173,7 +170,7 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	public function save_settings( $settings ) {
 		// Flush permalinks if they have changed
 		foreach ( $settings as $action => &$slug ) {
-			$slug = sanitize_title( $slug );
+			$slug = preg_replace( '#/+#', '/', str_replace( '#', '', $slug ) );
 			if ( $slug !== $this->get_option( $action ) ) {
 				// Save an option to flush after "init", where the new rules are added
 				$settings['flush_rules'] = true;

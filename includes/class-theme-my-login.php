@@ -110,9 +110,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			'lostpassword',
 			'postpass',
 			'register',
-			'retrievepassword',
-			'resetpass',
-			'rp'
+			'resetpass'
 		) );
 	}
 
@@ -219,7 +217,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		$tml_rules = array();
 		foreach ( $this->default_actions() as $action ) {
-			$tml_rules["{$action}/?$"] = "index.php?pagename={$action}";
+			$slug = apply_filters( 'tml_page_link_slug', $action );
+			$slug = trim( $slug, '/' );
+			if ( empty( $slug ) )
+				$slug = $action;
+			$tml_rules["{$slug}/?$"] = "index.php?pagename={$action}";
 		}
 		return array_merge( $tml_rules, $rules );
 	}
