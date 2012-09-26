@@ -126,16 +126,16 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		$this->load_instance();
 
-		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'         )        );
-		add_action( 'init',                    array( &$this, 'init'                   )        );
-		add_action( 'widgets_init',            array( &$this, 'widgets_init'           )        );
-		add_filter( 'rewrite_rules_array',     array( &$this, 'rewrite_rules_array'    )        );
-		add_action( 'parse_request',           array( &$this, 'parse_request'          )        );
-		add_filter( 'the_posts',               array( &$this, 'the_posts'              ), 10, 2 );
-		add_action( 'wp',                      array( &$this, 'wp'                     )        );
-		add_action( 'wp_head',                 array( &$this, 'login_head'             )        );
-		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts'   )        );
-		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'        )        );
+		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          )        );
+		add_action( 'init',                    array( &$this, 'init'                    )        );
+		add_action( 'widgets_init',            array( &$this, 'widgets_init'            )        );
+		add_filter( 'rewrite_rules_array',     array( &$this, 'rewrite_rules_array'     )        );
+		add_action( 'parse_request',           array( &$this, 'parse_request'           )        );
+		add_filter( 'the_posts',               array( &$this, 'the_posts'               ), 10, 2 );
+		add_action( 'wp',                      array( &$this, 'wp'                      )        );
+		add_action( 'wp_head',                 array( &$this, 'login_head'              )        );
+		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts'    )        );
+		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'         )        );
 
 		add_filter( 'wp_setup_nav_menu_item',  array( &$this, 'wp_setup_nav_menu_item' )        );
 		add_filter( 'site_url',                array( &$this, 'site_url'               ), 10, 3 );
@@ -195,11 +195,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 *
+	 * @param string $action Action to check
 	 * @return bool True if viewing a TML page, false otherwise
 	 */
-	public function is_login_page() {
-		$is_login_page = in_array( $this->request_page, $this->default_actions() );
-		return apply_filters( 'tml_is_login_page', $is_login_page );
+	public function is_login_page( $action = '' ) {
+		if ( empty( $action ) )
+			$action = $this->request_page;
+		return apply_filters( 'tml_is_login_page', in_array( $action, $this->default_actions() ) );
 	}
 
 	/**
@@ -582,9 +584,20 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @return object The (possibly) modified menu item
 	 */
 	public function wp_setup_nav_menu_item( $menu_item ) {
-		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->object_id ) ) {
-			$menu_item->title = $this->the_title( $menu_item->title, $menu_item->object_id );
-			$menu_item->url = is_user_logged_in() ? wp_logout_url() : $this->get_page_link();
+		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->post_name ) ) {
+			$menu_item->url = $this->get_page_link( $menu_item->post_name );
+			$menu_item->type = 'custom';
+		}
+
+		if ( is_admin() )
+			return $menu_item;
+
+		if ( 'custom' == $menu_item->object ) {
+			$login_url = wp_login_url();
+			if ( is_user_logged_in() && $menu_item->url == wp_login_url() ) {
+				$menu_item->title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
+				$menu_item->url = wp_logout_url();
+			}
 		}
 		return $menu_item;
 	}
