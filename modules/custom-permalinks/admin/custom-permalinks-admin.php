@@ -64,8 +64,6 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
-		global $theme_my_login;
-
 		add_submenu_page(
 			'theme_my_login',
 			__( 'Theme My Login Custom Permalinks Settings', 'theme-my-login' ),

@@ -82,6 +82,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
+		global $theme_my_login;
+
 		add_submenu_page(
 			'theme_my_login',
 			__( 'Theme My Login Themed Profiles Settings', 'theme-my-login' ),
@@ -93,8 +95,13 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles' ),       $this->options_key, 'general' );
+		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles'       ), $this->options_key, 'general' );
 		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( &$this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
+
+		if ( $theme_my_login->is_module_loaded( 'custom-permalinks' ) ) {
+			$custom_permalinks_admin =& $theme_my_login->get_module( 'custom-permalinks-admin' );
+			add_settings_field( 'profile', __( 'Profile' ), array( &$custom_permalinks_admin, 'settings_field_permalink' ), 'theme_my_login_permalinks', 'general', array( 'action' => 'profile' ) );
+		}
 	}
 
 	/**

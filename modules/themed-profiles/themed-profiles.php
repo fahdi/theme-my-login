@@ -70,6 +70,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar' ) );
 
+		add_filter( 'tml_default_actions', array( &$this, 'tml_default_actions' ) );
 		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' ) );
 		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' ) );
 		add_filter( 'tml_title',           array( &$this, 'tml_title' ), 10, 2 );
@@ -189,6 +190,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			return false;
 
 		return $show_admin_bar;
+	}
+
+	public function tml_default_actions( $actions ) {
+		$actions[] = 'profile';
+		return $actions;
 	}
 
 	/**
