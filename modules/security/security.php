@@ -41,8 +41,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 */
 	public function default_options() {
 		return array(
-			'private_site' => 0,
-			'failed_login' => array(
+			'private_site'  => 0,
+			'private_login' => 0,
+			'failed_login'  => array(
 				'threshold'               => 5,
 				'threshold_duration'      => 1,
 				'threshold_duration_unit' => 'hour',
@@ -59,6 +60,7 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
+		add_action( 'init',              array( &$this, 'init'              ) );
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 
 		add_action( 'authenticate',         array( &$this, 'authenticate' ), 100, 3 );
@@ -66,6 +68,28 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 
 		add_action( 'show_user_profile', array( &$this, 'show_user_profile' ) );
 		add_action( 'edit_user_profile', array( &$this, 'show_user_profile' ) );
+
+		add_filter( 'show_admin_bar', array( &$this, 'show_admin_bar' ) );
+	}
+
+	/**
+	 * Sets a 404 error for wp-login.php if it's disabled
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function init() {
+		global $theme_my_login, $wp_query, $pagenow;
+
+		if ( 'wp-login.php' == $pagenow && $this->get_option( 'private_login' ) ) {
+			$pagenow = 'index.php';
+			$wp_query->set_404();
+			status_header( 404 );
+			nocache_headers();
+			$template = get_404_template();
+			include( $template );
+			exit;
+		}
 	}
 
 	/**
@@ -206,6 +230,23 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 			<?php endforeach; ?>
 			</table>
 		<?php endif;
+	}
+
+	/**
+	 * Shows admin bar for wp-login.php when it is disabled
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param bool $show True to show admin bar, false to hide
+	 * @return bool True to show admin bar, false to hide
+	 */
+	public function show_admin_bar( $show ) {
+		global $pagenow;
+
+		if ( is_user_logged_in() && 'wp-login.php' == $pagenow && $this->get_option( 'private_login' ) )
+			return true;
+		return $show;
 	}
 
 	/**

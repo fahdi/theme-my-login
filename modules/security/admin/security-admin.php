@@ -98,7 +98,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'private_site',   __( 'Private Site',   'theme-my-login' ), array( &$this, 'settings_field_private_site' ),   $this->options_key, 'general' );
+		add_settings_field( 'private_site',   __( 'Private Site',   'theme-my-login' ), array( &$this, 'settings_field_private_site'   ), $this->options_key, 'general' );
+		add_settings_field( 'private_login',  __( 'Private Login',  'theme-my-login' ), array( &$this, 'settings_field_private_login'  ), $this->options_key, 'general' );
 		add_settings_field( 'login_attempts', __( 'Login Attempts', 'theme-my-login' ), array( &$this, 'settings_field_login_attempts' ), $this->options_key, 'general' );
 	}
 
@@ -135,6 +136,19 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 		?>
 		<input name="<?php echo $this->options_key; ?>[private_site]" type="checkbox" id="<?php echo $this->options_key; ?>_private_site" value="1"<?php checked( $this->get_option( 'private_site' ) ); ?> />
 		<label for="<?php echo $this->options_key; ?>_private_site"><?php _e( 'Require users to be logged in to view site', 'theme-my-login' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Renders Private Login settings field
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function settings_field_private_login() {
+		?>
+		<input name="<?php echo $this->options_key; ?>[private_login]" type="checkbox" id="<?php echo $this->options_key; ?>_private_login" value="1"<?php checked( $this->get_option( 'private_login' ) ); ?> />
+		<label for="<?php echo $this->options_key; ?>_private_login"><?php _e( 'Disable <tt>wp-login.php</tt>', 'theme-my-login' ); ?></label>
 		<?php
 	}
 
@@ -193,7 +207,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function save_settings( $settings ) {
 		return array(
-			'private_site' => isset( $settings['private_site'] ),
+			'private_site'  => isset( $settings['private_site']  ),
+			'private_login' => isset( $settings['private_login'] ),
 			'failed_login' => array(
 				'threshold'               => absint( $settings['failed_login']['threshold'] ),
 				'threshold_duration'      => absint( $settings['failed_login']['threshold_duration'] ),
