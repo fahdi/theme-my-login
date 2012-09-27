@@ -124,21 +124,22 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		$this->load_instance();
 
-		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          )        );
-		add_action( 'init',                    array( &$this, 'init'                    )        );
-		add_action( 'widgets_init',            array( &$this, 'widgets_init'            )        );
-		add_filter( 'rewrite_rules_array',     array( &$this, 'rewrite_rules_array'     )        );
-		add_action( 'parse_request',           array( &$this, 'parse_request'           )        );
-		add_filter( 'the_posts',               array( &$this, 'the_posts'               ), 10, 2 );
-		add_action( 'wp',                      array( &$this, 'wp'                      )        );
-		add_action( 'wp_head',                 array( &$this, 'login_head'              )        );
-		add_action( 'wp_print_footer_scripts', array( &$this, 'print_footer_scripts'    )        );
-		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'         )        );
+		add_action( 'plugins_loaded',             array( &$this, 'plugins_loaded'             )        );
+		add_action( 'init',                       array( &$this, 'init'                       )        );
+		add_action( 'widgets_init',               array( &$this, 'widgets_init'               )        );
+		add_action( 'parse_request',              array( &$this, 'parse_request'              )        );
+		add_action( 'wp',                         array( &$this, 'wp'                         )        );
+		add_action( 'wp_head',                    array( &$this, 'login_head'                 )        );
+		add_action( 'wp_print_footer_scripts',    array( &$this, 'print_footer_scripts'       )        );
+		add_action( 'wp_authenticate',            array( &$this, 'wp_authenticate'            )        );
+		add_action( 'wp_before_admin_bar_render', array( &$this, 'wp_before_admin_bar_render' )        );
 
-		add_filter( 'wp_setup_nav_menu_item',  array( &$this, 'wp_setup_nav_menu_item' )        );
-		add_filter( 'site_url',                array( &$this, 'site_url'               ), 10, 3 );
-		add_filter( 'logout_url',              array( &$this, 'logout_url'             ), 10, 2 );
-		add_filter( 'wp_list_pages',           array( &$this, 'wp_list_pages'          )        );
+		add_filter( 'rewrite_rules_array',        array( &$this, 'rewrite_rules_array'        )        );
+		add_filter( 'the_posts',                  array( &$this, 'the_posts'                  ), 10, 2 );
+		add_filter( 'wp_setup_nav_menu_item',     array( &$this, 'wp_setup_nav_menu_item'     )        );
+		add_filter( 'site_url',                   array( &$this, 'site_url'                   ), 10, 3 );
+		add_filter( 'logout_url',                 array( &$this, 'logout_url'                 ), 10, 2 );
+		add_filter( 'wp_list_pages',              array( &$this, 'wp_list_pages'              )        );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
@@ -476,6 +477,19 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Removes "Edit" menu from admin bar on virtual page
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
+	public function wp_before_admin_bar_render() {
+		global $wp_admin_bar;
+
+		if ( $this->is_login_page() )
+			$wp_admin_bar->remove_menu( 'edit' );
 	}
 
 	/**
