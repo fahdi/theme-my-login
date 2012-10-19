@@ -48,11 +48,11 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		if ( $theme_my_login->is_login_page() && isset( $_GET['ajax'] ) ) {
 			define( 'DOING_AJAX', true );
 
-			$data = $theme_my_login->shortcode( array(
+			$data = $theme_my_login->shortcode( apply_filters( 'tml_ajax_params', array(
 				'gravatar_size' => 100,
 				'before_title'  => '<h2>',
 				'after_title'   => '</h2>'
-			) );
+			) ) );
 
 			$x = new WP_Ajax_Response( array(
 				'what'   => 'login',
