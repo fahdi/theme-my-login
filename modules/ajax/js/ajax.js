@@ -49,7 +49,10 @@ var tmlAjax;
 								t.show(this.data);
 								if (this.supplemental.success == 1) {
 									t.overlay.off('click').click(function() {
-										t.hide(location.reload);
+										t.hide();
+										setTimeout(function() {
+											location.reload();
+										}, 500);
 									});
 								}
 							});
@@ -70,8 +73,7 @@ var tmlAjax;
 			}
 
 			if (document.getElementById('tmlAjaxContent') === null) {
-				this.content
-					.appendTo(this.window)
+				this.content.appendTo(this.window);
 			}
 
 			this.content.html(content);
@@ -94,7 +96,7 @@ var tmlAjax;
 			this.reposition();
 		},
 
-		hide : function(callback) {
+		hide : function() {
 			tmlAjax.window
 				.fadeOut('slow', function() {
 					tmlAjax.window.unbind().remove();
@@ -103,9 +105,6 @@ var tmlAjax;
 				.fadeTo('slow', 0, function() {
 					tmlAjax.overlay.unbind().remove();
 				});
-
-			if (callback)
-				callback();
 		},
 
 		reposition : function() {
