@@ -55,6 +55,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			'register_widget'       => false,
 			'lostpassword_widget'   => false,
 			'logged_in_widget'      => true,
+			'logged_out_widget'     => true,
 			'show_gravatar'         => true,
 			'gravatar_size'         => 50,
 			'before_widget'         => '',
