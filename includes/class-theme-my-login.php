@@ -575,14 +575,21 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function wp_list_pages( $output ) {
 		if ( $this->get_option( 'show_page' ) ) {
+
+			$classes = array( 'page_item' );
+			if ( $this->is_login_page() )
+				$classes[] = 'current_page_item';
+
 			if ( is_user_logged_in() ) {
 				$title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
 				$link = wp_logout_url();
+				$classes[] = 'tml_logout_link';
 			} else {
 				$title = apply_filters( 'tml_title', __( 'Log In' ), 'login' );
 				$link = wp_login_url();
+				$classes[] = 'tml_login_link';
 			}
-			$output .= '<li' . ( $this->is_login_page() ? ' class="current_page_item"' : '' ) . '><a href="' . $link . '">' . $title . '</a></li>';
+			$output .= '<li class="' . implode( ' ', $classes ) . '"><a href="' . $link . '">' . $title . '</a></li>';
 		}
 		return $output;
 	}
@@ -609,10 +616,14 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			return $menu_item;
 
 		if ( 'custom' == $menu_item->object ) {
-			$login_url = wp_login_url();
-			if ( is_user_logged_in() && $menu_item->url == wp_login_url() ) {
-				$menu_item->title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
-				$menu_item->url = wp_logout_url();
+			if ( $menu_item->url == wp_login_url() ) {
+				if ( is_user_logged_in() ) {
+					$menu_item->title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
+					$menu_item->url = wp_logout_url();
+					$menu_item->classes[] = 'tml_logout_link';
+				} else {
+					$menu_item->classes[] = 'tml_login_link';
+				}
 			}
 		}
 		return $menu_item;
