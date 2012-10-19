@@ -36,3 +36,27 @@
 	overflow: auto;
 	text-align: left;
 }
+#tml_ajax_content h2 {
+	font-size: 1.5em;
+	margin: 0 0 10px;
+}
+#tml_ajax_content input[type="text"],
+#tml_ajax_content input[type="password"],
+#tml_ajax_content input[type="submit"] {
+	width: 100%;
+	padding: 5px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+#tml_ajax_content ul {
+	margin: 5px 0;
+	list-style-position: inside;
+}
+#tml_ajax_content .tml-user-avatar {
+	float: left;
+}
+#tml_ajax_content .tml-user-links {
+	float: left;
+	margin: 0 0 0 10px;
+}
