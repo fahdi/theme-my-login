@@ -145,6 +145,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_filter( 'site_url',                   array( &$this, 'site_url'                   ), 10, 3 );
 		add_filter( 'logout_url',                 array( &$this, 'logout_url'                 ), 10, 2 );
 		add_filter( 'wp_list_pages',              array( &$this, 'wp_list_pages'              )        );
+		add_filter( 'redirect_canonical',         array( &$this, 'redirect_canonical'         ), 10, 2 );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
@@ -632,6 +633,22 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			}
 		}
 		return $menu_item;
+	}
+
+	/**
+	 * Cancels canonical guess redirect for Login pages
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $redirect_url The canonical redirect URL
+	 * @param string $requested_url The originally requested URL
+	 * @return string|bool The canonical redirect URL or false to cancel
+	 */
+	public function redirect_canonical( $redirect_url, $requested_url ) {
+		if ( is_404() && $this->is_login_page() )
+			return false;
+		return $redirect_url;
 	}
 
 	/**
