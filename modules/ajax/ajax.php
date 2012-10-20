@@ -71,7 +71,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/css/ajax.css' ) );
 
-		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery', 'thickbox', 'wp-ajax-response' ) );
+		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery', 'wp-ajax-response' ) );
 	}
 
 	public function tml_page_link( $link, $action, $query ) {
