@@ -33,6 +33,7 @@ class Theme_My_Login_MS_Signup {
 	public function __construct() {
 		global $theme_my_login;
 
+		add_filter( 'tml_default_actions',  array( &$this, 'tml_default_actions'  ) );
 		add_action( 'tml_request_register', array( &$this, 'tml_request_register' ) );
 		add_action( 'tml_request_activate', array( &$this, 'tml_request_activate' ) );
 		add_action( 'tml_display_register', array( &$this, 'tml_display_register' ) );
@@ -45,6 +46,20 @@ class Theme_My_Login_MS_Signup {
 		add_filter( 'site_url',         array( &$this, 'site_url'  ), 10, 3 );
 		add_filter( 'network_site_url', array( &$this, 'site_url'  ), 10, 3 );
 		add_filter( 'clean_url',        array( &$this, 'clean_url' ), 10, 3 );
+	}
+
+	/**
+	 * Adds activate to default actions
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $actions Default actions
+	 * @return array Default actions
+	 */
+	public function tml_default_actions( $actions ) {
+		$actions[] = 'activate';
+		return $actions;
 	}
 
 	/**
