@@ -39,6 +39,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), 10 );
 
 		add_filter( 'tml_page_link',    array( &$this, 'tml_page_link'    ), 10, 3 );
+		add_filter( 'tml_action_url',   array( &$this, 'tml_action_url'   ), 10, 3 );
 		add_filter( 'tml_redirect_url', array( &$this, 'tml_redirect_url' ), 10, 2 );
 	}
 
@@ -48,11 +49,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		if ( $theme_my_login->is_login_page() && isset( $_GET['ajax'] ) ) {
 			define( 'DOING_AJAX', true );
 
-			$data = $theme_my_login->shortcode( apply_filters( 'tml_ajax_params', array(
-				'gravatar_size' => 100,
-				'before_title'  => '<h2>',
-				'after_title'   => '</h2>'
-			) ) );
+			$instance =& $theme_my_login->get_instance();
+
+			$instance->set_option( 'default_action', ! empty( $theme_my_login->request_page ) ? $theme_my_login->request_page : 'login' );
+			$instance->set_option( 'gravatar_size', 75    );
+			$instance->set_option( 'before_title', '<h2>' );
+			$instance->set_option( 'after_title', '</h2>' );
+
+			$data = $instance->display();
 
 			$x = new WP_Ajax_Response( array(
 				'what'   => 'login',
@@ -77,10 +81,16 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	public function tml_page_link( $link, $action, $query ) {
 		if ( did_action( 'parse_request' ) && in_array( $action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
 			$link = add_query_arg( array(
-				'ajax'     => 1,
-				'instance' => 1
+				'ajax' => 1
 			), $link );
 		return $link;
+	}
+
+	public function tml_action_url( $url, $action, $instance ) {
+		global $theme_my_login;
+		if ( $theme_my_login->is_login_page() && in_array( $theme_my_login->request_action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
+			$url = $theme_my_login->get_page_link( $action, 'ajax=1' );
+		return $url;
 	}
 
 	public function tml_redirect_url( $url, $action ) {
