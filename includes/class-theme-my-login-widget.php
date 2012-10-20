@@ -38,6 +38,20 @@ class Theme_My_Login_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		global $theme_my_login;
 
+		$instance = wp_parse_args( $instance, array(
+			'default_action'      => 'login',
+			'logged_in_widget'    => true,
+			'logged_out_widget'   => true,
+			'show_title'          => true,
+			'show_log_link'       => true,
+			'show_reg_link'       => true,
+			'show_pass_link'      => true,
+			'show_gravatar'       => true,
+			'gravatar_size'       => 50,
+			'register_widget'     => false,
+			'lostpassword_widget' => false
+		) );
+
 		// Show if logged in?
 		if ( is_user_logged_in() && ! $instance['logged_in_widget'] )
 			return;
