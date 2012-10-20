@@ -397,7 +397,7 @@ class Theme_My_Login_MS_Signup {
 	public function tml_display_activate( &$template ) {
 		global $blog_id;
 
-		echo '<div class="login" id="theme-my-login' . esc_attr( $template->instance ) . '">';
+		echo '<div class="login" id="theme-my-login' . esc_attr( $template->get_options( 'instance' ) ) . '">';
 
 		if ( empty( $_GET['key'] ) && empty( $_POST['key'] ) ) { ?>
 
