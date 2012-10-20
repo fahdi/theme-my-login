@@ -42,9 +42,11 @@ class Theme_My_Login_MS_Signup {
 		add_action( 'switch_blog',   array( &$theme_my_login, 'load_options'  ) );
 		add_action( 'wpmu_new_blog', array( &$this,           'wpmu_new_blog' ), 10, 2 );
 
-		add_filter( 'site_url',         array( &$this, 'site_url'  ), 10, 3 );
-		add_filter( 'network_site_url', array( &$this, 'site_url'  ), 10, 3 );
-		add_filter( 'clean_url',        array( &$this, 'clean_url' ), 10, 3 );
+		add_filter( 'site_url',         array( &$this, 'site_url'         ),  9, 3 );
+		add_filter( 'home_url',         array( &$this, 'site_url'         ),  9, 3 );
+		add_filter( 'network_site_url', array( &$this, 'network_site_url' ), 10, 3 );
+		add_filter( 'network_home_url', array( &$this, 'network_site_url' ), 10, 3 );
+		add_filter( 'clean_url',        array( &$this, 'clean_url'        ), 10, 3 );
 	}
 
 	/**
@@ -72,10 +74,7 @@ class Theme_My_Login_MS_Signup {
 		}
 
 		if ( ! is_main_site() ) {
-			switch_to_blog( $current_site->blog_id );
-			$redirect_to = $theme_my_login->get_page_link( 'register' );
-			restore_current_blog();
-			wp_redirect( $redirect_to );
+			wp_redirect( network_home_url( 'wp-signup.php' ) );
 			exit;
 		}
 	}
@@ -485,14 +484,14 @@ class Theme_My_Login_MS_Signup {
 			require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
 			switch_to_blog( $blog_id );
 			$admin = new Theme_My_Login_Admin();
-			$admin->_install();
+			$admin->install();
 			unset( $admin );
 			restore_current_blog();
 		}
 	}
 
 	/**
-	 * Rewrites URL's containing wp-login.php created by site_url()
+	 * Rewrites URL's created by site_url containing wp-signup.php or wp-activate.php
 	 *
 	 * @since 6.1
 	 * @access public
@@ -505,30 +504,38 @@ class Theme_My_Login_MS_Signup {
 	public function site_url( $url, $path, $orig_scheme ) {
 		global $theme_my_login, $pagenow;
 
-		$actions = array( 'wp-signup.php' => 'register', 'wp-activate.php' => 'activate', 'wp-login.php' => '' );
+		if ( in_array( $pagenow, array( 'wp-login.php', 'wp-signup.php', 'wp-activate.php' ) ) )
+			return $url;
+
+		$actions = array(
+			'wp-signup.php'   => 'register',
+			'wp-activate.php' => 'activate'
+		);
 
 		foreach ( $actions as $page => $action ) {
-			if ( false !== strpos( $url, $page )  && $pagenow != $page ) {
-				// Parse the URL
-				$parsed_url = parse_url( $url );
-
-				// Extract the query string
-				$query = array();
-				if ( isset( $parsed_url['query'] ) ) {
-					wp_parse_str( $parsed_url['query'], $r );
-					$query = array_map( 'rawurlencode', $r );
-				}
-
-				// Get the login page link along with the query
-				$url = $theme_my_login->get_page_link( $action, $query );
-
-				// Check if HTTPS is needed
-				if ( 'https' == strtolower( $orig_scheme ) )
-					$url = preg_replace( '|^http://|', 'https://', $url );
-
+			if ( false !== strpos( $url, $page ) ) {
+				$url = add_query_arg( 'action', $action, str_replace( $page, 'wp-login.php', $url ) );
 				break;
 			}
 		}
+		return $url;
+	}
+
+	/**
+	 * Rewrites URL's created by network_site_url
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $url The URL
+	 * @param string $path The path specified
+	 * @param string $orig_scheme The current connection scheme (HTTP/HTTPS)
+	 * @return string The modified URL
+	 */
+	public function network_site_url( $url, $path, $orig_scheme ) {
+		global $theme_my_login, $current_site;
+		$url = $this->site_url( $url, $path, $orig_scheme );
+		$url = $theme_my_login->site_url( $url, $path, $orig_scheme, $current_site->blog_id );
 		return $url;
 	}
 
