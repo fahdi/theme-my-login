@@ -343,6 +343,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 		$this->set_option( 'version', $plugin_data['Version'] );
 		$this->save_options();
+
+		// Generate permalinks
+		flush_rewrite_rules();
 	}
 
 	/**
