@@ -6,7 +6,7 @@
  * @since 6.1
  */
 
-if ( !class_exists( 'Theme_My_Login_MS_Signup' ) ) :
+if ( ! class_exists( 'Theme_My_Login_MS_Signup' ) ) :
 /*
  * Theme My Login multisite signup class
  *
@@ -37,15 +37,14 @@ class Theme_My_Login_MS_Signup {
 		add_action( 'tml_request_activate', array( &$this, 'tml_request_activate' ) );
 		add_action( 'tml_display_register', array( &$this, 'tml_display_register' ) );
 		add_action( 'tml_display_activate', array( &$this, 'tml_display_activate' ) );
-		add_filter( 'tml_title', array( &$this, 'tml_title' ), 10, 2 );
+		add_filter( 'tml_title',            array( &$this, 'tml_title'            ), 10, 2 );
 
-		add_action( 'switch_blog', array( &$theme_my_login, 'load_options' ) );
-		add_action( 'wpmu_new_blog', array( &$this, 'wpmu_new_blog' ), 10, 2 );
+		add_action( 'switch_blog',   array( &$theme_my_login, 'load_options'  ) );
+		add_action( 'wpmu_new_blog', array( &$this,           'wpmu_new_blog' ), 10, 2 );
 
-		add_filter( 'site_url', array( &$this, 'site_url' ), 10, 3 );
-		add_filter( 'network_site_url', array( &$this, 'site_url' ), 10, 3 );
-
-		add_filter( 'clean_url', array( &$this, 'clean_url' ), 10, 3 );
+		add_filter( 'site_url',         array( &$this, 'site_url'  ), 10, 3 );
+		add_filter( 'network_site_url', array( &$this, 'site_url'  ), 10, 3 );
+		add_filter( 'clean_url',        array( &$this, 'clean_url' ), 10, 3 );
 	}
 
 	/**
@@ -72,7 +71,7 @@ class Theme_My_Login_MS_Signup {
 			exit;
 		}
 
-		if ( !is_main_site() ) {
+		if ( ! is_main_site() ) {
 			switch_to_blog( $current_site->blog_id );
 			$redirect_to = $theme_my_login->get_page_link( 'register' );
 			restore_current_blog();
@@ -96,10 +95,10 @@ class Theme_My_Login_MS_Signup {
 
 		do_action( 'before_signup_form' );
 
-		echo '<div class="login mu_register" id="theme-my-login' . esc_attr( $template->instance ) . '">';
+		echo '<div class="login mu_register" id="theme-my-login' . esc_attr( $template->get_option( 'instance' ) ) . '">';
 
 		$active_signup = get_site_option( 'registration' );
-		if ( !$active_signup )
+		if ( ! $active_signup )
 			$active_signup = 'all';
 
 		$active_signup = apply_filters( 'wpmu_active_signup', $active_signup ); // return "all", "none", "blog" or "user"
@@ -118,7 +117,7 @@ class Theme_My_Login_MS_Signup {
 		$current_user = wp_get_current_user();
 		if ( $active_signup == "none" ) {
 			_e( 'Registration has been disabled.' );
-		} elseif ( $active_signup == 'blog' && !is_user_logged_in() ) {
+		} elseif ( $active_signup == 'blog' && ! is_user_logged_in() ) {
 			printf( __( 'You must first <a href="%s">log in</a>, and then you can create a new site.' ), wp_login_url( Theme_My_Login_Common::get_current_url() ) );
 		} else {
 			$stage = isset( $_POST['stage'] ) ?  $_POST['stage'] : 'default';
@@ -204,7 +203,7 @@ class Theme_My_Login_MS_Signup {
 					break;
 				case 'gimmeanotherblog':
 					$current_user = wp_get_current_user();
-					if ( !is_user_logged_in() )
+					if ( ! is_user_logged_in() )
 						die();
 
 					$result = wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'], $current_user );
@@ -400,7 +399,7 @@ class Theme_My_Login_MS_Signup {
 
 		<?php } else {
 
-			$key = !empty( $_GET['key'] ) ? $_GET['key'] : $_POST['key'];
+			$key = ! empty( $_GET['key'] ) ? $_GET['key'] : $_POST['key'];
 			$result = wpmu_activate_signup( $key );
 			if ( is_wp_error( $result ) ) {
 				if ( 'already_active' == $result->get_error_code() || 'blog_taken' == $result->get_error_code() ) {
