@@ -142,7 +142,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_filter( 'rewrite_rules_array',        array( &$this, 'rewrite_rules_array'        )        );
 		add_filter( 'the_posts',                  array( &$this, 'the_posts'                  ), 10, 2 );
 		add_filter( 'wp_setup_nav_menu_item',     array( &$this, 'wp_setup_nav_menu_item'     )        );
-		add_filter( 'site_url',                   array( &$this, 'site_url'                   ), 10, 3 );
+		add_filter( 'site_url',                   array( &$this, 'site_url'                   ), 10, 4 );
 		add_filter( 'logout_url',                 array( &$this, 'logout_url'                 ), 10, 2 );
 		add_filter( 'wp_list_pages',              array( &$this, 'wp_list_pages'              )        );
 		add_filter( 'redirect_canonical',         array( &$this, 'redirect_canonical'         ), 10, 2 );
@@ -545,9 +545,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 *
 	 * @param string $action The action of which URL to retrieve
 	 * @param string|array $query Optional. Query arguments to add to link
+	 * @param int $blog_id Blog ID
 	 * @return string Login page link with optional $query arguments appended
 	 */
-	function get_page_link( $action = 'login', $query = '' ) {
+	function get_page_link( $action = 'login', $query = '', $blog_id = null ) {
 		global $wp_rewrite;
 
 		if ( $wp_rewrite->using_permalinks() ) {
@@ -563,16 +564,16 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 			$link = $wp_rewrite->get_page_permastruct();
 			$link = str_replace( '%pagename%', $slug, $link );
-			$link = home_url( $link );
+			$link = get_home_url( $blog_id, $link );
 			$link = user_trailingslashit( $link, 'page' );
 		} else {
-			$link = home_url( "?pagename=$action" );
+			$link = get_home_url( $blog_id, "?pagename=$action" );
 		}
 
 		if ( ! empty( $query ) )
 			$link = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $query ) ), $link );
 
-		return apply_filters( 'tml_page_link', $link, $action, $query );
+		return apply_filters( 'tml_page_link', $link, $action, $query, $blog_id );
 	}
 
 	/**
@@ -721,9 +722,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @param string $url The URL
 	 * @param string $path The path specified
 	 * @param string $orig_scheme The current connection scheme (HTTP/HTTPS)
+	 * @param int $blog_id Blog ID
 	 * @return string The modified URL
 	 */
-	public function site_url( $url, $path, $orig_scheme ) {
+	public function site_url( $url, $path, $orig_scheme, $blog_id ) {
 		global $pagenow;
 
 		if ( 'wp-login.php' != $pagenow && false !== strpos( $url, 'wp-login.php' ) && ! isset( $_REQUEST['interim-login'] ) ) {
@@ -739,7 +741,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				unset( $q['action'] );
 			}
 
-			$url = $this->get_page_link( $action, $q );
+			$url = $this->get_page_link( $action, $q, $blog_id );
 
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
