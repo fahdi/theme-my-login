@@ -35,12 +35,13 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'parse_request',      array( &$this, 'parse_request'      ), 11 );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ), 10 );
+		add_action( 'parse_request',         array( &$this, 'parse_request'         ), 11    );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts'    ), 10    );
 
-		add_filter( 'tml_page_link',    array( &$this, 'tml_page_link'    ), 10, 3 );
-		add_filter( 'tml_action_url',   array( &$this, 'tml_action_url'   ), 10, 3 );
-		add_filter( 'tml_redirect_url', array( &$this, 'tml_redirect_url' ), 10, 2 );
+		add_filter( 'tml_page_link',         array( &$this, 'tml_page_link'         ), 10, 3 );
+		add_filter( 'tml_action_url',        array( &$this, 'tml_action_url'        ), 10, 3 );
+		add_filter( 'tml_redirect_url',      array( &$this, 'tml_redirect_url'      ), 10, 2 );
+		add_filter( 'tml_menu_item_classes', array( &$this, 'tml_menu_item_classes' )        );
 	}
 
 	public function parse_request() {
@@ -113,6 +114,11 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 				$url = add_query_arg( 'instance', $_GET['instance'], $url );
 		}
 		return $url;
+	}
+
+	public function tml_menu_item_classes( $classes ) {
+		$classes[] = 'tml_ajax_link';
+		return $classes;
 	}
 }
 endif; // Class exists

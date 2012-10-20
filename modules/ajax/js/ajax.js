@@ -9,7 +9,7 @@ var tmlAjax;
 		content : $('<div id="tml_ajax_content" />'),
 
 		init : function() {
-			$('li.tml_login_link a, a.tml_login_link')
+			$('li.tml_ajax_link a, a.tml_ajax_link')
 				.attr('href', function(i, href) {
 					if (href.indexOf('?') === -1)
 						return href + '?ajax=1';
