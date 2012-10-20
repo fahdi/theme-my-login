@@ -595,6 +595,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				$link = wp_login_url();
 				$classes[] = 'tml_login_link';
 			}
+			$classes = apply_filters( 'tml_menu_item_classes', $classes );
+
 			$output .= '<li class="' . implode( ' ', $classes ) . '"><a href="' . $link . '">' . $title . '</a></li>';
 		}
 		return $output;
@@ -630,6 +632,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				} else {
 					$menu_item->classes[] = 'tml_login_link';
 				}
+				$menu_item->classes = apply_filters( 'tml_menu_item_classes', $menu_item->classes );
 			}
 		}
 		return $menu_item;
