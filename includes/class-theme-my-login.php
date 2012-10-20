@@ -458,7 +458,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function wp() {
+		global $withcomments;
+
 		if ( $this->is_login_page() ) {
+			$withcomments = false;
+
 			do_action( 'login_init' );
 
 			remove_action( 'wp_head', 'feed_links',                       2 );
