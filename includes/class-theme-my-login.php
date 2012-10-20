@@ -104,14 +104,19 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @return array Default actions
 	 */
 	public function default_actions() {
-		return apply_filters( 'tml_default_actions', array(
+		$actions = array(
 			'login',
 			'logout',
 			'lostpassword',
 			'postpass',
 			'register',
 			'resetpass'
-		) );
+		);
+
+		if ( is_multisite() )
+			$actions[] = 'activate';
+
+		return apply_filters( 'tml_default_actions', $actions );
 	}
 
 	/**

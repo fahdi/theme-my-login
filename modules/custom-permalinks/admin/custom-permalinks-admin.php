@@ -82,6 +82,9 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 			'logout'       => __( 'Log Out'       )
 		);
 
+		if ( is_multisite() )
+			$actions['activate'] = __( 'Activate' );
+
 		foreach ( $actions as $action => $name ) {
 			add_settings_field( $action, $name, array( &$this, 'settings_field_permalink' ), $this->options_key, 'general', array(
 				'action' => $action
