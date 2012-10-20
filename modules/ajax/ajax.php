@@ -117,7 +117,8 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function tml_menu_item_classes( $classes ) {
-		$classes[] = 'tml_ajax_link';
+		if ( ! is_user_logged_in() )
+			$classes[] = 'tml_ajax_link';
 		return $classes;
 	}
 }
