@@ -513,17 +513,11 @@ class Theme_My_Login_MS_Signup {
 				$parsed_url = parse_url( $url );
 
 				// Extract the query string
+				$query = array();
 				if ( isset( $parsed_url['query'] ) ) {
 					wp_parse_str( $parsed_url['query'], $r );
-					foreach ( $r as $k => $v ) {
-						if ( strpos( $v, ' ' ) !== false )
-							$r[$k] = rawurlencode( $v );
-					}
+					$query = array_map( 'rawurlencode', $r );
 				}
-
-				// Merge query args passed in by filter
-				if ( isset( $r ) )
-					$query = array_merge( $query, (array) $r );
 
 				// Get the login page link along with the query
 				$url = $theme_my_login->get_page_link( $action, $query );
