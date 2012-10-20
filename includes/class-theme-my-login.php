@@ -551,12 +551,12 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		global $wp_rewrite;
 
 		if ( $wp_rewrite->using_permalinks() ) {
-			switch ( $slug ) {
+			switch ( $action ) {
 				case 'retrievepassword' :
-					$slug = 'lostpassword';
+					$action = 'lostpassword';
 					break;
 				case 'rp' :
-					$slug = 'resetpass';
+					$action = 'resetpass';
 					break;
 			}
 			$slug = apply_filters( 'tml_page_link_slug', $action );
