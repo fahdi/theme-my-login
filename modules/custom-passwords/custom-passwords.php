@@ -3,8 +3,6 @@
  * Plugin Name: Custom Passwords
  * Description: Enabling this module will initialize and enable custom passwords. There are no other settings for this module.
  *
- * Class: Theme_My_Login_Custom_Passwords
- *
  * Holds the Theme My Login Custom Passwords class
  *
  * @package Theme_My_Login
@@ -20,6 +18,17 @@ if ( ! class_exists( 'Theme_My_Login_Custom_Passwords' ) ) :
  */
 class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.0
@@ -28,18 +37,18 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	protected function load() {
 		add_action( 'register_form',       array( &$this, 'password_fields' ) );
 		add_filter( 'registration_errors', array( &$this, 'password_errors' ) );
-		add_filter( 'random_password',     array( &$this, 'set_password' ) );
+		add_filter( 'random_password',     array( &$this, 'set_password'    ) );
 
-		add_action( 'signup_extra_fields',       array( &$this, 'ms_password_fields' ) );
+		add_action( 'signup_extra_fields',       array( &$this, 'ms_password_fields'       ) );
 		add_action( 'signup_hidden_fields',      array( &$this, 'ms_hidden_password_field' ) );
-		add_filter( 'wpmu_validate_user_signup', array( &$this, 'ms_password_errors' ) );
-		add_filter( 'add_signup_meta',           array( &$this, 'ms_save_password' ) );
+		add_filter( 'wpmu_validate_user_signup', array( &$this, 'ms_password_errors'       ) );
+		add_filter( 'add_signup_meta',           array( &$this, 'ms_save_password'         ) );
 
 		add_action( 'tml_new_user_registered', array( &$this, 'remove_default_password_nag' ) );
 		add_action( 'approve_user',            array( &$this, 'remove_default_password_nag' ) );
 
 		add_filter( 'tml_register_passmail_template_message', array( &$this, 'register_passmail_template_message' ) );
-		add_action( 'tml_request',                            array( &$this, 'action_messages' ) );
+		add_action( 'tml_request',                            array( &$this, 'action_messages'                    ) );
 
 		add_filter( 'register_redirect', array( &$this, 'register_redirect' ) );
 	}
@@ -54,9 +63,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function password_fields() {
-		global $theme_my_login;
-
-		$template =& $theme_my_login->get_active_instance();
+		$template =& Theme_My_Login::get_object()->get_active_instance();
 		?>
 		<p><label for="pass1<?php $template->the_instance(); ?>"><?php _e( 'Password' ); ?></label>
 		<input autocomplete="off" name="pass1" id="pass1<?php $template->the_instance(); ?>" class="input" size="20" value="" type="password" /></p>
@@ -75,7 +82,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function ms_password_fields() {
-		global $theme_my_login;
+		$theme_my_login = Theme_My_Login::get_object();
 
 		$template =& $theme_my_login->get_active_instance();
 
@@ -294,5 +301,8 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 		return $redirect_to;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Passwords::get_object();
+
+endif;
 

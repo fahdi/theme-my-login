@@ -5,7 +5,7 @@
  * @package Theme_My_Login
  */
 
-if ( !class_exists( 'Theme_My_Login_Widget' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Widget' ) ) :
 /*
  * Theme My Login widget class
  *
@@ -36,7 +36,8 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 * @param array $instance The settings for the particular instance of the widget
 	 */
 	public function widget( $args, $instance ) {
-		global $theme_my_login;
+
+		$theme_my_login = Theme_My_Login::get_object();
 
 		$instance = wp_parse_args( $instance, array(
 			'default_action'      => 'login',

@@ -3,9 +3,6 @@
  * Plugin Name: Custom Redirection
  * Description: Enabling this module will initialize custom redirection. You will then have to configure the settings via the "Redirection" tab.
  *
- * Class: Theme_My_Login_Custom_Redirection
- * Admin Class: Theme_My_Login_Custom_Redirection_Admin
- *
  * Holds Theme My Login Custom Redirection class
  *
  * @package Theme_My_Login
@@ -32,6 +29,17 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_redirection';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Called on Theme_My_Login_Abstract::__construct
 	 *
 	 * @since 6.0
@@ -51,7 +59,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -81,10 +89,7 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function login_form() {
-		global $theme_my_login;
-
-		$template =& $theme_my_login->get_active_instance();
-
+		$template =& Theme_My_Login::get_object()->get_active_instance();
 		echo wp_original_referer_field( false, $template->get_option( 'instance' ) ? 'current' : 'previous' ) . "\n";
 	}
 
@@ -128,11 +133,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 				$redirect_to = $redirection['login_url'];
 
 				// Allow a few user specific variables
-				$replace = array(
-					'%user_id%'    => $user->ID,
-					'%user_login%' => $user->user_login
-				);
-				$redirect_to = str_replace( array_keys( $replace ), array_values( $replace ), $redirect_to );
+				$redirect_to = Theme_My_Login_Common::replace_vars( $redirect_to, $user->ID, array(
+					'%user_id%' => $user->ID
+				) );
 			}
 		}
 
@@ -187,11 +190,9 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 				$redirect_to = $redirection['logout_url'];
 
 				// Allow a few user specific variables
-				$replace = array(
-					'%user_id%'    => $user->ID,
-					'%user_login%' => $user->user_login
-				);
-				$redirect_to = str_replace( array_keys( $replace ), array_values( $replace ), $redirect_to );
+				$redirect_to = Theme_My_Login_Common::replace_vars( $redirect_to, $user->ID, array(
+					'%user_id%' => $user->ID
+				) );
 			}
 		}
 
@@ -202,5 +203,12 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 		return $redirect_to;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Redirection::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( __FILE__ ) . '/admin/custom-redirection-admin.php' );
+
 

@@ -24,13 +24,24 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_themed_profiles';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.2
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_themed-profiles/themed-profiles.php',  array( &$this, 'activate' ) );
+		add_action( 'tml_activate_themed-profiles/themed-profiles.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_themed-profiles/themed-profiles.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -43,7 +54,7 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_Themed_Profiles::default_options();
 	}
 
@@ -98,10 +109,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles'       ), $this->options_key, 'general' );
 		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( &$this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
 
-		if ( $theme_my_login->is_module_loaded( 'custom-permalinks' ) ) {
-			$custom_permalinks_admin =& $theme_my_login->get_module( 'custom-permalinks-admin' );
-			add_settings_field( 'profile', __( 'Profile' ), array( &$custom_permalinks_admin, 'settings_field_permalink' ), 'theme_my_login_permalinks', 'general', array( 'action' => 'profile' ) );
-		}
+		if ( class_exists( 'Theme_My_Login_Custom_Permalinks' ) )
+			add_settings_field( 'profile', __( 'Profile' ), array( &$this, 'settings_field_permalink' ), 'theme_my_login_permalinks', 'general' );
 	}
 
 	/**
@@ -175,9 +184,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.2
 	 * @access public
 	 */
-	public function settings_field_permalink( $args = '' ) {
-		global $theme_my_login_custom_permalinks_admin;
-		$theme_my_login_custom_permalinks_admin->settings_field_permalink( array(
+	public function settings_field_permalink() {
+		Theme_My_Login_Custom_Permalinks_Admin::get_object()->settings_field_permalink( array(
 			'action' => 'profile'
 		) );
 	}
@@ -207,5 +215,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Themed_Profiles_Admin::get_object();
+
+endif;
 

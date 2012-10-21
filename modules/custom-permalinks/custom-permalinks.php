@@ -32,6 +32,17 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_permalinks';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.3
@@ -47,5 +58,11 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 		return $action;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Permalinks::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( __FILE__ ) . '/admin/custom-permalinks-admin.php' );
 

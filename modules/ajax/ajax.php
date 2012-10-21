@@ -29,6 +29,17 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	protected $ajax_actions = array( 'login', 'register', 'lostpassword' );
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.3
@@ -45,7 +56,8 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function parse_request() {
-		global $theme_my_login;
+
+		$theme_my_login = Theme_My_Login::get_object();
 
 		if ( $theme_my_login->is_login_page() && isset( $_GET['ajax'] ) ) {
 			define( 'DOING_AJAX', true );
@@ -88,26 +100,29 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function tml_action_url( $url, $action, $instance ) {
-		global $theme_my_login;
+
+		$theme_my_login = Theme_My_Login::get_object();
+
 		if ( $theme_my_login->is_login_page() && in_array( $theme_my_login->request_action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
-			$url = $theme_my_login->get_page_link( $action, 'ajax=1' );
+			$url = Theme_My_Login::get_page_link( $action, 'ajax=1' );
 		return $url;
 	}
 
 	public function tml_redirect_url( $url, $action ) {
-		global $theme_my_login;
+
+		$theme_my_login = Theme_My_Login::get_object();
 
 		if ( $theme_my_login->is_login_page() && in_array( $theme_my_login->request_action, $this->ajax_actions ) && isset( $_GET['ajax'] ) ) {
 			switch ( $action ) {
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					$url = $theme_my_login->get_page_link( 'login', 'checkemail=confirm&ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=confirm&ajax=1' );
 					break;
 				case 'register' :
-					$url = $theme_my_login->get_page_link( 'login', 'checkemail=registered&ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=registered&ajax=1' );
 					break;
 				case 'login' :
-					$url = $theme_my_login->get_page_link( 'login', 'ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'ajax=1' );
 					break;
 			}
 			if ( isset( $_GET['instance'] ) )
@@ -123,4 +138,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 }
 endif; // Class exists
+
+// Instantiate singleton
+Theme_My_Login_Ajax::get_object();
 

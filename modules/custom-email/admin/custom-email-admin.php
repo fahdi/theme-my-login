@@ -24,6 +24,17 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_email';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * Called by Theme_My_Login_Abstract::__construct()
@@ -33,7 +44,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_custom-email/custom-email.php',  array( &$this, 'activate' ) );
+		add_action( 'tml_activate_custom-email/custom-email.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_custom-email/custom-email.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -48,7 +59,7 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_Custom_Email::default_options();
 	}
 
@@ -87,7 +98,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
-		global $theme_my_login;
 
 		add_submenu_page(
 			'theme_my_login',
@@ -102,7 +112,9 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 		add_meta_box( 'new_user_admin', __( 'New User Admin',    'theme-my-login' ), array( &$this, 'new_user_admin_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
 		add_meta_box( 'retrieve_pass',  __( 'Retrieve Password', 'theme-my-login' ), array( &$this, 'retrieve_pass_meta_box' ),  'tml_page_' . $this->options_key, 'normal' );
 		add_meta_box( 'reset_pass',     __( 'Reset Password',    'theme-my-login' ), array( &$this, 'reset_pass_meta_box' ),     'tml_page_' . $this->options_key, 'normal' );
-		if ( $theme_my_login->is_module_loaded( 'user-moderation' ) ) {
+
+		// Check for User Moderation module
+		if ( class_exists( 'Theme_My_Login_User_Moderation' ) ) {
 			add_meta_box( 'user_activation',     __( 'User Activation',     'theme-my-login' ), array( &$this, 'user_activation_meta_box' ),     'tml_page_' . $this->options_key, 'normal' );
 			add_meta_box( 'user_approval',       __( 'User Approval',       'theme-my-login' ), array( &$this, 'user_approval_meta_box' ),       'tml_page_' . $this->options_key, 'normal' );
 			add_meta_box( 'user_approval_admin', __( 'User Approval Admin', 'theme-my-login'),  array( &$this, 'user_approval_admin_meta_box' ), 'tml_page_' . $this->options_key, 'normal' );
@@ -589,12 +601,10 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $settings ) {
-		global $theme_my_login;
-
 		$settings['new_user']['admin_disable']   = isset( $settings['new_user']['admin_disable'] );
 		$settings['reset_pass']['admin_disable'] = isset( $settings['reset_pass']['admin_disable'] );
 
-		if ( $theme_my_login->is_module_loaded( 'user-moderation' ) )
+		if ( class_exists( 'Theme_My_Login_User_Moderation' ) )
 			$settings['user_approval']['admin_disable'] = isset( $settings['user_approval']['admin_disable'] );
 
 		$settings = Theme_My_Login_Common::array_merge_recursive( $this->get_options(), $settings );
@@ -602,5 +612,8 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Email_Admin::get_object();
+
+endif;
 

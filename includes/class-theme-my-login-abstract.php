@@ -15,6 +15,15 @@ if ( !class_exists( 'Theme_My_Login_Abstract' ) ) :
  */
 abstract class Theme_My_Login_Abstract {
 	/**
+	 * Holds singleton objects
+	 *
+	 * @since 6.3
+	 * @access private
+	 * @var array
+	 */
+	private static $objects = array();
+
+	/**
 	 * Holds options key
 	 *
 	 * @since 6.3
@@ -40,11 +49,34 @@ abstract class Theme_My_Login_Abstract {
 	 * Constructor
 	 *
 	 * @since 6.3
-	 * @access public
+	 * @access private
 	 */
-	public function __construct() {
+	private function __construct() {
 		$this->load_options();
 		$this->load();
+	}
+
+	/**
+	 * Clone
+	 *
+	 * @since 6.3
+	 * @access private
+	 */
+	private function __clone() {}
+
+	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $class Class to instantiate
+	 * @return object Instance of $class
+	 */
+	public static function get_object( $class ) {
+		if ( ! isset( self::$objects[$class] ) )
+			self::$objects[$class] = new $class;
+		return self::$objects[$class];
 	}
 
 	/**
@@ -66,8 +98,10 @@ abstract class Theme_My_Login_Abstract {
 	 * @param array|string
 	 */
 	public function load_options() {
-		if ( method_exists( $this, 'default_options' ) )
-			$this->options = (array) $this->default_options();
+		if ( method_exists( $this, 'default_options' ) ) {
+			$class = get_class( $this );
+			$this->options = (array) $class::default_options();
+		}
 
 		if ( !$this->options_key )
 			return;

@@ -3,9 +3,6 @@
  * Plugin Name: reCAPTCHA
  * Description: Enabling this module will initialize reCAPTCHA. You will then have to configure the settings via the "reCAPTCHA" tab.
  *
- * Class: Theme_My_Login_Recaptcha
- * Admin Class: Theme_My_Login_Recaptcha_Admin
- *
  * Holds Theme My Login Recaptcha class
  *
  * @package Theme_My_Login
@@ -32,6 +29,17 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_recaptcha';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -39,7 +47,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return array(
 			'public_key'  => '',
 			'private_key' => '',
@@ -107,5 +115,11 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 		return $result;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Recaptcha::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( __FILE__ ) . '/admin/recaptcha-admin.php' );
 

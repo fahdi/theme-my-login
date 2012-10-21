@@ -6,7 +6,7 @@
  * @since 6.0
  */
 
-if ( !class_exists( 'Theme_My_Login_Admin' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Admin' ) ) :
 /**
  * Theme My Login Admin class
  *
@@ -23,12 +23,23 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return Theme_My_Login
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login::default_options();
 	}
 
@@ -354,7 +365,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.1
 	 * @access public
 	 */
-	public function uninstall() {
+	public static function uninstall() {
 		global $wpdb;
 
 		if ( is_multisite() ) {
@@ -377,7 +388,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.0
 	 * @access protected
 	 */
-	protected function _uninstall() {
+	protected static function _uninstall() {
 		global $theme_my_login;
 
 		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );

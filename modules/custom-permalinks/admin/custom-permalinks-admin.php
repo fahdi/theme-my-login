@@ -26,6 +26,17 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_permalinks';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * Called by Theme_My_Login_Abstract::__construct()
@@ -149,11 +160,10 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function settings_field_permalink( $args = '' ) {
-		global $theme_my_login;
 		extract( $args );
 		?>
 		<input name="<?php echo $this->options_key; ?>[<?php echo $action; ?>]" type="text" id="<?php echo $this->options_key; ?>_<?php echo $action; ?>" value="<?php echo $this->get_option( $action ); ?>" class="regular-text" />
-		<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo $theme_my_login->get_page_link( $action ); ?></span></p>
+		<p class="description"><strong><?php _e( 'Permalink:' ); ?></strong> <span id="sample-permalink"><?php echo Theme_My_Login::get_page_link( $action ); ?></span></p>
 		<?php
 	}
 
@@ -181,5 +191,8 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Permalinks_Admin::get_object();
+
+endif;
 

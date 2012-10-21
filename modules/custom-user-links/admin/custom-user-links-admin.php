@@ -24,6 +24,17 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_user_links';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * Called by Theme_My_Login_Abstract::__construct()
@@ -53,7 +64,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_login_Custom_User_Links::default_options();
 	}
 
@@ -197,7 +208,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 			$count = 0;
 			foreach ( $links as $key => $link ) {
 				$link['id'] = $key;
-				echo $this->get_link_row( $link, $role, $count );
+				echo self::get_link_row( $link, $role, $count );
 			}
 		} ?>
 		</tbody>
@@ -222,14 +233,14 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	 * Outputs a link row to the table
 	 *
 	 * @since 6.0
-	 * @access protected
+	 * @access public
 	 *
 	 * @param array $link Link data
 	 * @param string $role Name of user role
 	 * @param int $count Reference to counter variable
 	 * @return sring Link row
 	 */
-	protected function get_link_row( $link, $role, &$count ) {
+	public static function get_link_row( $link, $role, &$count ) {
 		$r = '';
 		++ $count;
 		if ( $count % 2 )
@@ -338,7 +349,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 					$x = new WP_Ajax_Response( array(
 						'what' => $role . '-link',
 						'id' => $link_row['id'],
-						'data' => $this->get_link_row( $link_row, $role, $c ),
+						'data' => self::get_link_row( $link_row, $role, $c ),
 						'position' => 1,
 						'supplemental' => array( 'user_role' => $role )
 					) );
@@ -370,7 +381,7 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 					'what' => $role . '-link',
 					'id' => $id,
 					'old_id' => $id,
-					'data' => $this->get_link_row( $link_row, $role, $c ),
+					'data' => self::get_link_row( $link_row, $role, $c ),
 					'position' => 0,
 					'supplemental' => array( 'user_role' => $role )
 				) );
@@ -415,5 +426,8 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 		die( '0' );
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_User_Links_Admin::get_object();
+
+endif;
 

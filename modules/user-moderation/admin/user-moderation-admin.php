@@ -24,13 +24,24 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_moderation';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Loads the module
 	 *
 	 * @since 6.0
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_user-moderation/user-moderation.php',   array( &$this, 'activate' ) );
+		add_action( 'tml_activate_user-moderation/user-moderation.php',   array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_user-moderation/user-moderation.php',  array( &$this, 'uninstall' ) );
 
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
@@ -41,7 +52,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
-		add_action( 'load-users.php',   array( &$this, 'load_users_page' ) );
+		add_action( 'load-users.php',   array( &$this, 'load_users_page'  )        );
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 
 		add_action( 'delete_user', array( &$this, 'deny_user' ) );
@@ -55,7 +66,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_User_Moderation::default_options();
 	}
 
@@ -101,9 +112,13 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function modules_loaded() {
 		if ( is_multisite() ) {
-			global $theme_my_login_modules_admin;
-			$theme_my_login_modules_admin->deactivate_modules( 'user-moderation/user-moderation.php' );
-			$theme_my_login_modules_admin->save_options();
+			$theme_my_login_admin = Theme_My_Login_Admin::get_object();
+
+			$active_modules = $theme_my_login_admin->get_option( 'active_modules' );
+			$active_modules = array_values( array_diff( $active_modules, array( 'user-moderation/user-moderation.php' ) ) );
+
+			$theme_my_login_admin->set_option( 'active_modules', $active_modules );
+			$theme_my_login_admin->save_options();
 			return;
 		}
 	}
@@ -224,7 +239,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 					case 'approve' :
 						check_admin_referer( 'approve-user' );
 
-						if ( ! $this->approve_user( $user ) )
+						if ( ! self::approve_user( $user ) )
 							wp_die( __( 'You can&#8217;t edit that user.' ) );
 
 						$redirect_to = add_query_arg( 'update', 'approve', $redirect_to );
@@ -317,7 +332,7 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * @param int $user_id User's ID
 	 * @return bool Returns false if not a valid user
 	 */
-	public function approve_user( $user_id ) {
+	public static function approve_user( $user_id ) {
 		global $wpdb, $current_site;
 
 		$user_id = (int) $user_id;
@@ -409,5 +424,8 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			  die( '<p>' . __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) . '</p>' );
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_User_Moderation_Admin::get_object();
+
+endif;
 

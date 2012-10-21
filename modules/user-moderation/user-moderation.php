@@ -3,9 +3,6 @@
  * Plugin Name: User Moderation
  * Description: Enabling this module will initialize user moderation. You will then have to configure the settings via the "Moderation" tab.
  *
- * Class: Theme_My_Login_User_Moderation
- * Admin Class: Theme_My_Login_User_Moderation_Admin
- *
  * Holds Theme My Login User Moderation class
  *
  * @packagae Theme_My_Login
@@ -32,6 +29,17 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_moderation';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -39,7 +47,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return array(
 			'type' => 'none'
 		);
@@ -57,13 +65,13 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 
 		if ( in_array( $this->get_option( 'type' ), array( 'admin', 'email' ) ) ) {
 
-			add_action( 'register_post',     array( &$this, 'register_post' ) );
+			add_action( 'register_post',     array( &$this, 'register_post'     )      );
 			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
 
-			add_action( 'authenticate',         array( &$this, 'authenticate' ), 100, 3 );
-			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ), 10, 2 );
+			add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
+			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
 
-			add_action( 'tml_request',            array( &$this, 'action_messages' ) );
+			add_action( 'tml_request',            array( &$this, 'action_messages'    )        );
 			add_action( 'tml_new_user_activated', array( &$this, 'new_user_activated' ), 10, 2 );
 
 			if ( 'email' == $this->get_option( 'type' ) ) {
@@ -80,14 +88,13 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function register_post() {
-		global $theme_my_login;
-
 		// Remove default new user notification
 		if ( has_action( 'tml_new_user_registered', 'wp_new_user_notification' ) )
 			remove_action( 'tml_new_user_registered', 'wp_new_user_notification', 10, 2 );
 
 		// Remove Custom Email new user notification
-		if ( $custom_email =& $theme_my_login->get_module( 'custom-email' ) ) {
+		if ( class_exists( 'Theme_My_Login_Custom_Email' ) ) {
+			$custom_email = Theme_My_Login_Custom_Email::get_object();
 			if ( has_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ) ) )
 				remove_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ), 10, 2 );
 		}
@@ -109,9 +116,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @return string URL to redirect to
 	 */
 	public function register_redirect( $redirect_to ) {
-		global $theme_my_login;
+		$theme_my_login = Theme_My_Login::get_object();
 
-		$redirect_to = $theme_my_login->get_page_link();
+		$redirect_to = Theme_My_Login::get_page_link();
 
 		if ( ! empty( $theme_my_login->request_instance ) )
 			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'instance' => $theme_my_login->request_instance ) );
@@ -143,7 +150,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @return WP_User|WP_Error WP_User if the user can login, WP_Error otherwise
 	 */
 	public function authenticate( $user, $username, $password ) {
-		global $theme_my_login, $wpdb;
+		global $wpdb;
 
 		$cap_key = $wpdb->prefix . 'capabilities';
 
@@ -152,7 +159,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 				if ( 'email' == $this->get_option( 'type' ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
-						$theme_my_login->get_page_link( 'sendactivation', array(
+						Theme_My_Login::get_page_link( 'sendactivation', array(
 							'login' => $username
 						) )
 					) );
@@ -263,13 +270,15 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		if ( 'email' == $this->get_option( 'type' ) ) {
 			// Generate an activation key
 			$key = wp_generate_password( 20, false );
+
 			// Set the activation key for the user
 			$wpdb->update( $wpdb->users, array( 'user_activation_key' => $key ), array( 'user_login' => $user->user_login ) );
+
 			// Send activation e-mail
-			$this->new_user_activation_notification( $user_id, $key );
+			self::new_user_activation_notification( $user_id, $key );
 		} elseif ( 'admin' == $this->get_option( 'type' ) ) {
 			// Send approval e-mail
-			$this->new_user_approval_admin_notification( $user_id );
+			self::new_user_approval_admin_notification( $user_id );
 		}
 	}
 
@@ -284,7 +293,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 */
 	public function user_activation() {
 		// Attempt to activate the user
-		$errors = $this->activate_new_user( $_GET['key'], $_GET['login'] );
+		$errors = self::activate_new_user( $_GET['key'], $_GET['login'] );
 
 		$redirect_to = Theme_My_Login_Common::get_current_url();
 
@@ -307,7 +316,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @since 6.0
 	 * @access public
 	 */
-	public function send_activation() {
+	public static function send_activation() {
 		global $wpdb;
 
 		$login = isset( $_GET['login'] ) ? trim( $_GET['login'] ) : '';
@@ -322,7 +331,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 
 		if ( in_array( 'pending', (array) $user->roles ) ) {
 			// Send activation e-mail
-			$this->new_user_activation_notification( $user->ID );
+			self::new_user_activation_notification( $user->ID );
 			// Now redirect them
 			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'sendactivation' => 'sent' ) );
 			wp_redirect( $redirect_to );
@@ -340,7 +349,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @param string $login User's username for logging in
 	 * @return bool|WP_Error True if successful, WP_Error otherwise
 	 */
-	public function activate_new_user( $key, $login ) {
+	public static function activate_new_user( $key, $login ) {
 		global $wpdb;
 
 		$key = preg_replace('/[^a-z0-9]/i', '', $key);
@@ -410,7 +419,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @param int $user_id The user's ID
 	 * @param string $key The unique activation key
 	 */
-	public function new_user_activation_notification( $user_id, $key = '' ) {
+	public static function new_user_activation_notification( $user_id, $key = '' ) {
 		global $wpdb, $current_site;
 
 		$user = new WP_User( $user_id );
@@ -454,7 +463,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @param int $user_id The user's ID
 	 */
-	public function new_user_approval_admin_notification( $user_id ) {
+	public static function new_user_approval_admin_notification( $user_id ) {
 		global $current_site;
 
 		$user = new WP_User( $user_id );
@@ -486,5 +495,11 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		@wp_mail( $to, $title, $message );
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_User_Moderation::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( __FILE__ ) . '/admin/user-moderation-admin.php' );
 

@@ -20,52 +20,24 @@ require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-widget.php' );
 
-/**
- * Theme My Login object
- * @global object $theme_my_login_object
- * @since 6.0
- */
-$GLOBALS['theme_my_login'] = new Theme_My_Login;
-
-/**
- * Include active module files
- */
-foreach ( $GLOBALS['theme_my_login']->get_option( 'active_modules', array() ) as $module ) {
-	include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
-}
-unset( $module );
+// Instantiate Theme_My_Login singleton
+Theme_My_Login::get_object();
 
 if ( is_admin() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
-	/**
-	 * Theme My Login Admin object
-	 * @global object $theme_my_login_admin
-	 * @since 6.0
-	 */
-	$GLOBALS['theme_my_login_admin'] = new Theme_My_Login_Admin;
 
-	/**
-	 * Include active module admin files
-	 */
-	foreach ( $GLOBALS['theme_my_login']->get_option( 'active_modules', array() ) as $module ) {
-		$admin_file = dirname( $module ) . '/admin/' . basename( $module, '.php' ) . '-admin.php';
-		if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $admin_file ) )
-			include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $admin_file );
-	}
-	unset( $module );
+	// Instantiate Theme_My_Login_Admin singleton
+	Theme_My_Login_Admin::get_object();
 }
 
 if ( is_multisite() ) {
 	require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-ms-signup.php' );
-	/**
-	 * Theme My Login MS Signup object
-	 * @global object $theme_my_login_ms_signup
-	 * @since 6.1
-	 */
-	$GLOBALS['theme_my_login_ms_signup'] = new Theme_My_Login_MS_Signup;
+
+	// Instantiate Theme_My_Login_MS_Signup singleton
+	Theme_My_Login_MS_Signup::get_object();
 }
 
-if ( !function_exists( 'theme_my_login' ) ) :
+if ( ! function_exists( 'theme_my_login' ) ) :
 /**
  * Displays a TML instance
  *
@@ -75,8 +47,7 @@ if ( !function_exists( 'theme_my_login' ) ) :
  * @param string|array $args Template tag arguments
  */
 function theme_my_login( $args = '' ) {
-	global $theme_my_login;
-	echo $theme_my_login->shortcode( wp_parse_args( $args ) );
+	Theme_My_Login::get_object()->shortcode( wp_parse_args( $args ) );
 }
 endif;
 

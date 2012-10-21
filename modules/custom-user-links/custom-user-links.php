@@ -3,9 +3,6 @@
  * Plugin Name: Custom User Links
  * Description: Enabling this module will initialize custom user links. You will then have to configure the settings via the "User Links" tab.
  *
- * Class: Theme_My_Login_Custom_User_Links
- * Admin Class: Theme_My_Login_Custom_User_Links_Admin
- *
  * Holds Theme My Login Custom User Links class
  *
  * @package Theme_My_Login
@@ -32,6 +29,17 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_user_links';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -39,7 +47,7 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -51,11 +59,11 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 				$options[$role] = array(
 					array(
 						'title' => __( 'Dashboard' ),
-						'url' => admin_url()
+						'url'   => admin_url()
 					),
 					array(
 						'title' => __( 'Profile' ),
-						'url' => admin_url( 'profile.php' )
+						'url'   => admin_url( 'profile.php' )
 					)
 				);
 			}
@@ -106,11 +114,17 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 
 		// Replace variables in link
 		foreach ( (array) $links as $key => $link ) {
-			$links[$key]['url'] = str_replace( array_keys( $replacements ), array_values( $replacements ), $link['url'] );
+			$links[$key]['url'] = Theme_My_Login_Common::replace_vars( $link['url'], $current_user->ID, $replacements );
 		}
 
 		return $links;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_User_Links::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( __FILE__ ) . '/admin/custom-user-links-admin.php' );
 

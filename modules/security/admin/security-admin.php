@@ -24,13 +24,24 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_security';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
 	 * @access public
 	 * @var array
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_Security::default_options();
 	}
 
@@ -41,13 +52,13 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_security/security.php', array( &$this, 'activate' ) );
+		add_action( 'tml_activate_security/security.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_security/security.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
-		add_action( 'load-users.php', array( &$this, 'load_users_page' ) );
+		add_action( 'load-users.php',   array( &$this, 'load_users_page'  )        );
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
 	}
 
@@ -162,8 +173,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 		// Units
 		$units = array(
 			'minute' => __( 'minute(s)', 'theme-my-login' ),
-			'hour'   => __( 'hour(s)', 'theme-my-login'   ),
-			'day'    => __( 'day(s)', 'theme-my-login'    )
+			'hour'   => __( 'hour(s)',   'theme-my-login' ),
+			'day'    => __( 'day(s)',    'theme-my-login' )
 		);
 
 		// Threshold
@@ -228,7 +239,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function load_users_page() {
-		global $theme_my_login_security;
+
+		$security = Theme_My_Login_Security::get_object();
 
 		wp_enqueue_script( 'tml-security-admin', plugins_url( 'theme-my-login/modules/security/admin/js/security-admin.js' ), array( 'jquery' ) );
 
@@ -248,13 +260,13 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 			if ( 'lock' == $_GET['action'] ) {
 				check_admin_referer( 'lock-user_' . $user->ID );
 
-				$theme_my_login_security->lock_user( $user );
+				$security->lock_user( $user );
 
 				$redirect_to = add_query_arg( 'update', 'lock', $redirect_to );
 			} elseif ( 'unlock' == $_GET['action'] ) {
 				check_admin_referer( 'unlock-user_' . $user->ID );
 
-				$theme_my_login_security->unlock_user( $user );
+				$security->unlock_user( $user );
 
 				$redirect_to = add_query_arg( 'update', 'unlock', $redirect_to );
 			}
@@ -308,5 +320,8 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 		return $actions;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Security_Admin::get_object();
+
+endif;
 

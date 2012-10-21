@@ -24,12 +24,23 @@ class Theme_My_Login_Recaptcha_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_recaptcha';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_Recaptcha::default_options();
 	}
 
@@ -184,7 +195,7 @@ class Theme_My_Login_Recaptcha_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $input ) {
-		$output = $defaults = $this->default_options();
+		$output = $defaults = self::default_options();
 
 		$output['public_key']  = strip_tags( $input['public_key'] );
 		$output['private_key'] = strip_tags( $input['private_key'] );
@@ -194,5 +205,8 @@ class Theme_My_Login_Recaptcha_Admin extends Theme_My_Login_Abstract {
 		return $output;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Recaptcha_Admin::get_object();
+
+endif;
 

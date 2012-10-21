@@ -70,13 +70,15 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	protected $loaded_instances = array();
 
 	/**
-	 * Holds loaded modules
+	 * Returns singleton instance
 	 *
 	 * @since 6.3
-	 * @access protected
-	 * @var array
+	 * @access public
+	 * @return object
 	 */
-	protected $loaded_modules = array();
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
 
 	/**
 	 * Returns default options
@@ -86,7 +88,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return array(
 			'show_page' => true,
 			'enable_css' => true,
@@ -103,7 +105,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default actions
 	 */
-	public function default_actions() {
+	public static function default_actions() {
 		$actions = array(
 			'login',
 			'logout',
@@ -161,7 +163,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function plugins_loaded() {
 		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
-			$this->load_module( $module );
+			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+				include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 		}
 		do_action_ref_array( 'tml_modules_loaded', array( &$this ) );
 	}
@@ -180,7 +183,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		$this->errors = new WP_Error();
 
 		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
-			wp_enqueue_style( 'theme-my-login', Theme_My_Login::get_stylesheet(), false, $this->get_option( 'version' ) );
+			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->get_option( 'version' ) );
 	}
 
 	/**
@@ -206,7 +209,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function is_login_page( $action = '' ) {
 		if ( empty( $action ) )
 			$action = $this->request_page;
-		return apply_filters( 'tml_is_login_page', in_array( $action, $this->default_actions() ) );
+		return apply_filters( 'tml_is_login_page', in_array( $action, self::default_actions() ) );
 	}
 
 	/**
@@ -218,12 +221,12 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @param array $rules Rewrite rules
 	 * @return array Rewrite rules
 	 */
-	function rewrite_rules_array( $rules ) {
+	public function rewrite_rules_array( $rules ) {
 		if ( defined( 'WP_INSTALLING' ) )
 			return $rules;
 
 		$tml_rules = array();
-		foreach ( $this->default_actions() as $action ) {
+		foreach ( self::default_actions() as $action ) {
 			$slug = apply_filters( 'tml_page_link_slug', $action );
 			$slug = trim( $slug, '/' );
 			if ( empty( $slug ) )
@@ -293,7 +296,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				case 'lostpassword' :
 				case 'retrievepassword' :
 					if ( $http_post ) {
-						$this->errors = $this->retrieve_password();
+						$this->errors = self::retrieve_password();
 						if ( ! is_wp_error( $this->errors ) ) {
 							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' );
 							wp_safe_redirect( $redirect_to );
@@ -308,11 +311,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					break;
 				case 'resetpass' :
 				case 'rp' :
-					$user = $this->check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
+					$user = self::check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error( $user ) ) {
 						if ( $this->is_login_page() && ! $this->request_instance )
-							$redirect_to = $this->get_page_link( 'lostpassword', 'error=invalidkey' );
+							$redirect_to = self::get_page_link( 'lostpassword', 'error=invalidkey' );
 						else
 							$redirect_to = Theme_My_Login_Common::get_current_url( 'action=lostpassword&error=invalidkey' );
 						wp_redirect( $redirect_to );
@@ -322,10 +325,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					if ( isset( $_POST['pass1'] ) && $_POST['pass1'] != $_POST['pass2'] ) {
 						$this->errors->add( 'password_reset_mismatch', __( 'The passwords do not match.' ) );
 					} elseif ( isset( $_POST['pass1'] ) && ! empty( $_POST['pass1'] ) ) {
-						$this->reset_password( $user, $_POST['pass1'] );
+						self::reset_password( $user, $_POST['pass1'] );
 
 						if ( $this->is_login_page() && ! $this->request_instance )
-							$redirect_to = $this->get_page_link( 'login', 'resetpass=complete' );
+							$redirect_to = self::get_page_link( 'login', 'resetpass=complete' );
 						else
 							$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
 						wp_safe_redirect( $redirect_to );
@@ -338,7 +341,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				case 'register' :
 					if ( ! get_option( 'users_can_register' ) ) {
 						if ( $this->is_login_page() && ! $this->request_instance )
-							$redirect_to = $this->get_page_link( 'login', 'registration=disabled' );
+							$redirect_to = self::get_page_link( 'login', 'registration=disabled' );
 						else
 							$redirect_to = Theme_My_Login_Common::get_current_url( 'registration=disabled' );
 						wp_redirect( $redirect_to );
@@ -351,7 +354,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 						$user_login = $_POST['user_login'];
 						$user_email = $_POST['user_email'];
 
-						$this->errors = Theme_My_Login::register_new_user( $user_login, $user_email );
+						$this->errors = self::register_new_user( $user_login, $user_email );
 						if ( ! is_wp_error( $this->errors ) ) {
 							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=registered' );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
@@ -522,13 +525,15 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @return object Login page object
 	 */
 	public function get_page_object( $args = '' ) {
+		$template =& $this->get_instance();
+
 		$defaults = array(
 			'ID'                    => -999999,
 			'post_author'           => 1,
 			'post_date'             => 0,
 			'post_date_gmt'         => 0,
 			'post_content'          => '[theme-my-login]',
-			'post_title'            => Theme_My_Login_Template::get_title( $this->request_page ),
+			'post_title'            => $template->get_title( $this->request_page ),
 			'post_excerpt'          => '',
 			'post_status'           => 'publish',
 			'comment_status'        => 'closed',
@@ -563,7 +568,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @param int $blog_id Blog ID
 	 * @return string Login page link with optional $query arguments appended
 	 */
-	function get_page_link( $action = 'login', $query = '', $blog_id = null ) {
+	public static function get_page_link( $action = 'login', $query = '', $blog_id = null ) {
 		global $wp_rewrite;
 
 		if ( $wp_rewrite->using_permalinks() ) {
@@ -640,7 +645,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function wp_setup_nav_menu_item( $menu_item ) {
 		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->post_name ) ) {
-			$menu_item->url = $this->get_page_link( $menu_item->post_name );
+			$menu_item->url = self::get_page_link( $menu_item->post_name );
 			$menu_item->type = 'custom';
 		}
 
@@ -756,7 +761,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 				unset( $q['action'] );
 			}
 
-			$url = $this->get_page_link( $action, $q, $blog_id );
+			$url = self::get_page_link( $action, $q, $blog_id );
 
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
@@ -777,7 +782,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @return string Logout URL
 	 */
 	public function logout_url( $logout_url, $redirect ) {
-		$logout_url = $this->get_page_link( 'logout' );
+		$logout_url = self::get_page_link( 'logout' );
 		if ( $redirect )
 			$logout = add_query_arg( 'redirect_to', urlencode( $redirect ), $logout_url );
 		$logout_url = wp_nonce_url( $logout_url, 'log-out' );
@@ -795,7 +800,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @param string $file Filename of stylesheet to load
 	 * @return string Path to stylesheet
 	 */
-	public function get_stylesheet( $file = 'theme-my-login.css' ) {
+	public static function get_stylesheet( $file = 'theme-my-login.css' ) {
 		if ( file_exists( get_stylesheet_directory() . '/' . $file ) )
 			$stylesheet = get_stylesheet_directory_uri() . '/' . $file;
 		elseif ( file_exists( get_template_directory() . '/' . $file ) )
@@ -905,7 +910,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @return bool|WP_Error True: when finish. WP_Error on error
 	 */
-	public function retrieve_password() {
+	public static function retrieve_password() {
 		global $wpdb, $current_site;
 
 		$errors = new WP_Error();
@@ -991,7 +996,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @return object|WP_Error
 	 */
-	public function check_password_reset_key( $key, $login ) {
+	public static function check_password_reset_key( $key, $login ) {
 		global $wpdb;
 
 		$key = preg_replace( '/[^a-z0-9]/i', '', $key );
@@ -1019,7 +1024,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @param string $key Hash to validate sending user's password
 	 */
-	public function reset_password( $user, $new_pass ) {
+	public static function reset_password( $user, $new_pass ) {
 		do_action( 'password_reset', $user, $new_pass );
 
 		wp_set_password( $new_pass, $user->ID );
@@ -1037,7 +1042,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @param string $user_email User's email address to send password and add
 	 * @return int|WP_Error Either user's ID or error on failure.
 	 */
-	public function register_new_user( $user_login, $user_email ) {
+	public static function register_new_user( $user_login, $user_email ) {
 		$errors = new WP_Error();
 
 		$sanitized_user_login = sanitize_user( $user_login );
@@ -1145,84 +1150,6 @@ if(typeof wpOnload=='function')wpOnload()
 		$this->loaded_instances[] = new Theme_My_Login_Template( $args );
 
 		return $args['instance'];
-	}
-
-	/**
-	 * Checks if a module is loaded
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $name Module name
-	 * @return bool True if module is loaded, false otherwise
-	 */
-	public function is_module_loaded( $name ) {
-		$name = sanitize_key( basename( $name, '.php' ) );
-		return isset( $this->loaded_modules[$name] );
-	}
-
-	/**
-	 * Retrieves a loaded module object
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $name Module name
-	 * @return object Module object
-	 */
-	public function &get_module( $name ) {
-		$name = sanitize_key( basename( $name, '.php' ) );
-		if ( isset( $this->loaded_modules[$name] ) )
-			return $this->loaded_modules[$name];
-
-		$null = null;
-		return $null;
-	}
-
-	/**
-	 * Sets a module object
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $name Module name
-	 * @param object $object Module object
-	 */
-	public function set_module( $name, $object ) {
-		$name = sanitize_key( basename( $name, '.php' ) );
-		$this->loaded_modules[$name] =& $object;
-	}
-
-	/**
-	 * Instantiates module object
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param string $file Module file path
-	 * @param bool $load_admin True to load module admin class
-	 */
-	public function load_module( $file ) {
-		if ( false === strpos( $file, WP_PLUGIN_DIR ) )
-			$file = WP_PLUGIN_DIR . '/theme-my-login/modules/' . rtrim( $file, '/' );
-
-		$data = get_file_data( $file, array(
-			'name'        => 'Plugin Name',
-			'description' => 'Description',
-			'class'       => 'Class',
-			'admin_class' => 'Admin Class'
-		) );
-
-		$name = sanitize_key( basename( $file, '.php' ) );
-
-		if ( class_exists( $data['class'] ) )
-			$this->loaded_modules[$name] = new $data['class'];
-
-		if ( ! is_admin() )
-			return;
-
-		if ( class_exists( $data['admin_class'] ) )
-			$this->loaded_modules["{$name}-admin"] = new $data['admin_class'];
 	}
 }
 endif; // Class exists

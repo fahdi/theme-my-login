@@ -3,9 +3,6 @@
  * Plugin Name: Themed Profiles
  * Description: Enabling this module will initialize and enable themed profiles. You will then have to configure the settings via the "Themed Profiles" tab.
  *
- * Class: Theme_My_Login_Themed_Profiles
- * Admin Class: Theme_My_Login_Themed_Profiles_Admin
- *
  * Holds Theme My Login Themed Profiles class
  *
  * @package Theme_My_Login
@@ -32,6 +29,17 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_themed_profiles';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -39,7 +47,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 *
 	 * @return array Default options
 	 */
-	public function default_options() {
+	public static function default_options() {
 		global $wp_roles;
 
 		if ( empty( $wp_roles ) )
@@ -66,14 +74,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	protected function load() {
 		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
 
-		add_action( 'init',              array( &$this, 'init' ) );
+		add_action( 'init',              array( &$this, 'init'              ) );
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
-		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar' ) );
+		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar'    ) );
 
-		add_filter( 'tml_default_actions', array( &$this, 'tml_default_actions' ) );
-		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' ) );
-		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' ) );
-		add_filter( 'tml_title',           array( &$this, 'tml_title' ), 10, 2 );
+		add_filter( 'tml_default_actions', array( &$this, 'tml_default_actions' )        );
+		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' )        );
+		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' )        );
+		add_filter( 'tml_title',           array( &$this, 'tml_title'           ), 10, 2 );
 	}
 
 	/**
@@ -98,10 +106,10 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function init() {
-		global $theme_my_login, $current_user, $pagenow;
+		global $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-			$redirect_to = $theme_my_login->get_page_link( 'profile' );
+			$redirect_to = Theme_My_Login::get_page_link( 'profile' );
 
 			$user_role = reset( $current_user->roles );
 			if ( is_multisite() && empty( $user_role ) )
@@ -134,14 +142,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function template_redirect() {
-		global $theme_my_login;
+		$theme_my_login = Theme_My_Login::get_object();
 
 		if ( $theme_my_login->is_login_page() ) {
 			switch ( $theme_my_login->request_action ) {
 				case 'profile' :
 					// Redirect to login page if not logged in
 					if ( ! is_user_logged_in() ) {
-						$redirect_to = $theme_my_login->get_page_link( 'login', array( 'reauth' => 1 ) );
+						$redirect_to = Theme_My_Login::get_page_link( 'login', array( 'reauth' => 1 ) );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -156,7 +164,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				default :
 					// Redirect to profile for any other action if logged in
 					if ( is_user_logged_in() ) {
-						$redirect_to = $theme_my_login->get_page_link( 'profile' );
+						$redirect_to = Theme_My_Login::get_page_link( 'profile' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -192,6 +200,15 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		return $show_admin_bar;
 	}
 
+	/**
+	 * Adds profile action to default actions
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array Default actions
+	 * @return array Default actions
+	 */
 	public function tml_default_actions( $actions ) {
 		$actions[] = 'profile';
 		return $actions;
@@ -207,7 +224,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function tml_request_profile() {
-		global $theme_my_login;
+		$theme_my_login = Theme_My_Login::get_object();
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
@@ -309,7 +326,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @return string The filtered link
 	 */
 	public function site_url( $url, $path, $orig_scheme = '' ) {
-		global $theme_my_login, $current_user, $pagenow;
+		global $current_user, $pagenow;
 
 		if ( 'profile.php' != $pagenow && strpos( $url, 'profile.php' ) !== false ) {
 			$user_role = reset( $current_user->roles );
@@ -320,15 +337,11 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				return $url;
 					
 			$parsed_url = parse_url( $url );
-			$url = $theme_my_login->get_page_link( 'profile' );
-			if ( isset( $parsed_url['query'] ) ) {
-				wp_parse_str( $parsed_url['query'], $r );
-				foreach ( $r as $k => $v ) {
-					if ( strpos( $v, ' ' ) !== false )
-						$r[$k] = rawurlencode( $v );
-				}
-				$url = add_query_arg( $r, $url );
-			}
+
+			$url = Theme_My_Login::get_page_link( 'profile' );
+
+			if ( isset( $parsed_url['query'] ) )
+				$url = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $parsed_url['query'] ) ), $url );
 		}
 		return $url;
 	}
@@ -347,11 +360,16 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @return string The filtered title
 	 */
 	public function tml_title( $title, $action ) {
-		global $theme_my_login;
-		if ( 'profile' == $action && is_user_logged_in() && '' == $theme_my_login->request_instance )
+		if ( 'profile' == $action && is_user_logged_in() && ! Theme_My_Login::get_object()->request_instance )
 			$title = __( 'Your Profile' );
 		return $title;
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Themed_Profiles::get_object();
+
+endif;
+
+if ( is_admin() )
+	include_once( dirname( 	__FILE__ ) . '/admin/themed-profiles-admin.php' );
 

@@ -24,13 +24,24 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_redirection';
 
 	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 * @access public
+	 * @return object
+	 */
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
+
+	/**
 	 * Called on Theme_My_Login_Abstract::__construct
 	 *
 	 * @since 6.3
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_custom-redirection/custom-redirection.php', array( &$this, 'activate' ) );
+		add_action( 'tml_activate_custom-redirection/custom-redirection.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_custom-redirection/custom-redirection.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -45,7 +56,7 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function default_options() {
+	public static function default_options() {
 		return Theme_My_Login_Custom_Redirection::default_options();
 	}
 
@@ -198,5 +209,8 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 		<?php
 	}
 }
-endif; // Class exists
+
+Theme_My_Login_Custom_Redirection_Admin::get_object();
+
+endif;
 

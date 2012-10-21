@@ -14,24 +14,27 @@ if ( ! class_exists( 'Theme_My_Login_MS_Signup' ) ) :
  *
  * @since 6.1
  */
-class Theme_My_Login_MS_Signup {
+class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 	/**
-	 * Holds reference to global $theme_my_login_template object
+	 * Returns singleton instance
 	 *
-	 * @since 6.1
-	 * @access protected
-	 * @var object
+	 * @since 6.3
+	 * @access public
+	 * @return object
 	 */
-	protected $theme_my_login_template;
+	public static function get_object() {
+		return parent::get_object( __CLASS__ );
+	}
 
 	/**
-	 * Constructor
+	 * Loads the object
 	 *
 	 * @since 6.1
 	 * @access public
 	 */
-	public function __construct() {
-		global $theme_my_login;
+	public function load() {
+
+		$theme_my_login = Theme_My_Login::get_object();
 
 		add_action( 'tml_request_register', array( &$this, 'tml_request_register' ) );
 		add_action( 'tml_request_activate', array( &$this, 'tml_request_activate' ) );
@@ -88,9 +91,9 @@ class Theme_My_Login_MS_Signup {
 	 * @param object $template Theme_My_Login_Template object
 	 */
 	public function tml_display_register( &$template ) {
-		global $theme_my_login, $wpdb, $blogname, $blog_title, $domain, $path, $active_signup;
+		global $wpdb, $blogname, $blog_title, $domain, $path, $active_signup;
 
-		$this->theme_my_login_template =& $template;
+		$theme_my_login = Theme_My_Login::get_object();
 
 		do_action( 'before_signup_form' );
 
@@ -278,9 +281,11 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $user_email The posted user e-mail
 	 */
 	public function signup_user( $user_name = '', $user_email = '' ) {
-		global $theme_my_login, $current_site, $active_signup;
+		global $current_site, $active_signup;
 
-		$template =& $this->theme_my_login_template;
+		$theme_my_login = Theme_My_Login::get_object();
+
+		$template =& $theme_my_login->get_active_instance();
 
 		// allow definition of default variables
 		$filtered_results = apply_filters( 'signup_user_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'errors' => $theme_my_login->errors ) );
@@ -306,9 +311,11 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blog_title The posted blog title
 	 */
 	public function signup_blog( $user_name = '', $user_email = '', $blogname = '', $blog_title = '' ) {
-		global $theme_my_login, $current_site;
+		global $current_site;
 
-		$template =& $this->theme_my_login_template;
+		$theme_my_login = Theme_My_Login::get_object();
+
+		$template =& $theme_my_login->get_active_instance();
 
 		// allow definition of default variables
 		$filtered_results = apply_filters( 'signup_blog_init', array( 'user_name' => $user_name, 'user_email' => $user_email, 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $theme_my_login->errors ) );
@@ -337,9 +344,11 @@ class Theme_My_Login_MS_Signup {
 	 * @param string $blog_title The posted blog title
 	 */
 	public function signup_another_blog( $blogname = '', $blog_title = '' ) {
-		global $theme_my_login, $current_site;
+		global $current_site;
 
-		$template =& $this->theme_my_login_template;
+		$theme_my_login = Theme_My_Login::get_object();
+
+		$template =& $theme_my_login->get_active_instance();
 
 		// allow definition of default variables
 		$filtered_results = apply_filters( 'signup_another_blog_init', array( 'blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $theme_my_login->errors ) );
@@ -483,7 +492,7 @@ class Theme_My_Login_MS_Signup {
 		if ( is_plugin_active_for_network( 'theme-my-login/theme-my-login.php' ) ) {
 			require_once( WP_PLUGIN_DIR . '/theme-my-login/admin/class-theme-my-login-admin.php' );
 			switch_to_blog( $blog_id );
-			$admin = new Theme_My_Login_Admin();
+			$admin = Theme_My_Login_Admin::get_object();
 			$admin->install();
 			unset( $admin );
 			restore_current_blog();
@@ -502,7 +511,9 @@ class Theme_My_Login_MS_Signup {
 	 * @return string The modified URL
 	 */
 	public function site_url( $url, $path, $orig_scheme ) {
-		global $theme_my_login, $pagenow;
+		global $pagenow;
+
+		$theme_my_login = Theme_My_Login::get_object();
 
 		if ( in_array( $pagenow, array( 'wp-login.php', 'wp-signup.php', 'wp-activate.php' ) ) )
 			return $url;
