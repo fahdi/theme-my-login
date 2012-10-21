@@ -80,7 +80,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function tml_page_link( $link, $action, $query ) {
-		if ( did_action( 'parse_request' ) && in_array( $action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
+		if ( did_action( 'template_redirect' ) && in_array( $action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
 			$link = add_query_arg( array(
 				'ajax' => 1
 			), $link );
