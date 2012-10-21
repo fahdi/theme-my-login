@@ -71,6 +71,57 @@ class Theme_My_Login_Common {
 		}
 		return $result;
 	}
+
+	/**
+	 * Replaces certain user and blog variables in $input string
+	 *
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $input The input string
+	 * @param int $user_id User ID to replace user specific variables
+	 * @param array $replacements Misc variables => values replacements
+	 * @return string The $input string with variables replaced
+	 */
+	public static function replace_vars( $input, $user_id = '', $replacements = array() ) {
+		$defaults = array(
+			'%site_url%' => get_bloginfo( 'url' ),
+			'%user_ip%'  => $_SERVER['REMOTE_ADDR']
+		);
+		$replacements = wp_parse_args( $replacements, $defaults );
+
+		// Get user data
+		$user = false;
+		if ( $user_id )
+			$user = get_user_by( 'id', $user_id );
+
+		// Get all matches ($matches[0] will be '%value%'; $matches[1] will be 'value')
+		preg_match_all( '/%([^%]*)%/', $input, $matches );
+
+		// Iterate through matches
+		foreach ( $matches[0] as $key => $match ) {
+			if ( ! isset( $replacements[$match] ) ) {	
+				if ( $user && isset( $user->{$matches[1][$key]} ) ) // Replacement from WP_User object
+					$replacements[$match] = $user->{$matches[1][$key]};
+				else
+					$replacements[$match] = get_bloginfo( $matches[1][$key] ); // Replacement from get_bloginfo()
+			}
+		}
+
+		// Allow replacements to be filtered
+		$replacements = apply_filters( 'tml_replace_vars', $replacements, $user_id );
+
+		if ( empty( $replacements ) )
+			return $input;
+
+		// Get search values
+		$search = array_keys( $replacements );
+
+		// Get replacement values
+		$replace = array_values( $replacements );
+
+		return str_replace( $search, $replace, $input );
+	}
 }
 endif; // Class exists
 
