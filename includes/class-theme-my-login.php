@@ -311,7 +311,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					$user = $this->check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error( $user ) ) {
-						wp_redirect( Theme_My_Login_Common::get_current_url( 'action=lostpassword&error=invalidkey' ) );
+						if ( $this->is_login_page() && ! $this->request_instance )
+							$redirect_to = $this->get_page_link( 'lostpassword', 'error=invalidkey' );
+						else
+							$redirect_to = Theme_My_Login_Common::get_current_url( 'action=lostpassword&error=invalidkey' );
+						wp_redirect( $redirect_to );
 						exit;
 					}
 
@@ -320,7 +324,10 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					} elseif ( isset( $_POST['pass1'] ) && ! empty( $_POST['pass1'] ) ) {
 						$this->reset_password( $user, $_POST['pass1'] );
 
-						$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
+						if ( $this->is_login_page() && ! $this->request_instance )
+							$redirect_to = $this->get_page_link( 'login', 'resetpass=complete' );
+						else
+							$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
 						wp_safe_redirect( $redirect_to );
 						exit;
 					}
@@ -330,7 +337,11 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					break;
 				case 'register' :
 					if ( ! get_option( 'users_can_register' ) ) {
-						wp_redirect( Theme_My_Login_Common::get_current_url( 'registration=disabled' ) );
+						if ( $this->is_login_page() && ! $this->request_instance )
+							$redirect_to = $this->get_page_link( 'login', 'registration=disabled' );
+						else
+							$redirect_to = Theme_My_Login_Common::get_current_url( 'registration=disabled' );
+						wp_redirect( $redirect_to );
 						exit;
 					}
 
@@ -417,7 +428,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					elseif	( isset( $_GET['checkemail'] ) && 'confirm' == $_GET['checkemail'] )
 						$this->errors->add( 'confirm', __( 'Check your e-mail for the confirmation link.' ), 'message' );
 					elseif ( isset( $_GET['resetpass'] ) && 'complete' == $_GET['resetpass'] )
-						$this->errors->add( 'password_reset', __( 'Your password has been reset.', 'theme-my-login' ), 'message' );
+						$this->errors->add( 'password_reset', __( 'Your password has been reset.' ), 'message' );
 					elseif	( isset( $_GET['checkemail'] ) && 'registered' == $_GET['checkemail'] )
 						$this->errors->add( 'registered', __( 'Registration complete. Please check your e-mail.' ), 'message' );
 					elseif	( $interim_login )
@@ -811,6 +822,15 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			?>
 <script type="text/javascript">
 try{document.getElementById('user_login').focus();}catch(e){}
+if(typeof wpOnload=='function')wpOnload()
+</script>
+<?php
+				break;
+			case 'resetpass' :
+			case 'rp' :
+			?>
+<script type="text/javascript">
+try{document.getElementById('pass1').focus();}catch(e){}
 if(typeof wpOnload=='function')wpOnload()
 </script>
 <?php

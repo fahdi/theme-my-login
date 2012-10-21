@@ -468,6 +468,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @return string The redirect URL
 	 */
 	public function get_redirect_url( $action = '' ) {
+		global $theme_my_login;
+
 		if ( empty( $action ) )
 			$action = $this->get_option( 'default_action' );
 
@@ -476,9 +478,13 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
+				if ( $theme_my_login->is_login_page() && ! $this->get_option( 'instance' ) )
+					$redirect_to = $theme_my_login->get_page_link( 'login', 'checkemail=confirm' );
 				$url = apply_filters( 'lostpassword_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' ) );
 				break;
 			case 'register' :
+				if ( $theme_my_login->is_login_page() && ! $this->get_option( 'instance' ) )
+					$redirect_to = $theme_my_login->get_page_link( 'login', 'checkemail=registered' );
 				$url = apply_filters( 'registration_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=registered' ) );
 				break;
 			case 'login' :
