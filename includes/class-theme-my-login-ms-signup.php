@@ -544,9 +544,9 @@ class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 	 * @return string The modified URL
 	 */
 	public function network_site_url( $url, $path, $orig_scheme ) {
-		global $theme_my_login, $current_site;
+		global $current_site;
 		$url = $this->site_url( $url, $path, $orig_scheme );
-		$url = $theme_my_login->site_url( $url, $path, $orig_scheme, $current_site->blog_id );
+		$url = Theme_My_Login::get_object()->site_url( $url, $path, $orig_scheme, $current_site->blog_id );
 		return $url;
 	}
 
