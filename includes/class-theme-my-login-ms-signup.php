@@ -390,7 +390,7 @@ class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 	public function tml_display_activate( &$template ) {
 		global $blog_id;
 
-		echo '<div class="login" id="theme-my-login' . esc_attr( $template->get_options( 'instance' ) ) . '">';
+		echo '<div class="login" id="theme-my-login' . esc_attr( $template->get_option( 'instance' ) ) . '">';
 
 		if ( empty( $_GET['key'] ) && empty( $_POST['key'] ) ) { ?>
 
