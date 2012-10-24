@@ -206,7 +206,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 				case 'activation' :
 					$theme_my_login->errors->add( 'pending_activation', __( 'Your registration was successful but you must now confirm your email address before you can log in. Please check your email and click on the link provided.', 'theme-my-login' ), 'message' );
 					break;
-				case 'complete' :
+				case 'approval' :
 					$theme_my_login->errors->add( 'pending_approval', __( 'Your registration was successful but you must now be approved by an administrator before you can log in. You will be notified by e-mail once your account has been reviewed.', 'theme-my-login' ), 'message' );
 					break;
 			}
