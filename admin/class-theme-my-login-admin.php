@@ -228,6 +228,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// If we have modules to activate
 		if ( $activate = array_diff( $settings['active_modules'], $this->get_option( 'active_modules', array() ) ) ) {
 			foreach ( $activate as $module ) {
+				if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+					include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 				do_action( 'tml_activate_' . $module );
 			}
 		}
