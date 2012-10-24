@@ -644,6 +644,9 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return object The (possibly) modified menu item
 	 */
 	public function wp_setup_nav_menu_item( $menu_item ) {
+		if ( is_admin() )
+			return $menu_item;
+
 		if ( 'page' == $menu_item->object && $this->is_login_page( $menu_item->object_id ) ) {
 			if ( is_user_logged_in() )
 				$menu_item->title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
