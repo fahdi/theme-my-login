@@ -53,6 +53,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 
+		add_action( 'wp_trash_post',      array( &$this, 'wp_trash_post' ) );
+		add_action( 'before_delete_post', array( &$this, 'wp_trash_post' ) );
+
 		register_activation_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( &$this, 'install' ) );
 		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
@@ -102,6 +105,19 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function admin_init() {
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
+	}
+
+	/**
+	 * Don't allow deletion of Login page
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param int $post_id Post ID
+	 */
+	public function wp_trash_post( $post_id ) {
+		if ( Theme_My_Login::get_object()->is_login_page( $post_id ) )
+			wp_die( __( 'Deleting this page will cause Theme My Login to malfunction. If you really want to delete it, please deactivate Theme My Login.', 'theme-my-login' ) );
 	}
 
 	/**
