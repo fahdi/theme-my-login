@@ -116,7 +116,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'wp_head',                    array( &$this, 'wp_head'                    )        );
 		add_action( 'wp_print_footer_scripts',    array( &$this, 'wp_print_footer_scripts'    )        );
 		add_action( 'wp_authenticate',            array( &$this, 'wp_authenticate'            )        );
-		add_action( 'wp_before_admin_bar_render', array( &$this, 'wp_before_admin_bar_render' )        );
 
 		add_filter( 'site_url',                   array( &$this, 'site_url'               ), 10, 3 );
 		add_filter( 'single_post_title',          array( &$this, 'single_post_title'      )        );
@@ -480,19 +479,6 @@ if(typeof wpOnload=='function')wpOnload()
 <?php
 				break;
 		}
-	}
-
-	/**
-	 * Removes "Edit" menu from admin bar on virtual page
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public function wp_before_admin_bar_render() {
-		global $wp_admin_bar;
-
-		if ( $this->is_login_page() )
-			$wp_admin_bar->remove_menu( 'edit' );
 	}
 
 	/**
