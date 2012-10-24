@@ -78,7 +78,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar'    ) );
 
-		add_filter( 'tml_default_actions', array( &$this, 'tml_default_actions' )        );
 		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' )        );
 		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' )        );
 		add_filter( 'tml_title',           array( &$this, 'tml_title'           ), 10, 2 );
@@ -109,7 +108,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		global $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-			$redirect_to = Theme_My_Login::get_page_link( 'profile' );
+			$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
 
 			$user_role = reset( $current_user->roles );
 			if ( is_multisite() && empty( $user_role ) )
@@ -149,7 +148,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				case 'profile' :
 					// Redirect to login page if not logged in
 					if ( ! is_user_logged_in() ) {
-						$redirect_to = Theme_My_Login::get_page_link( 'login', array( 'reauth' => 1 ) );
+						$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=login&reauth=1');
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -164,7 +163,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				default :
 					// Redirect to profile for any other action if logged in
 					if ( is_user_logged_in() ) {
-						$redirect_to = Theme_My_Login::get_page_link( 'profile' );
+						$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -198,20 +197,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			return false;
 
 		return $show_admin_bar;
-	}
-
-	/**
-	 * Adds profile action to default actions
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @param array Default actions
-	 * @return array Default actions
-	 */
-	public function tml_default_actions( $actions ) {
-		$actions[] = 'profile';
-		return $actions;
 	}
 
 	/**
@@ -338,7 +323,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 					
 			$parsed_url = parse_url( $url );
 
-			$url = Theme_My_Login::get_page_link( 'profile' );
+			$url = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
 
 			if ( isset( $parsed_url['query'] ) )
 				$url = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $parsed_url['query'] ) ), $url );

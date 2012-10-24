@@ -20,15 +20,6 @@ if ( ! class_exists( 'Theme_My_Login_Ajax' ) ) :
  */
 class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	/**
-	 * Holds AJAX actions
-	 *
-	 * @since 6.3
-	 * @access protected
-	 * @var array
-	 */
-	protected $ajax_actions = array( 'login', 'register', 'lostpassword' );
-
-	/**
 	 * Returns singleton instance
 	 *
 	 * @since 6.3
@@ -46,16 +37,28 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'parse_request',         array( &$this, 'parse_request'         ), 11    );
-		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts'    ), 10    );
+		add_action( 'template_redirect',     array( &$this, 'template_redirect'  ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts' ) );
 
 		add_filter( 'tml_page_link',         array( &$this, 'tml_page_link'         ), 10, 3 );
 		add_filter( 'tml_action_url',        array( &$this, 'tml_action_url'        ), 10, 3 );
 		add_filter( 'tml_redirect_url',      array( &$this, 'tml_redirect_url'      ), 10, 2 );
-		add_filter( 'tml_menu_item_classes', array( &$this, 'tml_menu_item_classes' )        );
+		add_filter( 'page_css_class',        array( &$this, 'page_css_class'        ), 10, 2 );
 	}
 
-	public function parse_request() {
+	/**
+	 * Returns default AJAX actions
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return array AJAX actions
+	 */
+	public static function default_actions() {
+		return apply_filters( 'tml_ajax_actions', array( 'login', 'register', 'lostpassword' ) );
+	}
+
+	public function template_redirect() {
 
 		$theme_my_login = Theme_My_Login::get_object();
 
@@ -64,7 +67,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 			$instance =& $theme_my_login->get_instance();
 
-			$instance->set_option( 'default_action', ! empty( $theme_my_login->request_page ) ? $theme_my_login->request_page : 'login' );
+			$instance->set_option( 'default_action', ! empty( $theme_my_login->request_action ) ? $theme_my_login->request_action : 'login' );
 			$instance->set_option( 'gravatar_size', 75    );
 			$instance->set_option( 'before_title', '<h2>' );
 			$instance->set_option( 'after_title', '</h2>' );
@@ -91,8 +94,12 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery', 'wp-ajax-response' ) );
 	}
 
-	public function tml_page_link( $link, $action, $query ) {
-		if ( did_action( 'template_redirect' ) && in_array( $action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
+	public function tml_page_link( $link, $query ) {
+		$q = wp_parse_args( $query );
+
+		$action = isset( $q['action'] ) ? $q['action'] : 'login';
+
+		if ( did_action( 'template_redirect' ) && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
 			$link = add_query_arg( array(
 				'ajax' => 1
 			), $link );
@@ -103,8 +110,8 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 		$theme_my_login = Theme_My_Login::get_object();
 
-		if ( $theme_my_login->is_login_page() && in_array( $theme_my_login->request_action, $this->ajax_actions ) && isset( $_GET['ajax'] ) )
-			$url = Theme_My_Login::get_page_link( $action, 'ajax=1' );
+		if ( $theme_my_login->is_login_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
+			$url = $theme_my_login->get_login_page_link( "action=$action&ajax=1" );
 		return $url;
 	}
 
@@ -112,17 +119,17 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 		$theme_my_login = Theme_My_Login::get_object();
 
-		if ( $theme_my_login->is_login_page() && in_array( $theme_my_login->request_action, $this->ajax_actions ) && isset( $_GET['ajax'] ) ) {
+		if ( $theme_my_login->is_login_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) ) {
 			switch ( $action ) {
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=confirm&ajax=1' );
+					$url = $theme_my_login->get_login_page_link( 'checkemail=confirm&ajax=1' );
 					break;
 				case 'register' :
-					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=registered&ajax=1' );
+					$url = $theme_my_login->get_login_page_link( 'checkemail=registered&ajax=1' );
 					break;
 				case 'login' :
-					$url = Theme_My_Login::get_page_link( 'login', 'ajax=1' );
+					$url = $theme_my_login->get_login_page_link( 'ajax=1' );
 					break;
 			}
 			if ( isset( $_GET['instance'] ) )
@@ -131,14 +138,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		return $url;
 	}
 
-	public function tml_menu_item_classes( $classes ) {
-		if ( ! is_user_logged_in() )
+	public function page_css_class( $classes, $page ) {
+		if ( ! is_user_logged_in() && Theme_My_Login::get_object()->is_login_page( $page->ID ) )
 			$classes[] = 'tml_ajax_link';
 		return $classes;
 	}
 }
-endif; // Class exists
 
-// Instantiate singleton
 Theme_My_Login_Ajax::get_object();
+
+endif;
 

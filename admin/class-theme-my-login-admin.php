@@ -53,8 +53,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 
-		add_action( 'admin_head-nav-menus.php', array( &$this, 'load_nav_menus' ) );
-
 		register_activation_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( &$this, 'install' ) );
 		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
@@ -104,67 +102,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function admin_init() {
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
-	}
-
-	/**
-	 * Adds TML meta box to nav menu page
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public function load_nav_menus() {
-		add_meta_box( 'add-login', __( 'Theme My Login', 'theme-my-login' ), array( &$this, 'nav_menu_item_meta_box' ), 'nav-menus', 'side', 'default' );
-	}
-
-	/**
-	 * Outputs TML nav menu meta box
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public function nav_menu_item_meta_box() {
-		global $theme_my_login, $nav_menu_selected_id;
-
-		$walker = new Walker_Nav_Menu_Checklist;
-		?>
-		<div class="customlinkdiv" id="thememylogindiv">
-			<div class="tabs-panel tabs-panel-active">
-				<ul id="thememyloginchecklist" class="categorychecklist form-no-clear">
-					<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', self::get_nav_menu_items() ), 0, (object) compact( 'walker' ) ); ?>
-				</ul>
-			</div>
-
-			<p class="button-controls">
-				<span class="add-to-menu">
-					<img class="waiting" src="<?php echo esc_url( admin_url( 'images/wpspin_light.gif' ) ); ?>" alt="" />
-					<input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-theme-my-login-menu-item" id="submit-thememylogindiv" />
-				</span>
-			</p>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Retrieves virtual page nav menu items
-	 *
-	 * @since 6.3
-	 * @access public
-	 *
-	 * @return array Array of nav menu objects
-	 */
-	public static function get_nav_menu_items() {
-		global $theme_my_login;
-
-		$items = array();
-
-		$actions = apply_filters( 'tml_default_actions', array( 'login', 'register', 'lostpassword' ) );
-		foreach ( $actions as $action ) {
-			$items[] = $theme_my_login->get_page_object( array(
-				'post_title' => Theme_My_Login_Template::get_title( $action ),
-				'post_name' => $action
-			) );
-		}
-		return $items;
 	}
 
 	/**
@@ -286,6 +223,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 
+		$settings = wp_parse_args( $settings, $this->get_options() );
+
 		return $settings;
 	}
 
@@ -329,17 +268,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		if ( version_compare( $version, '4.4', '<' ) ) {
 			remove_role( 'denied' );
 		}
-		// 6.0 upgrade
-		if ( version_compare( $version, '6.0', '<' ) ) {
-
-		}
 		// 6.3 upgrade
 		if ( version_compare( $version, '6.3', '<' ) ) {
-			// Delete the page
-			wp_delete_post( $this->get_option( 'page_id' ) );
-
 			// Delete obsolete options
-			$this->delete_option( 'page_id'     );
 			$this->delete_option( 'initial_nag' );
 
 			// Move options to their own rows
@@ -352,7 +283,31 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 
+		// Get existing page ID
+		$page_id = $this->get_option( 'page_id' );
+
+		// Check if page exists
+		$page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
+
+		// Maybe create login page?
+		if ( $page ) {
+			$page_id = $page->ID;
+			// Make sure the page is not in the trash
+			if ( 'trash' == $page->post_status )
+				wp_untrash_post( $page_id );
+		} else {
+			$page_id = wp_insert_post( array(
+				'post_title'     => 'Login',
+				'post_status'    => 'publish',
+				'post_type'      => 'page',
+				'post_content'   => '[theme-my-login]',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed'
+			) );
+		}
+
 		$this->set_option( 'version', $plugin_data['Version'] );
+		$this->set_option( 'page_id', (int) $page_id );
 		$this->save_options();
 
 		// Generate permalinks
@@ -403,6 +358,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 			do_action( 'tml_uninstall_' . $module );
 		}
+
+		// Delete the page
+		wp_delete_post( $this->get_option( 'page_id' ) );
 
 		// Delete options
 		delete_option( 'theme_my_login' );
