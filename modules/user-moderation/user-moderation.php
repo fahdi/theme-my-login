@@ -215,7 +215,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		if ( isset( $_GET['activation'] ) ) {
 			switch ( $_GET['activation'] ) {
 				case 'complete' :
-					if ( $theme_my_login->is_module_loaded( 'custom-passwords' ) )
+					if ( class_exists( 'Theme_My_Login_Custom_Passwords' ) )
 						$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. You may now log in.', 'theme-my-login' ), 'message' );
 					else
 						$theme_my_login->errors->add( 'activation_complete', __( 'Your account has been activated. Please check your e-mail for your password.', 'theme-my-login' ), 'message' );
