@@ -37,13 +37,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'template_redirect',     array( &$this, 'template_redirect'  ) );
-		add_action( 'wp_enqueue_scripts',    array( &$this, 'wp_enqueue_scripts' ) );
+		add_action( 'template_redirect',  array( &$this, 'template_redirect'  ) );
+		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 
-		add_filter( 'tml_page_link',         array( &$this, 'tml_page_link'         ), 10, 3 );
-		add_filter( 'tml_action_url',        array( &$this, 'tml_action_url'        ), 10, 3 );
-		add_filter( 'tml_redirect_url',      array( &$this, 'tml_redirect_url'      ), 10, 2 );
-		add_filter( 'page_css_class',        array( &$this, 'page_css_class'        ), 10, 2 );
+		add_filter( 'tml_page_link',          array( &$this, 'tml_page_link'          ), 10, 3 );
+		add_filter( 'tml_action_url',         array( &$this, 'tml_action_url'         ), 10, 3 );
+		add_filter( 'tml_redirect_url',       array( &$this, 'tml_redirect_url'       ), 10, 2 );
+		add_filter( 'page_css_class',         array( &$this, 'page_css_class'         ), 10, 2 );
+		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )        );
 	}
 
 	/**
@@ -142,6 +143,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		if ( ! is_user_logged_in() && Theme_My_Login::get_object()->is_login_page( $page->ID ) )
 			$classes[] = 'tml_ajax_link';
 		return $classes;
+	}
+
+	public function wp_setup_nav_menu_item( $menu_item ) {
+		if ( 'page' == $menu_item->object && Theme_My_Login::get_object()->is_login_page( $menu_item->object_id ) ) {
+			if ( ! is_user_logged_in() )
+				$menu_item->classes[] = 'tml_ajax_link';
+		}
+		return $menu_item;
 	}
 }
 
