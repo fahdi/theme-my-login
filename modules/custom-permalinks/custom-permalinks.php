@@ -82,10 +82,8 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	public function tml_request( &$theme_my_login ) {
 		global $wp;
 
-		if ( ! empty( $wp->query_vars['action'] ) ) {
+		if ( ! empty( $wp->query_vars['action'] ) )
 			$theme_my_login->request_action = $wp->query_vars['action'];
-			unset( $wp->query_vars['action'] );
-		}
 	}
 
 	/**
