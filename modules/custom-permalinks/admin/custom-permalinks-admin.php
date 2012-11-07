@@ -114,7 +114,7 @@ class Theme_My_Login_Custom_Permalinks_Admin extends Theme_My_Login_Abstract {
 		// Flush rewrite rules if slugs have been updated
 		if ( $this->get_option( 'flush_rules' ) ) {
 			// Flush rewrite rules
-			flush_rewrite_rules();
+			flush_rewrite_rules( false );
 			// Unset the option
 			$this->delete_option( 'flush_rules' );
 			// Update the options in the DB
