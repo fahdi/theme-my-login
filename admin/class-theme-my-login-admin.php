@@ -124,8 +124,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @param int $post_id Post ID
 	 */
 	public function wp_trash_post( $post_id ) {
-		//if ( Theme_My_Login::get_object()->is_login_page( $post_id ) )
-			//wp_die( __( 'Deleting this page will cause Theme My Login to malfunction. If you really want to delete it, please deactivate Theme My Login.', 'theme-my-login' ) );
+		if ( Theme_My_Login::get_page_action( $post_id ) )
+			wp_die( __( 'Deleting this page will cause Theme My Login to malfunction. If you really want to delete it, please deactivate Theme My Login.', 'theme-my-login' ), '', array( 'back_link' => true ) );
 	}
 
 	/**
@@ -395,6 +395,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 			do_action( 'tml_uninstall_' . $module );
 		}
+
+		// Remove delete block
+		remove_action( 'wp_trash_post', array( self::get_object(), 'wp_trash_post' ) );
 
 		// Delete the pages
 		$pages = get_posts( array( 'post_type' => 'tml_page', 'post_status' => 'any', 'posts_per_page' => -1 ) );
