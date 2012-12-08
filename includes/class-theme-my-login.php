@@ -232,7 +232,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					if ( $http_post ) {
 						$this->errors = self::retrieve_password();
 						if ( ! is_wp_error( $this->errors ) ) {
-							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' );
+							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->get_login_page_link( 'checkemail=confirm' );
 							wp_safe_redirect( $redirect_to );
 							exit;
 						}
@@ -281,7 +281,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 						$this->errors = self::register_new_user( $user_login, $user_email );
 						if ( ! is_wp_error( $this->errors ) ) {
-							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : Theme_My_Login_Common::get_current_url( 'checkemail=registered' );
+							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_login_page_link( 'checkemail=registered' );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
 							wp_safe_redirect( $redirect_to );
 							exit;
@@ -691,7 +691,7 @@ if(typeof wpOnload=='function')wpOnload()
 				$instance->set_option( $option, $value );
 			}
 		} else {
-			$instance =& $this->get_instance( $this->load_instance( $atts ) );
+			$instance =& $this->load_instance( $atts );
 		}
 		return $instance->display();
 	}
@@ -811,7 +811,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @param array|string $args Query string or array of arguments
 
-	 * @return int Instance ID
+	 * @return object Instance objec
 	 */
 	public function load_instance( $args = '' ) {
 		$args['instance'] = count( $this->loaded_instances );
@@ -821,9 +821,9 @@ if(typeof wpOnload=='function')wpOnload()
 			$args['default_action'] = $this->request_action;
 		}
 
-		$this->loaded_instances[] = new Theme_My_Login_Template( $args );
+		$instance = $this->loaded_instances[] = new Theme_My_Login_Template( $args );
 
-		return $args['instance'];
+		return $instance;
 	}
 
 	/**

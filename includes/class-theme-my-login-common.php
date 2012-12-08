@@ -25,7 +25,7 @@ class Theme_My_Login_Common {
 	 * @return string URL with optional path appended
 	 */
 	public static function get_current_url( $query = '' ) {
-		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login' ) );
+		$url = remove_query_arg( array( 'instance', 'action', 'checkemail', 'error', 'loggedout', 'registered', 'redirect_to', 'updated', 'key', '_wpnonce', 'reauth', 'login', 'updated' ) );
 
 		if ( ! empty( $_REQUEST['instance'] ) )
 			$url = add_query_arg( 'instance', $_REQUEST['instance'] );

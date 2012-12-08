@@ -84,7 +84,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			do_action_ref_array( 'tml_display_' . $action, array( &$this ) );
 		} else {
 			$template = array();
-			if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() && Theme_My_Login::get_object()->is_login_page() ) {
 				if ( $this->get_option( 'user_template' ) )
 					$template[] = $this->get_option( 'user_template' );
 				$template[] = 'user-panel.php';
@@ -135,7 +135,10 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		if ( empty( $action ) )
 			$action = $this->get_option( 'default_action' );
 
-		if ( is_user_logged_in() && ! is_admin() ) {
+		if ( is_admin() )
+			return $title;
+
+		if ( is_user_logged_in() && Theme_My_Login::get_object()->is_login_page() ) {
 			$user = wp_get_current_user();
 			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), $user->display_name );
 		} else {
@@ -233,19 +236,22 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @param string $action Action to retrieve
 	 * @return string The requested action URL
 	 */
-	public function get_action_url( $action = 'login' ) {
-
-		$theme_my_login = Theme_My_Login::get_object();
+	public function get_action_url( $action = '' ) {
 
 		$instance = $this->get_option( 'instance' );
 
-		if ( ! $this->get_option( "{$action}_widget", true ) || ( $theme_my_login->is_login_page() && in_the_loop() ) ) {
-			$url = $theme_my_login->get_login_page_link( compact( 'action' ) );
+		$theme_my_login = Theme_My_Login::get_object();
+
+		$args = array();
+
+		if ( $action == $this->get_option( 'default_action' ) ) {
+			if ( $instance )
+				$args['instance'] = $instance;
+			$url = Theme_My_Login_Common::get_current_url( $args );
 		} else {
-			if ( ! $instance )
-				$url = Theme_My_Login_Common::get_current_url( compact( 'action' ) );
-			else
-				$url = Theme_My_Login_Common::get_current_url( compact( 'action', 'instance' ) );
+			if ( $action )
+				$args['action'] = $action;
+			$url = $theme_my_login->get_login_page_link( $args );
 		}
 
 		// Respect FORCE_SSL_LOGIN
@@ -253,6 +259,10 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			$url = preg_replace( '|^http://|', 'https://', $url );
 
 		return apply_filters( 'tml_action_url', $url, $action, $instance );
+	}
+
+	public function get_form_action_url( $action = '' ) {
+	
 	}
 
 	/**
