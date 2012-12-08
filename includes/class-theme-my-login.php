@@ -728,8 +728,14 @@ if(typeof wpOnload=='function')wpOnload()
 	public function get_login_page_link( $query = '' ) {
 		$link = get_page_link( $this->get_option( 'page_id' ) );
 
-		if ( ! empty( $query ) )
-			$link = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $query ) ), $link );
+		if ( ! empty( $query ) ) {
+			$args = wp_parse_args( $query );
+
+			if ( isset( $args['action'] ) && 'login' == $args['action'] )
+				unset( $args['action'] );
+
+			$link = add_query_arg( array_map( 'rawurlencode', $args ), $link );
+		}
 
 		return apply_filters( 'tml_page_link', $link, $query );
 	}
