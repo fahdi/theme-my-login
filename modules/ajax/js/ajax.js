@@ -82,7 +82,7 @@ var tmlAjax;
 
 			this.window.find('form').submit(function(e) {
 				e.preventDefault();
-				tmlAjax.process(this.action, 'POST', $(this).serialize());
+				tmlAjax.process($(this).attr('action'), 'POST', $(this).serialize());
 			});
 
 			this.window.find('.tml-action-links a').click(function(e) {
