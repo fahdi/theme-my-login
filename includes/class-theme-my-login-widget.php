@@ -48,9 +48,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 			'show_reg_link'       => true,
 			'show_pass_link'      => true,
 			'show_gravatar'       => true,
-			'gravatar_size'       => 50,
-			'register_widget'     => false,
-			'lostpassword_widget' => false
+			'gravatar_size'       => 50
 		) );
 
 		// Show if logged in?
@@ -87,8 +85,6 @@ class Theme_My_Login_Widget extends WP_Widget {
 		$instance['show_pass_link']      = ! empty( $new_instance['show_pass_link'] );
 		$instance['show_gravatar']       = ! empty( $new_instance['show_gravatar'] );
 		$instance['gravatar_size']       = absint( $new_instance['gravatar_size'] );
-		$instance['register_widget']     = ! empty( $new_instance['register_widget'] );
-		$instance['lostpassword_widget'] = ! empty( $new_instance['lostpassword_widget'] );
 		return $instance;
 	}
 
@@ -149,12 +145,6 @@ class Theme_My_Login_Widget extends WP_Widget {
 		echo '<p><input name="' . $this->get_field_name( 'show_gravatar' ) . '" type="checkbox" id="' . $this->get_field_id( 'show_gravatar' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'show_gravatar' ) . '">' . __( 'Show Gravatar', 'theme-my-login' ) . '</label></p>' . "\n";
 
 		echo '<p>' . __( 'Gravatar Size', 'theme-my-login' ) . ': <input name="' . $this->get_field_name( 'gravatar_size' ) . '" type="text" id="' . $this->get_field_id( 'gravatar_size' ) . '" value="' . $instance['gravatar_size'] . '" size="3" /> <label for="' . $this->get_field_id( 'gravatar_size' ) . '"></label></p>' . "\n";
-
-		$is_checked = ( empty( $instance['register_widget'] ) ) ? '' : 'checked="checked" ';
-		echo '<p><input name="' . $this->get_field_name( 'register_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'register_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'register_widget' ) . '">' . __( 'Allow Registration', 'theme-my-login' ) . '</label></p>' . "\n";
-
-		$is_checked = ( empty( $instance['lostpassword_widget'] ) ) ? '' : 'checked="checked" ';
-		echo '<p><input name="' . $this->get_field_name( 'lostpassword_widget' ) . '" type="checkbox" id="' . $this->get_field_id( 'lostpassword_widget' ) . '" value="1" ' . $is_checked . '/> <label for="' . $this->get_field_id( 'lostpassword_widget' ) . '">' . __( 'Allow Password Recovery', 'theme-my-login' ) . '</label></p>' . "\n";
 	}
 }
 endif; // Class exists

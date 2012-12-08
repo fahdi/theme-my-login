@@ -569,7 +569,7 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( $post_id == $this->get_option( 'page_id' ) ) {
 			if ( in_the_loop() ) {
 				$action = empty( $this->request_instance ) ? $this->request_action : 'login';
-				$title = Theme_My_Login::get_instance()->get_title( $action );
+				$title = $this->get_instance()->get_title( $action );
 			} else {
 				if ( is_user_logged_in() )
 					$title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
@@ -663,9 +663,8 @@ if(typeof wpOnload=='function')wpOnload()
 	 * - show_log_link - True to display the login link, false to hide. Defaults to true.
 	 * - show_reg_link - True to display the register link, false to hide. Defaults to true.
 	 * - show_pass_link - True to display the lost password link, false to hide. Defaults to true.
-	 * - register_widget - True to allow registration in widget, false to send to register page. Defaults to false.
-	 * - lostpassword_widget - True to allow password recovery in widget, false to send to lost password page. Defaults to false.
 	 * - logged_in_widget - True to display the widget when logged in, false to hide. Defaults to true.
+	 * - logged_out_widget - True to display the widget when logged out, false to hide. Defaults to true.
 	 * - show_gravatar - True to display the user's gravatar, false to hide. Defaults to true.
 	 * - gravatar_size - The size of the user's gravatar. Defaults to "50".
 	 *

@@ -52,8 +52,6 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			'show_log_link'         => true,
 			'show_reg_link'         => true,
 			'show_pass_link'        => true,
-			'register_widget'       => false,
-			'lostpassword_widget'   => false,
 			'logged_in_widget'      => true,
 			'logged_out_widget'     => true,
 			'show_gravatar'         => true,
