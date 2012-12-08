@@ -660,11 +660,10 @@ if(typeof wpOnload=='function')wpOnload()
 			return $menu_item;
 
 		if ( 'tml_page' == $menu_item->object && self::is_tml_page( 'login', $menu_item->object_id ) ) {
-			if ( is_user_logged_in() )
-				$menu_item->title = apply_filters( 'tml_title', __( 'Log Out' ), 'logout' );
-			else
-				$menu_itme->title = apply_filters( 'tml_title', __( 'Log In' ), 'login' );
-			$menu_item->url = is_user_logged_in() ? wp_logout_url() : Theme_My_Login::get_page_link( 'login' );
+			if ( is_user_logged_in() ) {
+				$menu_item->title = $this->get_instance()->get_title( 'logout' );
+				$menu_item->url   = wp_logout_url();
+			}
 		}
 		return $menu_item;
 	}
