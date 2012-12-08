@@ -19,6 +19,7 @@ Theme My Login will always look in your theme's directory first, before using th
 			<input type="submit" name="wp-submit" id="wp-submit<?php $template->the_instance(); ?>" value="<?php esc_attr_e( 'Get New Password' ); ?>" />
 			<input type="hidden" name="redirect_to" value="<?php $template->the_redirect_url( 'lostpassword' ); ?>" />
 			<input type="hidden" name="instance" value="<?php $template->the_instance(); ?>" />
+			<input type="hidden" name="action" value="lostpassword" />
 		</p>
 	</form>
 	<?php $template->the_action_links( array( 'lostpassword' => false ) ); ?>

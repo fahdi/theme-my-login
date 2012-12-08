@@ -29,6 +29,7 @@ Theme My Login will always look in your theme's directory first, before using th
 			<input type="hidden" name="key" value="<?php $template->the_posted_value( 'key' ); ?>" />
 			<input type="hidden" name="login" id="user_login" value="<?php $template->the_posted_value( 'login' ); ?>" />
 			<input type="hidden" name="instance" value="<?php $template->the_instance(); ?>" />
+			<input type="hidden" name="action" value="resetpass" />
 		</p>
 	</form>
 	<?php $template->the_action_links( array( 'lostpassword' => false ) ); ?>

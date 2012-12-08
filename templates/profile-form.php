@@ -200,6 +200,7 @@ $user_can_edit = current_user_can( 'edit_posts' ) || current_user_can( 'edit_pag
 		<?php } ?>
 
 		<p class="submit">
+			<input type="hidden" name="action" value="profile" />
 			<input type="hidden" name="user_id" id="user_id" value="<?php echo esc_attr( $current_user->ID ); ?>" />
 			<input type="submit" class="button-primary" value="<?php esc_attr_e( 'Update Profile' ); ?>" name="submit" />
 		</p>
