@@ -211,9 +211,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	public function tml_request_profile() {
 		$theme_my_login = Theme_My_Login::get_object();
 
-		require_once( ABSPATH . 'wp-admin/includes/user.php' );
-		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
-
 		define( 'IS_PROFILE_PAGE', true );
 
 		register_admin_color_schemes();
@@ -270,6 +267,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 */
 	public function tml_display_profile( &$template ) {
 		global $current_user, $profileuser, $_wp_admin_css_colors, $wp_version;
+
+		require_once( ABSPATH . 'wp-admin/includes/user.php' );
+		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
 
 		$current_user = wp_get_current_user();
 		$profileuser  = get_user_to_edit( $current_user->ID );
