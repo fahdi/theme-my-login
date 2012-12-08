@@ -129,6 +129,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          ) );
 		add_action( 'init',                    array( &$this, 'init'                    ) );
 		add_action( 'widgets_init',            array( &$this, 'widgets_init'            ) );
+		add_action( 'pre_get_posts',           array( &$this, 'pre_get_posts'           ) );
 		add_action( 'wp',                      array( &$this, 'wp'                      ) );
 		add_action( 'template_redirect',       array( &$this, 'template_redirect'       ) );
 		add_action( 'wp_head',                 array( &$this, 'wp_head'                 ) );
@@ -139,7 +140,9 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_filter( 'site_url',               array( &$this, 'site_url'               ), 10, 3 );
 		add_filter( 'logout_url',             array( &$this, 'logout_url'             ), 10, 2 );
 		add_filter( 'single_post_title',      array( &$this, 'single_post_title'      )        );
+		add_filter( 'the_title',              array( &$this, 'the_title'              ), 10, 2 );
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )        );
+		add_filter( 'post_type_link',         array( &$this, 'post_type_link'         ), 10, 4 );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
@@ -180,6 +183,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			'show_in_menu' => false,
 			'hierarchical' => true,
 			'supports'     => array( 'title', 'editor', 'page-attributes' ),
+			'rewrite'      => false,
 			'labels'       => array(
 				'name'          => 'TML Pages',
 				'singular_name' => 'TML Page'
@@ -201,6 +205,23 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function widgets_init() {
 		if ( class_exists( 'Theme_My_Login_Widget' ) )
 			register_widget( 'Theme_My_Login_Widget' );
+	}
+
+	public function pre_get_posts( &$wp_query ) {
+		global $wpdb;
+
+		if ( ! $wp_query->is_main_query() )
+			return;
+
+		if ( $pagename = $wp_query->get( 'pagename' ) ) {
+			if ( $page = get_page_by_path( $pagename, OBJECT, 'tml_page' ) ) {
+				$wp_query->set( 'post_type', 'tml_page' );
+				$wp_query->is_single         = true;
+				$wp_query->is_page           = false;
+				$wp_query->queried_object    = $page;
+				$wp_query->queried_object_id = $page->ID;
+			}
+		}
 	}
 
 	/**
@@ -599,21 +620,25 @@ if(typeof wpOnload=='function')wpOnload()
 	}
 
 	/**
-	 * Changes single_post_title() to reflect the current action
+	 * Changes the_title() to reflect the current action
 	 *
-	 * Callback for "single_post_title" hook in single_post_title()
+	 * Callback for "the_title" hook in the_title()
 	 *
-	 * @see single_post_title()
+	 * @see the_title()
 	 * @since 6.0
-	 * @access public
+	 * @acess public
 	 *
 	 * @param string $title The current post title
+	 * @param int $post_id The current post ID
 	 * @return string The modified post title
 	 */
-	public function single_post_title( $title ) {
-		if ( self::is_tml_Page() ) {
-			$action = empty( $this->request_instance ) ? $this->request_action : 'login';
-			$title = $this->get_instance()->get_title( $action );
+	public function the_title( $title, $post_id = 0 ) {
+		if ( is_admin() )
+			return $title;
+
+		if ( self::is_tml_page( 'login', $post_id ) ) {
+			if ( in_the_loop() && is_user_logged_in() )
+				$title = $this->get_instance()->get_title();
 		}
 		return $title;
 	}
@@ -642,6 +667,16 @@ if(typeof wpOnload=='function')wpOnload()
 			$menu_item->url = is_user_logged_in() ? wp_logout_url() : Theme_My_Login::get_page_link( 'login' );
 		}
 		return $menu_item;
+	}
+
+	public function post_type_link( $post_link, $post, $leavename, $sample ) {
+		global $wp_rewrite;
+
+		if ( $wp_rewrite->using_permalinks() ) {
+			if ( 'tml_page' == $post->post_type )
+				$post_link = get_page_link( $post->ID, $leavename, $sample );
+		}
+		return $post_link;
 	}
 
 
@@ -767,7 +802,7 @@ if(typeof wpOnload=='function')wpOnload()
 			return get_permalink( $page_id );
 
 		// Remove site_url filter so we can return wp-login.php
-		remove_filter( 'site_url', array( Theme_My_Login::get_object(), 'site_url' ), 10, 3 );
+		remove_filter( 'site_url', array( self::get_object(), 'site_url' ), 10, 3 );
 
 		// Return wp-login.php
 		return site_url( 'wp-login.php' );
