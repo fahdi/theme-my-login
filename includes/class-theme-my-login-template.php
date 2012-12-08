@@ -138,23 +138,27 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		if ( is_admin() )
 			return $title;
 
-		if ( is_user_logged_in() && Theme_My_Login::is_tml_page( 'login' ) ) {
+		if ( is_user_logged_in() && 'login' == $action ) {
 			$user = wp_get_current_user();
 			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), $user->display_name );
 		} else {
-			switch ( $action ) {
-				case 'register':
-					$title = __( 'Register' );
-					break;
-				case 'lostpassword':
-				case 'retrievepassword':
-				case 'resetpass':
-				case 'rp':
-					$title = __( 'Lost Password' );
-					break;
-				case 'login':
-				default:
-					$title = __( 'Log In' );
+			if ( $page_id = Theme_My_Login::get_page_id( $action ) ) {
+				$title = get_post_field( 'post_title', $page_id );
+			} else {
+				switch ( $action ) {
+					case 'register':
+						$title = __( 'Register' );
+						break;
+					case 'lostpassword':
+					case 'retrievepassword':
+					case 'resetpass':
+					case 'rp':
+						$title = __( 'Lost Password' );
+						break;
+					case 'login':
+					default:
+						$title = __( 'Log In' );
+				}
 			}
 		}
 		return apply_filters( 'tml_title', $title, $action );
