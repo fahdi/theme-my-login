@@ -5,7 +5,7 @@
  * @package Theme_My_Login
  */
 
-if ( !class_exists( 'Theme_My_Login_Abstract' ) ) :
+if ( ! class_exists( 'Theme_My_Login_Abstract' ) ) :
 /*
  * Theme My Login Abstract class
  *

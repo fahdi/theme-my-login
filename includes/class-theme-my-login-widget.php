@@ -59,10 +59,6 @@ class Theme_My_Login_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() && ! $instance['logged_out_widget'] )
 			return;
 
-		// Don't show on Login page
-		if ( $theme_my_login->is_login_page() )
-			return;
-
 		$args = array_merge( $args, $instance );
 
 		echo $theme_my_login->shortcode( $args );
