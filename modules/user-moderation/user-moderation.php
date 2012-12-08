@@ -120,9 +120,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 
 		$redirect_to = $theme_my_login->get_login_page_link();
 
-		if ( ! empty( $theme_my_login->request_instance ) )
-			$redirect_to = Theme_My_Login_Common::get_current_url( array( 'instance' => $theme_my_login->request_instance ) );
-
 		switch ( $this->get_option( 'type' ) ) {
 			case 'email' :
 				$redirect_to = add_query_arg( 'pending', 'activation', $redirect_to );
