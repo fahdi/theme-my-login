@@ -168,13 +168,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 						exit;
 					}
 			}
-
-			// Remove instance if instance requested
-			if ( $theme_my_login->request_instance ) {
-				$redirect_to = remove_query_arg( array( 'instance' ) );
-				wp_redirect( $redirect_to );
-				exit;
-			}
 		}
 	}
 
@@ -209,7 +202,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function tml_request_profile() {
-		$theme_my_login = Theme_My_Login::get_object();
+		require_once( ABSPATH . 'wp-admin/includes/user.php' );
+		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
 
 		define( 'IS_PROFILE_PAGE', true );
 
@@ -241,17 +235,19 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 			do_action( 'personal_options_update', $current_user->ID );
 
-			$theme_my_login->errors = edit_user( $current_user->ID );
+			$errors = edit_user( $current_user->ID );
 
 			if ( ! is_wp_error( $errors ) ) {
-				$redirect = add_query_arg( array( 'updated' => 'true' ) );
+				$args = array( 'updated' => 'true' );
+				if ( isset( $_REQUEST['instance'] ) )
+					$args['instance'] = $_REQUEST['instance'];
+				$redirect = add_query_arg( $args, $redirect );
 				wp_redirect( $redirect );
 				exit;
+			} else {
+				Theme_My_Login::get_object()->errors = $errors;
 			}
 		}
-
-		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
-			$theme_my_login->errors->add( 'profile_updated', __( 'Profile updated.' ), 'message' );
 	}
 
 	/**
@@ -270,6 +266,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
 		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+
+		if ( isset( $_GET['updated'] ) && 'true' == $_GET['updated'] )
+			Theme_My_Login::get_object()->errors->add( 'profile_updated', __( 'Profile updated.' ), 'message' );
 
 		$current_user = wp_get_current_user();
 		$profileuser  = get_user_to_edit( $current_user->ID );
@@ -345,7 +344,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * @return string The filtered title
 	 */
 	public function tml_title( $title, $action ) {
-		if ( 'profile' == $action && is_user_logged_in() && ! Theme_My_Login::get_object()->request_instance )
+		if ( 'profile' == $action )
 			$title = __( 'Your Profile' );
 		return $title;
 	}
