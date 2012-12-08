@@ -153,7 +153,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function wp_setup_nav_menu_item( $menu_item ) {
-		if ( 'page' == $menu_item->object && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) ) {
+		if ( 'tml_page' == $menu_item->object && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) ) {
 			if ( ! is_user_logged_in() )
 				$menu_item->classes[] = 'tml_ajax_link';
 		}
