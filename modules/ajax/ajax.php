@@ -67,7 +67,7 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 		$theme_my_login = Theme_My_Login::get_object();
 
-		if ( $theme_my_login->is_login_page() && isset( $_GET['ajax'] ) ) {
+		if ( Theme_My_Login::is_tml_page() && isset( $_GET['ajax'] ) ) {
 			define( 'DOING_AJAX', true );
 
 			$instance =& $theme_my_login->get_instance();
@@ -112,29 +112,23 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function tml_action_url( $url, $action, $instance ) {
-
-		$theme_my_login = Theme_My_Login::get_object();
-
-		if ( $theme_my_login->is_login_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
-			$url = $theme_my_login->get_login_page_link( "action=$action&ajax=1" );
+		if ( Theme_My_Login::is_tml_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
+			$url = Theme_My_Login::get_page_link( $action, 'ajax=1' );
 		return $url;
 	}
 
 	public function tml_redirect_url( $url, $action ) {
-
-		$theme_my_login = Theme_My_Login::get_object();
-
-		if ( $theme_my_login->is_login_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) ) {
+		if ( Theme_My_Login::is_tml_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) ) {
 			switch ( $action ) {
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					$url = $theme_my_login->get_login_page_link( 'checkemail=confirm&ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=confirm&ajax=1' );
 					break;
 				case 'register' :
-					$url = $theme_my_login->get_login_page_link( 'checkemail=registered&ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=registered&ajax=1' );
 					break;
 				case 'login' :
-					$url = $theme_my_login->get_login_page_link( 'ajax=1' );
+					$url = Theme_My_Login::get_page_link( 'login', 'ajax=1' );
 					break;
 			}
 			if ( isset( $_GET['instance'] ) )
@@ -153,13 +147,13 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 
 	public function page_css_class( $classes, $page ) {
-		if ( ! is_user_logged_in() && Theme_My_Login::get_object()->is_login_page( $page->ID ) )
+		if ( ! is_user_logged_in() && Theme_My_Login::is_tml_page( '', $page->ID ) )
 			$classes[] = 'tml_ajax_link';
 		return $classes;
 	}
 
 	public function wp_setup_nav_menu_item( $menu_item ) {
-		if ( 'page' == $menu_item->object && Theme_My_Login::get_object()->is_login_page( $menu_item->object_id ) ) {
+		if ( 'page' == $menu_item->object && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) ) {
 			if ( ! is_user_logged_in() )
 				$menu_item->classes[] = 'tml_ajax_link';
 		}

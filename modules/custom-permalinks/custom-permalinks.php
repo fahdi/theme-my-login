@@ -137,9 +137,9 @@ class Theme_My_Login_Custom_Permalinks extends Theme_My_Login_Abstract {
 	/**
 	 * Returns link for login page
 	 *
-	 * Callback for "tml_page_link" filter in Theme_My_Login::get_login_page_link()
+	 * Callback for "tml_page_link" filter in Theme_My_Login::get_page_link()
 	 *
-	 * @see Theme_My_Login::get_login_page_link()
+	 * @see Theme_My_Login::get_page_link()
 	 * @since 6.3
 	 * @access public
 	 *

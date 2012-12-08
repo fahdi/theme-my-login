@@ -108,7 +108,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		global $current_user, $pagenow;
 
         if ( is_user_logged_in() && is_admin() ) {
-			$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
+			$redirect_to = Theme_My_Login::get_page_link( 'profile' );
 
 			$user_role = reset( $current_user->roles );
 			if ( is_multisite() && empty( $user_role ) )
@@ -143,12 +143,12 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	public function template_redirect() {
 		$theme_my_login = Theme_My_Login::get_object();
 
-		if ( $theme_my_login->is_login_page() ) {
+		if ( Theme_My_Login::is_tml_page() ) {
 			switch ( $theme_my_login->request_action ) {
 				case 'profile' :
 					// Redirect to login page if not logged in
 					if ( ! is_user_logged_in() ) {
-						$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=login&reauth=1');
+						$redirect_to = Theme_My_Login::get_page_link( 'login', 'reauth=1' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -163,7 +163,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				default :
 					// Redirect to profile for any other action if logged in
 					if ( is_user_logged_in() ) {
-						$redirect_to = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
+						$redirect_to = Theme_My_Login::get_page_link( 'profile' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -322,7 +322,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 					
 			$parsed_url = parse_url( $url );
 
-			$url = Theme_My_Login::get_object()->get_login_page_link( 'action=profile' );
+			$url = Theme_My_Login::get_page_link( 'profile' );
 
 			if ( isset( $parsed_url['query'] ) )
 				$url = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $parsed_url['query'] ) ), $url );
