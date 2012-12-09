@@ -691,6 +691,17 @@ if(typeof wpOnload=='function')wpOnload()
 		return $menu_item;
 	}
 
+	/**
+	 * Applies page permalink to TML pages
+	 *
+	 * @since 6.3
+	 *
+	 * @param string $post_link Post link
+	 * @param object $post Post object
+	 * @param bool $leavename
+	 * @param bool $sample
+	 * @return string Post link
+	 */
 	public function post_type_link( $post_link, $post, $leavename, $sample ) {
 		global $wp_rewrite;
 
@@ -739,7 +750,7 @@ if(typeof wpOnload=='function')wpOnload()
 		$atts = wp_parse_args( $atts );
 
 		if ( self::is_tml_page() && in_the_loop() && is_main_query() && ! $did_main_instance ) {
-			$instance =& $this->get_instance();
+			$instance = $this->get_instance();
 
 			if ( ! empty( $this->request_action ) )
 				$atts['default_action'] = $this->request_action;
@@ -753,7 +764,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 			$did_main_instance = true;
 		} else {
-			$instance =& $this->load_instance( $atts );
+			$instance = $this->load_instance( $atts );
 		}
 		return $instance->display();
 	}
@@ -893,7 +904,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 *
 	 * @return object Instance object
 	 */
-	public function &get_active_instance() {
+	public function get_active_instance() {
 		return $this->get_instance( (int) $this->request_instance );
 	}
 
@@ -907,12 +918,9 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return object Instance object
 
 	 */
-	public function &get_instance( $id = 0 ) {
+	public function get_instance( $id = 0 ) {
 		if ( isset( $this->loaded_instances[$id] ) )
 			return $this->loaded_instances[$id];
-
-		$null = null;
-		return $null;
 	}
 
 	/**
@@ -933,19 +941,21 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @since 6.3
 	 * @access public
 	 *
-	 * @param array|string $args Query string or array of arguments
+	 * @param array|string $args Array or query string of arguments
 
-	 * @return object Instance objec
+	 * @return object Instance object
 	 */
 	public function load_instance( $args = '' ) {
 		$args['instance'] = count( $this->loaded_instances );
 
+		$instance = new Theme_My_Login_Template( $args );
+
 		if ( $args['instance'] == $this->request_instance ) {
-			$args['active']         = true;
-			$args['default_action'] = $this->request_action;
+			$instance->set_active();
+			$instance->set_option( 'default_action', $this->request_action );
 		}
 
-		$instance = $this->loaded_instances[] = new Theme_My_Login_Template( $args );
+		$this->loaded_instances[] = $instance;
 
 		return $instance;
 	}
