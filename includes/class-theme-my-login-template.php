@@ -16,6 +16,15 @@ if ( ! class_exists( 'Theme_My_Login_Template' ) ) :
  */
 class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	/**
+	 * Holds active instance flag
+	 *
+	 * @since 6.3
+	 * @access private
+	 * @var bool
+	 */
+	private $is_active = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @since 6.0
@@ -41,7 +50,6 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	public static function default_options() {
 		return array(
 			'instance'              => 0,
-			'active'                => false,
 			'default_action'        => '',
 			'login_template'        => '',
 			'register_template'     => '',
@@ -138,9 +146,8 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		if ( is_admin() )
 			return $title;
 
-		if ( is_user_logged_in() && 'login' == $this->get_option( 'default_action' ) ) {
-			$user = wp_get_current_user();
-			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), $user->display_name );
+		if ( is_user_logged_in() && 'login' == $action && $action == $this->get_option( 'default_action' ) ) {
+			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), wp_get_current_user()->display_name );
 		} else {
 			if ( $page_id = Theme_My_Login::get_page_id( $action ) ) {
 				$title = get_post_field( 'post_title', $page_id );
@@ -199,7 +206,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		}
 
 		$output = '';
-		if ( $this->get_option( 'active' ) ) {
+		if ( $this->is_active() ) {
 			if ( $wp_error->get_error_code() ) {
 				$errors = '';
 				$messages = '';
@@ -511,9 +518,6 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Returns current template instance ID
-	 *
-	/**
 	 * Outputs current template instance ID
 	 *
 	 * @since 6.0
@@ -534,7 +538,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 * @return string|bool The value if it exists, false if not
 	 */
 	public function get_posted_value( $value ) {
-		if ( $this->get_option( 'active' ) && isset( $_REQUEST[$value] ) )
+		if ( $this->is_active() && isset( $_REQUEST[$value] ) )
 			return stripslashes( $_REQUEST[$value] );
 		return false;
 	}
@@ -549,6 +553,30 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	 */
 	public function the_posted_value( $value ) {
 		echo esc_attr( $this->get_posted_value( $value ) );
+	}
+
+	/**
+	 * Returns active status
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @return bool True if instance is active, false if not
+	 */
+	public function is_active() {
+		return $this->is_active;
+	}
+
+	/**
+	 * Sets active status
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param bool $active Active status
+	 */
+	public function set_active( $active = true ) {
+		$this->is_active = $active;
 	}
 }
 endif; // Class exists
