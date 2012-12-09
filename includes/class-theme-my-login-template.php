@@ -366,7 +366,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		foreach ( (array) self::get_user_links() as $link ) {
 			echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['title'] ) . '</a></li>' . "\n";
 		}
-		echo '<li><a href="' . wp_logout_url() . '">' . __( 'Log out' ) . '</a></li>' . "\n";
+		echo '<li><a href="' . wp_logout_url() . '">' . self::get_title( 'logout' ) . '</a></li>' . "\n";
 		echo '</ul>';
 	}
 
