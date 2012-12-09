@@ -138,7 +138,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		if ( is_admin() )
 			return $title;
 
-		if ( is_user_logged_in() && 'login' == $action ) {
+		if ( is_user_logged_in() && 'login' == $this->get_option( 'default_action' ) ) {
 			$user = wp_get_current_user();
 			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), $user->display_name );
 		} else {
@@ -486,10 +486,10 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 		switch ( $action ) {
 			case 'lostpassword' :
 			case 'retrievepassword' :
-				$url = apply_filters( 'lostpassword_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=confirm' ) );
+				$url = apply_filters( 'lostpassword_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_page_link( 'login', 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'registration_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login_Common::get_current_url( 'checkemail=registered' ) );
+				$url = apply_filters( 'register_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_page_link( 'login', 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :

@@ -207,6 +207,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 			register_widget( 'Theme_My_Login_Widget' );
 	}
 
+	/**
+	 * Changes post type to tml_page for TML permalinks
+	 *
+	 * @since 6.3
+	 *
+	 * @param object $wp_query WP_Query object
+	 */
 	public function pre_get_posts( &$wp_query ) {
 		global $wpdb;
 
@@ -268,7 +275,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function template_redirect() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : '';
-		if ( ! $this->request_action && Theme_My_Login::is_tml_page() ) {
+		if ( ! $this->request_action && self::is_tml_page() ) {
 			global $post;
 			if ( $action = self::get_page_action( $post->ID ) )
 				$this->request_action = $action;
@@ -317,7 +324,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					if ( $http_post ) {
 						$this->errors = self::retrieve_password();
 						if ( ! is_wp_error( $this->errors ) ) {
-							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : $this->get_page_link( 'login', 'checkemail=confirm' );
+							$redirect_to = ! empty( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : site_url( 'wp-login.php?checkemail=confirm' );
 							wp_safe_redirect( $redirect_to );
 							exit;
 						}
@@ -333,7 +340,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					$user = self::check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
 
 					if ( is_wp_error( $user ) ) {
-						$redirect_to = Theme_My_Login_Common::get_current_url( 'action=lostpassword&error=invalidkey' );
+						$redirect_to = site_url( 'wp-login.php?action=lostpassword&error=invalidkey' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -343,7 +350,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					} elseif ( isset( $_POST['pass1'] ) && ! empty( $_POST['pass1'] ) ) {
 						self::reset_password( $user, $_POST['pass1'] );
 
-						$redirect_to = Theme_My_Login_Common::get_current_url( 'resetpass=complete' );
+						$redirect_to = site_url( 'wp-login.php?resetpass=complete' );
 						wp_safe_redirect( $redirect_to );
 						exit;
 					}
@@ -353,7 +360,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 					break;
 				case 'register' :
 					if ( ! get_option( 'users_can_register' ) ) {
-						$redirect_to = Theme_My_Login_Common::get_current_url( 'registration=disabled' );
+						$redirect_to = site_url( 'wp-login.php?registration=disabled' );
 						wp_redirect( $redirect_to );
 						exit;
 					}
@@ -366,7 +373,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 						$this->errors = self::register_new_user( $user_login, $user_email );
 						if ( ! is_wp_error( $this->errors ) ) {
-							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : $this->get_page_link( 'login', 'checkemail=registered' );
+							$redirect_to = ! empty( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : site_url( 'wp-login.php?checkemail=registered' );
 							$redirect_to = apply_filters( 'register_redirect', $redirect_to );
 							wp_safe_redirect( $redirect_to );
 							exit;
@@ -585,13 +592,11 @@ if(typeof wpOnload=='function')wpOnload()
 		global $pagenow;
 
 		if ( 'wp-login.php' != $pagenow && false !== strpos( $url, 'wp-login.php' ) && ! isset( $_REQUEST['interim-login'] ) ) {
-			$parsed_url = parse_url( $url );
-
-			$query = isset( $parsed_url['query'] ) ? $parsed_url['query'] : array();
+			parse_str( parse_url( $url, PHP_URL_QUERY ), $query );
 
 			$action = isset( $query['action'] ) ? $query['action'] : 'login';
 
-			$url = Theme_My_Login::get_page_link( $action, $query );
+			$url = self::get_page_link( $action, $query );
 
 			if ( 'https' == strtolower( $orig_scheme ) )
 				$url = preg_replace( '|^http://|', 'https://', $url );
@@ -612,11 +617,29 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return string Logout URL
 	 */
 	public function logout_url( $logout_url, $redirect ) {
-		$logout_url = Theme_My_Login::get_page_link( 'logout' );
+		$logout_url = self::get_page_link( 'logout' );
 		if ( $redirect )
 			$logout = add_query_arg( 'redirect_to', urlencode( $redirect ), $logout_url );
 		$logout_url = wp_nonce_url( $logout_url, 'log-out' );
 		return $logout_url;
+	}
+
+	/**
+	 * Changes single_post_title() to reflect the current action
+	 *
+	 * Callback for "single_post_title" hook in single_post_title()
+	 *
+	 * @see single_post_title()
+	 * @since 6.0
+	 * @access public
+	 *
+	 * @param string $title The current post title
+	 * @return string The modified post title
+	 */
+	function single_post_title( $title ) {
+		if ( self::is_tml_page( 'login' ) && is_user_logged_in() )
+			$title = $this->get_instance()->get_title( 'login' );
+		return $title;
 	}
 
 	/**
@@ -636,9 +659,9 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( is_admin() )
 			return $title;
 
-		if ( self::is_tml_page( 'login', $post_id ) ) {
-			if ( in_the_loop() && is_user_logged_in() )
-				$title = $this->get_instance()->get_title();
+		if ( self::is_tml_page( 'login', $post_id ) && is_user_logged_in() ) {
+			if ( in_the_loop() )
+				$title = $this->get_instance()->get_title( 'login' );
 		}
 		return $title;
 	}
@@ -817,6 +840,11 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	public static function get_page_id( $action ) {
 		global $wpdb;
+
+		if ( 'rp' == $action )
+			$action = 'resetpass';
+		elseif ( 'retrievepassword' == $action )
+			$action = 'lostpassword';
 
 		return $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta pmeta ON p.ID = pmeta.post_id WHERE p.post_type = 'tml_page' AND pmeta.meta_key = '_tml_action' AND pmeta.meta_value = %s", $action ) );
 	}
