@@ -40,10 +40,8 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		add_action( 'template_redirect',  array( &$this, 'template_redirect'  ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 
-		add_filter( 'tml_page_link',          array( &$this, 'tml_page_link'          ),  10, 3 );
 		add_filter( 'tml_action_url',         array( &$this, 'tml_action_url'         ),  10, 3 );
 		add_filter( 'tml_redirect_url',       array( &$this, 'tml_redirect_url'       ),  10, 2 );
-		add_filter( 'register_redirect',      array( &$this, 'register_redirect'      ), 200    );
 		add_filter( 'page_css_class',         array( &$this, 'page_css_class'         ),  10, 2 );
 		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )         );
 	}
@@ -63,6 +61,12 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		return apply_filters( 'tml_ajax_actions', $actions );
 	}
 
+	/**
+	 * Handles AJAX response
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
 	public function template_redirect() {
 
 		$theme_my_login = Theme_My_Login::get_object();
@@ -93,30 +97,49 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		}
 	}
 
+	/**
+	 * Enqueues styles and scripts
+	 *
+	 * @since 6.3
+	 * @access public
+	 */
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/css/ajax.css' ) );
 
 		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery', 'wp-ajax-response' ) );
 	}
 
-	public function tml_page_link( $link, $query ) {
-		$q = wp_parse_args( $query );
-
-		$action = isset( $q['action'] ) ? $q['action'] : 'login';
-
-		if ( did_action( 'template_redirect' ) && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
-			$link = add_query_arg( array(
-				'ajax' => 1
-			), $link );
-		return $link;
-	}
-
+	/**
+	 * Adds ajax parameter to TML action URL's
+	 *
+	 * Callback for "tml_action_url" filter
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $url The action URL
+	 * @param string $action The action
+	 * @param int $instance The instance
+	 * @return string The action URL
+	 */
 	public function tml_action_url( $url, $action, $instance ) {
 		if ( Theme_My_Login::is_tml_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
 			$url = Theme_My_Login::get_page_link( $action, 'ajax=1' );
 		return $url;
 	}
 
+	/**
+	 * Adds ajax parameter to TML redirect URL's
+	 *
+	 * Callback for "tml_redirect_url" filter
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param string $url The redirect URL
+	 * @param string $action The action
+	 * @return string The redirect URL
+	 */
 	public function tml_redirect_url( $url, $action ) {
 		if ( Theme_My_Login::is_tml_page() && in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) ) {
 			switch ( $action ) {
@@ -137,21 +160,31 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		return $url;
 	}
 
-	public function register_redirect( $redirect_to ) {
-		$theme_my_login = Theme_My_Login::get_object();
-
-		$action = $theme_my_login->request_action ? $theme_my_login->request_action : 'login';
-		if ( in_array( $action, self::default_actions() ) && isset( $_GET['ajax'] ) )
-			$redirect_to = add_query_arg( 'ajax', 1, $redirect_to );
-		return $redirect_to;
-	}
-
+	/**
+	 * Adds CSS class to TML pages
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param array $classes CSS classes
+	 * @param object $page Post object
+	 * @return array CSS classes
+	 */
 	public function page_css_class( $classes, $page ) {
 		if ( ! is_user_logged_in() && Theme_My_Login::is_tml_page( '', $page->ID ) )
 			$classes[] = 'tml_ajax_link';
 		return $classes;
 	}
 
+	/**
+	 * Adds CSS class to TML pages
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param object $menu_item Nav menu item
+	 * @return object Nav menu item
+	 */
 	public function wp_setup_nav_menu_item( $menu_item ) {
 		if ( 'tml_page' == $menu_item->object && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) ) {
 			if ( ! is_user_logged_in() )
