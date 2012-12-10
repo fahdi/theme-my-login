@@ -103,7 +103,7 @@ abstract class Theme_My_Login_Abstract {
 			$this->options = (array) $class::default_options();
 		}
 
-		if ( !$this->options_key )
+		if ( ! $this->options_key )
 			return;
 
 		$options = get_option( $this->options_key, array() );
@@ -172,19 +172,30 @@ abstract class Theme_My_Login_Abstract {
 	 * @param mixed $value Value of new option
 	 */
 	public function set_option( $option, $value = '' ) {
-		if ( is_array( $option ) ) {
-			$options = $this->options;
-			$last = array_pop( $option );
-			foreach ( $option as $_option ) {
-				if ( !isset( $options[$_option] ) )
-					$options[$_option] = array();
-				$options = $options[$_option];
-			}
-			$options[$last] = $value;
-			$this->options = array_merge( $this->options, $options );
-		} else {
-			$this->options[$option] = $value;
+		if ( ! is_array( $option ) )
+			$option = array( $option );
+
+		self::_set_option( $option, $value, $this->options );
+	}
+
+	/**
+	 * Recursively sets a multidimensional option
+	 *
+	 * @since 6.3
+	 * @access private
+	 *
+	 * @param array $option Array of hierarchy
+	 * @param mixed $value Value of new option
+	 * @param array $options Options to update
+	 */
+	private function _set_option( $option, $value, &$options ) {
+		$key = array_shift( $option );
+		if ( ! empty( $option ) ) {
+			if ( ! isset( $options[$key] ) )
+				$options[$key] = array();
+			return self::_set_option( $option, $value, $options[$key] );
 		}
+		$options[$key] = $value;
 	}
 
 	/**
@@ -208,8 +219,26 @@ abstract class Theme_My_Login_Abstract {
 	 * @param string $option Name of option to delete
 	 */
 	public function delete_option( $option ) {
-		if ( isset( $this->options[$option] ) )
-			unset( $this->options[$option] );
+		if ( ! is_array( $option ) )
+			$option = array( $option );
+
+		self::_delete_option( $option, $this->options );
+	}
+
+	/**
+	 * Recursively finds and deletes a multidimensional option
+	 *
+	 * @since 6.3
+	 * @access private
+	 *
+	 * @param array $option Array of hierarchy
+	 * @param array $options Options to update
+	 */
+	private function _delete_option( $option, &$options ) {
+		$key = array_shift( $option );
+		if ( ! empty( $option ) )
+			return self::_delete_option( $option, $options[$key] );
+		unset( $options[$key] );
 	}
 }
 endif;
