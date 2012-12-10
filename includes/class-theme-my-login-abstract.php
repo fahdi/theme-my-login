@@ -134,20 +134,29 @@ abstract class Theme_My_Login_Abstract {
 	 * @return mixed Value of requested option or $default if option is not set
 	 */
 	public function get_option( $option, $default = false ) {
-		$options = $this->options;
-		$value = false;
-		if ( is_array( $option ) ) {
-			foreach ( $option as $_option ) {
-				if ( !isset( $options[$_option] ) ) {
-					$value = $default;
-					break;
-				}
-				$options = $value = $options[$_option];
-			}
-		} else {
-			$value = isset( $options[$option] ) ? $options[$option] : $default;
-		}
-		return $value;
+		if ( ! is_array( $option ) )
+			$option = array( $option );
+		return self::_get_option( $option, $default, $this->options );
+	}
+
+	/**
+	 * Recursively retrieves a multidimensional option
+	 *
+	 * @since 6.3
+	 * @access private
+	 *
+	 * @param array $option Array of hierarchy
+	 * @param mixed $default Default value to return
+	 * @param array Options to search
+	 * @return mixed Value of requested option or $default if option is not set
+	 */
+	private function _get_option( $option, $default, &$options ) {
+		$key = array_shift( $option );
+		if ( ! isset( $options[$key] ) )
+			return $default;
+		if ( ! empty( $option ) )
+			return self::_get_option( $option, $default, $options[$key] );
+		return $options[$key];
 	}
 
 	/**
