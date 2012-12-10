@@ -187,6 +187,8 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Adds password to signup meta array
 	 *
+	 * Callback for "add_signup_meta" hook
+	 *
 	 * @since 6.1
 	 * @access public
 	 *
@@ -283,16 +285,16 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 	/**
 	 * Changes where the user is redirected upon successful registration
 	 *
-	 * Callback for "register_redirect" hook in Theme_My_Login::the_request()
+	 * Callback for "registration_redirect" hook in Theme_My_Login_Template::get_redirect_url()
 	 *
-	 * @see Theme_My_Login::the_request()
+	 * @see Theme_My_Login_Template::get_redirect_url()
 	 * @since 6.0
 	 * @access public
 	 *
 	 * @return string $redirect_to Default redirect
 	 * @return string URL to redirect to
 	 */
-	public function register_redirect( $redirect_to ) {
+	public function registration_redirect( $redirect_to ) {
 		// Redirect to login page with "registration=complete" added to the query
 		$redirect_to = site_url( 'wp-login.php?registration=complete' );
 		// Add instance to the query if specified
