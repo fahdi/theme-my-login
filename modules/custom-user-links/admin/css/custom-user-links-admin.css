@@ -1,72 +1,29 @@
 #theme_my_login_user_links div.ajax-response {
 	border: none;
 }
-
-#theme_my_login_user_links .submit input {
-	text-decoration: none;
-	font-size: 11px !important;
-	line-height: 13px;
-	padding: 3px 8px;
-	cursor: pointer;
-	border-width: 1px;
-	border-style: solid;
-	-moz-border-radius: 11px;
-	-khtml-border-radius: 11px;
-	-webkit-border-radius: 11px;
-	border-radius: 11px;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	-khtml-box-sizing: content-box;
-	box-sizing: content-box;
-}
-
-#theme_my_login_user_links input,
-#theme_my_login_user_links textarea {
-	border-width: 1px;
-	border-style: solid;
-	-moz-border-radius: 3px;
-	-khtml-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-}
-
-#theme_my_login_user_links .updatelink,
-#theme_my_login_user_links .deletelink {
-	margin: auto;
-}
-
-#theme_my_login_user_links .submit {
-	border: 0 none;
-	float: none !important;
-	padding: 5px 8px !important;
-	width: 25%;
-}
-
 #theme_my_login_user_links table {
 	width: 100%;
 	margin: 0;
 	border-spacing: 0;
 }
-
 #theme_my_login_user_links table input[type="text"] {
 	width: 95%;
-	margin: 4px 0 4px 8px;
-	border-color: #dfdfdf;
-	background-color: #fff;
 }
-
 #theme_my_login_user_links th.left,
 #theme_my_login_user_links td.left {
 	width: 35%;
 }
-
 #theme_my_login_user_links td.center {
 	text-align: center;
 }
-
-#theme_my_login_user_links td.submit input {
-	width: 50px;
+#theme_my_login_user_links td.submit {
+	border: 0 none;
+	float: none !important;
+	padding: 5px 8px !important;
+	width: 25%;
 }
-
+#theme_my_login_user_links td.submit input {
+	min-width: 75px;
+}
 #theme_my_login_user_links .alternate {
 	background-color: transparent;
