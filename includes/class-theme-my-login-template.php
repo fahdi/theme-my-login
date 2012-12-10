@@ -496,7 +496,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 				$url = apply_filters( 'lostpassword_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_page_link( 'login', 'checkemail=confirm' ) );
 				break;
 			case 'register' :
-				$url = apply_filters( 'register_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_page_link( 'login', 'checkemail=registered' ) );
+				$url = apply_filters( 'registration_redirect', ! empty( $redirect_to ) ? $redirect_to : Theme_My_Login::get_page_link( 'login', 'checkemail=registered' ) );
 				break;
 			case 'login' :
 			default :
