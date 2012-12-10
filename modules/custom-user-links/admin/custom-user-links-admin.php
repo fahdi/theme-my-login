@@ -185,11 +185,8 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	 * @param array $args Arguments passed in by add_settings_section()
 	 */
 	public function user_links_meta_box( $object, $box ) {
-		$role = $box['id'];
-
+		$role  = $box['id'];
 		$links = $this->get_option( $role );
-		if ( empty($links) )
-			$links = array();
 		?>
 	<div id="ajax-response-<?php echo $role; ?>" class="ajax-response"></div>
 
@@ -403,14 +400,16 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function delete_user_link_ajax() {
-		global $id;
-
 		if ( ! current_user_can( 'manage_options' ) )
-			die( '-1' );
+			wp_die( -1 );
 
 		$user_role = isset( $_POST['user_role'] ) ? $_POST['user_role'] : '';
 		if ( empty( $user_role ) )
-			die( '0' );
+			wp_die( -1 );
+
+		$id = isset( $_POST['id'] ) ? $_POST['id'] : '';
+		if ( empty( $id ) )
+			wp_die( -1 );
 
 		check_ajax_referer( "delete-user-link_$id" );
 
@@ -421,9 +420,9 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 			// Save links
 			$this->set_options( $links );
 			$this->save_options();
-			die( '1' );
+			wp_die( 1 );
 		}
-		die( '0' );
+		wp_die( 0 );
 	}
 }
 
