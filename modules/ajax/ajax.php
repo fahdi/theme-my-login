@@ -40,10 +40,10 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 		add_action( 'template_redirect',  array( &$this, 'template_redirect'  ) );
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 
-		add_filter( 'tml_action_url',         array( &$this, 'tml_action_url'         ),  10, 3 );
-		add_filter( 'tml_redirect_url',       array( &$this, 'tml_redirect_url'       ),  10, 2 );
-		add_filter( 'page_css_class',         array( &$this, 'page_css_class'         ),  10, 2 );
-		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )         );
+		add_filter( 'tml_action_url',         array( &$this, 'tml_action_url'         ),  100, 3 );
+		add_filter( 'tml_redirect_url',       array( &$this, 'tml_redirect_url'       ),  100, 2 );
+		add_filter( 'page_css_class',         array( &$this, 'page_css_class'         ),   10, 2 );
+		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )          );
 	}
 
 	/**
@@ -145,17 +145,13 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 			switch ( $action ) {
 				case 'lostpassword' :
 				case 'retrievepassword' :
-					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=confirm&ajax=1' );
-					break;
 				case 'register' :
-					$url = Theme_My_Login::get_page_link( 'login', 'checkemail=registered&ajax=1' );
+					$url = add_query_arg( 'ajax', 1, $url );
 					break;
 				case 'login' :
 					$url = Theme_My_Login::get_page_link( 'login', 'ajax=1' );
 					break;
 			}
-			if ( isset( $_GET['instance'] ) )
-				$url = add_query_arg( 'instance', $_GET['instance'], $url );
 		}
 		return $url;
 	}
