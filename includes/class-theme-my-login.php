@@ -180,13 +180,14 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 
 		register_post_type( 'tml_page', array(
 			'public'       => true,
-			'show_in_menu' => false,
+			'show_in_menu' => 'theme_my_login',
 			'hierarchical' => true,
 			'supports'     => array( 'title', 'editor', 'page-attributes' ),
 			'rewrite'      => false,
 			'labels'       => array(
-				'name'          => 'TML Pages',
-				'singular_name' => 'TML Page'
+				'name'          => __( 'Theme My Login Pages', 'theme-my-login' ),
+				'singular_name' => __( 'Theme My Login Page',  'theme-my-login' ),
+				'menu_name'     => __( 'Pages' )
 			)
 		) );
 

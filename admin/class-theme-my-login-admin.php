@@ -84,14 +84,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			array( 'Theme_My_Login_Admin', 'settings_page' )
 		);
 
-		add_submenu_page(
-			'theme_my_login',
-			__( 'Pages' ),
-			__( 'Pages' ),
-			'manage_options',
-			'edit.php?post_type=tml_page'
-		);
-
 		// General section
 		add_settings_section( 'general',    __( 'General', 'theme-my-login'    ), '__return_false', $this->options_key );
 		add_settings_section( 'modules',    __( 'Modules', 'theme-my-login'    ), '__return_false', $this->options_key );
