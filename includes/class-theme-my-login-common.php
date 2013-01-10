@@ -96,7 +96,7 @@ class Theme_My_Login_Common {
 			$user = get_user_by( 'id', $user_id );
 
 		// Get all matches ($matches[0] will be '%value%'; $matches[1] will be 'value')
-		preg_match_all( '/%([^%]*)%/', $input, $matches );
+		preg_match_all( '/%([a-zA-Z0-9-_]*)%/', $input, $matches );
 
 		// Iterate through matches
 		foreach ( $matches[0] as $key => $match ) {
