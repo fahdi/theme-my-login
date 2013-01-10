@@ -116,9 +116,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @return string URL to redirect to
 	 */
 	public function register_redirect( $redirect_to ) {
-		$theme_my_login = Theme_My_Login::get_object();
 
-		$redirect_to = $theme_my_login->get_login_page_link();
+		$redirect_to = Theme_My_Login::get_page_link( 'login' );
 
 		switch ( $this->get_option( 'type' ) ) {
 			case 'email' :
@@ -156,10 +155,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 				if ( 'email' == $this->get_option( 'type' ) ) {
 					return new WP_Error( 'pending', sprintf(
 						__( '<strong>ERROR</strong>: You have not yet confirmed your e-mail address. <a href="%s">Resend activation</a>?', 'theme-my-login' ),
-						Theme_My_Login::get_object()->get_login_page_link( array(
-							'action' => 'sendactivation',
-							'login'  => $username
-						) )
+						Theme_My_Login::get_page_link( 'login', array( 'action' => 'sendactivation', 'login' => $username ) )
 					) );
 				} else {
 					return new WP_Error( 'pending', __( '<strong>ERROR</strong>: Your registration has not yet been approved.', 'theme-my-login' ) );
@@ -183,9 +179,9 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * @return bool Whether to allow password reset or not
 	 */
 	public function allow_password_reset( $allow, $user_id ) {
-		$user = new WP_User( $user_id );
+		$user = get_user_by( 'id', $user_id );
 		if ( in_array( 'pending', (array) $user->roles ) )
-			$allow = false;
+			return false;
 		return $allow;
 	}
 
@@ -350,7 +346,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	public static function activate_new_user( $key, $login ) {
 		global $wpdb;
 
-		$key = preg_replace('/[^a-z0-9]/i', '', $key);
+		$key = preg_replace( '/[^a-z0-9]/i', '', $key );
 
 		if ( empty( $key ) || ! is_string( $key ) )
 			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
@@ -379,7 +375,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		// Set user role
 		$user_object = new WP_User( $user->ID );
 		$user_object->set_role( get_option( 'default_role' ) );
-		unset( $user_object );
 
 		// Check for plaintext pass
 		if ( ! $user_pass = get_user_meta( $user->ID, 'user_pass', true ) ) {
