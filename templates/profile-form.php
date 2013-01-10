@@ -15,7 +15,7 @@ $user_can_edit = current_user_can( 'edit_posts' ) || current_user_can( 'edit_pag
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
 	<?php $template->the_action_template_message( 'profile' ); ?>
 	<?php $template->the_errors(); ?>
-	<form id="your-profile" action="" method="post">
+	<form id="your-profile" action="<?php $template->the_action_url( 'profile' ); ?>" method="post">
 		<?php wp_nonce_field( 'update-user_' . $current_user->ID ); ?>
 		<p>
 			<input type="hidden" name="from" value="profile" />
