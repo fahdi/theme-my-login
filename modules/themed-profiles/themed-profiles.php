@@ -78,9 +78,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
 		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar'    ) );
 
-		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' )        );
-		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' )        );
-		add_filter( 'tml_title',           array( &$this, 'tml_title'           ), 10, 2 );
+		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' ) );
+		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' ) );
 	}
 
 	/**
@@ -211,19 +210,7 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/themed-profiles.css' ) );
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-
-		wp_enqueue_script( 'user-profile',            admin_url( "js/user-profile$suffix.js" ),            array( 'jquery' ), '', true );
-		wp_enqueue_script( 'password-strength-meter', admin_url( "js/password-strength-meter$suffix.js" ), array( 'jquery' ), '', true );
-
-		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-			'empty'            => __( 'Strength indicator'          ),
-			'short'            => __( 'Very weak'                   ),
-			'bad'              => __( 'Weak'                        ),
-			'good'             => _x( 'Medium', 'password strength' ),
-			'strong'           => __( 'Strong'                      ),
-			'l10n_print_after' => 'try{convertEntities(pwsL10n);}catch(e){};'
-		) );
+		wp_enqueue_script( 'user-profile' );
 
 		$current_user = wp_get_current_user();
 
@@ -239,9 +226,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 			if ( ! is_wp_error( $errors ) ) {
 				$args = array( 'updated' => 'true' );
-				if ( isset( $_REQUEST['instance'] ) )
+				if ( ! empty( $_REQUEST['instance'] ) )
 					$args['instance'] = $_REQUEST['instance'];
-				$redirect = add_query_arg( $args, $redirect );
+				$redirect = add_query_arg( $args );
 				wp_redirect( $redirect );
 				exit;
 			} else {
@@ -328,25 +315,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 				$url = add_query_arg( array_map( 'rawurlencode', wp_parse_args( $parsed_url['query'] ) ), $url );
 		}
 		return $url;
-	}
-
-	/**
-	 * Changes the page title for themed profile page
-	 *
-	 * Callback for "tml_title" hook in method Theme_My_Login_Template::get_page_title()
-	 *
-	 * @see Theme_My_Login_Template::get_page_title()
-	 * @since 6.0
-	 * @access public
-	 *
-	 * @param string $title The current title
-	 * @param string $action The requested action
-	 * @return string The filtered title
-	 */
-	public function tml_title( $title, $action ) {
-		if ( 'profile' == $action )
-			$title = __( 'Your Profile' );
-		return $title;
 	}
 }
 

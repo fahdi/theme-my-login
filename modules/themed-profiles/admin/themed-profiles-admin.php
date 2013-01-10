@@ -68,6 +68,18 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function activate() {
+		if ( ! $page_id = Theme_My_Login::get_page_id( 'profile' ) ) {
+			$page_id = wp_insert_post( array(
+				'post_title'     => __( 'Your Profile' ),
+				'post_status'    => 'publish',
+				'post_type'      => 'tml_page',
+				'post_content'   => '[theme-my-login]',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed'
+			) );
+			update_post_meta( $page_id, '_tml_action', 'profile' );
+		}
+
 		$this->save_options();
 	}
 
@@ -93,8 +105,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function admin_menu() {
-		global $theme_my_login;
-
 		add_submenu_page(
 			'theme_my_login',
 			__( 'Theme My Login Themed Profiles Settings', 'theme-my-login' ),
@@ -108,9 +118,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 
 		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles'       ), $this->options_key, 'general' );
 		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( &$this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
-
-		if ( class_exists( 'Theme_My_Login_Custom_Permalinks' ) )
-			add_settings_field( 'profile', __( 'Profile' ), array( &$this, 'settings_field_permalink' ), 'theme_my_login_permalinks', 'general' );
 	}
 
 	/**
@@ -176,18 +183,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 			<label for="<?php echo $this->options_key; ?>_<?php echo $role; ?>_restrict_admin"><?php echo $role_name; ?></label><br />
 			<?php
 		}
-	}
-
-	/**
-	 * Outputs HTML for "Permalinks" settings tab
-	 *
-	 * @since 6.2
-	 * @access public
-	 */
-	public function settings_field_permalink() {
-		Theme_My_Login_Custom_Permalinks_Admin::get_object()->settings_field_permalink( array(
-			'action' => 'profile'
-		) );
 	}
 
 	/**
