@@ -260,7 +260,9 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		$current_user = wp_get_current_user();
 		$profileuser  = get_user_to_edit( $current_user->ID );
 
-		$role = reset( $profileuser->roles );
+		$user_role = reset( $profileuser->roles );
+		if ( is_multisite() && empty( $user_role ) )
+			$user_role = 'subscriber';
 
 		$_template = array();
 
@@ -269,17 +271,17 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 			$_template[] = $template->options['profile_template'];
 
 		// Allow role template overrid via shortcode or template tag args
-		if ( ! empty( $template->options["profile_template_$role"] ) )
-			$_template[] = $template->options["profile_template_$role"];
+		if ( ! empty( $template->options["profile_template_{$user_role}"] ) )
+			$_template[] = $template->options["profile_template_{$user_role}"];
 
 		// Role template
-		$_template[] = "profile-form-$role.php";
+		$_template[] = "profile-form-{$user_role}.php";
 
 		// Default template
 		$_template[] = 'profile-form.php';
 
 		// Load template
-		$template->get_template( $_template, true, compact( 'current_user', 'profileuser', '_wp_admin_css_colors', 'wp_version' ) );
+		$template->get_template( $_template, true, compact( 'current_user', 'profileuser', 'user_role', '_wp_admin_css_colors', 'wp_version' ) );
 	}
 
 	/**

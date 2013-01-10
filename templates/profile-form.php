@@ -3,14 +3,7 @@
 If you would like to edit this file, copy it to your current theme's directory and edit it there.
 Theme My Login will always look in your theme's directory first, before using this default template.
 */
-
-$user_role = reset( $profileuser->roles );
-if ( is_multisite() && empty( $user_role ) ) {
-	$user_role = 'subscriber';
-}
-
 ?>
-
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
 	<?php $template->the_action_template_message( 'profile' ); ?>
 	<?php $template->the_errors(); ?>
