@@ -273,7 +273,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			remove_role( 'denied' );
 		}
 		// 6.3 upgrade
-		if ( version_compare( $version, '6.4', '<' ) ) {
+		if ( version_compare( $version, '6.3', '<' ) ) {
 			// Delete obsolete options
 			$this->delete_option( 'page_id'          );
 			$this->delete_option( 'initial_nag'      );
@@ -309,7 +309,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 		// Setup default pages
 		foreach ( Theme_My_Login::default_pages() as $action => $title ) {
-			if ( ! $page = $wpdb->get_row( $wpdb->prepare( "SELECT p.* FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta pmeta ON p.ID = pmeta.post_id WHERE p.post_type = 'tml_page' AND pmeta.meta_key = '_tml_action' AND pmeta.meta_value = %s", $action ) ) ) {
+			if ( ! $page_id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta pmeta ON p.ID = pmeta.post_id WHERE p.post_type = 'tml_page' AND pmeta.meta_key = '_tml_action' AND pmeta.meta_value = %s", $action ) ) ) {
 				$page_id = wp_insert_post( array(
 					'post_title'     => $title,
 					'post_status'    => 'publish',
