@@ -9,7 +9,6 @@ if ( is_multisite() && empty( $user_role ) ) {
 	$user_role = 'subscriber';
 }
 
-$user_can_edit = current_user_can( 'edit_posts' ) || current_user_can( 'edit_pages' );
 ?>
 
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
@@ -22,46 +21,15 @@ $user_can_edit = current_user_can( 'edit_posts' ) || current_user_can( 'edit_pag
 			<input type="hidden" name="checkuser_id" value="<?php echo $current_user->ID; ?>" />
 		</p>
 
-		<?php if ( ! $theme_my_login->get_option( array( 'themed_profiles', $user_role, 'restrict_admin' ) ) && ! has_action( 'personal_options' ) ): ?>
+		<?php if ( has_action( 'personal_options' ) ) : ?>
 
 		<h3><?php _e( 'Personal Options' ); ?></h3>
 
 		<table class="form-table">
-		<?php if ( rich_edit_exists() && $user_can_edit ) : // don't bother showing the option if the editor has been removed ?>
-		<tr>
-			<th scope="row"><?php _e( 'Visual Editor' ); ?></th>
-			<td><label for="rich_editing"><input name="rich_editing" type="checkbox" id="rich_editing" value="false" <?php checked( 'false', $profileuser->rich_editing ); ?> /> <?php _e( 'Disable the visual editor when writing' ); ?></label></td>
-		</tr>
-		<?php endif; ?>
-		<?php if ( count( $_wp_admin_css_colors ) > 1 && has_action( 'admin_color_scheme_picker' ) ) : ?>
-		<tr>
-			<th scope="row"><?php _e( 'Admin Color Scheme' ); ?></th>
-			<td><?php do_action( 'admin_color_scheme_picker' ); ?></td>
-		</tr>
-		<?php
-		endif; // $_wp_admin_css_colors
-		if ( $user_can_edit ) : ?>
-		<tr>
-			<th scope="row"><?php _e( 'Keyboard Shortcuts' ); ?></th>
-			<td><label for="comment_shortcuts"><input type="checkbox" name="comment_shortcuts" id="comment_shortcuts" value="true" <?php if ( ! empty( $profileuser->comment_shortcuts ) ) checked( 'true', $profileuser->comment_shortcuts ); ?> /> <?php _e( 'Enable keyboard shortcuts for comment moderation.' ); ?></label> <?php _e( '<a href="http://codex.wordpress.org/Keyboard_Shortcuts" target="_blank">More information</a>' ); ?></td>
-		</tr>
-		<?php endif; ?>
-		<tr class="show-admin-bar">
-			<th scope="row"><?php _e( 'Toolbar' ); ?></th>
-			<td>
-				<fieldset>
-					<legend class="screen-reader-text"><span><?php _e( 'Toolbar' ); ?></span></legend>
-					<label for="admin_bar_front">
-						<input name="admin_bar_front" type="checkbox" id="admin_bar_front" value="1"<?php checked( _get_admin_bar_pref( 'front', $profileuser->ID ) ); ?> />
-						<?php _e( 'Show Toolbar when viewing site' ); ?>
-					</label>
-					<br />
-				</fieldset>
-			</td>
-		</tr>
 		<?php do_action( 'personal_options', $profileuser ); ?>
 		</table>
-		<?php endif; // restrict admin ?>
+
+		<?php endif; ?>
 
 		<?php do_action( 'profile_personal_options', $profileuser ); ?>
 
@@ -174,30 +142,7 @@ $user_can_edit = current_user_can( 'edit_posts' ) || current_user_can( 'edit_pag
 		<?php endif; ?>
 		</table>
 
-		<?php
-			do_action( 'show_user_profile', $profileuser );
-		?>
-
-		<?php if ( count( $profileuser->caps ) > count( $profileuser->roles ) && apply_filters( 'additional_capabilities_display', true, $profileuser ) ) { ?>
-		<br class="clear" />
-			<table width="99%" style="border: none;" cellspacing="2" cellpadding="3" class="editform">
-				<tr>
-					<th scope="row"><?php _e( 'Additional Capabilities' ); ?></th>
-					<td><?php
-					$output = '';
-					global $wp_roles;
-					foreach ( $profileuser->caps as $cap => $value ) {
-						if ( ! $wp_roles->is_role( $cap ) ) {
-							if ( $output != '' )
-								$output .= ', ';
-							$output .= $value ? $cap : "Denied: {$cap}";
-						}
-					}
-					echo $output;
-					?></td>
-				</tr>
-			</table>
-		<?php } ?>
+		<?php do_action( 'show_user_profile', $profileuser ); ?>
 
 		<p class="submit">
 			<input type="hidden" name="action" value="profile" />
