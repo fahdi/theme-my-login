@@ -68,8 +68,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'init',              array( &$this, 'init'              ) );
-		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
+		add_action( 'init',               array( &$this, 'init'              ) );
+		add_action( 'template_redirect',  array( &$this, 'template_redirect' ) );
+		add_action( 'tml_request_unlock', array( &$this, 'request_unlock' ) );
 
 		add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
 		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
@@ -116,6 +117,61 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 				exit;
 			}
 		}
+	}
+
+	/**
+	 * Handles "unlock" action for login page
+	 *
+	 * Callback for "tml_request_activate" hook in method Theme_My_Login::the_request();
+	 *
+	 * @see Theme_My_Login::the_request();
+	 * @since 6.3
+	 */
+	public function request_unlock() {
+		$user = self::check_user_unlock_key( $_GET['key'], $_GET['login'] );
+
+		$redirect_to = Theme_My_Login_Common::get_current_url();
+
+		if ( is_wp_error( $user ) ) {
+			$redirect_to = add_query_arg( 'unlock', 'invalidkey', $redirect_to );
+			wp_redirect( $redirect_to );
+			exit;
+		}
+
+		self::unlock_user( $user->ID );
+
+		$redirect_to = add_query_arg( 'unlock', 'complete', $redirect_to );
+		wp_redirect( $redirect_to );
+		exit;
+	}
+
+	/**
+	 * Validates a user unlock key
+	 *
+	 * @since 6.3
+	 *
+	 * @param string $key Unlock key
+	 * @param string $login User login
+	 * @return WP_User|WP_Error WP_User object on success, WP_Error object on failure
+	 */
+	public static function check_user_unlock_key( $key, $login ) {
+		global $wpdb;
+
+		$key = preg_replace( '/[^a-z0-9]/i', '', $key );
+
+		if ( empty( $key ) || ! is_string( $key ) )
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
+
+		if ( empty( $login ) || ! is_string( $login ) )
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
+
+		if ( ! $user = get_user_by( 'login', $login ) )
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
+
+		if ( $key != self::get_user_unlock_key( $user->ID ) )
+			return new WP_Error( 'invalid_key', __( 'Invalid key' ) );
+
+		return $user;
 	}
 
 	/**
@@ -274,11 +330,14 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 
 		$security = self::get_security_meta( $user );
 
-		$security['is_locked'] = true;
-		if ( $expires )
-			$security['lock_expiration'] = absint( $expires );
+		$security['is_locked']       = true;
+		$security['lock_expiration'] = absint( $expires );
+		$security['unlock_key']      = wp_generate_password( 20, false );
 
-		return update_user_meta( $user, 'theme_my_login_security', $security );
+		update_user_meta( $user, 'theme_my_login_security', $security );
+
+		if ( $expires )
+			self::user_lock_notification( $user );
 	}
 
 	/**
@@ -299,9 +358,9 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 
 		$security = self::get_security_meta( $user );
 
-		$security['is_locked'] = false;
-		if ( isset( $security['lock_expiration'] ) )
-			unset( $security['lock_expiration'] );
+		$security['is_locked']             = false;
+		$security['lock_expiration']       = 0;
+		$security['unlock_key']            = '';
 		$security['failed_login_attempts'] = array();
 
 		return update_user_meta( $user, 'theme_my_login_security', $security );
@@ -354,6 +413,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	protected static function get_security_meta( $user_id ) {
 		$defaults = array(
 			'is_locked'             => false,
+			'lock_expiration'       => 0,
+			'unlock_key'            => '',
 			'failed_login_attempts' => array()
 		);
 		$meta = get_user_meta( $user_id, 'theme_my_login_security', true );
@@ -374,8 +435,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 */
 	public static function get_failed_login_attempts( $user_id ) {
 		$security_meta = self::get_security_meta( $user_id );
-		if ( ! is_array( $security_meta['failed_login_attempts'] ) )
-			$security_meta['failed_login_attempts'] = array();
 		return $security_meta['failed_login_attempts'];
 	}
 
@@ -444,11 +503,21 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * @return int User's lock expiration time
 	 */
 	public static function get_user_lock_expiration( $user_id ) {
-		$expiration = false;
 		$security_meta = self::get_security_meta( $user_id );
-		if ( isset( $security_meta['lock_expiration'] ) )
-			$expiration = absint( $security_meta['lock_expiration'] );
-		return apply_filters( 'tml_user_lock_expiration', $expiration, $user_id );
+		return apply_filters( 'tml_user_lock_expiration', absint( $security_meta['lock_expiration'] ), $user_id );
+	}
+
+	/**
+	 * Get a user's unlock key
+	 *
+	 * @since 6.3
+	 *
+	 * @param int $user_id User ID
+	 * @return string User's unlock key
+	 */
+	public static function get_user_unlock_key( $user_id ) {
+		$security_meta = self::get_security_meta( $user_id );
+		return apply_filters( 'tml_user_unlock_key', $security_meta['unlock_key'], $user_id );
 	}
 
 	/**
@@ -474,6 +543,52 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 				break;
 		}
 		return $value;
+	}
+
+	/**
+	 * Sends a user a notification that their account has been locked
+	 *
+	 * @since 6.3
+	 *
+	 * @param int $user_id User ID
+	 */
+	public static function user_lock_notification( $user_id ) {
+		global $wpdb, $current_site;
+
+		if ( apply_filters( 'send_user_lock_notification', true ) ) {
+			$user = new WP_User( $user_id );
+
+			$user_login = stripslashes( $user->user_login );
+			$user_email = stripslashes( $user->user_email );
+
+			if ( is_multisite() ) {
+				$blogname = $current_site->site_name;
+			} else {
+				// The blogname option is escaped with esc_html on the way into the database in sanitize_option
+				// we want to reverse this for the plain text arena of emails.
+				$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+			}			
+
+			$unlock_url = add_query_arg( array( 'action' => 'unlock', 'key' => self::get_user_unlock_key( $user->ID ), 'login' => rawurlencode( $user_login ) ), wp_login_url() );
+
+			$title    = sprintf( __( '[%s] Account Locked', 'theme-my-login' ), $blogname );
+			$message  = sprintf( __( 'For your security, your account has been locked because of too many failed login attempts. To unlock your account please click the following link: ', 'theme-my-login' ), $blogname ) . "\r\n\r\n";
+			$message .=  $unlock_url . "\r\n";
+
+			if ( $user->has_cap( 'administrator' ) ) {
+				$message .= "\r\n";
+				$message .= __( 'The following attempts resulted in the lock:', 'theme-my-login' ) . "\r\n\r\n";
+				foreach ( self::get_failed_login_attempts( $user->ID ) as $attempt ) {
+					$time = date_i18n( __( 'Y/m/d g:i:s A' ), $attempt['time'] );
+					$message .= $attempt['ip'] . "\t" . $time . "\r\n";
+				}
+			}
+
+			$title   = apply_filters( 'user_lock_notification_title',   $title,   $user_id );
+			$message = apply_filters( 'user_lock_notification_message', $message, $unlock_url, $user_id );
+
+			wp_mail( $user_email, $title, $message );
+		}
 	}
 }
 
