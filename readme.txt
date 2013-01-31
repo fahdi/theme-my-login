@@ -41,6 +41,14 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 == Changelog ==
 
+= 6.3 =
+* Introduce tml_page post type and give each action it's own page
+* Introduce AJAX module
+* Implement user lock notifications for the Security module.
+* Add option to hide widget when logged out
+* Add option to disable wp-login.php to Security module
+* Removed languages from plugin
+
 = 6.2.3 =
 * Fix static front page bug
 * Remove tab indexes from forms
