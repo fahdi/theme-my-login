@@ -222,7 +222,7 @@ class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 					$meta = apply_filters( 'signup_create_blog_meta', array( 'lang_id' => 1, 'public' => $public ) ); // deprecated
 					$meta = apply_filters( 'add_signup_meta', $meta );
 
-					wpmu_create_blog( $domain, $path, $blog_title, $current_user->id, $meta, $wpdb->siteid );
+					wpmu_create_blog( $domain, $path, $blog_title, $current_user->ID, $meta, $wpdb->siteid );
 					?>
 					<h2><?php printf( __( 'The site %s is yours.' ), "<a href='http://{$domain}{$path}'>{$blog_title}</a>" ) ?></h2>
 					<p>
