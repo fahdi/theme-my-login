@@ -262,6 +262,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	protected function _install() {
 		global $wpdb;
 
+		// Initialize the plugin
+		Theme_My_Login::get_object()->init();
+
 		// Get plugin data
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
 
