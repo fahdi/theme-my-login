@@ -50,7 +50,7 @@ class Theme_My_Login_Custom_Passwords extends Theme_My_Login_Abstract {
 		add_filter( 'tml_register_passmail_template_message', array( &$this, 'register_passmail_template_message' ) );
 		add_action( 'tml_request',                            array( &$this, 'action_messages'                    ) );
 
-		add_filter( 'register_redirect', array( &$this, 'register_redirect' ) );
+		add_filter( 'registration_redirect', array( &$this, 'registration_redirect' ) );
 	}
 
 	/**

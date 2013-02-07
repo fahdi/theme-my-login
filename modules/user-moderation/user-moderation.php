@@ -65,8 +65,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 
 		if ( in_array( $this->get_option( 'type' ), array( 'admin', 'email' ) ) ) {
 
-			add_action( 'register_post',     array( &$this, 'register_post'     )      );
-			add_filter( 'register_redirect', array( &$this, 'register_redirect' ), 100 );
+			add_action( 'register_post',         array( &$this, 'register_post'         )      );
+			add_filter( 'registration_redirect', array( &$this, 'registration_redirect' ), 100 );
 
 			add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
 			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
@@ -106,16 +106,16 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	/**
 	 * Changes the registration redirection based upon moderaton type
 	 *
-	 * Callback for "register_redirect" hook in method Theme_My_Login::the_request()
+	 * Callback for "registration_redirect" hook in method Theme_My_Login_Template::get_redirect_url()
 	 *
-	 * @see Theme_My_Login::the_request()
+	 * @see Theme_My_Login_Template::get_redirect_url()
 	 * @since 6.0
 	 * @access public
 	 *
 	 * @param string $redirect_to Default redirect
 	 * @return string URL to redirect to
 	 */
-	public function register_redirect( $redirect_to ) {
+	public function registration_redirect( $redirect_to ) {
 
 		$redirect_to = Theme_My_Login::get_page_link( 'login' );
 
