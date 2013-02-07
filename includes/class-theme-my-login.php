@@ -276,11 +276,8 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function template_redirect() {
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : '';
-		if ( ! $this->request_action && self::is_tml_page() ) {
-			global $post;
-			if ( $action = self::get_page_action( $post->ID ) )
-				$this->request_action = $action;
-		}
+		if ( ! $this->request_action && self::is_tml_page() )
+			$this->request_action = self::get_page_action( get_the_id() );
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;
 
 		do_action_ref_array( 'tml_request', array( &$this ) );
