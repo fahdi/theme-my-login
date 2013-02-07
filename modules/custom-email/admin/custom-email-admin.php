@@ -51,6 +51,8 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
 		add_action( 'load-tml_page_theme_my_login_email', array( &$this, 'load_settings_page' ) );
+
+		add_action( 'user_register', array( &$this, 'user_register' ) );
 	}
 
 	/**
@@ -587,6 +589,21 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 			</tr>
 		</table>
 		<?php
+	}
+
+	public function user_register( $user_id ) {
+		$screen = get_current_screen();
+
+		if ( 'user' == $screen->base && 'add' == $screen->action ) {
+			do_action( 'tml_new_user_registered', $user_id, isset( $_POST['send_password'] ) ? $_POST['pass1'] : '' );
+
+			if ( current_user_can( 'list_users' ) )
+				$redirect = 'users.php?update=add&id=' . $user_id;
+			else
+				$redirect = add_query_arg( 'update', 'add', 'user-new.php' );
+			wp_redirect( $redirect );
+			exit;
+		}
 	}
 
 	/**
