@@ -176,7 +176,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function init() {
-		load_plugin_textdomain( 'theme-my-login', '', 'theme-my-login/language' );
+		self::load_textdomain();
 
 		register_post_type( 'tml_page', array(
 			'public'       => true,
@@ -954,6 +954,38 @@ if(typeof wpOnload=='function')wpOnload()
 		$this->loaded_instances[] = $instance;
 
 		return $instance;
+	}
+
+	/**
+	 * Load the translation file for current language. Checks the languages
+	 * folder inside the plugin first, and then the default WordPress
+	 * languages folder.
+	 *
+	 * Note that custom translation files inside the plugin folder
+	 * will be removed on plugin updates. If you're creating custom
+	 * translation files, please use the global language folder.
+	 *
+	 * @since 6.3
+	 *
+	 * @return bool True on success, false on failure
+	 */
+	private static function load_textdomain() {
+
+		// Traditional WordPress plugin locale filter
+		$locale        = apply_filters( 'plugin_locale',  get_locale(), 'theme-my-login' );
+		$mofile        = sprintf( 'theme-my-login-%s.mo', $locale );
+
+		// Look in global /wp-content/languages/theme-my-login folder
+		if ( file_exists( WP_LANG_DIR . '/theme-my-login/' . $mofile ) ) {
+			return load_textdomain( 'theme-my-login', WP_LANG_DIR . '/theme-my-login/' . $mofile );
+
+		// Look in local /wp-content/plugins/theme-my-login/language folder
+		} elseif ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/' . $mofile ) ) {
+			return load_textdomain( 'theme-my-login', WP_PLUGIN_DIR . '/theme-my-login/' . $mofile );
+		}
+
+		// Nothing found
+		return false;
 	}
 
 	/**
