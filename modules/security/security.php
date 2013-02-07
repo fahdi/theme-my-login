@@ -70,7 +70,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	protected function load() {
 		add_action( 'init',               array( &$this, 'init'              ) );
 		add_action( 'template_redirect',  array( &$this, 'template_redirect' ) );
-		add_action( 'tml_request_unlock', array( &$this, 'request_unlock' ) );
+		add_action( 'tml_request_unlock', array( &$this, 'request_unlock'    ) );
+		add_action( 'tml_request',        array( &$this, 'action_messages'   ) );
 
 		add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
 		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
@@ -143,6 +144,21 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 		$redirect_to = add_query_arg( 'unlock', 'complete', $redirect_to );
 		wp_redirect( $redirect_to );
 		exit;
+	}
+
+	/**
+	 * Handles display of various action/status messages
+	 *
+	 * Callback for "tml_request" hook in Theme_My_Login::the_request()
+	 *
+	 * @since 6.3
+	 * @access public
+	 *
+	 * @param object $theme_my_login Reference to global $theme_my_login object
+	 */
+	public function action_messages( &$theme_my_login ) {
+		if ( isset( $_GET['unlock'] ) && 'complete' == $_GET['unlock'] )
+			$theme_my_login->errors->add( 'unlock_complete', __( 'Your account has been unlocked. You may now log in.', 'theme-my-login' ), 'message' );
 	}
 
 	/**
