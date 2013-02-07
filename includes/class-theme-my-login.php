@@ -510,7 +510,6 @@ if(typeof wpOnload=='function')wpOnload()
 <?php
 				break;
 			case 'login' :
-			default :
 				$user_login = '';
 				if ( isset($_POST['log']) )
 					$user_login = ( 'incorrect_password' == $this->errors->get_error_code() || 'empty_password' == $this->errors->get_error_code() ) ? esc_attr( stripslashes( $_POST['log'] ) ) : '';
