@@ -48,6 +48,8 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 * Add option to hide widget when logged out
 * Add option to disable wp-login.php to Security module
 * Removed languages from plugin
+* Use Custom E-mail's New User template when a user is added via wp-admin
+* Use Custom E-mail's User Activation template when an activation is resent via wp-admin
 
 = 6.2.3 =
 * Fix static front page bug
