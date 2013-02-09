@@ -321,6 +321,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 			exit;
 		}
 
+		do_action( 'tml_user_activation_resend', $user_id );
+
 		$user = new WP_User( $user_id );
 
 		if ( in_array( 'pending', (array) $user->roles ) ) {

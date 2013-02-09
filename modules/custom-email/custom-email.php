@@ -127,7 +127,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 		add_action( 'tml_user_password_changed', array( &$this, 'password_change_notification' ) );
 
 		add_action( 'register_post',              array( &$this, 'apply_user_moderation_notification_filters' ) );
-		add_action( 'tml_request_sendactivation', array( &$this, 'apply_user_moderation_notification_filters' ) );
+		add_action( 'tml_user_activation_resend', array( &$this, 'apply_user_moderation_notification_filters' ) );
 		add_action( 'approve_user',               array( &$this, 'apply_user_approval_notification_filters' ) );
 		add_action( 'deny_user',                  array( &$this, 'apply_user_denial_notification_filters' ) );
 	}

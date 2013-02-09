@@ -247,6 +247,8 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 					case 'resendactivation' :
 						check_admin_referer( 'resend-activation' );
 
+						do_action( 'tml_user_activation_resend', $user );
+
 						if ( ! Theme_My_Login_User_Moderation::new_user_activation_notification( $user ) )
 							wp_die( __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) );
 
