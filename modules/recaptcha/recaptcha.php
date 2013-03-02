@@ -20,6 +20,14 @@ if ( ! class_exists( 'Theme_My_Login_Recaptcha' ) ) :
  */
 class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	/**
+	 * Holds reCAPTCHA API URI
+	 *
+	 * @since 6.3
+	 * @const string
+	 */
+	const RECAPTCHA_API_URI = 'http://www.google.com/recaptcha/api';
+
+	/**
 	 * Holds options key
 	 *
 	 * @since 6.3
@@ -27,6 +35,14 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_recaptcha';
+
+	/**
+	 * Holds response error code
+	 *
+	 * @since 6.3
+	 * @var string
+	 */
+	private $recaptcha_error_code;
 
 	/**
 	 * Returns singleton instance
@@ -65,8 +81,8 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 		if ( ! ( $this->get_option( 'public_key' ) || $this->get_option( 'private_key' ) ) )
 			return;
 
-		add_action( 'register_form',       array( &$this, 'recaptcha_display'  ) );
-		add_filter( 'registration_errors', array( &$this, 'recaptcha_validate' ) );
+		add_action( 'register_form',       array( &$this, 'register_form'       ) );
+		add_filter( 'registration_errors', array( &$this, 'registration_errors' ) );
 
 		if ( is_multisite() ) {
 			add_action( 'signup_extra_fields',       array( &$this, 'recaptcha_display'  ) );
@@ -76,23 +92,72 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Renders reCAPTCHA on register form
+	 *
+	 * @since 6.3
+	 */
+	public function register_form() {
+		$this->recaptcha_display();
+	}
+
+	/**
+	 * Retrieves reCAPTCHA errors
+	 *
+	 * @since 6.3
+	 *
+	 * @param WP_Error $errors WP_Error object
+	 * @return WP_Error WP_Error object
+	 */
+	public function registration_errors( $errors ) {
+		$response = $this->recaptcha_validate( $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field'] );
+		if ( is_wp_error( $response ) ) {
+			$error_code = $response->get_error_message();
+
+			$this->recaptcha_error_code = $error_code;
+
+			switch ( $error_code ) {
+				case 'invalid-site-private-key' :
+					$errors->add( $error_code, __( '<strong>ERROR</strong>: Invalid reCAPTCHA private key.', 'theme-my-login' ) );
+					break;
+				case 'invalid-request-cookie' :
+					$errors->add( $error_code, __( '<strong>ERROR</strong>: Invalid reCAPTCHA challenge parameter.', 'theme-my-login' ) );
+					break;
+				case 'incorrect-captcha-sol' :
+					$errors->add( $error_code, __( '<strong>ERROR</strong>: Incorrect captcha code.', 'theme-my-login' ) );
+					break;
+				case 'recaptcha-not-reachable' :
+				default :
+					$errors->add( $error_code, __( '<strong>ERROR</strong>: Unable to reach the reCAPTCHA server.', 'theme-my-login' ) );
+					break;
+			}
+		}
+		return $errors;
+	}
+
+	/**
 	 * Displays reCAPTCHA
 	 *
 	 * @since 6.3
 	 * @access public
 	 */
 	public function recaptcha_display( $errors = null ) {
-		require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/recaptcha/includes/recaptchalib.php' );
+		$args = array_filter( array(
+			'k'     => $this->get_option( 'public_key' ),
+			'error' => $this->recaptcha_error_code
+		) );
 		?>
-		<?php if ( $errors && ( $errmsg = $errors->get_error_message( 'recaptcha' ) ) ) : ?>
-			<p class="error"><?php echo $errmsg ?></p>
-		<?php endif; ?>
 		<script type="text/javascript">
 			var RecaptchaOptions = {
 				theme: '<?php echo $this->get_option( 'theme' ); ?>'
 			};
 		</script>
-		<?php echo recaptcha_get_html( $this->get_option( 'public_key' ) );
+		<script type="text/javascript" src="<?php echo add_query_arg( $args, self::RECAPTCHA_API_URI . '/challenge' ); ?>"></script>
+		<noscript>
+			<iframe src="<?php echo add_query_arg( $args, self::RECAPTCHA_API_URI . '/noscript' ); ?>" height="300" width="500" frameborder="0"></iframe><br>
+			<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+			<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+		</noscript>
+		<?php
 	}
 
 	/**
@@ -101,18 +166,30 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access public
 	 */
-	public function recaptcha_validate( $result ) {
-		require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/recaptcha/includes/recaptchalib.php' );
+	public function recaptcha_validate( $remote_ip, $challenge, $response ) {
+		$response = wp_remote_post( self::RECAPTCHA_API_URI . '/verify', array(
+			'body' => array(
+				'privatekey' => $this->get_option( 'private_key' ),
+				'remoteip'   => $remote_ip,
+				'challenge'  => $challenge,
+				'response'   => $response
+			)
+		) );
 
-		$response = recaptcha_check_answer( $this->get_option( 'private_key' ), $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field'] );
-		if ( ! $response->is_valid ) {
-			if ( is_multisite() )
-				$result['errors']->add( 'recaptcha', __( 'The CAPTCHA entered was incorrect', 'theme-my-login' ) );
-			else
-				$result->add( 'recaptcha', __( '<strong>ERROR</strong>: The CAPTCHA entered was incorrect', 'theme-my-login' ) );
+		$response_code    = wp_remote_retrieve_response_code( $response );
+		$response_message = wp_remote_retrieve_response_message( $response );
+
+		if ( 200 == $response_code ) {
+			// Parse the response
+			list( $is_valid, $error_code ) = array_map( 'trim', explode( "\n", wp_remote_retrieve_body( $response ) ) );
+
+			if ( 'true' == $is_valid )
+				return true;
+
+			return new WP_Error( 'recaptcha', $error_code );
 		}
 
-		return $result;
+		return new WP_Error( 'recaptcha', 'recaptcha-not-reachable' );
 	}
 }
 
