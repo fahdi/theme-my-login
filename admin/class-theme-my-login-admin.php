@@ -280,17 +280,19 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
 			remove_role( 'denied' );
+		}
 
 		// 6.0 upgrade
-		} elseif ( version_compare( $version, '6.0', '<' ) ) {
+		if ( version_compare( $version, '6.0', '<' ) ) {
 			// Replace shortcode
 			if ( $existing_page ) {
 				$existing_page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login'] );
 				wp_update_post( $existing_page );
 			}
+		}
 
 		// 6.3 upgrade
-		} elseif ( version_compare( $version, '6.3', '<' ) ) {
+		if ( version_compare( $version, '6.3', '<' ) ) {
 			// Delete obsolete options
 			$this->delete_option( 'page_id'          );
 			$this->delete_option( 'initial_nag'      );
