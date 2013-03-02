@@ -286,7 +286,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		if ( version_compare( $version, '6.0', '<' ) ) {
 			// Replace shortcode
 			if ( $existing_page ) {
-				$existing_page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login'] );
+				$existing_page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login]', $existing_page->post_content );
 				wp_update_post( $existing_page );
 			}
 		}
