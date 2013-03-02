@@ -78,6 +78,8 @@ var tmlAjax;
 
 			this.content.html(content);
 
+			this.window.trigger('show');
+
 			this.content.find(':input:visible:first').focus();
 
 			this.window.find('form').submit(function(e) {
@@ -98,6 +100,7 @@ var tmlAjax;
 
 		hide : function() {
 			tmlAjax.window
+				.trigger('hide')
 				.fadeOut('slow', function() {
 					tmlAjax.window.unbind().remove();
 				});
