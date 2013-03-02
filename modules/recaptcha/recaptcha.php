@@ -37,14 +37,6 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_recaptcha';
 
 	/**
-	 * Holds response error code
-	 *
-	 * @since 6.3
-	 * @var string
-	 */
-	private $recaptcha_error_code;
-
-	/**
 	 * Returns singleton instance
 	 *
 	 * @since 6.3
@@ -81,6 +73,8 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 		if ( ! ( $this->get_option( 'public_key' ) || $this->get_option( 'private_key' ) ) )
 			return;
 
+		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
+
 		add_action( 'register_form',       array( &$this, 'register_form'       ) );
 		add_filter( 'registration_errors', array( &$this, 'registration_errors' ) );
 
@@ -89,6 +83,20 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 			add_filter( 'wpmu_validate_user_signup', array( &$this, 'recaptcha_validate' ) );
 			add_filter( 'wpmu_validate_blog_signup', array( &$this, 'recaptcha_validate' ) );
 		}
+	}
+
+	/**
+	 * Enqueues scripts
+	 *
+	 * @since 6.3
+	 */
+	function wp_enqueue_scripts() {
+		wp_enqueue_script( 'recaptcha', 'http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' );
+		wp_enqueue_script( 'theme-my-login-recaptcha', plugins_url( 'theme-my-login/modules/recaptcha/js/recaptcha.js' ), array( 'recaptcha', 'jquery' ) );
+		wp_localize_script( 'theme-my-login-recaptcha', 'tmlRecaptcha', array(
+			'publickey' => $this->get_option( 'public_key' ),
+			'theme'     => $this->get_option( 'theme' )
+		) );
 	}
 
 	/**
@@ -111,9 +119,8 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	public function registration_errors( $errors ) {
 		$response = $this->recaptcha_validate( $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field'] );
 		if ( is_wp_error( $response ) ) {
-			$error_code = $response->get_error_message();
 
-			$this->recaptcha_error_code = $error_code;
+			$error_code = $response->get_error_message();
 
 			switch ( $error_code ) {
 				case 'invalid-site-private-key' :
@@ -141,22 +148,14 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function recaptcha_display( $errors = null ) {
-		$args = array_filter( array(
-			'k'     => $this->get_option( 'public_key' ),
-			'error' => $this->recaptcha_error_code
-		) );
 		?>
-		<script type="text/javascript">
-			var RecaptchaOptions = {
-				theme: '<?php echo $this->get_option( 'theme' ); ?>'
-			};
-		</script>
-		<script type="text/javascript" src="<?php echo add_query_arg( $args, self::RECAPTCHA_API_URI . '/challenge' ); ?>"></script>
-		<noscript>
-			<iframe src="<?php echo add_query_arg( $args, self::RECAPTCHA_API_URI . '/noscript' ); ?>" height="300" width="500" frameborder="0"></iframe><br>
-			<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-			<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
-		</noscript>
+		<div id="recaptcha">
+			<noscript>
+				<iframe src="<?php echo self::RECAPTCHA_API_URI; ?>/noscript?k=<?php echo $this->get_option( 'public_key' ); ?>" height="300" width="500" frameborder="0"></iframe><br>
+				<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+				<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+			</noscript>
+		</div>
 		<?php
 	}
 
