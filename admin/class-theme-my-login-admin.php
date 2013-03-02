@@ -271,12 +271,26 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// Current version
 		$version = $this->get_option( 'version', $plugin_data['Version'] );
 
+		// Get existing page ID
+		$page_id = $this->get_option( 'page_id' );
+
+		// Check if page exists
+		$existing_page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
+
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
 			remove_role( 'denied' );
-		}
+
+		// 6.0 upgrade
+		} elseif ( version_compare( $version, '6.0', '<' ) ) {
+			// Replace shortcode
+			if ( $existing_page ) {
+				$existing_page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login'] );
+				wp_update_post( $existing_page );
+			}
+
 		// 6.3 upgrade
-		if ( version_compare( $version, '6.3', '<' ) ) {
+		} elseif ( version_compare( $version, '6.3', '<' ) ) {
 			// Delete obsolete options
 			$this->delete_option( 'page_id'          );
 			$this->delete_option( 'initial_nag'      );
@@ -290,12 +304,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				if ( is_array( $value ) )
 					update_option( "theme_my_login_{$key}", $value );
 			}
-
-			// Get existing page ID
-			$page_id = $this->get_option( 'page_id' );
-
-			// Check if page exists
-			$existing_page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
 
 			// Maybe create login page?
 			if ( $existing_page ) {
