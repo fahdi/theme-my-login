@@ -98,10 +98,8 @@ abstract class Theme_My_Login_Abstract {
 	 * @param array|string
 	 */
 	public function load_options() {
-		if ( method_exists( $this, 'default_options' ) ) {
-			$class = get_class( $this );
-			$this->options = (array) $class::default_options();
-		}
+		if ( method_exists( $this, 'default_options' ) )
+			$this->options = (array) $this->default_options();
 
 		if ( ! $this->options_key )
 			return;
