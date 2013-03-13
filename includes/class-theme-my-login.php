@@ -132,7 +132,9 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'pre_get_posts',           array( &$this, 'pre_get_posts'           ) );
 		add_action( 'wp',                      array( &$this, 'wp'                      ) );
 		add_action( 'template_redirect',       array( &$this, 'template_redirect'       ) );
+		add_action( 'wp_enqueue_scripts',      array( &$this, 'wp_enqueue_scripts'      ) );
 		add_action( 'wp_head',                 array( &$this, 'wp_head'                 ) );
+		add_action( 'wp_footer',               array( &$this, 'wp_footer'               ) );
 		add_action( 'wp_print_footer_scripts', array( &$this, 'wp_print_footer_scripts' ) );
 		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'         ) );
 
@@ -464,6 +466,18 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Calls "login_enqueue_scripts" on login page
+	 *
+	 * Callback for "wp_enqueue_scripts" hook
+	 *
+	 * @since 6.3
+	 */
+	public function wp_enqueue_scripts() {
+		if ( self::is_tml_page() )
+			do_action( 'login_enqueue_scripts' );
+	}
+
+	/**
 	 * Calls "login_head" hook on login page
 	 *
 	 * Callback for "wp_head" hook
@@ -473,8 +487,26 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public function wp_head() {
 		if ( self::is_tml_page() ) {
-			do_action( 'login_enqueue_scripts' );
+			// This is already attached to "wp_head"
+			remove_action( 'login_head', 'wp_print_head_scripts', 9 );
+
 			do_action( 'login_head' );
+		}
+	}
+
+	/**
+	 * Calls "login_footer" hook on login page
+	 *
+	 * Callback for "wp_footer" hook
+	 *
+	 * @since 6.3
+	 */
+	public function wp_footer() {
+		if ( self::is_tml_page() ) {
+			// This is already attached to "wp_footer"
+			remove_action( 'login_footer', 'wp_print_footer_scripts', 20 );
+
+			do_action( 'login_footer' );
 		}
 	}
 
