@@ -545,8 +545,15 @@ class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 	 */
 	public function network_site_url( $url, $path, $orig_scheme ) {
 		global $current_site;
+
 		$url = $this->site_url( $url, $path, $orig_scheme );
+
+		switch_to_blog( 1 );
+
 		$url = Theme_My_Login::get_object()->site_url( $url, $path, $orig_scheme, $current_site->blog_id );
+
+		restore_current_blog();
+
 		return $url;
 	}
 
