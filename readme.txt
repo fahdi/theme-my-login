@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.3.0.1
+Stable tag: 6.3.1
 
 Themes the WordPress login pages according to your theme.
 
