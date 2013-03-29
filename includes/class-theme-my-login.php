@@ -223,7 +223,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		if ( ! $wp_query->is_main_query() )
 			return;
 
-		if ( $pagename = $wp_query->get( 'pagename' ) ) {
+		if ( ( $pagename = $wp_query->get( 'pagename' ) ) || ( $pagename = $wp_query->get( 'name' ) ) ) {
 			if ( $page = get_page_by_path( $pagename, OBJECT, 'tml_page' ) ) {
 				$wp_query->set( 'post_type', 'tml_page' );
 				$wp_query->is_single         = true;
