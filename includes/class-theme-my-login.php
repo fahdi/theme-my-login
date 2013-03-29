@@ -599,8 +599,15 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return string The template to include
 	 */
 	public function template_include( $template ) {
-		if ( self::is_tml_page() )
-			$template = get_page_template();
+		if ( self::is_tml_page() ) {
+			$templates = array();
+
+			if ( $action = self::get_page_action( get_the_id() ) )
+				$templates[] = "$action.php";
+
+			if ( $located = locate_template( $templates ) )
+				return $located;
+		}
 		return $template;
 	}
 
