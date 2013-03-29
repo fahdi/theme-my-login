@@ -36,6 +36,21 @@ Also includes a widget for sidebar login.
 
 == Frequently Asked Questions ==
 
+= How do I change the look of forms? =
+
+The same way you would change the look of anything else on your site: CSS. Theme My Login uses it's own very basic stylesheet.
+You can copy this to your theme's directory and add additional styling there or simply add additional styling to your theme's stylesheet.
+
+= I can't get into my site! What do I do? =
+
+Visit yoursite.com/wp-login.php.
+
+= What happened to the language folder? =
+
+As of version 6.3, Theme My Login no longer ships with translation files. Translations will be available at http://downloads.jfarthing.com.
+
+= How do I obtain additional assistance? =
+
 Please visit http://www.jfarthing.com/development/theme-my-login first and then visit http://www.jfarthing.com/support if you have any questions, concerns, suggestions or problems.
 
 
