@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.3.0.1
+Stable tag: 6.3.1
 
 Themes the WordPress login pages according to your theme.
 
@@ -55,6 +55,10 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 
 == Changelog ==
+
+= 6.3.1 =
+* Fix multisite 404 error when using Post Name permalink structure
+* Fix multisite redirect to main site for register
 
 = 6.3 =
 * Introduce tml_page post type and give each action it's own page
