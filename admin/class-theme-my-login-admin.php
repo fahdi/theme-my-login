@@ -294,6 +294,13 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// Generate permalinks
 		flush_rewrite_rules();
 
+		// Activate modules
+		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
+			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+				include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
+			do_action( 'tml_activate_' . $module );
+		}
+
 		$this->set_option( 'version', Theme_My_Login::version );
 		$this->save_options();
 	}
