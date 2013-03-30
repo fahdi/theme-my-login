@@ -844,7 +844,18 @@ if(typeof wpOnload=='function')wpOnload()
 	 * @return string Login page link with optional $query arguments appended
 	 */
 	public static function get_page_link( $action, $query = '' ) {
-		$link = self::_get_page_link( $action );
+		$page_id = self::get_page_id( $action );
+
+		if ( $page_id ) {
+			$link = get_permalink( $page_id );
+		} elseif ( $page_id = self::get_page_id( 'login' ) ) {
+			$link = add_query_arg( 'action', $action, get_permalink( $page_id ) );
+		} else {
+			// Remove site_url filter so we can use wp-login.php
+			remove_filter( 'site_url', array( self::get_object(), 'site_url' ), 10, 3 );
+
+			$link = site_url( "wp-login.php?action=$action" );
+		}
 
 		if ( ! empty( $query ) ) {
 			$args = wp_parse_args( $query );
@@ -856,25 +867,6 @@ if(typeof wpOnload=='function')wpOnload()
 		}
 
 		return apply_filters( 'tml_page_link', $link, $action, $query );
-	}
-
-	private static function _get_page_link( $action ) {
-		// Check if page exists
-		$page_id = self::get_page_id( $action );
-
-		// If not, try for Login page, if it wasn't tried already.
-		if ( ! $page_id && 'login' != $action )
-			$page_id = self::get_page_id( 'login' );
-
-		// Return permalink if page exists
-		if ( $page_id )
-			return get_permalink( $page_id );
-
-		// Remove site_url filter so we can return wp-login.php
-		remove_filter( 'site_url', array( self::get_object(), 'site_url' ), 10, 3 );
-
-		// Return wp-login.php
-		return site_url( 'wp-login.php' );
 	}
 
 	/**
