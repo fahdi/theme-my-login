@@ -56,7 +56,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		add_action( 'wp_trash_post',      array( &$this, 'wp_trash_post' ) );
 		add_action( 'before_delete_post', array( &$this, 'wp_trash_post' ) );
 
-		register_activation_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( &$this, 'install' ) );
 		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
 
@@ -104,6 +103,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function admin_init() {
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
+
+		if ( version_compare( $this->get_option( 'version', 0 ), Theme_My_Login::version, '<' ) )
+			$this->install();
 	}
 
 	/**
@@ -231,51 +233,21 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Wrapper for multisite installation
-	 *
-	 * @since 6.1
-	 * @access public
-	 */
-	public function install() {
-		global $wpdb;
-
-		if ( is_multisite() ) {
-			if ( isset( $_GET['networkwide'] ) && ( $_GET['networkwide'] == 1 ) ) {
-				$blogids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-				foreach ( $blogids as $blog_id ) {
-					switch_to_blog( $blog_id );
-					$this->_install();
-				}
-				restore_current_blog();
-				return;
-			}	
-		}
-		$this->_install();
-	}
-
-	/**
 	 * Installs TML
 	 *
 	 * @since 6.0
-	 * @access protected
+	 * @access private
 	 */
-	protected function _install() {
-		global $wpdb;
-
-		// Initialize the plugin
-		Theme_My_Login::get_object()->init();
-
-		// Get plugin data
-		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php' );
-
+	private function install() {
 		// Current version
-		$version = $this->get_option( 'version', $plugin_data['Version'] );
+		$version = $this->get_option( 'version', Theme_My_Login::version );
 
-		// Get existing page ID
-		$page_id = $this->get_option( 'page_id' );
-
-		// Check if page exists
-		$existing_page = ( $page_id ) ? get_page( $page_id ) : get_page_by_title( 'Login' );
+		// Check if legacy page exists
+		if ( $page_id = $this->get_option( 'page_id' ) ) {
+			$page = get_page( $page_id );
+		} else {
+			$page = get_page_by_title( 'Login' );
+		}
 
 		// 4.4 upgrade
 		if ( version_compare( $version, '4.4', '<' ) ) {
@@ -285,9 +257,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// 6.0 upgrade
 		if ( version_compare( $version, '6.0', '<' ) ) {
 			// Replace shortcode
-			if ( $existing_page ) {
-				$existing_page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login]', $existing_page->post_content );
-				wp_update_post( $existing_page );
+			if ( $page ) {
+				$page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login]', $page->post_content );
+				wp_update_post( $page );
 			}
 		}
 
@@ -308,15 +280,15 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			}
 
 			// Maybe create login page?
-			if ( $existing_page ) {
+			if ( $page ) {
 				// Make sure the page is not in the trash
 				if ( 'trash' == $page->post_status )
-					wp_untrash_post( $page_id );
+					wp_untrash_post( $page->ID );
 
 				// Change to new post type
-				$wpdb->update( $wpdb->posts, array( 'post_type' => 'tml_page' ), array( 'ID' => $existing_page->ID ) );
+				set_post_type( $page->ID, 'tml_page' );
 
-				update_post_meta( $existing_page->ID, '_tml_action', 'login' );
+				update_post_meta( $page->ID, '_tml_action', 'login' );
 			}
 		}
 
@@ -335,11 +307,11 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			}
 		}
 
-		$this->set_option( 'version', $plugin_data['Version'] );
-		$this->save_options();
-
 		// Generate permalinks
 		flush_rewrite_rules();
+
+		$this->set_option( 'version', Theme_My_Login::version );
+		$this->save_options();
 	}
 
 	/**
