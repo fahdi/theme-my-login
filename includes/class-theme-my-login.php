@@ -16,6 +16,14 @@ if ( ! class_exists( 'Theme_My_Login' ) ) :
  */
 class Theme_My_Login extends Theme_My_Login_Abstract {
 	/**
+	 * Holds plugin version
+	 *
+	 * @since 6.3.2
+	 * @const string
+	 */
+	const version = '6.3.2';
+
+	/**
 	 * Holds options key
 	 *
 	 * @since 6.3
