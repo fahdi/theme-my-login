@@ -56,6 +56,9 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 == Changelog ==
 
+= 6.3.2 =
+* Fix issue where pages weren't created when upgrading from previous versions
+
 = 6.3.1 =
 * Fix multisite 404 error when using Post Name permalink structure
 * Fix multisite redirect to main site for register
