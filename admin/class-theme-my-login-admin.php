@@ -248,7 +248,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// 6.3 upgrade
-		if ( version_compare( $version, '6.3', '<' ) ) {
+		if ( version_compare( $version, '6.3.3', '<' ) ) {
 			// Delete obsolete options
 			$this->delete_option( 'page_id'          );
 			$this->delete_option( 'initial_nag'      );
@@ -261,6 +261,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 				if ( is_array( $value ) )
 					update_option( "theme_my_login_{$key}", $value );
+
+				$this->delete_option( $key );
 			}
 
 			// Maybe create login page?
