@@ -248,7 +248,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// 6.3 upgrade
-		if ( version_compare( $version, '6.3', '<' ) ) {
+		if ( version_compare( $version, '6.3.3', '<' ) ) {
 			// Delete obsolete options
 			$this->delete_option( 'page_id'          );
 			$this->delete_option( 'initial_nag'      );
@@ -261,6 +261,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 				if ( is_array( $value ) )
 					update_option( "theme_my_login_{$key}", $value );
+
+				$this->delete_option( $key );
 			}
 
 			// Maybe create login page?
@@ -293,6 +295,13 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 		// Generate permalinks
 		flush_rewrite_rules();
+
+		// Activate modules
+		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
+			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+				include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
+			do_action( 'tml_activate_' . $module );
+		}
 
 		$this->set_option( 'version', Theme_My_Login::version );
 		$this->save_options();
