@@ -51,7 +51,7 @@ abstract class Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @access private
 	 */
-	private function __construct() {
+	protected function __construct() {
 		$this->load_options();
 		$this->load();
 	}
