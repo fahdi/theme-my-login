@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.2.3
+Stable tag: 6.3.3
 
 Themes the WordPress login pages according to your theme.
 
@@ -55,6 +55,12 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 
 == Changelog ==
+
+= 6.3.3 =
+* Fix issue where actions weren't being appended to page links
+* Fix issue where modules weren't being installed on upgrade
+* Fix fatal error in Custom E-mail module where old function name wasn't replaced
+* Fix private constructor issue for PHP versions less than 5.3
 
 = 6.3.2 =
 * Fix issue where pages weren't created when upgrading from previous versions
