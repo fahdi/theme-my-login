@@ -259,8 +259,10 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				if ( in_array( $key, array( 'active_modules' ) ) )
 					continue;
 
-				if ( is_array( $value ) )
-					update_option( "theme_my_login_{$key}", $value );
+				if ( ! is_array( $value ) )
+					continue;
+
+				update_option( "theme_my_login_{$key}", $value );
 
 				$this->delete_option( $key );
 			}
