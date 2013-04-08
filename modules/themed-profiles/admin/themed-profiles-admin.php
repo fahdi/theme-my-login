@@ -81,8 +81,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 
 			flush_rewrite_rules( false );
 		}
-
-		$this->save_options();
 	}
 
 	/**

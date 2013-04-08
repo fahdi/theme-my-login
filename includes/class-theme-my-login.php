@@ -98,8 +98,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public static function default_options() {
 		return apply_filters( 'tml_default_options', array(
-			'page_id'        => 0,
-			'show_page'      => true,
 			'enable_css'     => true,
 			'email_login'    => true,
 			'active_modules' => array()
@@ -885,7 +883,12 @@ if(typeof wpOnload=='function')wpOnload()
 		elseif ( 'retrievepassword' == $action )
 			$action = 'lostpassword';
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta pmeta ON p.ID = pmeta.post_id WHERE p.post_type = 'tml_page' AND pmeta.meta_key = '_tml_action' AND pmeta.meta_value = %s", $action ) );
+		$page_id = wp_cache_get( $action, 'tml_page_ids' );
+		if ( false === $page_id ) {
+			$page_id = $wpdb->get_var( $wpdb->prepare( "SELECT p.ID FROM $wpdb->posts p LEFT JOIN $wpdb->postmeta pmeta ON p.ID = pmeta.post_id WHERE p.post_type = 'tml_page' AND pmeta.meta_key = '_tml_action' AND pmeta.meta_value = %s", $action ) );
+			wp_cache_add( $action, $page_id, 'tml_page_ids' );
+		}
+		return $page_id;
 	}
 
 	/**

@@ -86,7 +86,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			add_settings_error( $this->options_key, 'invalid_module', __( 'User Moderation is not currently compatible with multisite.', 'theme-my-login' ) );
 			return;
 		}
-		$this->save_options();
 		add_role( 'pending', 'Pending', array() );
 	}
 

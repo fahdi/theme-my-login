@@ -44,7 +44,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_custom-email/custom-email.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_custom-email/custom-email.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -63,19 +62,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 */
 	public static function default_options() {
 		return Theme_My_Login_Custom_Email::default_options();
-	}
-
-	/**
-	 * Activates the module
-	 *
-	 * Callback for "tml_activate_custom-email/custom-email.php" hook in method Theme_My_Login_Modules_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Modules_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 */
-	public function activate() {
-		$this->save_options();
 	}
 
 	/**
