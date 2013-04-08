@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.3.4
+Stable tag: 6.3.5
 
 Themes the WordPress login pages according to your theme.
 
@@ -55,6 +55,9 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 
 == Changelog ==
+
+= 6.3.5 =
+* Fix issue with blank pages where page.php didn't exists in a theme
 
 = 6.3.4 =
 * Use verbose rewrite rules for TML pages
