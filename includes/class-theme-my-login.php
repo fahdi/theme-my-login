@@ -137,7 +137,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          ) );
 		add_action( 'init',                    array( &$this, 'init'                    ) );
 		add_action( 'widgets_init',            array( &$this, 'widgets_init'            ) );
-		add_action( 'pre_get_posts',           array( &$this, 'pre_get_posts'           ) );
 		add_action( 'wp',                      array( &$this, 'wp'                      ) );
 		add_action( 'template_redirect',       array( &$this, 'template_redirect'       ) );
 		add_action( 'wp_enqueue_scripts',      array( &$this, 'wp_enqueue_scripts'      ) );
@@ -217,30 +216,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function widgets_init() {
 		if ( class_exists( 'Theme_My_Login_Widget' ) )
 			register_widget( 'Theme_My_Login_Widget' );
-	}
-
-	/**
-	 * Changes post type to tml_page for TML permalinks
-	 *
-	 * @since 6.3
-	 *
-	 * @param object $wp_query WP_Query object
-	 */
-	public function pre_get_posts( &$wp_query ) {
-		global $wpdb;
-
-		if ( ! $wp_query->is_main_query() )
-			return;
-
-		if ( ( $pagename = $wp_query->get( 'pagename' ) ) || ( $pagename = $wp_query->get( 'name' ) ) ) {
-			if ( $page = get_page_by_path( $pagename, OBJECT, 'tml_page' ) ) {
-				$wp_query->set( 'post_type', 'tml_page' );
-				$wp_query->is_single         = true;
-				$wp_query->is_page           = false;
-				$wp_query->queried_object    = $page;
-				$wp_query->queried_object_id = $page->ID;
-			}
-		}
 	}
 
 	/**
