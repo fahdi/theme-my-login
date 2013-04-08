@@ -98,8 +98,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 */
 	public static function default_options() {
 		return apply_filters( 'tml_default_options', array(
-			'page_id'        => 0,
-			'show_page'      => true,
 			'enable_css'     => true,
 			'email_login'    => true,
 			'active_modules' => array()
