@@ -146,6 +146,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'wp_print_footer_scripts', array( &$this, 'wp_print_footer_scripts' ) );
 		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'         ) );
 
+		add_filter( 'rewrite_rules_array',    array( &$this, 'rewrite_rules_array'    )        );
 		add_filter( 'template_include',       array( &$this, 'template_include'       )        );
 		add_filter( 'site_url',               array( &$this, 'site_url'               ), 10, 3 );
 		add_filter( 'logout_url',             array( &$this, 'logout_url'             ), 10, 2 );
@@ -597,6 +598,28 @@ if(typeof wpOnload=='function')wpOnload()
 	/************************************************************************************************************************
 	 * Filters
 	 ************************************************************************************************************************/
+
+	/**
+	 * Generates verbose rewrite rules for plugin pages
+	 *
+	 * @since 6.3.4
+	 *
+	 * @param array $rules Rewrite rules
+	 * @return array Rewrite rules
+	 */
+	public function rewrite_rules_array( $rules ) {
+		$pages = get_posts( array(
+			'post_type'      => 'tml_page',
+			'posts_per_page' => -1
+		) );
+
+		$tml_rules = array();
+		foreach ( $pages as $page ) {
+			$tml_rules["{$page->post_name}/?$"] = "index.php?tml_page={$page->post_name}";
+		}
+
+		return array_merge( $tml_rules, $rules );
+	}
 
 	/**
 	 * Uses Page template hierarchy for TML pages
