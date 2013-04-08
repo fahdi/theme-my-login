@@ -254,6 +254,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			$this->delete_option( 'show_page'   );
 			$this->delete_option( 'initial_nag' );
 			$this->delete_option( 'permalinks'  );
+			$this->delete_option( 'flush_rules' );
 
 			// Move options to their own rows
 			foreach ( $this->get_options() as $key => $value ) {
