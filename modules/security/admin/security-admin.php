@@ -52,7 +52,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 	 * @access protected
 	 */
 	protected function load() {
-		add_action( 'tml_activate_security/security.php',  array( &$this, 'activate'  ) );
 		add_action( 'tml_uninstall_security/security.php', array( &$this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
@@ -60,19 +59,6 @@ class Theme_My_Login_Security_Admin extends Theme_My_Login_Abstract {
 
 		add_action( 'load-users.php',   array( &$this, 'load_users_page'  )        );
 		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
-	}
-
-	/**
-	 * Activates the module
-	 *
-	 * Callback for "tml_activate_security/security.php" hook in method Theme_My_Login_Modules_Admin::activate_module()
-	 *
-	 * @see Theme_My_Login_Modules_Admin::activate_module()
-	 * @since 6.0
-	 * @access public
-	 */
-	public function activate() {
-		$this->save_options();
 	}
 
 	/**
