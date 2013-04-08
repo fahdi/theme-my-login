@@ -83,6 +83,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 			$data = $instance->display();
 
+			send_origin_headers();
+
+			@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+			@header( 'X-Robots-Tag: noindex' );
+
+			send_nosniff_header();
+			nocache_headers();
+
 			$x = new WP_Ajax_Response( array(
 				'what'   => 'login',
 				'action' => $theme_my_login->request_action,
