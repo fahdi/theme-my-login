@@ -78,6 +78,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 				'ping_status'    => 'closed'
 			) );
 			update_post_meta( $page_id, '_tml_action', 'profile' );
+
+			flush_rewrite_rules( false );
 		}
 
 		$this->save_options();
