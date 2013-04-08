@@ -294,7 +294,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// Generate permalinks
-		flush_rewrite_rules();
+		flush_rewrite_rules( false );
 
 		// Activate modules
 		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
