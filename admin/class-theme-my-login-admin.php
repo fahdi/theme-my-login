@@ -250,9 +250,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// 6.3 upgrade
 		if ( version_compare( $version, '6.3.3', '<' ) ) {
 			// Delete obsolete options
-			$this->delete_option( 'page_id'          );
-			$this->delete_option( 'initial_nag'      );
-			$this->delete_option( 'show_in_pagelist' );
+			$this->delete_option( 'page_id'     );
+			$this->delete_option( 'show_page'   );
+			$this->delete_option( 'initial_nag' );
 
 			// Move options to their own rows
 			foreach ( $this->get_options() as $key => $value ) {
