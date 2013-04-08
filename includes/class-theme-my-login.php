@@ -21,7 +21,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	 * @since 6.3.2
 	 * @const string
 	 */
-	const version = '6.3.3';
+	const version = '6.3.4';
 
 	/**
 	 * Holds options key
@@ -137,7 +137,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          ) );
 		add_action( 'init',                    array( &$this, 'init'                    ) );
 		add_action( 'widgets_init',            array( &$this, 'widgets_init'            ) );
-		add_action( 'pre_get_posts',           array( &$this, 'pre_get_posts'           ) );
 		add_action( 'wp',                      array( &$this, 'wp'                      ) );
 		add_action( 'template_redirect',       array( &$this, 'template_redirect'       ) );
 		add_action( 'wp_enqueue_scripts',      array( &$this, 'wp_enqueue_scripts'      ) );
@@ -146,6 +145,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		add_action( 'wp_print_footer_scripts', array( &$this, 'wp_print_footer_scripts' ) );
 		add_action( 'wp_authenticate',         array( &$this, 'wp_authenticate'         ) );
 
+		add_filter( 'rewrite_rules_array',    array( &$this, 'rewrite_rules_array'    )        );
 		add_filter( 'template_include',       array( &$this, 'template_include'       )        );
 		add_filter( 'site_url',               array( &$this, 'site_url'               ), 10, 3 );
 		add_filter( 'logout_url',             array( &$this, 'logout_url'             ), 10, 2 );
@@ -216,30 +216,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function widgets_init() {
 		if ( class_exists( 'Theme_My_Login_Widget' ) )
 			register_widget( 'Theme_My_Login_Widget' );
-	}
-
-	/**
-	 * Changes post type to tml_page for TML permalinks
-	 *
-	 * @since 6.3
-	 *
-	 * @param object $wp_query WP_Query object
-	 */
-	public function pre_get_posts( &$wp_query ) {
-		global $wpdb;
-
-		if ( ! $wp_query->is_main_query() )
-			return;
-
-		if ( ( $pagename = $wp_query->get( 'pagename' ) ) || ( $pagename = $wp_query->get( 'name' ) ) ) {
-			if ( $page = get_page_by_path( $pagename, OBJECT, 'tml_page' ) ) {
-				$wp_query->set( 'post_type', 'tml_page' );
-				$wp_query->is_single         = true;
-				$wp_query->is_page           = false;
-				$wp_query->queried_object    = $page;
-				$wp_query->queried_object_id = $page->ID;
-			}
-		}
 	}
 
 	/**
@@ -597,6 +573,28 @@ if(typeof wpOnload=='function')wpOnload()
 	/************************************************************************************************************************
 	 * Filters
 	 ************************************************************************************************************************/
+
+	/**
+	 * Generates verbose rewrite rules for plugin pages
+	 *
+	 * @since 6.3.4
+	 *
+	 * @param array $rules Rewrite rules
+	 * @return array Rewrite rules
+	 */
+	public function rewrite_rules_array( $rules ) {
+		$pages = get_posts( array(
+			'post_type'      => 'tml_page',
+			'posts_per_page' => -1
+		) );
+
+		$tml_rules = array();
+		foreach ( $pages as $page ) {
+			$tml_rules["{$page->post_name}/?$"] = "index.php?tml_page={$page->post_name}";
+		}
+
+		return array_merge( $tml_rules, $rules );
+	}
 
 	/**
 	 * Uses Page template hierarchy for TML pages
