@@ -60,6 +60,7 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 * Fix issue with blank pages where page.php didn't exists in a theme
 * Fix issue where activating Themed Profiles resulted in a 404 for profile page
 * Fix issue where options were being deleted upon upgrade
+* Fix issue with AJAX module not working properly in Internet Explorer
 
 = 6.3.4 =
 * Use verbose rewrite rules for TML pages
