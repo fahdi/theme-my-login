@@ -200,9 +200,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 		) );
 
 		$this->errors = new WP_Error();
-
-		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
-			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->get_option( 'version' ) );
 	}
 
 	/**
@@ -457,6 +454,9 @@ class Theme_My_Login extends Theme_My_Login_Abstract {
 	public function wp_enqueue_scripts() {
 		if ( self::is_tml_page() )
 			do_action( 'login_enqueue_scripts' );
+
+		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
+			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->get_option( 'version' ) );
 	}
 
 	/**
