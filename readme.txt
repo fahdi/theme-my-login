@@ -26,7 +26,7 @@ Also includes a widget for sidebar login.
 * Allow users to set their own password upon registration
 * Require users to be approved or confirm e-mail address upon registration
 * Theme user profiles
-
+ 
 
 == Installation ==
 
