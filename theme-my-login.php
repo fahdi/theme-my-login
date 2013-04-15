@@ -47,7 +47,7 @@ if ( ! function_exists( 'theme_my_login' ) ) :
  * @param string|array $args Template tag arguments
  */
 function theme_my_login( $args = '' ) {
-	Theme_My_Login::get_object()->shortcode( wp_parse_args( $args ) );
+	echo Theme_My_Login::get_object()->shortcode( wp_parse_args( $args ) );
 }
 endif;
 
