@@ -202,8 +202,8 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		foreach( $wp_roles->get_names() as $role => $role_name ) {
 			if ( 'pending' != $role ) {
 				$settings[$role] = array(
-					'theme_profile'  => isset( $settings[$role]['theme_profile']  ),
-					'restrict_admin' => isset( $settings[$role]['restrict_admin'] )
+					'theme_profile'  => ! empty( $settings[$role]['theme_profile']  ),
+					'restrict_admin' => ! empty( $settings[$role]['restrict_admin'] )
 				);
 			}
 		}
