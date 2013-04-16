@@ -31,7 +31,7 @@ class Theme_My_Login_Admin {
 	public static function get_object() {
 		if ( ! isset( self::$object ) )
 			self::$object = new Theme_My_Login_Admin;
-		return self::$oibject;
+		return self::$object;
 	}
 
 	/**
