@@ -69,7 +69,15 @@ class Theme_My_Login {
 	 * @since 6.3
 	 * @var array
 	 */
-	protected $loaded_instances = array();
+	private $loaded_instances = array();
+
+	/**
+	 * Holds loaded modules
+	 *
+	 * @since 6.4
+	 * @var array
+	 */
+	private $loaded_modules = array();
 
 	/**
 	 * Returns singleton object
@@ -1067,6 +1075,9 @@ if(typeof wpOnload=='function')wpOnload()
 		return $stylesheet;
 	}
 
+
+	/** Instances *************************************************************/
+
 	/**
 	 * Retrieves active instance object
 	 *
@@ -1115,6 +1126,43 @@ if(typeof wpOnload=='function')wpOnload()
 
 		return $instance;
 	}
+
+
+	/** Modules ***************************************************************/
+
+	/**
+	 * Retrieves a loaded module
+	 *
+	 * @since 6.4
+	 *
+	 * @param string $module_name The registered module name
+	 * @return object Module object
+	 */
+	public function get_module( $module_name ) {
+		if ( isset( $this->loaded_modules[$module_name] ) )
+			return $this->loaded_modules[$module_name];
+	}
+
+	/**
+	 * Loads a module
+	 *
+	 * @since 6.4
+	 *
+	 * @param string $module_name A name for the module
+	 * @param string $class_name The module class name
+	 * @return bool True if module is loaded, false otherwise
+	 */
+	public function load_module( $module_name, $class_name ) {
+		if ( ! class_exists( $class_name ) )
+			return false;
+
+		$this->loaded_modules[$module_name] = new $class_name;
+
+		return true;
+	}
+
+
+	/** Options ***************************************************************/
 
 	/**
 	 * Loads plugin options
