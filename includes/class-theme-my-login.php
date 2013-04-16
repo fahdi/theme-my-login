@@ -503,7 +503,6 @@ class Theme_My_Login {
 	 */
 	public function login_handler() {
 		$secure_cookie = '';
-		$interim_login = isset( $_REQUEST['interim-login'] );
 
 		// If the user wants ssl but the session is not ssl, force a secure cookie.
 		if ( ! empty( $_POST['log'] ) && ! force_ssl_admin() ) {
@@ -566,10 +565,8 @@ class Theme_My_Login {
 	 * @since 6.4
 	 */
 	public function message_handler() {
-		$reauth = empty( $_REQUEST['reauth'] ) ? false : true;
-
 		// Clear errors if loggedout is set.
-		if ( ! empty( $_GET['loggedout'] ) || $reauth )
+		if ( ! empty( $_GET['loggedout'] ) || ! empty( $_REQUEST['reauth'] ) )
 			$this->errors = new WP_Error();
 
 		// Some parts of this script use the main login form to display a message
@@ -583,15 +580,15 @@ class Theme_My_Login {
 			$this->errors->add( 'password_reset', __( 'Your password has been reset.' ), 'message' );
 		elseif	( isset( $_GET['checkemail'] ) && 'registered' == $_GET['checkemail'] )
 			$this->errors->add( 'registered', __( 'Registration complete. Please check your e-mail.' ), 'message' );
-		elseif	( $interim_login )
+		elseif	( isset( $_REQUEST['interim_login'] ) )
 			$this->errors->add( 'expired', __( 'Your session has expired. Please log-in again.' ), 'message' );
-		elseif ( strpos( $redirect_to, 'about.php?updated' ) )
+		elseif ( isset( $_REQUEST['redirect_to'] ) && strpos( $_REQUEST['redirect_to'], 'about.php?updated' ) )
 			$this->errors->add('updated', __( '<strong>You have successfully updated WordPress!</strong> Please log back in to experience the awesomeness.' ), 'message' );
-		elseif	( $reauth )
+		elseif	( ! empty( $_REQUEST['reauth'] ) )
 			$this->errors->add( 'reauth', __( 'Please log in to continue.', 'theme-my-login' ), 'message' );
 
 		// Clear any stale cookies.
-		if ( $reauth )
+		if ( ! empty( $_REQUEST['reauth'] ) )
 			wp_clear_auth_cookie();
 	}
 
