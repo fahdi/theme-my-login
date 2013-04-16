@@ -12,46 +12,15 @@ if ( ! class_exists( 'Theme_My_Login_Admin' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
+class Theme_My_Login_Admin {
 	/**
-	 * Holds options key
+	 * Constructor
 	 *
-	 * @since 6.3
-	 * @access protected
-	 * @var string
+	 * @since 6.4
 	 */
-	protected $options_key = 'theme_my_login';
-
-	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return Theme_My_Login
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
-	 * Returns default options
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	public static function default_options() {
-		return Theme_My_Login::default_options();
-	}
-
-	/**
-	 * Loads object
-	 *
-	 * @since 6.3
-	 * @access public
-	 */
-	protected function load() {
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ), 8 );
+	public function __construct() {
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
 		register_uninstall_hook( WP_PLUGIN_DIR . '/theme-my-login/theme-my-login.php', array( 'Theme_My_Login_Admin', 'uninstall' ) );
 	}
@@ -80,14 +49,22 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			array( 'Theme_My_Login_Admin', 'settings_page' )
 		);
 
+		add_submenu_page(
+			'theme_my_login',
+			__( 'TML Pages', 'theme-my-login' ),
+			__( 'Pages',     'theme-my-login' ),
+			'manage_options',
+			'edit.php?post_type=tml_page'
+		);
+
 		// General section
-		add_settings_section( 'general',    __( 'General', 'theme-my-login'    ), '__return_false', $this->options_key );
-		add_settings_section( 'modules',    __( 'Modules', 'theme-my-login'    ), '__return_false', $this->options_key );
+		add_settings_section( 'general',    __( 'General', 'theme-my-login'    ), '__return_false', 'theme_my_login' );
+		add_settings_section( 'modules',    __( 'Modules', 'theme-my-login'    ), '__return_false', 'theme_my_login' );
 
 		// General fields
-		add_settings_field( 'enable_css',  __( 'Stylesheet',   'theme-my-login' ), array( &$this, 'settings_field_enable_css'  ), $this->options_key, 'general' );
-		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), $this->options_key, 'general' );
-		add_settings_field( 'modules',     __( 'Modules',      'theme-my-login' ), array( &$this, 'settings_field_modules'     ), $this->options_key, 'modules' );
+		add_settings_field( 'enable_css',  __( 'Stylesheet',   'theme-my-login' ), array( &$this, 'settings_field_enable_css'  ), 'theme_my_login', 'general' );
+		add_settings_field( 'email_login', __( 'E-mail Login', 'theme-my-login' ), array( &$this, 'settings_field_email_login' ), 'theme_my_login', 'general' );
+		add_settings_field( 'modules',     __( 'Modules',      'theme-my-login' ), array( &$this, 'settings_field_modules'     ), 'theme_my_login', 'modules' );
 	}
 
 	/**
@@ -101,7 +78,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	public function admin_init() {
 		register_setting( 'theme_my_login', 'theme_my_login',  array( &$this, 'save_settings' ) );
 
-		if ( version_compare( $this->get_option( 'version', 0 ), Theme_My_Login::version, '<' ) )
+		if ( version_compare( Theme_My_Login::get_object()->version, Theme_My_Login::version, '<' ) )
 			$this->install();
 	}
 
@@ -141,7 +118,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function settings_field_enable_css() {
 		?>
-		<input name="theme_my_login[enable_css]" type="checkbox" id="theme_my_login_enable_css" value="1"<?php checked( 1, $this->get_option( 'enable_css' ) ); ?> />
+		<input name="theme_my_login[enable_css]" type="checkbox" id="theme_my_login_enable_css" value="1"<?php checked( Theme_My_Login::get_object()->enable_css ); ?> />
 		<label for="theme_my_login_enable_css"><?php _e( 'Enable "theme-my-login.css"', 'theme-my-login' ); ?></label>
 		<p class="description"><?php _e( 'In order to keep changes between upgrades, you can store your customized "theme-my-login.css" in your current theme directory.', 'theme-my-login' ); ?></p>
         <?php
@@ -155,7 +132,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 */
 	public function settings_field_email_login() {
 		?>
-		<input name="theme_my_login[email_login]" type="checkbox" id="theme_my_login_email_login" value="1"<?php checked( 1, $this->get_option( 'email_login' ) ); ?> />
+		<input name="theme_my_login[email_login]" type="checkbox" id="theme_my_login_email_login" value="1"<?php checked( Theme_My_Login::get_object()->email_login ); ?> />
 		<label for="theme_my_login_email_login"><?php _e( 'Enable e-mail address login', 'theme-my-login' ); ?></label>
 		<p class="description"><?php _e( 'Allows users to login using their e-mail address in place of their username.', 'theme-my-login' ); ?></p>
     	<?php
@@ -171,7 +148,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		foreach ( get_plugins( '/theme-my-login/modules' ) as $path => $data ) {
 			$id = sanitize_key( $data['Name'] );
 		?>
-		<input name="theme_my_login[active_modules][]" type="checkbox" id="theme_my_login_active_modules_<?php echo $id; ?>" value="<?php echo $path; ?>"<?php checked( in_array( $path, (array) $this->get_option( 'active_modules' ) ) ); ?> />
+		<input name="theme_my_login[active_modules][]" type="checkbox" id="theme_my_login_active_modules_<?php echo $id; ?>" value="<?php echo $path; ?>"<?php checked( in_array( $path, (array) Theme_My_Login::get_object()->active_modules ) ); ?> />
 		<label for="theme_my_login_active_modules_<?php echo $id; ?>"><?php printf( __( 'Enable %s', 'theme-my-login' ), $data['Name'] ); ?></label><br />
 		<?php if ( $data['Description'] ) : ?>
 		<p class="description"><?php echo $data['Description']; ?></p>
@@ -196,7 +173,7 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		$settings['active_modules'] = isset( $settings['active_modules'] ) ? (array) $settings['active_modules'] : array();
 
 		// If we have modules to activate
-		if ( $activate = array_diff( $settings['active_modules'], $this->get_option( 'active_modules', array() ) ) ) {
+		if ( $activate = array_diff( $settings['active_modules'], (array) Theme_My_Login::get_object()->active_modules ) ) {
 			foreach ( $activate as $module ) {
 				if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
 					include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
@@ -205,13 +182,13 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// If we have modules to deactivate
-		if ( $deactivate = array_diff( $this->get_option( 'active_modules', array() ), $settings['active_modules'] ) ) {
+		if ( $deactivate = array_diff( (array) Theme_My_Login::get_object()->active_modules, $settings['active_modules'] ) ) {
 			foreach ( $deactivate as $module ) {
 				do_action( 'tml_deactivate_' . $module );
 			}
 		}
 
-		$settings = wp_parse_args( $settings, $this->get_options() );
+		$settings = array_intersect_key( $settings, Theme_My_Login::default_options() );
 
 		return $settings;
 	}
@@ -223,63 +200,79 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @access private
 	 */
 	private function install() {
-		// Current version
-		$version = $this->get_option( 'version', Theme_My_Login::version );
+		global $wpdb;
 
-		// Check if legacy page exists
-		if ( $page_id = $this->get_option( 'page_id' ) ) {
-			$page = get_page( $page_id );
+		// Check if options exist
+		if ( $options = get_option( 'theme_my_login' ) ) {
+			// Current version
+			$version = empty( $options['version'] ) ? Theme_My_Login::version : $options['version'];
+
+			// Check if legacy page exists
+			if ( ! empty( $options['page_id'] ) ) {
+				$page = get_page( $options['page_id'] );
+			} else {
+				$page = get_page_by_title( 'Login' );
+			}
+
+			// 4.4 upgrade
+			if ( version_compare( $version, '4.4', '<' ) ) {
+				remove_role( 'denied' );
+			}
+
+			// 6.0 upgrade
+			if ( version_compare( $version, '6.0', '<' ) ) {
+				// Replace shortcode
+				if ( $page ) {
+					$page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login]', $page->post_content );
+					wp_update_post( $page );
+				}
+			}
+
+			// 6.3 upgrade
+			if ( version_compare( $version, '6.3.3', '<' ) ) {
+				// Move options to their own rows
+				foreach ( $options as $key => $value ) {
+					if ( in_array( $key, array( 'active_modules' ) ) )
+						continue;
+
+					if ( ! is_array( $value ) )
+						continue;
+
+					update_option( "theme_my_login_{$key}", $value );
+				}
+
+				// Maybe create login page?
+				if ( $page ) {
+					// Make sure the page is not in the trash
+					if ( 'trash' == $page->post_status )
+						wp_untrash_post( $page->ID );
+
+					// Change to new post type
+					set_post_type( $page->ID, 'tml_page' );
+
+					update_post_meta( $page->ID, '_tml_action', 'login' );
+				}
+			}
+
+			// 6.4 upgrade
+			if ( version_compare( $version, '6.4', '<' ) ) {
+				// Merge module options back into the main options. Heh.
+				$modules = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE 'theme_my_login_%'" );
+				foreach ( $modules as $module ) {
+					$option_name  = str_replace( 'theme_my_login_', '', $module->option_name );
+					$option_value = maybe_unserialize( $module->option_value );
+					$options[$option_name] = $option_value;
+				}
+			}
+
+			// Activate modules in case they need to be upgraded
+			foreach ( (array) $options['active_modules'] as $module ) {
+				if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
+					include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
+				do_action( 'tml_activate_' . $module );
+			}
 		} else {
-			$page = get_page_by_title( 'Login' );
-		}
-
-		// 4.4 upgrade
-		if ( version_compare( $version, '4.4', '<' ) ) {
-			remove_role( 'denied' );
-		}
-
-		// 6.0 upgrade
-		if ( version_compare( $version, '6.0', '<' ) ) {
-			// Replace shortcode
-			if ( $page ) {
-				$page->post_content = str_replace( '[theme-my-login-page]', '[theme-my-login]', $page->post_content );
-				wp_update_post( $page );
-			}
-		}
-
-		// 6.3 upgrade
-		if ( version_compare( $version, '6.3.3', '<' ) ) {
-			// Delete obsolete options
-			$this->delete_option( 'page_id'     );
-			$this->delete_option( 'show_page'   );
-			$this->delete_option( 'initial_nag' );
-			$this->delete_option( 'permalinks'  );
-			$this->delete_option( 'flush_rules' );
-
-			// Move options to their own rows
-			foreach ( $this->get_options() as $key => $value ) {
-				if ( in_array( $key, array( 'active_modules' ) ) )
-					continue;
-
-				if ( ! is_array( $value ) )
-					continue;
-
-				update_option( "theme_my_login_{$key}", $value );
-
-				$this->delete_option( $key );
-			}
-
-			// Maybe create login page?
-			if ( $page ) {
-				// Make sure the page is not in the trash
-				if ( 'trash' == $page->post_status )
-					wp_untrash_post( $page->ID );
-
-				// Change to new post type
-				set_post_type( $page->ID, 'tml_page' );
-
-				update_post_meta( $page->ID, '_tml_action', 'login' );
-			}
+			$options = Theme_My_Login::default_options();
 		}
 
 		// Setup default pages
@@ -300,15 +293,11 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		// Generate permalinks
 		flush_rewrite_rules( false );
 
-		// Activate modules
-		foreach ( $this->get_option( 'active_modules', array() ) as $module ) {
-			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
-				include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
-			do_action( 'tml_activate_' . $module );
-		}
+		// Set current version
+		$options['version'] = Theme_My_Login::version;
 
-		$this->set_option( 'version', Theme_My_Login::version );
-		$this->save_options();
+		// Update options
+		update_option( 'theme_my_login', $options );
 	}
 
 	/**
@@ -353,9 +342,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 			do_action( 'tml_uninstall_' . $module );
 		}
-
-		// Remove delete block
-		remove_action( 'wp_trash_post', array( self::get_object(), 'wp_trash_post' ) );
 
 		// Delete the pages
 		$pages = get_posts( array( 'post_type' => 'tml_page', 'post_status' => 'any', 'posts_per_page' => -1 ) );
