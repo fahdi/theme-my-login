@@ -144,7 +144,7 @@ class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 			$action = $this->get_option( 'default_action' );
 
 		if ( is_admin() )
-			return $title;
+			return;
 
 		if ( is_user_logged_in() && 'login' == $action && $action == $this->get_option( 'default_action' ) ) {
 			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), wp_get_current_user()->display_name );
