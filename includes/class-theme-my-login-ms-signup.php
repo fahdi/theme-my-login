@@ -27,8 +27,8 @@ final class Theme_My_Login_MS_Signup {
 	 * Returns singleton instance
 	 *
 	 * @since 6.3
-	 * @access public
-	 * @return object
+	 *
+	 * @return Theme_My_Login_MS_Signup
 	 */
 	public static function get_object() {
 		if ( ! isset( self::$object ) )

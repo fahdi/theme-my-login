@@ -14,11 +14,32 @@ if ( ! class_exists( 'Theme_My_Login_Admin' ) ) :
  */
 class Theme_My_Login_Admin {
 	/**
+	 * Holds singleton instance
+	 *
+	 * @since 6.4
+	 * @var Theme_My_Login_Admin
+	 */
+	private static $object;
+
+	/**
+	 * Returns singleton instance
+	 *
+	 * @since 6.3
+	 *
+	 * @return Theme_My_Login_Admin
+	 */
+	public static function get_object() {
+		if ( ! isset( self::$object ) )
+			self::$object = new Theme_My_Login_Admin;
+		return self::$oibject;
+	}
+
+	/**
 	 * Constructor
 	 *
 	 * @since 6.4
 	 */
-	public function __construct() {
+	private function __construct() {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 

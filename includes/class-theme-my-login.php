@@ -32,6 +32,22 @@ class Theme_My_Login {
 	private static $object;
 
 	/**
+	 * Holds admin object
+	 *
+	 * @since 6.4
+	 * @var Theme_My_Login_Admin
+	 */
+	private static $admin;
+
+	/**
+	 * Holds multisite object
+	 *
+	 * @since 6.4
+	 * @var Theme_My_Login_MS_Signup
+	 */
+	private static $multisite;
+
+	/**
 	 * Holds options key
 	 *
 	 * @since 6.3
@@ -151,10 +167,6 @@ class Theme_My_Login {
 
 		// Load options
 		$this->load_options();
-
-		// Load admin
-		if ( is_admin() )
-			$this->admin = new Theme_My_Login_Admin;
 
 		add_action( 'plugins_loaded',          array( &$this, 'plugins_loaded'          ) );
 		add_action( 'init',                    array( &$this, 'init'                    ) );
