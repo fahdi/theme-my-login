@@ -220,9 +220,9 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * Installs TML
 	 *
 	 * @since 6.0
-	 * @access private
+	 * @access public
 	 */
-	private function install() {
+	public function install() {
 		// Current version
 		$version = $this->get_option( 'version', Theme_My_Login::version );
 
