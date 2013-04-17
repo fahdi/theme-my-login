@@ -23,27 +23,14 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_user_links';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -72,13 +59,22 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
+	 * Constructor
 	 *
 	 * @since 6.0
-	 * @access protected
 	 */
-	protected function load() {
-		add_filter( 'tml_user_links', array( &$this, 'get_user_links' ) );
+	public function __construct() {
+		// Load options
+		$this->load_options();
+
+		add_filter( 'tml_user_links', array( $this, 'get_user_links' ) );
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-user-links/admin/custom-user-links-admin.php' );
+
+			$this->admin = new Theme_My_Login_Custom_User_Links_Admin;
+		}
 	}
 
 	/**
@@ -88,7 +84,6 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param array $links Default user links
 	 * @return array New user links
@@ -121,10 +116,14 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Custom_User_Links::get_object();
+/**
+ * Loads the Custom User Links module
+ *
+ * @since 6.4
+ */
+function theme_my_login_custom_user_links_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'custom-user-links', 'Theme_My_Login_Custom_User_Links' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_custom_user_links_load' );
 
-endif;
-
-if ( is_admin() )
-	include_once( dirname( __FILE__ ) . '/admin/custom-user-links-admin.php' );
-
+endif; // Class exists
