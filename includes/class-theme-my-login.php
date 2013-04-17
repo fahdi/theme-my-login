@@ -338,7 +338,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 			add_action( 'login_head', 'wp_no_robots' );
 		}
 
-		do_action_ref_array( 'tml_request', array( $this ) );
+		do_action_ref_array( 'tml_request', array( &$this ) );
 	}
 
 	/**
