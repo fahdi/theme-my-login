@@ -18,44 +18,33 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_themed_profiles';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.2
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_activate_themed-profiles/themed-profiles.php',  array( &$this, 'activate'  ) );
-		add_action( 'tml_uninstall_themed-profiles/themed-profiles.php', array( &$this, 'uninstall' ) );
-
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public static function default_options() {
 		return Theme_My_Login_Themed_Profiles::default_options();
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @since 6.4
+	 */
+	public function __construct() {
+		// Load options
+		$this->load_options();
+
+		add_action( 'tml_activate_themed-profiles/themed-profiles.php',  array( $this, 'activate'  ) );
+		add_action( 'tml_uninstall_themed-profiles/themed-profiles.php', array( $this, 'uninstall' ) );
+
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
 	}
 
 	/**
@@ -65,7 +54,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Modules_Admin::activate_module()
 	 * @since 6.0
-	 * @access public
 	 */
 	public function activate() {
 		if ( ! $page_id = Theme_My_Login::get_page_id( 'profile' ) ) {
@@ -90,7 +78,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Admin::uninstall()
 	 * @since 6.3
-	 * @access public
 	 */
 	public function uninstall() {
 		delete_option( $this->options_key );
@@ -102,7 +89,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_menu" hook
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function admin_menu() {
 		add_submenu_page(
@@ -111,13 +97,13 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 			__( 'Themed Profiles', 'theme-my-login' ),
 			'manage_options',
 			$this->options_key,
-			array( &$this, 'settings_page' )
+			array( $this, 'settings_page' )
 		);
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( &$this, 'settings_field_themed_profiles'       ), $this->options_key, 'general' );
-		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( &$this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
+		add_settings_field( 'themed_profiles', __( 'Themed Profiles',       'theme-my-login' ), array( $this, 'settings_field_themed_profiles'       ), $this->options_key, 'general' );
+		add_settings_field( 'restrict_admin',  __( 'Restrict Admin Access', 'theme-my-login' ), array( $this, 'settings_field_restrict_admin_access' ), $this->options_key, 'general' );
 	}
 
 	/**
@@ -126,7 +112,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_init" hook
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function admin_init() {
 		register_setting( $this->options_key, $this->options_key, array( &$this, 'save_settings' ) );
@@ -138,7 +123,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Callback for add_submenu_page()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_page() {
 		Theme_My_Login_Admin::settings_page( array(
@@ -151,7 +135,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Renders Themed Profiles settings field
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_field_themed_profiles() {
 		global $wp_roles;
@@ -170,7 +153,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Renders Restrict Admin Access settings field
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_field_restrict_admin_access() {
 		global $wp_roles;
@@ -191,7 +173,6 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * Callback for register_setting()
 	 *
 	 * @since 6.2
-	 * @access public
 	 *
 	 * @param array $settings Settings passed in from filter
 	 * @return array Sanitized settings
@@ -210,8 +191,4 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 		return $settings;
 	}
 }
-
-Theme_My_Login_Themed_Profiles_Admin::get_object();
-
-endif;
-
+endif; // Class exists

@@ -23,27 +23,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_themed_profiles';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -66,33 +53,30 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
+	 * Constructor
 	 *
-	 * @since 6.0
-	 * @access protected
+	 * @since 6.4
 	 */
-	protected function load() {
-		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
+	public function __construct() {
+		// Load options
+		$this->load_options();
 
-		add_action( 'init',              array( &$this, 'init'              ) );
-		add_action( 'template_redirect', array( &$this, 'template_redirect' ) );
-		add_filter( 'show_admin_bar',    array( &$this, 'show_admin_bar'    ) );
+		add_action( 'init',              array( $this, 'init'              ) );
+		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
+		add_filter( 'show_admin_bar',    array( $this, 'show_admin_bar'    ) );
 
-		add_action( 'tml_request_profile', array( &$this, 'tml_request_profile' ) );
-		add_action( 'tml_display_profile', array( &$this, 'tml_display_profile' ) );
-	}
+		add_action( 'tml_request_profile', array( $this, 'tml_request_profile' ) );
+		add_action( 'tml_display_profile', array( $this, 'tml_display_profile' ) );
 
-	/**
-	 * Adds filters to site_url() and admin_url()
-	 *
-	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
-	 *
-	 * @since 6.0
-	 * @access public
-	 */
-	public function modules_loaded() {
-		add_filter( 'site_url',  array( &$this, 'site_url' ), 10, 3 );
-		add_filter( 'admin_url', array( &$this, 'site_url' ), 10, 2 );
+		add_filter( 'site_url',  array( $this, 'site_url' ), 10, 3 );
+		add_filter( 'admin_url', array( $this, 'site_url' ), 10, 2 );
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/themed-profiles/admin/themed-profiles-admin.php' );
+
+			$this->admin = new Theme_My_Login_Themed_Profiles_Admin;
+		}
 	}
 
 	/**
@@ -101,7 +85,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * Callback for "init" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function init() {
 		global $current_user, $pagenow;
@@ -137,7 +120,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * Callback for "template_redirect" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function template_redirect() {
 		$theme_my_login = Theme_My_Login::get_object();
@@ -176,7 +158,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 * Callback for "show_admin_bar" hook
 	 *
 	 * @since 6.2
-	 * @access public
 	 */
 	public function show_admin_bar( $show_admin_bar ) {
 		global $current_user;
@@ -198,7 +179,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
-	 * @access public
 	 */
 	public function tml_request_profile() {
 		require_once( ABSPATH . 'wp-admin/includes/user.php' );
@@ -244,7 +224,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param object $template Reference to $theme_my_login_template object
 	 */
@@ -291,7 +270,6 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	 *
 	 * @see site_url()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $url The generated link
 	 * @param string $path The specified path
@@ -320,10 +298,14 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Themed_Profiles::get_object();
+/**
+ * Loads the Themed Profiles module
+ *
+ * @since 6.4
+ */
+function theme_my_login_themed_profiles_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'themed-profiles', 'Theme_My_Login_Themed_Profiles' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_themed_profiles_load' );
 
-endif;
-
-if ( is_admin() )
-	include_once( dirname( 	__FILE__ ) . '/admin/themed-profiles-admin.php' );
-
+endif; // Class exists
