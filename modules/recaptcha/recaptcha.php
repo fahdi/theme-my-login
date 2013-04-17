@@ -31,27 +31,14 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_recaptcha';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -64,24 +51,30 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
+	 * Constructor
 	 *
-	 * @since 6.3
-	 * @access protected
+	 * @since 6.4
 	 */
-	protected function load() {
-		if ( ! ( $this->get_option( 'public_key' ) || $this->get_option( 'private_key' ) ) )
-			return;
+	public function __construct() {
+		// Load options
+		$this->load_options();
 
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 
-		add_action( 'register_form',       array( &$this, 'recaptcha_display'   ) );
-		add_filter( 'registration_errors', array( &$this, 'registration_errors' ) );
+		add_action( 'register_form',       array( $this, 'recaptcha_display'   ) );
+		add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
 
 		if ( is_multisite() ) {
-			add_action( 'signup_extra_fields',       array( &$this, 'recaptcha_display'    ) );
-			add_filter( 'wpmu_validate_user_signup', array( &$this, 'wpmu_validate_signup' ) );
-			add_filter( 'wpmu_validate_blog_signup', array( &$this, 'wpmu_validate_signup' ) );
+			add_action( 'signup_extra_fields',       array( $this, 'recaptcha_display'    ) );
+			add_filter( 'wpmu_validate_user_signup', array( $this, 'wpmu_validate_signup' ) );
+			add_filter( 'wpmu_validate_blog_signup', array( $this, 'wpmu_validate_signup' ) );
+		}
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/recaptcha/admin/recaptcha-admin.php' );
+
+			$this->admin = new Theme_My_Login_Recaptcha_Admin;
 		}
 	}
 
@@ -149,7 +142,6 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * Displays reCAPTCHA
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function recaptcha_display( $errors = null ) {
 		if ( is_multisite() ) {
@@ -172,7 +164,6 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * Validates reCAPTCHA
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function recaptcha_validate( $remote_ip, $challenge, $response ) {
 		$response = wp_remote_post( self::RECAPTCHA_API_URI . '/verify', array(
@@ -201,10 +192,14 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Recaptcha::get_object();
+/**
+ * Loads the reCAPTCHA module
+ *
+ * @since 6.4
+ */
+function theme_my_login_recaptcha_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'recaptcha', 'Theme_My_Login_Recaptcha' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_recaptcha_load' );
 
-endif;
-
-if ( is_admin() )
-	include_once( dirname( __FILE__ ) . '/admin/recaptcha-admin.php' );
-
+endif; // Class exists
