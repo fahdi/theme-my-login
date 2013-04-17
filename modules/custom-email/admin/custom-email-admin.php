@@ -24,37 +24,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	protected $options_key = 'theme_my_login_email';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * Called by Theme_My_Login_Abstract::__construct()
-	 *
-	 * @see Theme_My_Login_Abstract::__construct()
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_uninstall_custom-email/custom-email.php', array( &$this, 'uninstall' ) );
-
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-
-		add_action( 'load-tml_page_theme_my_login_email', array( &$this, 'load_settings_page' ) );
-
-		add_action( 'user_register', array( &$this, 'user_register' ) );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
@@ -65,13 +34,28 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Constructor
+	 *
+	 * @since 6.4
+	 */
+	public function __construct() {
+		add_action( 'tml_uninstall_custom-email/custom-email.php', array( $this, 'uninstall' ) );
+
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'load-tml_page_theme_my_login_email', array( $this, 'load_settings_page' ) );
+
+		add_action( 'user_register', array( $this, 'user_register' ) );
+	}
+
+	/**
 	 * Uninstalls the module
 	 *
 	 * Callback for "tml_uninstall_custom-email/custom-email.php" hook in method Theme_My_Login_Admin::uninstall()
 	 *
 	 * @see Theme_My_Login_Admin::uninstall()
 	 * @since 6.3
-	 * @access public
 	 */
 	public function uninstall() {
 		delete_option( $this->options_key );
@@ -83,7 +67,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_menu" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function admin_menu() {
 
@@ -116,7 +99,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_init" hook
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function admin_init() {
 		register_setting( $this->options_key, $this->options_key, array( &$this, 'save_settings' ) );
@@ -128,7 +110,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function load_settings_page() {
 		wp_enqueue_script( 'tml-custom-email-admin', plugins_url( 'theme-my-login/modules/custom-email/admin/js/custom-email-admin.js' ), array( 'postbox' ) );
@@ -140,7 +121,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * Callback for add_submenu_page()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_page() {
 		global $current_screen;
@@ -171,7 +151,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function new_user_meta_box() {
 		?>
@@ -219,7 +198,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function new_user_admin_meta_box() {
 		?>
@@ -276,7 +254,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function retrieve_pass_meta_box() {
 		?>
@@ -324,7 +301,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function reset_pass_meta_box() {
 		?>
@@ -382,7 +358,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function user_activation_meta_box() {
 		?>
@@ -430,7 +405,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function user_approval_meta_box() {
 		?>
@@ -478,7 +452,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function user_approval_admin_meta_box() {
 		?>
@@ -536,7 +509,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * This is the callback for add_meta_box()
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function user_denial_meta_box() {
 		?>
@@ -577,6 +549,13 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 		<?php
 	}
 
+	/**
+	 * Customizes e-mail when user is created via wp-admin
+	 *
+	 * @since 6.3
+	 *
+	 * @param int $user_id User ID
+	 */
 	public function user_register( $user_id ) {
 		$screen = get_current_screen();
 
@@ -598,7 +577,6 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * Callback for register_setting()
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string|array $settings Settings passed in from filter
 	 * @return string|array Sanitized settings
@@ -608,15 +586,11 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 		$settings['reset_pass']['admin_disable'] = ! empty( $settings['reset_pass']['admin_disable'] );
 
 		if ( class_exists( 'Theme_My_Login_User_Moderation' ) )
-			$settings['user_approval']['admin_disable'] = isset( $settings['user_approval']['admin_disable'] );
+			$settings['user_approval']['admin_disable'] = ! empty( $settings['user_approval']['admin_disable'] );
 
 		$settings = Theme_My_Login_Common::array_merge_recursive( $this->get_options(), $settings );
 
 		return $settings;
 	}
 }
-
-Theme_My_Login_Custom_Email_Admin::get_object();
-
-endif;
-
+endif; // Class exists
