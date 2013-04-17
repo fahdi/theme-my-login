@@ -23,27 +23,14 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_security';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -62,31 +49,39 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
+	 * Constructor
 	 *
-	 * @since 6.0
-	 * @access protected
+	 * @since 6.4
 	 */
-	protected function load() {
-		add_action( 'init',               array( &$this, 'init'              ) );
-		add_action( 'template_redirect',  array( &$this, 'template_redirect' ) );
-		add_action( 'tml_request_unlock', array( &$this, 'request_unlock'    ) );
-		add_action( 'tml_request',        array( &$this, 'action_messages'   ) );
+	public function __construct() {
+		// Load options
+		$this->load_options();
 
-		add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
-		add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
+		add_action( 'init',               array( $this, 'init'              ) );
+		add_action( 'template_redirect',  array( $this, 'template_redirect' ) );
+		add_action( 'tml_request_unlock', array( $this, 'request_unlock'    ) );
+		add_action( 'tml_request',        array( $this, 'action_messages'   ) );
 
-		add_action( 'show_user_profile', array( &$this, 'show_user_profile' ) );
-		add_action( 'edit_user_profile', array( &$this, 'show_user_profile' ) );
+		add_action( 'authenticate',         array( $this, 'authenticate'         ), 100, 3 );
+		add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ),  10, 2 );
 
-		add_filter( 'show_admin_bar', array( &$this, 'show_admin_bar' ) );
+		add_action( 'show_user_profile', array( $this, 'show_user_profile' ) );
+		add_action( 'edit_user_profile', array( $this, 'show_user_profile' ) );
+
+		add_filter( 'show_admin_bar', array( $this, 'show_admin_bar' ) );
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/security/admin/security-admin.php' );
+
+			$this->admin = new Theme_My_Login_Security_Admin;
+		}
 	}
 
 	/**
 	 * Sets a 404 error for wp-login.php if it's disabled
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function init() {
 		global $wp_query, $pagenow;
@@ -109,7 +104,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Callback for "template_redirect" hook in the file wp-settings.php
 	 *
 	 * @since 6.2
-	 * @access public
 	 */
 	public function template_redirect() {
 		if ( $this->get_option( 'private_site' ) ) {
@@ -153,7 +147,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Callback for "tml_request" hook in Theme_My_Login::the_request()
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
@@ -198,7 +191,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 *
 	 * @see wp_authenticate()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param WP_User $user WP_User object
 	 * @param string $username Username posted
@@ -260,7 +252,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param bool $allow Default setting
 	 * @param int $user_id User ID
@@ -276,7 +267,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Displays failed login attempts on users profile for administrators
 	 *
 	 * @since 6.2
-	 * @access public
 	 *
 	 * @param object $profileuser User object
 	 */
@@ -315,7 +305,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Shows admin bar for wp-login.php when it is disabled
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param bool $show True to show admin bar, false to hide
 	 * @return bool True to show admin bar, false to hide
@@ -332,7 +321,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Locks a user
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int|WP_User $user User ID ir WP_User object
 	 * @param int $expires When the lock expires, in seconds from current time
@@ -361,7 +349,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Unlocks a user
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int|WP_User $user User ID or WP_User object
 	 */
@@ -387,7 +374,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Determine if a user is locked or not
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int|WP_User $user User ID or WP_User object
 	 * @return bool True if user is locked, false if not
@@ -422,7 +408,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Get a user's security meta
 	 *
 	 * @since 6.0
-	 * @access protected
 	 *
 	 * @param int $user_id User ID
 	 * @return array User's security meta
@@ -445,7 +430,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Get a user's failed login attempts
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User ID
 	 * @return array User's failed login attempts
@@ -459,7 +443,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Reset a user's failed login attempts
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User ID
 	 */
@@ -473,7 +456,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Get a user's failed login attempt count
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User ID
 	 * @return int Number of user's failed login attempts
@@ -486,7 +468,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Add a failed login attempt to a user
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User ID
 	 * @param int $time Time of attempt, in seconds
@@ -514,7 +495,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Get user's lock expiration time
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User ID
 	 * @return int User's lock expiration time
@@ -541,7 +521,6 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	 * Get number of secongs from days, hours and minutes
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $value Number of $unit
 	 * @param string $unit Can be either "day", "hour" or "minute"
@@ -609,10 +588,14 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Security::get_object();
+/**
+ * Loads the Security module
+ *
+ * @since 6.4
+ */
+function theme_my_login_security_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'security', 'Theme_My_Login_Security' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_security_load' );
 	
-endif;
-
-if ( is_admin() )
-	include_once( dirname( __FILE__ ) . '/admin/security-admin.php' );
-
+endif; // Class exists
