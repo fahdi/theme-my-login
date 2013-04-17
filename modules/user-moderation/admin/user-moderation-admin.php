@@ -18,45 +18,9 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_moderation';
-
-	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_activate_user-moderation/user-moderation.php',   array( &$this, 'activate'  ) );
-		add_action( 'tml_uninstall_user-moderation/user-moderation.php',  array( &$this, 'uninstall' ) );
-
-		add_action( 'tml_modules_loaded', array( &$this, 'modules_loaded' ) );
-
-		if ( is_multisite() )
-			return;
-
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-
-		add_action( 'load-users.php',   array( &$this, 'load_users_page'  )        );
-		add_filter( 'user_row_actions', array( &$this, 'user_row_actions' ), 10, 2 );
-
-		add_action( 'delete_user', array( &$this, 'deny_user' ) );
-	}
 
 	/**
 	 * Returns default options
@@ -71,13 +35,38 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Constructor
+	 *
+	 * @since 6.4
+	 */
+	public function __construct() {
+		// Load options
+		$this->load_options();
+
+		add_action( 'tml_activate_user-moderation/user-moderation.php',   array( $this, 'activate'  ) );
+		add_action( 'tml_uninstall_user-moderation/user-moderation.php',  array( $this, 'uninstall' ) );
+
+		add_action( 'tml_modules_loaded', array( $this, 'modules_loaded' ) );
+
+		if ( is_multisite() )
+			return;
+
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'load-users.php',   array( $this, 'load_users_page'  )        );
+		add_filter( 'user_row_actions', array( $this, 'user_row_actions' ), 10, 2 );
+
+		add_action( 'delete_user', array( $this, 'deny_user' ) );
+	}
+
+	/**
 	 * Activates the module
 	 *
 	 * Callback for "tml_activate_user-moderation/user-moderation.php" hook in method Theme_My_Login_Admin::activate_module()
 	 *
 	 * @see Theme_My_Login_Admin::activate_module()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
@@ -96,7 +85,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Admin::uninstall()
 	 * @since 6.3
-	 * @access public
 	 */
 	public function uninstall() {
 		delete_option( $this->options_key );
@@ -107,7 +95,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Disables the module if multisite
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function modules_loaded() {
 		if ( is_multisite() ) {
@@ -128,7 +115,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_menu" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function admin_menu() {
 		add_submenu_page(
@@ -137,12 +123,12 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			__( 'Moderation', 'theme-my-login' ),
 			'manage_options',
 			$this->options_key,
-			array( &$this, 'settings_page' )
+			array( $this, 'settings_page' )
 		);
 
 		add_settings_section( 'general', null, '__return_false', $this->options_key );
 
-		add_settings_field( 'type', __( 'Moderation Type', 'theme-my-login' ), array( &$this, 'settings_field_moderation_type' ), $this->options_key, 'general' );
+		add_settings_field( 'type', __( 'Moderation Type', 'theme-my-login' ), array( $this, 'settings_field_moderation_type' ), $this->options_key, 'general' );
 	}
 
 	/**
@@ -151,7 +137,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_init" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function admin_init() {
 		register_setting( $this->options_key, $this->options_key, array( &$this, 'save_settings' ) );
@@ -161,7 +146,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Renders settings page
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_page() {
 		Theme_My_Login_Admin::settings_page( array(
@@ -174,7 +158,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Renders Moderation Type settings field
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_field_moderation_type() {
 		?>
@@ -196,7 +179,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Sanitizes settings
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param array $settings Posted settings
 	 * @return array Sanitized settings
@@ -213,7 +195,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "load-users.php" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function load_users_page() {
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
@@ -266,7 +247,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_notices" hook in file admin-header.php
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function admin_notices() {
 		if ( isset( $_GET['update'] ) && in_array( $_GET['update'], array( 'approve', 'sendactivation' ) ) ) {
@@ -285,7 +265,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "user_row_actions" hook in {@internal unknown}
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param array $actions The user actions
 	 * @param WP_User $user_object The current user object
@@ -328,7 +307,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Handles activating a new user by admin approval
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User's ID
 	 * @return bool Returns false if not a valid user
@@ -392,7 +370,6 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 	 * Called upon deletion of a user in the "Pending" role
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id User's ID
 	 */
@@ -425,8 +402,4 @@ class Theme_My_Login_User_Moderation_Admin extends Theme_My_Login_Abstract {
 			  die( '<p>' . __( 'The e-mail could not be sent.' ) . "<br />\n" . __( 'Possible reason: your host may have disabled the mail() function...' ) . '</p>' );
 	}
 }
-
-Theme_My_Login_User_Moderation_Admin::get_object();
-
-endif;
-
+endif; // Class exists

@@ -23,27 +23,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_moderation';
 
 	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -54,30 +41,39 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	}
 
 	/**
-	 * Loads the module
+	 * Constructor
 	 *
-	 * @since 6.0
-	 * @access protected
+	 * @since 6.4
 	 */
-	protected function load() {
+	public function __construct() {
 		if ( is_multisite() )
 			return;
 
+		// Load options
+		$this->load_options();
+
 		if ( in_array( $this->get_option( 'type' ), array( 'admin', 'email' ) ) ) {
 
-			add_action( 'register_post',         array( &$this, 'register_post'         )      );
-			add_filter( 'registration_redirect', array( &$this, 'registration_redirect' ), 100 );
+			add_action( 'register_post',         array( $this, 'register_post'         )      );
+			add_filter( 'registration_redirect', array( $this, 'registration_redirect' ), 100 );
 
-			add_action( 'authenticate',         array( &$this, 'authenticate'         ), 100, 3 );
-			add_filter( 'allow_password_reset', array( &$this, 'allow_password_reset' ),  10, 2 );
+			add_action( 'authenticate',         array( $this, 'authenticate'         ), 100, 3 );
+			add_filter( 'allow_password_reset', array( $this, 'allow_password_reset' ),  10, 2 );
 
-			add_action( 'tml_request',            array( &$this, 'action_messages'    )        );
-			add_action( 'tml_new_user_activated', array( &$this, 'new_user_activated' ), 10, 2 );
+			add_action( 'tml_request',            array( $this, 'action_messages'    )        );
+			add_action( 'tml_new_user_activated', array( $this, 'new_user_activated' ), 10, 2 );
 
 			if ( 'email' == $this->get_option( 'type' ) ) {
-				add_action( 'tml_request_activate',       array( &$this, 'user_activation' ) );
-				add_action( 'tml_request_sendactivation', array( &$this, 'send_activation' ) );
+				add_action( 'tml_request_activate',       array( $this, 'user_activation' ) );
+				add_action( 'tml_request_sendactivation', array( $this, 'send_activation' ) );
 			}
+		}
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/user-moderation/admin/user-moderation-admin.php' );
+
+			$this->admin = new Theme_My_Login_User_Moderation_Admin;
 		}
 	}
 
@@ -85,7 +81,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Applies user moderation upon registration
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function register_post() {
 		// Remove default new user notification
@@ -95,8 +90,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		// Remove Custom Email new user notification
 		if ( class_exists( 'Theme_My_Login_Custom_Email' ) ) {
 			$custom_email = Theme_My_Login_Custom_Email::get_object();
-			if ( has_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ) ) )
-				remove_action( 'tml_new_user_registered', array( &$custom_email, 'new_user_notification' ), 10, 2 );
+			if ( has_action( 'tml_new_user_registered', array( $custom_email, 'new_user_notification' ) ) )
+				remove_action( 'tml_new_user_registered', array( $custom_email, 'new_user_notification' ), 10, 2 );
 		}
 
 		// Moderate user upon registration
@@ -110,7 +105,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Template::get_redirect_url()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $redirect_to Default redirect
 	 * @return string URL to redirect to
@@ -138,7 +132,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see wp_authenticate()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param WP_User $user WP_User object
 	 * @param string $username Username posted
@@ -172,7 +165,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::retrieve_password()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param bool $allow Default setting
 	 * @param int $user_id User ID
@@ -189,7 +181,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Handles display of various action/status messages
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param object $theme_my_login Reference to global $theme_my_login object
 	 */
@@ -238,7 +229,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::register_new_user()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id The user's ID
 	 * @param string $user_pass The user's password
@@ -283,7 +273,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::the_request();
 	 * @since 6.0
-	 * @access public
 	 */
 	public function user_activation() {
 		// Attempt to activate the user
@@ -308,7 +297,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::the_request();
 	 * @since 6.0
-	 * @access public
 	 */
 	public static function send_activation() {
 		global $wpdb;
@@ -339,7 +327,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Handles activating a new user by user email confirmation
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $key Hash to validate sending confirmation email
 	 * @param string $login User's username for logging in
@@ -396,7 +383,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Calls the "tml_new_user_registered" hook
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id The user's ID
 	 * @param string $user_pass The user's password
@@ -409,7 +395,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Notifies a pending user to activate their account
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id The user's ID
 	 * @param string $key The unique activation key
@@ -454,7 +439,6 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	 * Notifies the administrator of a pending user needing approval
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param int $user_id The user's ID
 	 */
@@ -491,10 +475,14 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_User_Moderation::get_object();
+/**
+ * Loads the User Moderation module
+ *
+ * @since 6.4
+ */
+function theme_my_login_user_moderation_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'user-moderation', 'Theme_My_Login_User_Moderation' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_user_moderation_load' );
 
-endif;
-
-if ( is_admin() )
-	include_once( dirname( __FILE__ ) . '/admin/user-moderation-admin.php' );
-
+endif; // Class exists
