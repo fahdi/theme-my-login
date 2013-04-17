@@ -117,13 +117,8 @@ class Theme_My_Login_Custom_User_Links extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the Custom User Links module
- *
- * @since 6.4
+ * Load the Custom User Links module
  */
-function theme_my_login_custom_user_links_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'custom-user-links', 'Theme_My_Login_Custom_User_Links' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_custom_user_links_load' );
+Theme_My_Login::get_object()->load_module( 'custom-user-links', 'Theme_My_Login_Custom_User_Links' );
 
 endif; // Class exists

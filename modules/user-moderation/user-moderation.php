@@ -476,13 +476,8 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the User Moderation module
- *
- * @since 6.4
+ * Load the User Moderation module
  */
-function theme_my_login_user_moderation_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'user-moderation', 'Theme_My_Login_User_Moderation' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_user_moderation_load' );
+Theme_My_Login::get_object()->load_module( 'user-moderation', 'Theme_My_Login_User_Moderation' );
 
 endif; // Class exists

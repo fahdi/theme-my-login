@@ -194,12 +194,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 
 /**
  * Loads the reCAPTCHA module
- *
- * @since 6.4
  */
-function theme_my_login_recaptcha_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'recaptcha', 'Theme_My_Login_Recaptcha' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_recaptcha_load' );
+Theme_My_Login::get_object()->load_module( 'recaptcha', 'Theme_My_Login_Recaptcha' );
 
 endif; // Class exists

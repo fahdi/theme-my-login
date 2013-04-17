@@ -198,13 +198,8 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the Custom Redirection module
- *
- * @since 6.4
+ * Load the Custom Redirection module
  */
-function theme_my_login_custom_redirection_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'custom-redirection', 'Theme_My_Login_Custom_Redirection' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_custom_redirection_load' );
+Theme_My_Login::get_object()->load_module( 'custom-redirection', 'Theme_My_Login_Custom_Redirection' );
 
 endif; // Class exists

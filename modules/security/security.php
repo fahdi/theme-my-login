@@ -589,13 +589,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the Security module
- *
- * @since 6.4
+ * Load the Security module
  */
-function theme_my_login_security_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'security', 'Theme_My_Login_Security' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_security_load' );
+Theme_My_Login::get_object()->load_module( 'security', 'Theme_My_Login_Security' );
 	
 endif; // Class exists

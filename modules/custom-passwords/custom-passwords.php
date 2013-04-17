@@ -282,13 +282,8 @@ class Theme_My_Login_Custom_Passwords {
 }
 
 /**
- * Loads the Custom Passwords module
- *
- * @since 6.4
+ * Load the Custom Passwords module
  */
-function theme_my_login_custom_passwords_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'custom-passwords', 'Theme_My_Login_Custom_Passwords' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_custom_passwords_load' );
+Theme_My_Login::get_object()->load_module( 'custom-passwords', 'Theme_My_Login_Custom_Passwords' );
 
 endif; // Class exists

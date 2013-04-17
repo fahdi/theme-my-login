@@ -831,13 +831,8 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the Custom E-mail module
- *
- * @since 6.4
+ * Load the Custom E-mail module
  */
-function theme_my_login_custom_email_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'custom-email', 'Theme_My_Login_Custom_Email' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_custom_email_load' );
+Theme_My_Login::get_object()->load_module( 'custom-email', 'Theme_My_Login_Custom_Email' );
 
 endif; // Class exists

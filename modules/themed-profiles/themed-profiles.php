@@ -61,6 +61,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		// Load options
 		$this->load_options();
 
+		add_action( 'tml_modules_loaded', array( $this, 'modules_loaded' ) );
+
 		add_action( 'init',              array( $this, 'init'              ) );
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
 		add_filter( 'show_admin_bar',    array( $this, 'show_admin_bar'    ) );
@@ -68,15 +70,25 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 		add_action( 'tml_request_profile', array( $this, 'tml_request_profile' ) );
 		add_action( 'tml_display_profile', array( $this, 'tml_display_profile' ) );
 
-		add_filter( 'site_url',  array( $this, 'site_url' ), 10, 3 );
-		add_filter( 'admin_url', array( $this, 'site_url' ), 10, 2 );
-
 		// Load admin
 		if ( is_admin() ) {
 			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/themed-profiles/admin/themed-profiles-admin.php' );
 
 			$this->admin = new Theme_My_Login_Themed_Profiles_Admin;
 		}
+	}
+
+	/**
+	 * Adds filters to site_url() and admin_url()
+	 *
+	 * Callback for "tml_modules_loaded" in file "theme-my-login.php"
+	 *
+	 * @since 6.0
+	 * @access public
+	 */
+	public function modules_loaded() {
+		add_filter( 'site_url',  array( $this, 'site_url' ), 10, 3 );
+		add_filter( 'admin_url', array( $this, 'site_url' ), 10, 2 );
 	}
 
 	/**
@@ -299,13 +311,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 }
 
 /**
- * Loads the Themed Profiles module
- *
- * @since 6.4
+ * Load the Themed Profiles module
  */
-function theme_my_login_themed_profiles_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'themed-profiles', 'Theme_My_Login_Themed_Profiles' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_themed_profiles_load' );
+Theme_My_Login::get_object()->load_module( 'themed-profiles', 'Theme_My_Login_Themed_Profiles' );
 
 endif; // Class exists

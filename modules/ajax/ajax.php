@@ -68,7 +68,7 @@ class Theme_My_Login_Ajax {
 
 			$instance =& $theme_my_login->get_instance();
 
-			$instance->set_option( 'default_action', empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action );
+			$instance->set_option( 'default_action', $theme_my_login->request_action );
 			$instance->set_option( 'gravatar_size', 75 );
 			$instance->set_option( 'before_title', '<h2>' );
 			$instance->set_option( 'after_title', '</h2>' );
@@ -160,22 +160,16 @@ class Theme_My_Login_Ajax {
 	 * @return object Nav menu item
 	 */
 	public function wp_setup_nav_menu_item( $menu_item ) {
-		if ( 'tml_page' == $menu_item->object && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) ) {
-			if ( ! is_user_logged_in() )
-				$menu_item->classes[] = 'tml_ajax_link';
-		}
+		if ( ! is_user_logged_in() && Theme_My_Login::is_tml_page( '', $menu_item->object_id ) )
+			$menu_item->classes[] = 'tml_ajax_link';
 		return $menu_item;
 	}
 }
 
 /**
- * Loads the AJAX module
+ * Load the AJAX module
  *
- * @since 6.4
  */
-function theme_my_login_ajax_load( &$theme_my_login ) {
-	$theme_my_login->load_module( 'ajax', 'Theme_My_Login_Ajax' );
-}
-add_action( 'tml_modules_loaded', 'theme_my_login_ajax_load' );
+Theme_My_Login::get_object()->load_module( 'ajax', 'Theme_My_Login_Ajax' );
 
 endif; // Class exists
