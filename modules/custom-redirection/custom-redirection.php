@@ -23,39 +23,35 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_redirection';
 
 	/**
-	 * Returns singleton instance
+	 * Constructor
 	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
+	 * @since 6.4
 	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
+	public function __construct() {
+		// Load options
+		$this->load_options();
 
-	/**
-	 * Called on Theme_My_Login_Abstract::__construct
-	 *
-	 * @since 6.0
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'login_form',      array( &$this, 'login_form'      )        );
-		add_filter( 'login_redirect',  array( &$this, 'login_redirect'  ), 10, 3 );
-		add_filter( 'logout_redirect', array( &$this, 'logout_redirect' ), 10, 3 );
+		add_action( 'login_form',      array( $this, 'login_form'      )        );
+		add_filter( 'login_redirect',  array( $this, 'login_redirect'  ), 10, 3 );
+		add_filter( 'logout_redirect', array( $this, 'logout_redirect' ), 10, 3 );
+
+		// Load admin
+		if ( is_admin() ) {
+			require_once( WP_PLUGIN_DIR . '/theme-my-login/modules/custom-redirection/admin/custom-redirection-admin.php' );
+
+			$this->admin = new Theme_My_Login_Custom_Redirection_Admin;
+		}
 	}
 
 	/**
 	 * Returns default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -86,7 +82,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login_Template::display()
 	 * @since 6.0
-	 * @access public
 	 */
 	public function login_form() {
 		$template =& Theme_My_Login::get_object()->get_active_instance();
@@ -100,7 +95,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $redirect_to Default redirect
 	 * @param string $request Requested redirect
@@ -157,7 +151,6 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	 *
 	 * @see Theme_My_Login::the_request()
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $redirect_to Default redirect
 	 * @param string $request Requested redirect
@@ -204,11 +197,14 @@ class Theme_My_Login_Custom_Redirection extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Custom_Redirection::get_object();
+/**
+ * Loads the Custom Redirection module
+ *
+ * @since 6.4
+ */
+function theme_my_login_custom_redirection_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'custom-redirection', 'Theme_My_Login_Custom_Redirection' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_custom_redirection_load' );
 
-endif;
-
-if ( is_admin() )
-	include_once( dirname( __FILE__ ) . '/admin/custom-redirection-admin.php' );
-
-
+endif; // Class exists

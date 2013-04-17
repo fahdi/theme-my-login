@@ -18,36 +18,9 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Holds options key
 	 *
 	 * @since 6.3
-	 * @access protected
 	 * @var string
 	 */
 	protected $options_key = 'theme_my_login_redirection';
-
-	/**
-	 * Returns singleton instance
-	 *
-	 * @since 6.3
-	 * @access public
-	 * @return object
-	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
-
-	/**
-	 * Called on Theme_My_Login_Abstract::__construct
-	 *
-	 * @since 6.3
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'tml_uninstall_custom-redirection/custom-redirection.php', array( &$this, 'uninstall' ) );
-
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-
-		add_action( 'load-tml_page_theme_my_login_redirection', array( &$this, 'load_settings_page' ) );
-	}
 
 	/**
 	 * Returns default options
@@ -60,13 +33,29 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	}
 
 	/**
+	 * Constructor
+	 *
+	 * @since 6.4
+	 */
+	public function __construct() {
+		// Load options
+		$this->load_options();
+
+		add_action( 'tml_uninstall_custom-redirection/custom-redirection.php', array( $this, 'uninstall' ) );
+
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+
+		add_action( 'load-tml_page_theme_my_login_redirection', array( $this, 'load_settings_page' ) );
+	}
+
+	/**
 	 * Uninstalls the module
 	 *
 	 * Callback for "tml_uninstall_custom-email/custom-email.php" hook in method Theme_My_Login_Admin::uninstall()
 	 *
 	 * @see Theme_My_Login_Admin::uninstall()
 	 * @since 6.3
-	 * @access public
 	 */
 	public function uninstall() {
 		delete_option( $this->options_key );
@@ -76,7 +65,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Adds "Redirection" tab to Theme My Login menu
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function admin_menu() {
 		global $wp_roles;
@@ -102,7 +90,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "admin_init" hook
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function admin_init() {
 		register_setting( $this->options_key, $this->options_key );
@@ -114,7 +101,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Callback for "load-settings_page_theme-my-login" hook in file "wp-admin/admin.php"
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function load_settings_page() {
 		wp_enqueue_script( 'tml-custom-redirection-admin', plugins_url( 'theme-my-login/modules/custom-redirection/admin/js/custom-redirection-admin.js' ), array( 'postbox' ) );
@@ -124,7 +110,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Renders settings page
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function settings_page() {
 		global $current_screen;
@@ -155,7 +140,6 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 	 * Callback for add_submenu_page()
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param array $args Arguments passed in from add_submenu_page()
 	 */
@@ -195,8 +179,4 @@ class Theme_My_Login_Custom_Redirection_Admin extends Theme_My_Login_Abstract {
 		<?php
 	}
 }
-
-Theme_My_Login_Custom_Redirection_Admin::get_object();
-
-endif;
-
+endif; // Class exists
