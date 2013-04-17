@@ -3,8 +3,6 @@
  * Plugin Name: AJAX
  * Description: Enabling this module will initialize and enable AJAX. There are no other settings for this module.
  *
- * Class: Theme_My_Login_Ajax
- *
  * Holds the Theme My Login Ajax class
  *
  * @package Theme_My_Login
@@ -18,39 +16,26 @@ if ( ! class_exists( 'Theme_My_Login_Ajax' ) ) :
  *
  * @since 6.3
  */
-class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
+class Theme_My_Login_Ajax {
 	/**
-	 * Returns singleton instance
+	 * Constructor
 	 *
 	 * @since 6.3
-	 * @access public
-	 * @return object
 	 */
-	public static function get_object() {
-		return parent::get_object( __CLASS__ );
-	}
+	public function __construct() {
+		add_action( 'template_redirect',  array( $this, 'template_redirect'  ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
 
-	/**
-	 * Loads the module
-	 *
-	 * @since 6.3
-	 * @access protected
-	 */
-	protected function load() {
-		add_action( 'template_redirect',  array( &$this, 'template_redirect'  ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
-
-		add_filter( 'tml_action_url',         array( &$this, 'tml_action_url'         ),  100, 3 );
-		add_filter( 'tml_redirect_url',       array( &$this, 'tml_redirect_url'       ),  100, 2 );
-		add_filter( 'page_css_class',         array( &$this, 'page_css_class'         ),   10, 2 );
-		add_filter( 'wp_setup_nav_menu_item', array( &$this, 'wp_setup_nav_menu_item' )          );
+		add_filter( 'tml_action_url',         array( $this, 'tml_action_url'         ),  100, 3 );
+		add_filter( 'tml_redirect_url',       array( $this, 'tml_redirect_url'       ),  100, 2 );
+		add_filter( 'page_css_class',         array( $this, 'page_css_class'         ),   10, 2 );
+		add_filter( 'wp_setup_nav_menu_item', array( $this, 'wp_setup_nav_menu_item' )          );
 	}
 
 	/**
 	 * Returns default AJAX actions
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array AJAX actions
 	 */
@@ -65,7 +50,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Handles AJAX response
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function template_redirect() {
 
@@ -76,10 +60,10 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 
 			$instance =& $theme_my_login->get_instance();
 
-			$instance->set_option( 'default_action', ! empty( $theme_my_login->request_action ) ? $theme_my_login->request_action : 'login' );
-			$instance->set_option( 'gravatar_size', 75    );
-			$instance->set_option( 'before_title', '<h2>' );
-			$instance->set_option( 'after_title', '</h2>' );
+			$instance->default_action = empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action;
+			$instance->gravatar_size  = 75;
+			$instance->before_title   = '<h2>';
+			$instance->after_title    = '</h2>';
 
 			$data = $instance->display();
 
@@ -109,7 +93,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Enqueues styles and scripts
 	 *
 	 * @since 6.3
-	 * @access public
 	 */
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/css/ajax.css' ) );
@@ -123,7 +106,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Callback for "tml_action_url" filter
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param string $url The action URL
 	 * @param string $action The action
@@ -142,7 +124,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Callback for "tml_redirect_url" filter
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param string $url The redirect URL
 	 * @param string $action The action
@@ -168,7 +149,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Adds CSS class to TML pages
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param array $classes CSS classes
 	 * @param object $page Post object
@@ -184,7 +164,6 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	 * Adds CSS class to TML pages
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param object $menu_item Nav menu item
 	 * @return object Nav menu item
@@ -198,7 +177,14 @@ class Theme_My_Login_Ajax extends Theme_My_Login_Abstract {
 	}
 }
 
-Theme_My_Login_Ajax::get_object();
+/**
+ * Loads the AJAX module
+ *
+ * @since 6.4
+ */
+function theme_my_login_ajax_load( &$theme_my_login ) {
+	$theme_my_login->load_module( 'ajax', 'Theme_My_Login_Ajax' );
+}
+add_action( 'tml_modules_loaded', 'theme_my_login_ajax_load' );
 
-endif;
-
+endif; // Class exists
