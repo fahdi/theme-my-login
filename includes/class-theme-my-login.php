@@ -285,6 +285,14 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		// Set request action
 		$this->request_action = isset( $_REQUEST['action'] ) ? sanitize_key( $_REQUEST['action'] ) : '';
 
+		// Change "retrievepass" to "lostpassword"
+		if ( 'retrievepassword' == $this->request_action )
+			$this->request_action = 'lostpassword';
+
+		// Change "rp" to "resetpass"
+		if ( 'rp' == $this->request_action )
+			$this->request_action = 'resetpass';
+
 		// If no request action, use assigned page action
 		if ( ! $this->request_action && self::is_tml_page() )
 			$this->request_action = self::get_page_action( get_queried_object_id() );
@@ -339,6 +347,13 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		}
 
 		do_action_ref_array( 'tml_request', array( &$this ) );
+
+		if ( has_action( 'tml_request_' . $this->request_action ) ) {
+			// Remove default action
+			remove_action( 'template_redirect', $this->request_action . '_handler' );
+
+			do_action_ref_array( 'tml_request_' . $this->request_action, array( &$this ) );
+		}
 	}
 
 	/**
@@ -397,7 +412,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 	 * @since 6.4
 	 */
 	public function lostpassword_handler() {
-		if ( 'lostpassword' != $this->request_action || 'retrievepassword' != $this->request_action )
+		if ( 'lostpassword' != $this->request_action )
 			return;
 
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
@@ -423,7 +438,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 	 * @since 6.4
 	 */
 	public function resetpass_handler() {
-		if ( 'resetpass' != $this->request_action || 'rp' != $this->request_action )
+		if ( 'resetpass' != $this->request_action )
 			return;
 
 		$user = self::check_password_reset_key( $_REQUEST['key'], $_REQUEST['login'] );
@@ -589,7 +604,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
 			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->get_option( 'version' ) );
 
-		if ( 'resetpass' == $this->request_action || 'rp' == $this->request_action ) {
+		if ( 'resetpass' == $this->request_action ) {
 			wp_enqueue_script( 'utils' );
 			wp_enqueue_script( 'user-profile' );
 		}
@@ -638,7 +653,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 
 		switch ( $this->request_action ) {
 			case 'lostpassword' :
-			case 'retrievepassword' :
 			case 'register' :
 			?>
 <script type="text/javascript">
@@ -648,7 +662,6 @@ if(typeof wpOnload=='function')wpOnload()
 <?php
 				break;
 			case 'resetpass' :
-			case 'rp' :
 			?>
 <script type="text/javascript">
 try{document.getElementById('pass1').focus();}catch(e){}
