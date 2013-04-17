@@ -60,10 +60,10 @@ class Theme_My_Login_Ajax {
 
 			$instance =& $theme_my_login->get_instance();
 
-			$instance->default_action = empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action;
-			$instance->gravatar_size  = 75;
-			$instance->before_title   = '<h2>';
-			$instance->after_title    = '</h2>';
+			$instance->set_option( 'default_action', empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action );
+			$instance->set_option( 'gravatar_size', 75 );
+			$instance->set_option( 'before_title', '<h2>' );
+			$instance->set_option( 'after_title', '</h2>' );
 
 			$data = $instance->display();
 
