@@ -39,6 +39,9 @@ class Theme_My_Login_Custom_Email_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.4
 	 */
 	public function __construct() {
+		// Load options
+		$this->load_options();
+
 		add_action( 'tml_uninstall_custom-email/custom-email.php', array( $this, 'uninstall' ) );
 
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
