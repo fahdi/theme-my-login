@@ -34,29 +34,15 @@ var tmlAjax;
 				url: url,
 				data: data,
 				type: type,
-				success: function(data) {
-					var r = wpAjax.parseAjaxResponse(data);
-
-					if (r === false ) {
-						t.show(data);
-					} else {
-						if (r.errors) {
-							$.each(r.responses, function() {
-								t.show(this.supplemental.html);
-							});
-						} else {
-							$.each(r.responses, function() {
-								t.show(this.data);
-								if (this.supplemental.success == 1) {
-									t.overlay.off('click').click(function() {
-										t.hide();
-										setTimeout(function() {
-											location.reload();
-										}, 500);
-									});
-								}
-							});
-						}
+				success: function(response) {
+					t.show(response.data);
+					if (response.success) {
+						t.overlay.off('click').click(function() {
+							t.hide();
+							setTimeout(function() {
+								location.reload();
+							}, 500);
+						});
 					}
 				}
 			});

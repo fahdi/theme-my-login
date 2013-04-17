@@ -58,15 +58,6 @@ class Theme_My_Login_Ajax {
 		if ( Theme_My_Login::is_tml_page() && isset( $_GET['ajax'] ) ) {
 			define( 'DOING_AJAX', true );
 
-			$instance =& $theme_my_login->get_instance();
-
-			$instance->set_option( 'default_action', empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action );
-			$instance->set_option( 'gravatar_size', 75 );
-			$instance->set_option( 'before_title', '<h2>' );
-			$instance->set_option( 'after_title', '</h2>' );
-
-			$data = $instance->display();
-
 			send_origin_headers();
 
 			@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
@@ -75,17 +66,17 @@ class Theme_My_Login_Ajax {
 			send_nosniff_header();
 			nocache_headers();
 
-			$x = new WP_Ajax_Response( array(
-				'what'   => 'login',
-				'action' => $theme_my_login->request_action,
-				'data'   => $theme_my_login->errors->get_error_code() ? $theme_my_login->errors : $data,
-				'supplemental' => array(
-					'html' => $data,
-					'success' => is_user_logged_in()
-				)
-			) );
-			$x->send();
-			exit;
+			$instance =& $theme_my_login->get_instance();
+
+			$instance->set_option( 'default_action', empty( $theme_my_login->request_action ) ? 'login' : $theme_my_login->request_action );
+			$instance->set_option( 'gravatar_size', 75 );
+			$instance->set_option( 'before_title', '<h2>' );
+			$instance->set_option( 'after_title', '</h2>' );
+
+			if ( is_user_logged_in() )
+				wp_send_json_success( $instance->display() );
+
+			wp_send_json_error( $instance->display() );
 		}
 	}
 
@@ -97,7 +88,7 @@ class Theme_My_Login_Ajax {
 	public function wp_enqueue_scripts() {
 		wp_enqueue_style( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/css/ajax.css' ) );
 
-		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery', 'wp-ajax-response' ) );
+		wp_enqueue_script( 'theme-my-login-ajax', plugins_url( 'theme-my-login/modules/ajax/js/ajax.js' ), array( 'jquery' ) );
 	}
 
 	/**
