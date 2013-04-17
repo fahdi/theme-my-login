@@ -14,7 +14,10 @@ if ( ! class_exists( 'Theme_My_Login_MS_Signup' ) ) :
  *
  * @since 6.1
  */
-final class Theme_My_Login_MS_Signup {
+final class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
+
+	/** Singleton *************************************************************/
+
 	/**
 	 * Holds singleton instance
 	 *
@@ -104,7 +107,7 @@ final class Theme_My_Login_MS_Signup {
 
 		do_action( 'before_signup_form' );
 
-		echo '<div class="login mu_register" id="theme-my-login' . esc_attr( $template->instance ) . '">';
+		echo '<div class="login mu_register" id="theme-my-login' . esc_attr( $template->get_option( 'instance' ) ) . '">';
 
 		$active_signup = get_site_option( 'registration' );
 		if ( ! $active_signup )
@@ -300,7 +303,7 @@ final class Theme_My_Login_MS_Signup {
 		$user_email = $filtered_results['user_email'];
 		$errors = $filtered_results['errors'];
 
-		$templates   = (array) $template->ms_signup_user_template;
+		$templates   = (array) $template->get_option( 'ms_signup_user_template', array() );
 		$templates[] = 'ms-signup-user-form.php';
 
 		$template->get_template( $templates, true, compact( 'current_site', 'active_signup', 'user_name', 'user_email', 'errors' ) );
@@ -335,7 +338,7 @@ final class Theme_My_Login_MS_Signup {
 		if ( empty( $blogname ) )
 			$blogname = $user_name;
 
-		$templates   = (array) $template->ms_signup_blog_template;
+		$templates   = (array) $template->get_option( 'ms_signup_blog_template', array() );
 		$templates[] = 'ms-signup-blog-form.php';
 
 		$template->get_template( $templates, true, compact( 'current_site', 'user_name', 'user_email', 'blogname', 'blog_title', 'errors' ) );
@@ -363,7 +366,7 @@ final class Theme_My_Login_MS_Signup {
 		$blog_title = $filtered_results['blog_title'];
 		$errors = $filtered_results['errors'];
 
-		$templates   = (array) $template->ms_signup_another_blog_template;
+		$templates   = (array) $template->get_option( 'ms_signup_another_blog_template', array() );
 		$templates[] = 'ms-signup-another-blog-form.php';
 
 		$template->get_template( $templates, true, compact( 'current_site', 'blogname', 'blog_title', 'errors' ) );
@@ -397,7 +400,7 @@ final class Theme_My_Login_MS_Signup {
 	public function tml_display_activate( &$template ) {
 		global $blog_id;
 
-		echo '<div class="login" id="theme-my-login' . esc_attr( $template->instance ) . '">';
+		echo '<div class="login" id="theme-my-login' . esc_attr( $template->get_option( 'instance' ) ) . '">';
 
 		if ( empty( $_GET['key'] ) && empty( $_POST['key'] ) ) { ?>
 

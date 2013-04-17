@@ -14,7 +14,7 @@ if ( ! class_exists( 'Theme_My_Login' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login {
+class Theme_My_Login extends Theme_My_Login_Abstract{
 	/**
 	 * Holds plugin version
 	 *
@@ -24,20 +24,12 @@ class Theme_My_Login {
 	const version = '6.4-alpha';
 
 	/**
-	 * Holds singleton object
+	 * Holds options key
 	 *
-	 * @since 6.4
-	 * @var Theme_My_Login
+	 * @since 6.3
+	 * @var string
 	 */
-	private static $object;
-
-	/**
-	 * Holds options
-	 *
-	 * @since 6.4
-	 * @var array
-	 */
-	private $options = array();
+	protected $options_key = 'theme_my_login';
 
 	/**
 	 * Holds errors object
@@ -79,6 +71,16 @@ class Theme_My_Login {
 	 */
 	private $loaded_modules = array();
 
+	/** Singleton *************************************************************/
+
+	/**
+	 * Holds singleton object
+	 *
+	 * @since 6.4
+	 * @var Theme_My_Login
+	 */
+	private static $object;
+
 	/**
 	 * Returns singleton object
 	 *
@@ -90,7 +92,6 @@ class Theme_My_Login {
 			self::$object = new Theme_My_Login;
 		return self::$object;
 	}
-
 
 	/** Defaults **************************************************************/
 
@@ -127,7 +128,6 @@ class Theme_My_Login {
 		) );
 	}
 
-
 	/** Magic Methods *********************************************************/
 
 	/**
@@ -137,11 +137,11 @@ class Theme_My_Login {
 	 */
 	private function __construct() {
 
-		// Load main instance
-		$this->load_instance();
-
 		// Load options
 		$this->load_options();
+
+		// Load main instance
+		$this->load_instance();
 
 		add_action( 'plugins_loaded', array( $this, 'load_modules'       ) );
 		add_action( 'init',           array( $this, 'load_textdomain'    ) );
@@ -194,42 +194,6 @@ class Theme_My_Login {
 	 */
 	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; uh?' ), '6.4' ); }
 
-	/**
-	 * Magic method for checking the existence of a certain option
-	 *
-	 * @since 6.4
-	 */
-	public function __isset( $key ) { return isset( $this->options[$key] ); }
-
-	/**
-	 * Magic method for getting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __get( $key ) { return isset( $this->options[$key] ) ? $this->options[$key] : null; }
-
-	/**
-	 * Magic method for setting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __set( $key, $value ) { $this->options[$key] = $value; }
-
-	/**
-	 * Magic method for unsetting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __unset( $key ) { if ( isset( $this->options[$key] ) ) unset( $this->options[$key] ); }
-
-	/**
-	 * Magic method to prevent notices and errors from invalid method calls
-	 *
-	 * @since 6.4
-	 */
-	public function __call( $name = '', $args = array() ) { unset( $name, $args ); return null; }
-
-
 	/** Actions ***************************************************************/
 
 	/**
@@ -238,7 +202,7 @@ class Theme_My_Login {
 	 * @since 6.4
 	 */
 	public function load_modules() {
-		foreach ( (array) $this->active_modules as $module ) {
+		foreach ( (array) $this->get_option( 'active_modules' ) as $module ) {
 			if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module ) )
 				include_once( WP_PLUGIN_DIR . '/theme-my-login/modules/' . $module );
 		}
@@ -258,7 +222,7 @@ class Theme_My_Login {
 	 *
 	 * @return bool True on success, false on failure
 	 */
-	private static function load_textdomain() {
+	public function load_textdomain() {
 
 		// Traditional WordPress plugin locale filter
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'theme-my-login' );
@@ -327,6 +291,25 @@ class Theme_My_Login {
 
 		// Set request instance
 		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;	
+	}
+
+	/**
+	 * Enforces ssl_admin
+	 *
+	 * Callback for "template_redirect" action
+	 *
+	 * @since 6.4
+	 */
+	public function enforce_ssl_admin() {
+		if ( force_ssl_admin() && ! is_ssl() ) {
+			if ( 0 === strpos( $_SERVER['REQUEST_URI'], 'http' ) ) {
+				wp_redirect( preg_replace( '|^http://|', 'https://', $_SERVER['REQUEST_URI'] ) );
+				exit;
+			} else {
+				wp_redirect( 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+				exit;
+			}
+		}
 	}
 
 	/**
@@ -603,8 +586,8 @@ class Theme_My_Login {
 		if ( self::is_tml_page() )
 			do_action( 'login_enqueue_scripts' );
 
-		if ( ! is_admin() && $this->enable_css )
-			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->version );
+		if ( ! is_admin() && $this->get_option( 'enable_css' ) )
+			wp_enqueue_style( 'theme-my-login', self::get_stylesheet(), false, $this->get_option( 'version' ) );
 
 		if ( 'resetpass' == $this->request_action || 'rp' == $this->request_action ) {
 			wp_enqueue_script( 'utils' );
@@ -709,13 +692,12 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	public function wp_authenticate( &$user_login ) {
 		global $wpdb;
-		if ( is_email( $user_login ) && $this->email_login ) {
+		if ( is_email( $user_login ) && $this->get_option( 'email_login' ) ) {
 			if ( $found = $wpdb->get_var( $wpdb->prepare( "SELECT user_login FROM $wpdb->users WHERE user_email = %s", $user_login ) ) )
 				$user_login = $found;
 		}
 		return;
 	}
-
 
 	/** Filters ***************************************************************/
 
@@ -896,7 +878,6 @@ if(typeof wpOnload=='function')wpOnload()
 		return $post_link;
 	}
 
-
 	/** Utilities *************************************************************/
 
 	/**
@@ -940,7 +921,7 @@ if(typeof wpOnload=='function')wpOnload()
 				$atts['show_title'] = false;
 
 			foreach ( $atts as $option => $value ) {
-				$instance->$option = $value;
+				$instance->set_option( $option, $value );
 			}
 
 			$did_main_instance = true;
@@ -1072,7 +1053,6 @@ if(typeof wpOnload=='function')wpOnload()
 		return $stylesheet;
 	}
 
-
 	/** Instances *************************************************************/
 
 	/**
@@ -1116,14 +1096,13 @@ if(typeof wpOnload=='function')wpOnload()
 
 		if ( $args['instance'] == $this->request_instance ) {
 			$instance->set_active();
-			$instance->default_action = $this->request_action;
+			$instance->set_option( 'default_action', $this->request_action );
 		}
 
 		$this->loaded_instances[] = $instance;
 
 		return $instance;
 	}
-
 
 	/** Modules ***************************************************************/
 
@@ -1157,19 +1136,6 @@ if(typeof wpOnload=='function')wpOnload()
 
 		return true;
 	}
-
-
-	/** Options ***************************************************************/
-
-	/**
-	 * Loads plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function load_options() {
-		$this->options = wp_parse_args( get_option( 'theme_my_login' ), self::default_options() );
-	}
-
 
 	/** Compatibility *********************************************************/
 

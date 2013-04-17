@@ -14,7 +14,7 @@ if ( ! class_exists( 'Theme_My_Login_Template' ) ) :
  *
  * @since 6.0
  */
-class Theme_My_Login_Template {
+class Theme_My_Login_Template extends Theme_My_Login_Abstract {
 	/**
 	 * Holds active instance flag
 	 *
@@ -24,16 +24,6 @@ class Theme_My_Login_Template {
 	private $is_active = false;
 
 	/**
-	 * Holds template options
-	 *
-	 * @since 6.4
-	 * @var array
-	 */
-	private $options = array();
-
-	/** Magic Methods *********************************************************/
-
-	/**
 	 * Constructor
 	 *
 	 * @since 6.0
@@ -41,42 +31,16 @@ class Theme_My_Login_Template {
 	 * @param array $options Instance options
 	 */
 	public function __construct( $options = '' ) {
-		$this->options = shortcode_atts( self::default_options(), $options );
+		$options = wp_parse_args( $options );
+		$options = shortcode_atts( self::default_options(), $options );
+
+		$this->set_options( $options );
 	}
-
-	/**
-	 * Magic method for checking the existence of a certain option
-	 *
-	 * @since 6.4
-	 */
-	public function __isset( $key ) { return isset( $this->options[$key] ); }
-
-	/**
-	 * Magic method for getting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __get( $key ) { return isset( $this->options[$key] ) ? $this->options[$key] : null; }
-
-	/**
-	 * Magic method for setting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __set( $key, $value ) { $this->options[$key] = $value; }
-
-	/**
-	 * Magic method for unsetting plugin options
-	 *
-	 * @since 6.4
-	 */
-	public function __unset( $key ) { if ( isset( $this->options[$key] ) ) unset( $this->options[$key] ); }
 
 	/**
 	 * Retrieves default options
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return array Default options
 	 */
@@ -113,50 +77,50 @@ class Theme_My_Login_Template {
 	 */
 	public function display( $action = '' ) {
 		if ( empty( $action ) )
-			$action = $this->default_action;
+			$action = $this->get_option( 'default_action' );
 
 		ob_start();
-		echo $this->before_widget;
-		if ( $this->show_title )
-			echo $this->before_title . $this->get_title( $action ) . $this->after_title . "\n";
+		echo $this->get_option( 'before_widget' );
+		if ( $this->get_option( 'show_title' ) )
+			echo $this->get_option( 'before_title' ) . $this->get_title( $action ) . $this->get_option( 'after_title' ) . "\n";
 		// Is there a specified template?
 		if ( has_action( 'tml_display_' . $action ) ) {
 			do_action_ref_array( 'tml_display_' . $action, array( &$this ) );
 		} else {
 			$template = array();
 			if ( is_user_logged_in() && 'login' == $action ) {
-				if ( $this->user_template )
-					$template[] = $this->user_template;
+				if ( $this->get_option( 'user_template' ) )
+					$template[] = $this->get_option( 'user_template' );
 				$template[] = 'user-panel.php';
 			} else {
 				switch ( $action ) {
 					case 'lostpassword':
 					case 'retrievepassword':
-						if ( $this->lostpassword_template )
-							$template[] = $this->lostpassword_template;
+						if ( $this->get_option( 'lostpassword_template' ) )
+							$template[] = $this->get_option( 'lostpassword_template' );
 						$template[] = 'lostpassword-form.php';
 						break;
 					case 'resetpass':
 					case 'rp':
-						if ( $this->resetpass_template )
-							$template[] = $this->resetpass_template;
+						if ( $this->get_option( 'resetpass_template' ) )
+							$template[] = $this->get_option( 'resetpass_template' );
 						$template[] = 'resetpass-form.php';
 						break;
 					case 'register':
-						if ( $this->register_template )
-							$template[] = $this->register_template;
+						if ( $this->get_option( 'register_template' ) )
+							$template[] = $this->get_option( 'register_template' );
 						$template[] = 'register-form.php';
 						break;
 					case 'login':
 					default :
-						if ( $this->login_template )
-							$template[] = $this->login_template;
+						if ( $this->get_option( 'login_template' ) )
+							$template[] = $this->get_option( 'login_template' );
 						$template[] = 'login-form.php';
 				}
 			}
 			$this->get_template( $template );
 		}
-		echo $this->after_widget . "\n";
+		echo $this->get_option( 'after_widget' ) . "\n";
 		$output = ob_get_contents();
 		ob_end_clean();
 		return apply_filters_ref_array( 'tml_display', array( $output, $action, &$this ) );
@@ -166,16 +130,15 @@ class Theme_My_Login_Template {
 	 * Returns action title
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action The action to retrieve. Defaults to current action.
 	 * @return string Title of $action
 	 */
 	public function get_title( $action = '' ) {
 		if ( empty( $action ) )
-			$action = $this->default_action;
+			$action = $this->get_option( 'default_action' );
 
-		if ( is_user_logged_in() && 'login' == $action && $action == $this->default_action ) {
+		if ( is_user_logged_in() && 'login' == $action && $action == $this->get_option( 'default_action' ) ) {
 			$title = sprintf( __( 'Welcome, %s', 'theme-my-login' ), wp_get_current_user()->display_name );
 		} else {
 			if ( $page_id = Theme_My_Login::get_page_id( $action ) ) {
@@ -204,7 +167,6 @@ class Theme_My_Login_Template {
 	 * Outputs action title
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action The action to retieve. Defaults to current action.
 	 */
@@ -216,7 +178,6 @@ class Theme_My_Login_Template {
 	 * Returns plugin errors
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function get_errors() {
 		global $error;
@@ -261,7 +222,6 @@ class Theme_My_Login_Template {
 	 * Prints plugin errors
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function the_errors() {
 		echo $this->get_errors();
@@ -271,17 +231,18 @@ class Theme_My_Login_Template {
 	 * Returns requested action URL
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action Action to retrieve
 	 * @return string The requested action URL
 	 */
 	public function get_action_url( $action = '' ) {
 
-		if ( $action == $this->default_action ) {
+		$instance = $this->get_option( 'instance' );
+
+		if ( $action == $this->get_option( 'default_action' ) ) {
 			$args = array();
-			if ( $this->instance )
-				$args['instance'] = $this->instance;
+			if ( $instance )
+				$args['instance'] = $instance;
 			$url = Theme_My_Login_Common::get_current_url( $args );
 		} else {
 			$url = Theme_My_Login::get_page_link( $action );
@@ -298,7 +259,6 @@ class Theme_My_Login_Template {
 	 * Outputs requested action URL
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action Action to retrieve
 	 */
@@ -310,7 +270,6 @@ class Theme_My_Login_Template {
 	 * Returns the action links
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param array $args Optionally specify which actions to include/exclude. By default, all are included.
 	 */
@@ -322,19 +281,19 @@ class Theme_My_Login_Template {
 		) );
 		
 		$action_links = array();
-		if ( $args['login'] && $this->show_log_link ) {
+		if ( $args['login'] && $this->get_option( 'show_log_link' ) ) {
 			$action_links[] = array(
 				'title' => $this->get_title( 'login' ),
 				'url'   => $this->get_action_url( 'login' )
 			);
 		}
-		if ( $args['register'] && $this->show_reg_link && get_option( 'users_can_register' ) ) {
+		if ( $args['register'] && $this->get_option( 'show_reg_link' ) && get_option( 'users_can_register' ) ) {
 			$action_links[] = array(
 				'title' => $this->get_title( 'register' ),
 				'url'   => $this->get_action_url( 'register' )
 			);
 		}
-		if ( $args['lostpassword'] && $this->show_pass_link ) {
+		if ( $args['lostpassword'] && $this->get_option( 'show_pass_link' ) ) {
 			$action_links[] = array(
 				'title' => $this->get_title( 'lostpassword' ),
 				'url'   => $this->get_action_url( 'lostpassword' )
@@ -347,7 +306,6 @@ class Theme_My_Login_Template {
 	 * Outputs the action links
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param array $args Optionally specify which actions to include/exclude. By default, all are included.
 	 */
@@ -365,7 +323,6 @@ class Theme_My_Login_Template {
 	 * Returns logged-in user links
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @return array Logged-in user links
 	 */
@@ -386,7 +343,6 @@ class Theme_My_Login_Template {
 	 * Outputs logged-in user links
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function the_user_links() {
 		echo '<ul class="tml-user-links">';
@@ -401,11 +357,10 @@ class Theme_My_Login_Template {
 	 * Displays user avatar
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function the_user_avatar( $size = '' ) {
 		if ( empty( $size ) )
-			$size = $this->gravatar_size ? $this->gravatar_size : 50;
+			$size = $this->get_option( 'gravatar_size', 50 );
 
 		$current_user = wp_get_current_user();
 
@@ -416,7 +371,6 @@ class Theme_My_Login_Template {
 	 * Returns template message for requested action
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action Action to retrieve
 	 * @return string The requested template message
@@ -444,7 +398,6 @@ class Theme_My_Login_Template {
 	 * Outputs template message for requested action
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action Action to retrieve
 	 * @param string $before_message Text/HTML to add before the message
@@ -459,7 +412,6 @@ class Theme_My_Login_Template {
 	 * Locates specified template
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string|array $template_names The template(s) to locate
 	 * @param bool $load If true, the template will be included if found
@@ -503,7 +455,6 @@ class Theme_My_Login_Template {
 	 * Returns the proper redirect URL according to action
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action The action
 	 * @return string The redirect URL
@@ -513,7 +464,7 @@ class Theme_My_Login_Template {
 		$theme_my_login = Theme_My_Login::get_object();
 
 		if ( empty( $action ) )
-			$action = $this->default_action;
+			$action = $this->get_option( 'default_action' );
 
 		$redirect_to = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
 
@@ -536,7 +487,6 @@ class Theme_My_Login_Template {
 	 * Outputs redirect URL
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $action The action
 	 */
@@ -548,18 +498,16 @@ class Theme_My_Login_Template {
 	 * Outputs current template instance ID
 	 *
 	 * @since 6.0
-	 * @access public
 	 */
 	public function the_instance() {
-		if ( $this->instance )
-			echo esc_attr( $this->instance );
+		if ( $this->get_option( 'instance' ) )
+			echo esc_attr( $this->get_option( 'instance' ) );
 	}
 
 	/**
 	 * Returns requested $value
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $value The value to retrieve
 	 * @return string|bool The value if it exists, false if not
@@ -574,7 +522,6 @@ class Theme_My_Login_Template {
 	 * Outputs requested value
 	 *
 	 * @since 6.0
-	 * @access public
 	 *
 	 * @param string $value The value to retrieve
 	 */
@@ -586,7 +533,6 @@ class Theme_My_Login_Template {
 	 * Returns active status
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @return bool True if instance is active, false if not
 	 */
@@ -598,7 +544,6 @@ class Theme_My_Login_Template {
 	 * Sets active status
 	 *
 	 * @since 6.3
-	 * @access public
 	 *
 	 * @param bool $active Active status
 	 */
@@ -607,4 +552,3 @@ class Theme_My_Login_Template {
 	}
 }
 endif; // Class exists
-
