@@ -49,9 +49,15 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
+#tml_ajax_content p {
+	margin: 5px 0;
+}
 #tml_ajax_content ul {
 	margin: 5px 0;
 	list-style-position: inside;
+}
+#tml_ajax_content li {
+	margin: 5px 0;
 }
 #tml_ajax_content .tml-user-avatar {
 	float: left;
