@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.3.5
+Stable tag: 6.3.6
 
 Themes the WordPress login pages according to your theme.
 
@@ -26,7 +26,7 @@ Also includes a widget for sidebar login.
 * Allow users to set their own password upon registration
 * Require users to be approved or confirm e-mail address upon registration
 * Theme user profiles
- 
+
 
 == Installation ==
 
@@ -55,6 +55,12 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 
 == Changelog ==
+
+= 6.3.6 =
+* Fix issue where all module options were set once activated
+* Fix issue where template tag was not being output
+* Fix issue where install failed during new blog creation on multisite
+* Fix issue where error messages were duplicated on login pages
 
 = 6.3.5 =
 * Fix issue with blank pages where page.php didn't exists in a theme
