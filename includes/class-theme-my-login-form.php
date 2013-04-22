@@ -444,15 +444,13 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 
 		$html .= $this->get_error_html();
 
-		$html .= '<form';
+		$html .= '<form action="' . $form_action . '"';
 		if ( $form_name )
 			$html .= ' name="' . $form_name . '"';
 		if ( $form_id )
 			$html .= ' id="' . $form_id . '"';
 		if ( $form_method )
 			$html .= ' method="' . $form_method . '"';
-		if ( $form_action )
-			$html .= ' action="' . $form_action . '"';
 		if ( $form_enctype )
 			$html .= ' enctype="' . $form_enctype . '"';
 		$html .= '>' . $before_fields;
