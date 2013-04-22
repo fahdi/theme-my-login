@@ -17,8 +17,12 @@ if ( file_exists( WP_PLUGIN_DIR . '/theme-my-login-custom.php' ) )
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-common.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-abstract.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login.php' );
-require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-template.php' );
 require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-widget.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/includes/class-theme-my-login-form.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-login.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-lost-password.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-register.php' );
+require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-reset-password.php' );
 
 // Instantiate Theme_My_Login singleton
 Theme_My_Login::get_object();
