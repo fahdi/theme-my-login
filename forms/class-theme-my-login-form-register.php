@@ -65,9 +65,11 @@ final class Theme_My_Login_Form_Register extends Theme_My_Login_Form {
 			'after_field'  => '</p>'
 		) );
 
-		// Pseudo field for "register_form" action
+		// Do "register_form" action
 		$this->add_field( 'register_form_action', 'general', array(
-			'do_action' => 'register_form'
+			'type' => 'hook',
+			'hook' => 'do_action',
+			'args' => array( 'register_form' )
 		) );
 
 		// Submit group

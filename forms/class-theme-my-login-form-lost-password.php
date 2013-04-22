@@ -53,9 +53,11 @@ final class Theme_My_Login_Form_Lost_Password extends Theme_My_Login_Form {
 			'after_field'  => '</p>'
 		) );
 
-		// Pseudo field for "login_form" action
+		// Do "lostpassword_form" action
 		$this->add_field( 'lostpassword_form_action', 'general', array(
-			'type' => 'custom'
+			'type' => 'hook',
+			'hook' => 'do_action',
+			'args' => array( 'lostpassword_form' )
 		) );
 
 		// Submit group

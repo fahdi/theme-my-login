@@ -78,9 +78,11 @@ final class Theme_My_Login_Form_Login extends Theme_My_Login_Form {
 			'after_field'  => '</p>'
 		) );
 
-		// Pseudo field for "login_form" action
+		// Do "login_form" action
 		$this->add_field( 'login_form_action', 'general', array(
-			'type' => 'custom'
+			'type' => 'hook',
+			'hook' => 'do_action',
+			'args' => array( 'login_form' )
 		) );
 
 		// Submit group

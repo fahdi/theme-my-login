@@ -75,9 +75,11 @@ final class Theme_My_Login_Form_Reset_Password extends Theme_My_Login_Form {
 			'</p>'
 		) );
 
-		// Pseudo field for "resetpassword_form" action
+		// Do "resetpassword_form" action
 		$this->add_field( 'resetpassword_form_action', 'general', array(
-			'type' => 'custom'
+			'type' => 'hook',
+			'hook' => 'do_action',
+			'args' => array( 'resetpassword_form' )
 		) );
 
 		// Submit group
