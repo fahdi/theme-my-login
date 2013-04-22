@@ -304,11 +304,6 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 
 		if ( ! empty( $field->html ) ) {
 			$html .= $field->html;
-		} elseif ( ! empty( $field->do_action ) ) {
-			ob_start();
-			do_action( $field->do_action );
-			$html .= ob_get_contents();
-			ob_end_clean();
 		} else {
 			switch ( $field->type ) {
 				case 'select' :
@@ -354,6 +349,14 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 					}
 				case 'file' :
 					$html .= '<input type="' . esc_attr( $field->type ) . '"' . $this->get_attr_html( $field ) . ' />';
+					break;
+				case 'hook' :
+					if ( $field->hook && $field->args ) {
+						ob_start();
+						call_user_func_array( $field->hook, (array) $field->args );
+						$html .= ob_get_contents();
+						ob_end_clean();
+					}
 					break;
 				default :
 					$html .= apply_filters_ref_array( 'tml_form_custom_field_html', array( '', $name, &$this ) );
@@ -564,7 +567,7 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 	 */
 	public function get_attr_html( $attr ) {
 
-		$valid_attr = apply_filters( 'tml_form_field_valid_attr', array( 'name', 'id', 'value', 'class', 'style', 'rows', 'cols', 'size', 'selected', 'checked' ) );
+		$valid_attr = apply_filters( 'tml_form_field_valid_attr', array( 'name', 'id', 'value', 'class', 'style', 'rows', 'cols', 'size', 'selected', 'checked', 'maxlength' ) );
 
 		$html = '';
 		foreach ( $attr as $name => $value ) {
