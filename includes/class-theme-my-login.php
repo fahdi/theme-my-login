@@ -140,9 +140,6 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		// Load options
 		$this->load_options();
 
-		// Load main instance
-		$this->load_instance();
-
 		add_action( 'plugins_loaded', array( $this, 'load_modules'       ) );
 		add_action( 'init',           array( $this, 'load_textdomain'    ) );
 		add_action( 'init',           array( $this, 'register_post_type' ) );
@@ -298,7 +295,12 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 			$this->request_action = self::get_page_action( get_queried_object_id() );
 
 		// Set request instance
-		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;	
+		$this->request_instance = isset( $_REQUEST['instance'] ) ? sanitize_key( $_REQUEST['instance'] ) : 0;
+
+		// Load main instance
+		$this->load_instance( array(
+			'default_action' => self::is_tml_page() ? self::get_page_action( get_queried_object_id() ) : $this->request_action
+		) );
 	}
 
 	/**
@@ -819,7 +821,7 @@ if(typeof wpOnload=='function')wpOnload()
 	 */
 	function single_post_title( $title ) {
 		if ( self::is_tml_page( 'login' ) && is_user_logged_in() )
-			$title = $this->get_instance()->get_title( 'login' );
+			$title = self::get_page_title( 'login' );
 		return $title;
 	}
 
@@ -841,7 +843,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 		if ( self::is_tml_page( 'login', $post_id ) && is_user_logged_in() ) {
 			if ( in_the_loop() )
-				$title = $this->get_instance()->get_title( 'login' );
+				$title = apply_filters( 'tml_title', sprintf( __( 'Howdy, %1$s' ), wp_get_current_user()->display_name ), 'login' );
 		}
 		return $title;
 	}
@@ -863,7 +865,7 @@ if(typeof wpOnload=='function')wpOnload()
 
 		if ( 'tml_page' == $menu_item->object && self::is_tml_page( 'login', $menu_item->object_id ) ) {
 			if ( is_user_logged_in() ) {
-				$menu_item->title = $this->get_instance()->get_title( 'logout' );
+				$menu_item->title = self::get_page_title( 'logout' );
 				$menu_item->url   = wp_logout_url();
 			}
 		}
@@ -927,11 +929,8 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( self::is_tml_page() && in_the_loop() && is_main_query() && ! $did_main_instance ) {
 			$instance = $this->get_instance();
 
-			if ( ! empty( $this->request_instance ) )
-				$instance->set_active( false );
-
-			if ( ! empty( $this->request_action ) )
-				$atts['default_action'] = $this->request_action;
+			if ( empty( $this->request_instance ) )
+				$instance->errors = $this->errors;
 
 			if ( ! isset( $atts['show_title'] ) )
 				$atts['show_title'] = false;
@@ -944,7 +943,11 @@ if(typeof wpOnload=='function')wpOnload()
 		} else {
 			$instance = $this->load_instance( $atts );
 		}
-		return $instance->display();
+
+		if ( $instance->get_option( 'instance' ) == $this->request_instance )
+			$instance->errors = $this->errors;
+
+		return $instance->get_form_html();
 	}
 
 	/**
@@ -973,6 +976,39 @@ if(typeof wpOnload=='function')wpOnload()
 			return true;
 
 		return false;
+	}
+
+	/**
+	 * Returns title for a login page
+	 *
+	 * @since 6.4
+	 *
+	 * @param string $action The action
+	 * @return string Login page title
+	 */
+	public static function get_page_title( $action ) {
+		if ( $page_id = self::get_page_id( $action ) ) {
+			$title = get_post_field( 'post_title', $page_id );
+		} else {
+			switch ( $action ) {
+				case 'register':
+					$title = __( 'Register' );
+					break;
+				case 'lostpassword':
+				case 'retrievepassword':
+				case 'resetpass':
+				case 'rp':
+					$title = __( 'Lost Password' );
+					break;
+				case 'logout' :
+					$title = __( 'Log Out' );
+					break;
+				case 'login':
+				default:
+					$title = __( 'Log In' );
+			}
+		}
+		return apply_filters( 'tml_title', $title, $action );
 	}
 
 	/**
@@ -1108,16 +1144,45 @@ if(typeof wpOnload=='function')wpOnload()
 	public function load_instance( $args = '' ) {
 		$args['instance'] = count( $this->loaded_instances );
 
-		$instance = new Theme_My_Login_Template( $args );
+		$action = empty( $args['default_action'] ) ? 'login' : $args['default_action'];
 
-		if ( $args['instance'] == $this->request_instance ) {
-			$instance->set_active();
-			$instance->set_option( 'default_action', $this->request_action );
-		}
+		$instance = self::get_form( $action, $args );
 
 		$this->loaded_instances[] = $instance;
 
 		return $instance;
+	}
+
+	/**
+	 * Retrieves proper form depending on action
+	 *
+	 * @since 6.4
+	 *
+	 * @param string $action Action of the form to get
+	 * @param array $args Arguments to pass to the form object
+	 * @return object Form object
+	 */
+	public static function get_form( $action, $args = array() ) {
+		switch ( $action ) {
+			case 'lostpassword' :
+				require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-lost-password.php' );
+				$form = new Theme_My_Login_Form_Lost_Password( $args );
+				break;
+			case 'resetpass' :
+				require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-reset-password.php' );
+				$form = new Theme_My_Login_Form_Reset_Password( $args );
+				break;
+			case 'register' :
+				require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-register.php' );
+				$form = new Theme_My_Login_Form_Register( $args );
+				break;
+			case 'login' :
+			default :
+				require_once( WP_PLUGIN_DIR . '/theme-my-login/forms/class-theme-my-login-form-login.php' );
+				$form = new Theme_My_Login_Form_Login( $args );
+				break;
+		}
+		return apply_filters( 'tml_get_form', $form, $action, $args );
 	}
 
 	/** Modules ***************************************************************/
