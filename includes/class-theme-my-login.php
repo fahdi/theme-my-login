@@ -166,6 +166,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		add_filter( 'single_post_title',      array( $this, 'single_post_title'      )        );
 		add_filter( 'the_title',              array( $this, 'the_title'              ), 10, 2 );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'wp_setup_nav_menu_item' )        );
+		add_filter( 'page_link',              array( $this, 'page_link'              ), 10, 2 );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
 		add_action( 'tml_user_password_changed', 'wp_password_change_notification' );
@@ -742,7 +743,6 @@ if(typeof wpOnload=='function')wpOnload()
 		$logout_url = self::get_page_link( 'logout' );
 		if ( $redirect )
 			$logout = add_query_arg( 'redirect_to', urlencode( $redirect ), $logout_url );
-		$logout_url = wp_nonce_url( $logout_url, 'log-out' );
 		return $logout_url;
 	}
 
@@ -808,6 +808,21 @@ if(typeof wpOnload=='function')wpOnload()
 			}
 		}
 		return $menu_item;
+	}
+
+	/**
+	 * Adds nonce to logout link
+	 *
+	 * @since 6.4
+	 *
+	 * @param string $link Page link
+	 * @param int $post_id Post ID
+	 * @return string Page link
+	 */
+	public function page_link( $link, $post_id ) {
+		if ( self::is_tml_page( 'logout', $post_id ) )
+			$link = add_query_arg( '_wpnonce', wp_create_nonce( 'log-out' ), $link );
+		return $link;
 	}
 
 
