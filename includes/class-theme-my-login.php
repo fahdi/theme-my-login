@@ -781,7 +781,7 @@ if(typeof wpOnload=='function')wpOnload()
 			return $title;
 
 		if ( self::is_tml_page( 'login', $post_id ) && is_user_logged_in() ) {
-			if ( in_the_loop() )
+			if ( in_the_loop() && is_main_query() )
 				$title = apply_filters( 'tml_title', sprintf( __( 'Howdy, %1$s' ), wp_get_current_user()->display_name ), 'login' );
 		}
 		return $title;
