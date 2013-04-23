@@ -850,61 +850,6 @@ if(typeof wpOnload=='function')wpOnload()
 	/** Utilities *************************************************************/
 
 	/**
-	 * Handler for "theme-my-login" shortcode
-	 *
-	 * Optional $atts contents:
-	 *
-	 * - instance - A unqiue instance ID for this instance.
-	 * - default_action - The action to display. Defaults to "login".
-	 * - login_template - The template used for the login form. Defaults to "login-form.php".
-	 * - register_template - The template used for the register form. Defaults to "register-form.php".
-	 * - lostpassword_template - The template used for the lost password form. Defaults to "lostpassword-form.php".
-	 * - resetpass_template - The template used for the reset password form. Defaults to "resetpass-form.php".
-	 * - user_template - The templated used for when a user is logged in. Defalts to "user-panel.php".
-	 * - show_title - True to display the current title, false to hide. Defaults to true.
-	 * - show_log_link - True to display the login link, false to hide. Defaults to true.
-	 * - show_reg_link - True to display the register link, false to hide. Defaults to true.
-	 * - show_pass_link - True to display the lost password link, false to hide. Defaults to true.
-	 * - logged_in_widget - True to display the widget when logged in, false to hide. Defaults to true.
-	 * - logged_out_widget - True to display the widget when logged out, false to hide. Defaults to true.
-	 * - show_gravatar - True to display the user's gravatar, false to hide. Defaults to true.
-	 * - gravatar_size - The size of the user's gravatar. Defaults to "50".
-	 *
-	 * @since 6.0
-	 *
-	 * @param string|array $atts Attributes passed from the shortcode
-	 * @return string HTML output from Theme_My_Login_Template->display()
-	 */
-	public function shortcode( $atts = '' ) {
-		static $did_main_instance = false;
-
-		$atts = wp_parse_args( $atts );
-
-		if ( self::is_tml_page() && in_the_loop() && is_main_query() && ! $did_main_instance ) {
-			$instance = $this->get_instance();
-
-			if ( empty( $this->request_instance ) )
-				$instance->errors = $this->errors;
-
-			if ( ! isset( $atts['show_title'] ) )
-				$atts['show_title'] = false;
-
-			foreach ( $atts as $option => $value ) {
-				$instance->set_option( $option, $value );
-			}
-
-			$did_main_instance = true;
-		} else {
-			$instance = $this->load_instance( $atts );
-		}
-
-		if ( $instance->get_option( 'instance' ) == $this->request_instance )
-			$instance->errors = $this->errors;
-
-		return $instance->get_form_html();
-	}
-
-	/**
 	 * Determines if $action is for $page
 	 *
 	 * @since 6.3
@@ -1063,7 +1008,74 @@ if(typeof wpOnload=='function')wpOnload()
 		return $stylesheet;
 	}
 
+	/**
+	 * Handler for "theme-my-login" shortcode
+	 *
+	 * Optional $atts contents:
+	 *
+	 * - instance - A unqiue instance ID for this instance.
+	 * - default_action - The action to display. Defaults to "login".
+	 * - login_template - The template used for the login form. Defaults to "login-form.php".
+	 * - register_template - The template used for the register form. Defaults to "register-form.php".
+	 * - lostpassword_template - The template used for the lost password form. Defaults to "lostpassword-form.php".
+	 * - resetpass_template - The template used for the reset password form. Defaults to "resetpass-form.php".
+	 * - user_template - The templated used for when a user is logged in. Defalts to "user-panel.php".
+	 * - show_title - True to display the current title, false to hide. Defaults to true.
+	 * - show_log_link - True to display the login link, false to hide. Defaults to true.
+	 * - show_reg_link - True to display the register link, false to hide. Defaults to true.
+	 * - show_pass_link - True to display the lost password link, false to hide. Defaults to true.
+	 * - logged_in_widget - True to display the widget when logged in, false to hide. Defaults to true.
+	 * - logged_out_widget - True to display the widget when logged out, false to hide. Defaults to true.
+	 * - show_gravatar - True to display the user's gravatar, false to hide. Defaults to true.
+	 * - gravatar_size - The size of the user's gravatar. Defaults to "50".
+	 *
+	 * @since 6.0
+	 *
+	 * @param string|array $atts Attributes passed from the shortcode
+	 * @return string HTML output from Theme_My_Login_Template->display()
+	 */
+	public function shortcode( $atts = '' ) {
+		if ( self::is_tml_page() ) {
+			$instance = $this->get_instance();
+
+			if ( ! isset( $atts['show_title'] ) )
+				$atts['show_title'] = false;
+
+			foreach ( $atts as $option => $value ) {
+				$instance->set_option( $option, $value );
+			}
+		} else {
+			$instance = $this->load_instance( $atts );
+		}
+		return $instance->get_form_html();
+	}
+
+
 	/** Instances *************************************************************/
+
+	/**
+	 * Instantiates an instance
+	 *
+	 * @since 6.3
+	 *
+	 * @param array|string $args Array or query string of arguments
+
+	 * @return object Instance object
+	 */
+	public function load_instance( $args = '' ) {
+		$args['instance'] = count( $this->loaded_instances );
+
+		$action = empty( $args['default_action'] ) ? 'login' : $args['default_action'];
+
+		$instance = self::get_form( $action, $args );
+
+		if ( $instance->get_instance() == $this->request_instance )
+			$instance->errors =& $this->errors;
+
+		$this->loaded_instances[] = $instance;
+
+		return $instance;
+	}
 
 	/**
 	 * Retrieves active instance object
@@ -1088,27 +1100,6 @@ if(typeof wpOnload=='function')wpOnload()
 	public function get_instance( $id = 0 ) {
 		if ( isset( $this->loaded_instances[$id] ) )
 			return $this->loaded_instances[$id];
-	}
-
-	/**
-	 * Instantiates an instance
-	 *
-	 * @since 6.3
-	 *
-	 * @param array|string $args Array or query string of arguments
-
-	 * @return object Instance object
-	 */
-	public function load_instance( $args = '' ) {
-		$args['instance'] = count( $this->loaded_instances );
-
-		$action = empty( $args['default_action'] ) ? 'login' : $args['default_action'];
-
-		$instance = self::get_form( $action, $args );
-
-		$this->loaded_instances[] = $instance;
-
-		return $instance;
 	}
 
 	/**
