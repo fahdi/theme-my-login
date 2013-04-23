@@ -114,14 +114,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			array( 'Theme_My_Login_Admin', 'settings_page' )
 		);
 
-		add_submenu_page(
-			'theme_my_login',
-			__( 'TML Pages', 'theme-my-login' ),
-			__( 'Pages',     'theme-my-login' ),
-			'manage_options',
-			'edit.php?post_type=tml_page'
-		);
-
 		// General section
 		add_settings_section( 'general',    __( 'General', 'theme-my-login'    ), '__return_false', $this->options_key );
 		add_settings_section( 'modules',    __( 'Modules', 'theme-my-login'    ), '__return_false', $this->options_key );
@@ -269,6 +261,8 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 	 * @access private
 	 */
 	private function install() {
+		global $wpdb;
+
 		// Current version
 		$version = $this->get_option( 'version', Theme_My_Login::version );
 
@@ -319,11 +313,17 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				if ( 'trash' == $page->post_status )
 					wp_untrash_post( $page->ID );
 
-				// Change to new post type
-				set_post_type( $page->ID, 'tml_page' );
-
 				update_post_meta( $page->ID, '_tml_action', 'login' );
 			}
+		}
+
+		// 6.4 upgrade
+		if ( version_compare( $version, '6.4', '<' ) ) {
+			// Convert TML pages to regular pages
+			$wpdb->update( $wpdb->posts, array( 'post_type' => 'page' ), array( 'post_type' => 'tml_page' ) );
+
+			// Get rid of stale rewrite rules
+			flush_rewrite_rules( false );
 		}
 
 		// Activate modules in case they need to be upgraded
@@ -335,11 +335,13 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 
 		// Setup default pages
 		foreach ( Theme_My_Login::default_pages() as $action => $title ) {
+			wp_cache_delete( $action, 'tml_page_ids' );
 			if ( ! $page_id = Theme_My_Login::get_page_id( $action ) ) {
 				$page_id = wp_insert_post( array(
 					'post_title'     => $title,
+					'post_name'      => $action,
 					'post_status'    => 'publish',
-					'post_type'      => 'tml_page',
+					'post_type'      => 'page',
 					'post_content'   => '[theme-my-login]',
 					'comment_status' => 'closed',
 					'ping_status'    => 'closed'
@@ -347,9 +349,6 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 				update_post_meta( $page_id, '_tml_action', $action );
 			}
 		}
-
-		// Generate permalinks
-		flush_rewrite_rules( false );
 
 		// Set new version
 		$this->set_option( 'version', Theme_My_Login::version );
