@@ -37,8 +37,6 @@ class Theme_My_Login_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 
-		$theme_my_login = Theme_My_Login::get_object();
-
 		$instance = wp_parse_args( $instance, array(
 			'default_action'      => 'login',
 			'logged_in_widget'    => true,
@@ -61,7 +59,7 @@ class Theme_My_Login_Widget extends WP_Widget {
 
 		$args = array_merge( $args, $instance );
 
-		echo $theme_my_login->shortcode( $args );
+		theme_my_login( $args );
 	}
 
 	/**
