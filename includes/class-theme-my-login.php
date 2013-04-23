@@ -1047,7 +1047,10 @@ if(typeof wpOnload=='function')wpOnload()
 		} else {
 			$instance = $this->load_instance( $atts );
 		}
-		return $instance->get_form_html();
+		$output = $instance->get_form_html();
+		$output = apply_filters_ref_array( 'tml_display_' . $instance->action, array( $output, &$instance ) );
+		$output = apply_filters_ref_array( 'tml_display', array( $output, $instance->action, &$instance ) );
+		return $output;
 	}
 
 
