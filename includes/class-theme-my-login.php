@@ -166,6 +166,7 @@ class Theme_My_Login extends Theme_My_Login_Abstract{
 		add_filter( 'single_post_title',      array( $this, 'single_post_title'      )        );
 		add_filter( 'the_title',              array( $this, 'the_title'              ), 10, 2 );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'wp_setup_nav_menu_item' )        );
+		add_filter( 'wp_list_pages_excludes', array( $this, 'wp_list_pages_excludes' )        );
 		add_filter( 'page_link',              array( $this, 'page_link'              ), 10, 2 );
 
 		add_action( 'tml_new_user_registered',   'wp_new_user_notification', 10, 2 );
@@ -808,6 +809,26 @@ if(typeof wpOnload=='function')wpOnload()
 			}
 		}
 		return $menu_item;
+	}
+
+	/**
+	 * Excludes pages from wp_list_pages
+	 *
+	 * @since 6.4
+	 *
+	 * @param array $exclude Page IDs to exclude
+	 * @return array Page IDs to exclude
+	 */
+	public function wp_list_pages_excludes( $exclude ) {
+		$pages = get_posts( array(
+			'post_type'      => 'page',
+			'post_status'    => 'any',
+			'meta_key'       => '_tml_action',
+			'posts_per_page' => -1
+		) );
+		$pages = wp_list_pluck( $pages, 'ID' );
+
+		return array_merge( $exclude, $pages );
 	}
 
 	/**
