@@ -36,7 +36,7 @@ final class Theme_My_Login_MS_Signup extends Theme_My_Login_Abstract {
 	public static function get_object() {
 		if ( ! isset( self::$object ) )
 			self::$object = new Theme_My_Login_MS_Signup;
-		return self::$oibject;
+		return self::$object;
 	}
 
 	/**
