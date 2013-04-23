@@ -401,7 +401,12 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 		}
 
 		// Delete the pages
-		$pages = get_posts( array( 'post_type' => 'tml_page', 'post_status' => 'any', 'posts_per_page' => -1 ) );
+		$pages = get_posts( array(
+			'post_type'      => 'page',
+			'post_status'    => 'any',
+			'meta_key'       => '_tml_action',
+			'posts_per_page' => -1
+		) );
 		foreach ( $pages as $page ) {
 			wp_delete_post( $page->ID );
 		}
