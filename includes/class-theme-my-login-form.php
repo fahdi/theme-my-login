@@ -425,8 +425,14 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 		$args = wp_parse_args( $args, array(
 			'form_name'     => '',
 			'form_id'       => '',
-			'form_action'   => '',
-			'form_method'   => '',
+			'form_action'   => remove_query_arg( array(
+				'instance',    'action',    'checkemail',
+				'error',       'loggedout', 'registered',
+				'redirect_to', 'updated',   'key',
+				'_wpnonce',    'reauth',    'login',
+				'updated'
+			) ),
+			'form_method'   => 'post',
 			'form_enctype'  => '',
 			'before_form'   => '',
 			'after_form'    => '',
@@ -582,6 +588,13 @@ abstract class Theme_My_Login_Form extends Theme_My_Login_Abstract {
 		return $html;
 	}
 
+	/**
+	 * Retrieves form instance
+	 *
+	 * @since 6.4
+	 *
+	 * @return int Form instance
+	 */
 	public function get_instance() {
 		if ( $instance = $this->get_option( 'instance' ) )
 			return $instance;
