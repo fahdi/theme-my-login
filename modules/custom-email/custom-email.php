@@ -526,7 +526,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 					$this->get_option( array( 'user_approval', 'admin_mail_from_name'    ) ),
 					$this->get_option( array( 'user_approval', 'admin_mail_content_type' ) )
 				);
-				add_filter( 'user_approval_admin_notifcation_mail_to',  array( $this, 'user_approval_admin_notifcation_mail_to_filter'  )        );
+				add_filter( 'user_approval_admin_notification_mail_to', array( $this, 'user_approval_admin_notification_mail_to_filter' )        );
 				add_filter( 'user_approval_admin_notification_title',   array( $this, 'user_approval_admin_notification_title_filter'   ), 10, 2 );
 				add_filter( 'user_approval_admin_notification_message', array( $this, 'user_approval_admin_notification_message_filter' ), 10, 2 );
 				break;
@@ -661,7 +661,7 @@ class Theme_My_Login_Custom_Email extends Theme_My_Login_Abstract {
 	 * @param string $to The default recipient
 	 * @return string The filtered recipient
 	 */
-	public function user_approval_admin_notifcation_mail_to_filter( $to ) {
+	public function user_approval_admin_notification_mail_to_filter( $to ) {
 		$_to = $this->get_option( array( 'user_approval', 'admin_mail_to' ) );
 		return empty( $_to ) ? $to : $_to;
 	}
