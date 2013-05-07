@@ -96,7 +96,8 @@ class Theme_My_Login_Security extends Theme_My_Login_Abstract {
 			$wp_query->set_404();
 			status_header( 404 );
 			nocache_headers();
-			$template = get_404_template();
+			if ( ! $template = get_404_template() )
+				$template = 'index.php';
 			include( $template );
 			exit;
 		}
