@@ -25,7 +25,15 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @const string
 	 */
-	const RECAPTCHA_API_URI = 'http://www.google.com/recaptcha/api';
+	const RECAPTCHA_API_URI = 'www.google.com/recaptcha/api';
+
+	/**
+	 * Holds reCAPTCHA API URL
+	 *
+	 * @since 6.3.7
+	 * @var string
+	 */
+	private $recaptcha_api_url;
 
 	/**
 	 * Holds options key
@@ -73,15 +81,17 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 		if ( ! ( $this->get_option( 'public_key' ) || $this->get_option( 'private_key' ) ) )
 			return;
 
+		$this->recaptcha_api_url = ( is_ssl() ? 'https://' : 'http://' ) . self::RECAPTCHA_API_URI;
+
 		add_action( 'wp_enqueue_scripts', array( &$this, 'wp_enqueue_scripts' ) );
 
-		add_action( 'register_form',       array( &$this, 'register_form'       ) );
+		add_action( 'register_form',       array( &$this, 'recaptcha_display'   ) );
 		add_filter( 'registration_errors', array( &$this, 'registration_errors' ) );
 
 		if ( is_multisite() ) {
-			add_action( 'signup_extra_fields',       array( &$this, 'recaptcha_display'  ) );
-			add_filter( 'wpmu_validate_user_signup', array( &$this, 'recaptcha_validate' ) );
-			add_filter( 'wpmu_validate_blog_signup', array( &$this, 'recaptcha_validate' ) );
+			add_action( 'signup_extra_fields',       array( &$this, 'recaptcha_display'    ) );
+			add_filter( 'wpmu_validate_user_signup', array( &$this, 'wpmu_validate_signup' ) );
+			add_filter( 'wpmu_validate_blog_signup', array( &$this, 'wpmu_validate_signup' ) );
 		}
 	}
 
@@ -91,21 +101,12 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 */
 	function wp_enqueue_scripts() {
-		wp_enqueue_script( 'recaptcha', 'http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' );
+		wp_enqueue_script( 'recaptcha', $this->recaptcha_api_url . '/js/recaptcha_ajax.js' );
 		wp_enqueue_script( 'theme-my-login-recaptcha', plugins_url( 'theme-my-login/modules/recaptcha/js/recaptcha.js' ), array( 'recaptcha', 'jquery' ) );
 		wp_localize_script( 'theme-my-login-recaptcha', 'tmlRecaptcha', array(
 			'publickey' => $this->get_option( 'public_key' ),
 			'theme'     => $this->get_option( 'theme' )
 		) );
-	}
-
-	/**
-	 * Renders reCAPTCHA on register form
-	 *
-	 * @since 6.3
-	 */
-	public function register_form() {
-		$this->recaptcha_display();
 	}
 
 	/**
@@ -124,21 +125,34 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 
 			switch ( $error_code ) {
 				case 'invalid-site-private-key' :
-					$errors->add( $error_code, __( '<strong>ERROR</strong>: Invalid reCAPTCHA private key.', 'theme-my-login' ) );
+					$errors->add( 'recaptcha', __( '<strong>ERROR</strong>: Invalid reCAPTCHA private key.', 'theme-my-login' ), 'invalid-site-private-key' );
 					break;
 				case 'invalid-request-cookie' :
-					$errors->add( $error_code, __( '<strong>ERROR</strong>: Invalid reCAPTCHA challenge parameter.', 'theme-my-login' ) );
+					$errors->add( 'recaptcha', __( '<strong>ERROR</strong>: Invalid reCAPTCHA challenge parameter.', 'theme-my-login' ), 'invalid-request-cookie' );
 					break;
 				case 'incorrect-captcha-sol' :
-					$errors->add( $error_code, __( '<strong>ERROR</strong>: Incorrect captcha code.', 'theme-my-login' ) );
+					$errors->add( 'recaptcha', __( '<strong>ERROR</strong>: Incorrect captcha code.', 'theme-my-login' ), 'incorrect-captcha-sol' );
 					break;
 				case 'recaptcha-not-reachable' :
 				default :
-					$errors->add( $error_code, __( '<strong>ERROR</strong>: Unable to reach the reCAPTCHA server.', 'theme-my-login' ) );
+					$errors->add( 'recaptcha', __( '<strong>ERROR</strong>: Unable to reach the reCAPTCHA server.', 'theme-my-login' ), 'recaptcha-not-reachable' );
 					break;
 			}
 		}
 		return $errors;
+	}
+
+	/**
+	 * Retrieves reCAPTCHA errors for multisite
+	 *
+	 * @since 0.1
+	 *
+	 * @param array $result Signup parameters
+	 * @return array Signup parameters
+	 */
+	public function wpmu_validate_signup( $result ) {
+		$result['errors'] = $this->registration_errors( $result['errors'] );
+		return $result;
 	}
 
 	/**
@@ -148,6 +162,11 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function recaptcha_display( $errors = null ) {
+		if ( is_multisite() ) {
+			if ( $error = $errors->get_error_message( 'recaptcha' ) ) { ?>
+			<p class="error"><?php echo $error; ?></p>
+			<?php }
+		}
 		?>
 		<div id="recaptcha">
 			<noscript>
@@ -166,7 +185,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @access public
 	 */
 	public function recaptcha_validate( $remote_ip, $challenge, $response ) {
-		$response = wp_remote_post( self::RECAPTCHA_API_URI . '/verify', array(
+		$response = wp_remote_post( $this->recaptcha_api_url . '/verify', array(
 			'body' => array(
 				'privatekey' => $this->get_option( 'private_key' ),
 				'remoteip'   => $remote_ip,
