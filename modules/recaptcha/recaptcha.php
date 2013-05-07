@@ -25,7 +25,15 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 * @const string
 	 */
-	const RECAPTCHA_API_URI = 'http://www.google.com/recaptcha/api';
+	const RECAPTCHA_API_URI = 'www.google.com/recaptcha/api';
+
+	/**
+	 * Holds reCAPTCHA API URL
+	 *
+	 * @since 6.3.7
+	 * @var string
+	 */
+	private $recaptcha_api_url;
 
 	/**
 	 * Holds options key
@@ -59,7 +67,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 		// Load options
 		$this->load_options();
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'wp_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts',  array( $this, 'wp_enqueue_scripts'  ) );
 
 		add_action( 'register_form',       array( $this, 'recaptcha_display'   ) );
 		add_filter( 'registration_errors', array( $this, 'registration_errors' ) );
@@ -84,7 +92,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 */
 	function wp_enqueue_scripts() {
-		wp_enqueue_script( 'recaptcha', 'http://www.google.com/recaptcha/api/js/recaptcha_ajax.js' );
+		wp_enqueue_script( 'recaptcha', $this->recaptcha_api_url . '/js/recaptcha_ajax.js' );
 		wp_enqueue_script( 'theme-my-login-recaptcha', plugins_url( 'theme-my-login/modules/recaptcha/js/recaptcha.js' ), array( 'recaptcha', 'jquery' ) );
 		wp_localize_script( 'theme-my-login-recaptcha', 'tmlRecaptcha', array(
 			'publickey' => $this->get_option( 'public_key' ),
@@ -128,7 +136,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	/**
 	 * Retrieves reCAPTCHA errors for multisite
 	 *
-	 * @since 0.1
+	 * @since 6.3.7
 	 *
 	 * @param array $result Signup parameters
 	 * @return array Signup parameters
@@ -166,7 +174,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	 * @since 6.3
 	 */
 	public function recaptcha_validate( $remote_ip, $challenge, $response ) {
-		$response = wp_remote_post( self::RECAPTCHA_API_URI . '/verify', array(
+		$response = wp_remote_post( $this->recaptcha_api_url . '/verify', array(
 			'body' => array(
 				'privatekey' => $this->get_option( 'private_key' ),
 				'remoteip'   => $remote_ip,
