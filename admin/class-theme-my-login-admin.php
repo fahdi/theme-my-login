@@ -360,13 +360,17 @@ class Theme_My_Login_Admin extends Theme_My_Login_Abstract {
 			do_action( 'tml_uninstall_' . $module );
 		}
 
-		// Remove delete block
-		remove_action( 'wp_trash_post', array( self::get_object(), 'wp_trash_post' ) );
+		// Get pages
+		$pages = get_posts( array(
+			'post_type'      => 'page',
+			'post_status'    => 'any',
+			'meta_key'       => '_tml_action',
+			'posts_per_page' => -1
+		) );
 
-		// Delete the pages
-		$pages = get_posts( array( 'post_type' => 'tml_page', 'post_status' => 'any', 'posts_per_page' => -1 ) );
+		// Delete pages
 		foreach ( $pages as $page ) {
-			wp_delete_post( $page->ID );
+			wp_delete_post( $page->ID, true );
 		}
 
 		// Delete options
