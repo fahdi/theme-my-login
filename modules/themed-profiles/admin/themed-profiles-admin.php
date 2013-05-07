@@ -56,19 +56,16 @@ class Theme_My_Login_Themed_Profiles_Admin extends Theme_My_Login_Abstract {
 	 * @since 6.0
 	 */
 	public function activate() {
-		wp_cache_delete( 'profile', 'tml_page_ids' );
 		if ( ! $page_id = Theme_My_Login::get_page_id( 'profile' ) ) {
 			$page_id = wp_insert_post( array(
 				'post_title'     => __( 'Your Profile' ),
 				'post_status'    => 'publish',
-				'post_type'      => 'tml_page',
+				'post_type'      => 'page',
 				'post_content'   => '[theme-my-login]',
 				'comment_status' => 'closed',
 				'ping_status'    => 'closed'
 			) );
 			update_post_meta( $page_id, '_tml_action', 'profile' );
-
-			flush_rewrite_rules( false );
 		}
 	}
 
