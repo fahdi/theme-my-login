@@ -814,7 +814,7 @@ if(typeof wpOnload=='function')wpOnload()
 	/**
 	 * Excludes pages from wp_list_pages
 	 *
-	 * @since 6.4
+	 * @since 6.3.7
 	 *
 	 * @param array $exclude Page IDs to exclude
 	 * @return array Page IDs to exclude
@@ -834,7 +834,7 @@ if(typeof wpOnload=='function')wpOnload()
 	/**
 	 * Adds nonce to logout link
 	 *
-	 * @since 6.4
+	 * @since 6.3.7
 	 *
 	 * @param string $link Page link
 	 * @param int $post_id Post ID
