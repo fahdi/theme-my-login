@@ -485,7 +485,7 @@ class Theme_My_Login_User_Moderation extends Theme_My_Login_Abstract {
 		$title   = apply_filters( 'user_approval_admin_notification_title',   $title,   $user_id );
 		$message = apply_filters( 'user_approval_admin_notification_message', $message, $user_id );
 
-		$to = apply_filters( 'user_approval_admin_notifcation_mail_to', get_option( 'admin_email' ) );
+		$to = apply_filters( 'user_approval_admin_notification_mail_to', get_option( 'admin_email' ) );
 
 		@wp_mail( $to, $title, $message );
 	}
