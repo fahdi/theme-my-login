@@ -206,6 +206,8 @@ class Theme_My_Login_Themed_Profiles extends Theme_My_Login_Abstract {
 
 		define( 'IS_PROFILE_PAGE', true );
 
+		load_textdomain( 'default', WP_LANG_DIR . '/admin-' . get_locale() . '.mo' );
+
 		register_admin_color_schemes();
 
 		wp_enqueue_style( 'password-strength', plugins_url( 'theme-my-login/modules/themed-profiles/themed-profiles.css' ) );
