@@ -3,7 +3,7 @@ Contributors: jfarthing84
 Tags: widget, login, registration, theme, custom, log in, register, sidebar, gravatar, redirection, e-mail
 Requires at least: 3.1
 Tested up to: 3.5.1
-Stable tag: 6.3.6
+Stable tag: 6.3.7
 
 Themes the WordPress login pages according to your theme.
 
@@ -55,6 +55,17 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 
 == Changelog ==
+
+= 6.4 =
+* Introduce intuitive form class interface in favor of templates
+
+= 6.3.7 =
+* Revert tml_page post type back to default WP pages
+* Fix issue where SSL warnings were displayed in reCAPTCHA module
+* Fix issue where a blank page resulted when 404.php didn't exist in a theme
+* Fix issue where User Links couldn't be deleted
+* Fix issue where "Are you sure?" would display when attempting to log out
+* Fix issue where strings weren't being translated on Profile page
 
 = 6.3.6 =
 * Fix issue where all module options were set once activated
@@ -446,3 +457,9 @@ Please visit http://www.jfarthing.com/development/theme-my-login first and then 
 
 = 1.0.0 =
 * Initial release version
+
+
+== Upgrade Notice ==
+
+= 6.4 =
+WARNING: This version will render all of your custom templates obsolete!
