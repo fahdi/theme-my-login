@@ -145,7 +145,7 @@ class Theme_My_Login_Recaptcha extends Theme_My_Login_Abstract {
 	/**
 	 * Retrieves reCAPTCHA errors for multisite
 	 *
-	 * @since 0.1
+	 * @since 6.3.7
 	 *
 	 * @param array $result Signup parameters
 	 * @return array Signup parameters
