@@ -255,32 +255,36 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 	 * @return string|array Sanitized settings
 	 */
 	public function save_settings( $settings ) {
+		global $wp_roles;
+
 		// Bail-out if doing AJAX because it has it's own saving routine
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			return $settings;
 
-		// Handle updating/deleting of links
-		if ( ! empty( $_POST['user_links'] ) && is_array( $_POST['user_links'] ) ) {
-			foreach ( $_POST['user_links'] as $role => $links ) {
-				foreach ( $links as $key => $link ) {
+		foreach ( $wp_roles->get_names() as $role => $role_name ) {
+			if ( 'pending' == $role )
+				continue;
+
+			$settings[$role] = array();
+
+			// Handle updating/deleting of links
+			if ( ! empty( $_POST['user_links'] ) && ! empty( $_POST['user_links'][$role] ) ) {
+				foreach ( (array) $_POST['user_links'][$role] as $key => $link ) {
 					$clean_title = wp_kses( $link['title'], null );
 					$clean_url   = wp_kses( $link['url'],   null );
-					$links[$key] = array(
-						'title' => $clean_title,
-						'url'   => $clean_url
-					);
-					if ( ( empty( $clean_title ) && empty( $clean_url ) ) || ( isset( $_POST['delete_user_link'][$role][$key] ) ) )
-						unset( $links[$key] );
+					if ( ! empty( $clean_title ) && ! empty( $clean_url ) && ! isset( $_POST['delete_user_link'][$role][$key] ) ) {
+						$settings[$role][] = array(
+							'title' => $clean_title,
+							'url'   => $clean_url
+						);
+					}
 				}
-				$settings[$role] = $links;
 			}
-		}
 
-		// Handle new links
-		if ( ! empty( $_POST['new_user_link'] ) && is_array( $_POST['new_user_link'] ) ) {
-			foreach ( $_POST['new_user_link'] as $role => $link ) {
-				$clean_title = wp_kses( $link['title'], null );
-				$clean_url   = wp_kses( $link['url'],   null );
+			// Handle new links
+			if ( ! empty( $_POST['new_user_link'] ) && ! empty( $_POST['new_user_link'][$role] ) ) {
+				$clean_title = wp_kses( $_POST['new_user_link'][$role]['title'], null );
+				$clean_url   = wp_kses( $_POST['new_user_link'][$role]['url'],   null );
 				if ( ! empty( $clean_title ) && ! empty( $clean_url ) ) {
 					$settings[$role][] = array(
 						'title' => $clean_title,
@@ -289,9 +293,6 @@ class Theme_My_Login_Custom_User_Links_Admin extends Theme_My_Login_Abstract {
 				}
 			}
 		}
-
-		// Reset link keys
-		$settings = array_map( 'array_values', $settings );
 
 		return $settings;
 	}
