@@ -7,6 +7,7 @@ Version: 6.3.6
 Author: Jeff Farthing
 Author URI: http://www.jfarthing.com
 Text Domain: theme-my-login
+Domain Path: /language/
 */
 
 // Allow custom functions file
