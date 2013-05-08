@@ -865,13 +865,10 @@ if(typeof wpOnload=='function')wpOnload()
 		if ( 'page' != $page->post_type )
 			return false;
 
-		if ( empty( $action ) )
-			return true;
-
 		if ( ! $page_action = self::get_page_action( $page->ID ) )
 			return false;
 
-		if ( $action == $page_action )
+		if ( empty( $action ) || $action == $page_action )
 			return true;
 
 		return false;
